@@ -1,0 +1,61 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pdb
+*.egg-info/
+*.egg
+*.manifest
+*.spec
+
+# Django
+*.log
+*.pot
+*.pyc
+db.sqlite3
+media/
+staticfiles/
+static/
+local_settings.py
+
+# Environments
+.env
+.env.local
+.env.dev
+.env.prod
+.env.test
+*.env
+
+# Virtualenv
+venv/
+env/
+.venv/
+.env/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Migrations (optional: keep if you want them versioned)
+# **Tu gardes les migrations dans ton projet, donc on ne les ignore pas**
+# */migrations/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+docker-data/
+docker-volumes/
+*.pid
+*.sock
+
+# Coverage / tests
+.coverage
+coverage.xml
+htmlcov/
+pytest_cache/
