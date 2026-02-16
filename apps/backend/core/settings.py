@@ -7,6 +7,8 @@ SECRET_KEY = "dev-secret-key"
 DEBUG = True
 ALLOWED_HOSTS = []
 
+AUTH_USER_MODEL = "users.User"
+
 INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.auth",
@@ -17,10 +19,20 @@ INSTALLED_APPS = [
     "users",
 ]
 
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
+}
+
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
+]
+
+AUTHENTICATION_BACKENDS = [
+    "core.auth_backend.EmailAuthBackend",
 ]
 
 ROOT_URLCONF = "core.urls"
