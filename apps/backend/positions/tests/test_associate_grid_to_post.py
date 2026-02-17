@@ -1,11 +1,10 @@
 import pytest
 from django.urls import reverse
 from positions.models import Position
-from grids.models import Grid  # supposé module futur
+from templates_grid.models.template import Template  # supposé module futur
 
 @pytest.mark.django_db
-def test_associate_grid_to_post(api_client):
-    # Create a position
+def test_associate_template_to_post(api_client):
     position = Position.objects.create(
         title="Backend Developer",
         description="API development",
@@ -16,21 +15,20 @@ def test_associate_grid_to_post(api_client):
         salary=45000,
     )
 
-    # Create a grid
-    grid = Grid.objects.create(
-        name="Backend Evaluation Grid"
+    template = Template.objects.create(
+        nom="Backend Evaluation Template",
+        type="Evaluation",
+        poste_id=position.id
     )
 
-    url = reverse("positions-associate-grid", args=[position.id])
-    payload = {"grid_id": grid.id}
+    url = reverse("positions-associate-template", args=[position.id])
+    payload = {"template_id": template.id}
 
     response = api_client.post(url, payload, format="json")
 
-    # Must return HTTP 200 OK
     assert response.status_code == 200
 
-    # Refresh from DB
     position.refresh_from_db()
 
-    # Check association
-    assert position.grid_id == grid.id
+    assert template in position.templates.all()
+

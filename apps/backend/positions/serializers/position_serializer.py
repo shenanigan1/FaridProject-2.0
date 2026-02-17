@@ -13,6 +13,7 @@ class PositionSerializer(serializers.ModelSerializer):
             "company_id",
             "location",
             "salary",
+            "templates",
         ]
         extra_kwargs = {
             "title": {"required": True},
