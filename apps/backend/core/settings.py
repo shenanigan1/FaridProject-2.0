@@ -19,6 +19,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "users",
     "candidates",
+    "positions",
 ]
 
 REST_FRAMEWORK = {
