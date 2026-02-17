@@ -7,4 +7,5 @@ urlpatterns = [
     path("", include("candidates.routes")),
     path("", include("positions.routes")),
     path("", include("templates_grid.routes")),
+    path("", include("users.routes")),
 ]
