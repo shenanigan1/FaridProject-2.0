@@ -1,14 +1,10 @@
-from turtle import position
-from urllib import request
-from django import template
 from rest_framework.decorators import action
-from rest_framework.response import Response 
-from rest_framework import status
+from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from positions.models import Position
 from positions.serializers import PositionSerializer
-from templates_grid.models import Template
+from positions.services import associate_template_to_position
 
 class PositionViewSet(ModelViewSet):
     queryset = Position.objects.all()
@@ -39,10 +35,5 @@ class PositionViewSet(ModelViewSet):
                status=status.HTTP_404_NOT_FOUND
         )
 
-        position.templates.add(template)
-
-        return Response(
-            {"status": "template associated"},
-            status=status.HTTP_200_OK
-        )
+        return Response(result.payload, status=result.status_code)
 
