@@ -6,9 +6,7 @@ from templates_grid.models import Template
 def test_get_template_detail(api_client):
     # Create a template
     template = Template.objects.create(
-        nom="Grille Backend Junior",
-        type="technique",
-        poste_id=1,
+        name="Grille Backend Junior"
     )
 
     url = reverse("templates-detail", args=[template.id])
@@ -19,6 +17,4 @@ def test_get_template_detail(api_client):
 
     # Check returned data
     assert response.data["id"] == template.id
-    assert response.data["nom"] == "Grille Backend Junior"
-    assert response.data["type"] == "technique"
-    assert response.data["poste_id"] == 1
+    assert response.data["name"] == "Grille Backend Junior"

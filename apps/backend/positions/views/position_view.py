@@ -23,19 +23,19 @@ class PositionViewSet(ModelViewSet):
     )
     def associate_template(self, request, pk=None):
         position = self.get_object()
-        template_id = request.data.get("template_id")  # <-- FIX
+        grid_id = request.data.get("grid_id")  # <-- FIX
 
-        if not template_id:
+        if not grid_id:
             return Response(
-                {"template_id": ["This field is required."]},
+                {"grid_id": ["This field is required."]},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
         try:
-            template = Template.objects.get(id=template_id)
+            template = Template.objects.get(id=grid_id)
         except Template.DoesNotExist:
            return Response(
-               {"template_id": ["Template not found."]},
+               {"grid_id": ["Template not found."]},
                status=status.HTTP_404_NOT_FOUND
         )
 

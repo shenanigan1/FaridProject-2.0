@@ -21,6 +21,8 @@ INSTALLED_APPS = [
     "candidates",
     "positions",
     "templates_grid",
+    "evaluations",
+    
 ]
 
 REST_FRAMEWORK = {
