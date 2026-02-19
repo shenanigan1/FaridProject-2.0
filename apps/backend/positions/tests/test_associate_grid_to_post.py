@@ -16,13 +16,11 @@ def test_associate_template_to_post(api_client):
     )
 
     template = Template.objects.create(
-        nom="Backend Evaluation Template",
-        type="Evaluation",
-        poste_id=position.id
+        name="Backend Evaluation Template"
     )
 
     url = reverse("positions-associate-template", args=[position.id])
-    payload = {"template_id": template.id}
+    payload = {"grid_id": template.id}
 
     response = api_client.post(url, payload, format="json")
 

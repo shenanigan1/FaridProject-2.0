@@ -18,96 +18,71 @@ L’objectif est de reconstruire l’application FARID depuis zéro, avec une ba
 ## 📦 Architecture du Monorepo
 
 ```
-FaridProject-2.0/
+FaridProject/
 │
 ├── apps/
-│   ├── frontend/                         # Application Angular (Admin + Candidat)
-│   │   ├── src/
-│   │   │   ├── app/
-│   │   │   │   ├── core/                 # Services globaux, interceptors, guards
-│   │   │   │   │   ├── auth/
-│   │   │   │   │   ├── http/
-│   │   │   │   │   ├── guards/
-│   │   │   │   │   └── interceptors/
-│   │   │   │   │
-│   │   │   │   ├── shared/               # UI réutilisable
-│   │   │   │   │   ├── components/
-│   │   │   │   │   ├── directives/
-│   │   │   │   │   └── pipes/
-│   │   │   │   │
-│   │   │   │   ├── features/             # Modules fonctionnels
-│   │   │   │   │   ├── auth/             # Login / Register
-│   │   │   │   │   ├── admin/            # Interface Admin
-│   │   │   │   │   │   ├── dashboard/
-│   │   │   │   │   │   ├── candidates/
-│   │   │   │   │   │   ├── positions/
-│   │   │   │   │   │   ├── templates/
-│   │   │   │   │   │   ├── tests/
-│   │   │   │   │   │   ├── evaluations/
-│   │   │   │   │   │   └── users/
-│   │   │   │   │   ├── candidate/        # Interface Candidat
-│   │   │   │   │   │   ├── profile/
-│   │   │   │   │   │   ├── jobs/
-│   │   │   │   │   │   └── evaluations/
-│   │   │   │   │
-│   │   │   │   ├── types/                # Types TypeScript
-│   │   │   │   ├── utils/                # Helpers frontend
-│   │   │   │   └── environments/
-│   │   │   │
-│   │   │   ├── tests/                    # Tests Angular (TDD)
-│   │   │   │   ├── unit/
-│   │   │   │   ├── integration/
-│   │   │   │   └── factories/
-│   │   │   │
-│   │   │   └── index.html
-│   │   └── package.json
-│   │
-│   ├── backend/                          # API Django REST Framework
-│   │   ├── core/                         # Settings, middlewares, utils
-│   │   ├── users/                        # Auth, rôles, permissions
-│   │   │   ├── models/
-│   │   │   ├── serializers/
-│   │   │   ├── views/
-│   │   │   ├── routes/
+│   ├── backend/
+│   │   ├── core/                     # settings, base config
+│   │   │
+│   │   ├── identity/                 # Authentication only
+│   │   │   ├── infrastructure/
+│   │   │   │   ├── models.py         # Django User extension if needed
+│   │   │   ├── interface/
+│   │   │   │   ├── views.py
+│   │   │   │   ├── serializers.py
 │   │   │   └── tests/
+│   │   │
 │   │   ├── candidates/
-│   │   │   ├── models/
-│   │   │   ├── serializers/
-│   │   │   ├── views/
-│   │   │   ├── routes/
+│   │   │   ├── domain/
+│   │   │   │   ├── entities.py
+│   │   │   │   ├── value_objects.py
+│   │   │   │   ├── exceptions.py
+│   │   │   ├── application/
+│   │   │   │   ├── use_cases/
+│   │   │   │   ├── ports.py
+│   │   │   │   ├── dtos.py
+│   │   │   ├── infrastructure/
+│   │   │   │   ├── models.py
+│   │   │   │   ├── repositories.py
+│   │   │   ├── interface/
+│   │   │   │   ├── views.py
+│   │   │   │   ├── serializers.py
 │   │   │   └── tests/
+│   │   │
 │   │   ├── positions/
-│   │   ├── templates/                    # Templates dynamiques (JSON Schema)
+│   │   ├── templates/
 │   │   ├── evaluations/
-│   │   ├── storage/                      # Futur OSS / MinIO
-│   │   ├── utils/
-│   │   ├── tests/                        # Tests globaux (pytest)
-│   │   ├── manage.py
-│   │   └── requirements.txt
+│   │   │   ├── domain/
+│   │   │   │   ├── entities.py
+│   │   │   │   ├── policies.py       # workflow engine
+│   │   │   ├── application/
+│   │   │   ├── infrastructure/
+│   │   │   ├── interface/
+│   │   │   └── tests/
+│   │   │
+│   │   └── storage/
 │   │
-│   └── api-gateway/                      # (Optionnel futur) Gateway Node/Nginx
+│   ├── frontend/
+│   │   ├── core/
+│   │   ├── shared/
+│   │   ├── features/
+│   │   │   ├── candidates/
+│   │   │   │   ├── data-access/
+│   │   │   │   ├── ui/
+│   │   │   │   ├── pages/
+│   │   │   │   └── domain/
+│   │   │   ├── evaluations/
+│   │   │   ├── templates/
+│   │   │   └── positions/
+│   │   └── tests/
+│   │
+│   └── api-gateway/ (optional future)
 │
 ├── packages/
-│   └── shared/                           # Code partagé (types, utils)
-│       ├── src/
-│       │   ├── types/
-│       │   ├── utils/
-│       │   └── config/
-│       └── package.json
+│   └── shared/
 │
-├── docs/                                 # Documentation projet
-│   ├── architecture/
-│   ├── api/
-│   ├── tdd/
-│   └── roadmap.md
-│
-├── .github/
-│   ├── workflows/                        # CI/CD (tests, lint)
-│   └── ISSUE_TEMPLATE/
-│
-├── package.json                          # Workspace monorepo
-├── tsconfig.json                          # Config TS globale
-└── README.md
+└── docs/
+
 ```
 
 ---
