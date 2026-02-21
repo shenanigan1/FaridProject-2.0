@@ -35,7 +35,7 @@ def test_associate_template_to_post(api_client):
     )
 
     url = reverse("positions-associate-template", args=[position.id])
-    payload = {"template_id": template.id}
+    payload = {"grid_id": template.id}
 
     response = api_client.post(url, payload, format="json")
 

@@ -2,6 +2,22 @@ import pytest
 from django.urls import reverse
 
 from candidates.models import Candidate
+from users.models import User, UserRoles
+
+
+def _auth_client() -> APIClient:
+    user = User.objects.create_user(
+        email="tester@farid.com",
+        password="password123",
+        role=UserRoles.HR,
+    )
+    refresh = RefreshToken.for_user(user)
+    client = APIClient()
+    client.credentials(HTTP_AUTHORIZATION=f"Bearer {str(refresh.access_token)}")
+    return client
+
+
+
 
 
 def _has_field(field_name: str) -> bool:
@@ -30,7 +46,7 @@ def test_get_candidate_detail(api_client):
     candidate = Candidate.objects.create(**payload)
 
     url = reverse("candidates-detail", args=[candidate.id])
-    response = api_client.get(url)
+    response = client.get(url)
 
     assert response.status_code == 200
     assert response.data["id"] == candidate.id

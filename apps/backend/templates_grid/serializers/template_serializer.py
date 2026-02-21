@@ -4,9 +4,7 @@ from templates_grid.models import Template
 class TemplateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Template
-        fields = ["id", "nom", "type", "poste_id"]
+        fields = ["id", "name"]
         extra_kwargs = {
-            "nom": {"required": True},
-            "type": {"required": True},
-            "poste_id": {"required": True},
+            "name": {"required": True},
         }
