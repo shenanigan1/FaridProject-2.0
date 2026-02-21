@@ -1,5 +1,30 @@
 import pytest
 from django.urls import reverse
+from rest_framework.test import APIClient
+from rest_framework_simplejwt.tokens import RefreshToken
+
+from users.models import User, UserRoles
+from candidates.models import Candidate
+
+
+def _auth_client() -> APIClient:
+    """
+    Enterprise clean: most endpoints are protected.
+    This helper authenticates an APIClient with a valid JWT.
+    """
+    user = User.objects.create_user(
+        email="tester@farid.com",
+        password="password123",
+        role=UserRoles.HR,
+    )
+    refresh = RefreshToken.for_user(user)
+    client = APIClient()
+    client.credentials(HTTP_AUTHORIZATION=f"Bearer {str(refresh.access_token)}")
+    return client
+
+
+from candidates.models import Candidate
+
 
 from candidates.models import Candidate
 
@@ -15,7 +40,7 @@ def test_create_candidate_success(api_client):
         "phone": "0601020304",
     }
 
-    response = api_client.post(url, payload, format="json")
+    response = client.post(url, payload, format="json")
 
     assert response.status_code == 201
     assert "id" in response.data
@@ -33,7 +58,8 @@ def test_create_candidate_success(api_client):
 
 
 @pytest.mark.django_db
-def test_create_candidate_missing_fields(api_client):
+def test_create_candidate_missing_fields():
+    client = _auth_client()
     url = reverse("candidates-list")
 
     response = api_client.post(url, {}, format="json")

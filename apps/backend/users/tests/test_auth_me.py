@@ -6,6 +6,7 @@ from rest_framework.test import APIClient
 from users.models import User
 
 
+
 @pytest.mark.django_db
 def test_auth_me_success():
     user = User.objects.create(
