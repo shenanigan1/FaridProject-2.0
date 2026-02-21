@@ -24,6 +24,7 @@ def _extract_items(response_data):
 
 
 
+
 @pytest.mark.django_db
 def test_list_candidates(api_client):
     Candidate.objects.create(

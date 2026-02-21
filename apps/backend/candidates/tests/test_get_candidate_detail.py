@@ -18,6 +18,7 @@ def _auth_client() -> APIClient:
 
 
 
+
 @pytest.mark.django_db
 def test_get_candidate_detail(api_client):
     candidate = Candidate.objects.create(

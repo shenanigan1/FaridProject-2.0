@@ -5,7 +5,6 @@ from rest_framework.test import APIClient
 
 from users.models import User
 
-from rest_framework_simplejwt.tokens import RefreshToken
 
 
 @pytest.mark.django_db
@@ -16,11 +15,8 @@ def test_auth_me_success():
         role="hr",
     )
 
-    refresh = RefreshToken.for_user(user)
-    access_token = str(refresh.access_token)
-
     client = APIClient()
-    client.credentials(HTTP_AUTHORIZATION=f"Bearer {access_token}")
+    client.force_authenticate(user=user)
 
     url = reverse("auth-me")
     response = client.get(url)

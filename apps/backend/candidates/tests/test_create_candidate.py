@@ -26,6 +26,9 @@ def _auth_client() -> APIClient:
 from candidates.models import Candidate
 
 
+from candidates.models import Candidate
+
+
 @pytest.mark.django_db
 def test_create_candidate_success(api_client):
     url = reverse("candidates-list")

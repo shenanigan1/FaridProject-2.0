@@ -5,14 +5,10 @@ from rest_framework.test import APIClient
 
 from users.models import User, UserRoles
 
-from rest_framework_simplejwt.tokens import RefreshToken
-
 
 def auth_client(user):
-    refresh = RefreshToken.for_user(user)
-    token = str(refresh.access_token)
     client = APIClient()
-    client.credentials(HTTP_AUTHORIZATION=f"Bearer {token}")
+    client.force_authenticate(user=user)
     return client
 
 
