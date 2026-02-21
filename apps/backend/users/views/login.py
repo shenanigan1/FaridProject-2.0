@@ -1,15 +1,14 @@
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
 from django.contrib.auth import authenticate
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from users.serializers.login import LoginSerializer
 
+
 class LoginView(APIView):
-    """
-    Handle user login and return JWT tokens.
-    """
+    """Handle user login and return JWT tokens."""
 
     def post(self, request):
         serializer = LoginSerializer(data=request.data)
@@ -23,7 +22,7 @@ class LoginView(APIView):
         if not user:
             return Response(
                 {"detail": "Invalid credentials"},
-                status=status.HTTP_401_UNAUTHORIZED
+                status=status.HTTP_401_UNAUTHORIZED,
             )
 
         refresh = RefreshToken.for_user(user)
@@ -31,7 +30,7 @@ class LoginView(APIView):
         return Response(
             {
                 "access": str(refresh.access_token),
-                "refresh": str(refresh)
+                "refresh": str(refresh),
             },
-            status=status.HTTP_200_OK
+            status=status.HTTP_200_OK,
         )
