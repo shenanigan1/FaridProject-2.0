@@ -1,6 +1,8 @@
-import pytest
-from rest_framework.test import APIClient
+from __future__ import annotations
 
-@pytest.fixture
-def api_client():
-    return APIClient()
+import sys
+from pathlib import Path
+
+BACKEND_ROOT = Path(__file__).resolve().parent
+if str(BACKEND_ROOT) not in sys.path:
+    sys.path.insert(0, str(BACKEND_ROOT))

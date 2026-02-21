@@ -1,10 +1,28 @@
 import pytest
 from django.urls import reverse
+from rest_framework.test import APIClient
+from rest_framework_simplejwt.tokens import RefreshToken
+
 from candidates.models import Candidate
+from users.models import User, UserRoles
+
+
+def _auth_client() -> APIClient:
+    user = User.objects.create_user(
+        email="tester@farid.com",
+        password="password123",
+        role=UserRoles.HR,
+    )
+    refresh = RefreshToken.for_user(user)
+    client = APIClient()
+    client.credentials(HTTP_AUTHORIZATION=f"Bearer {str(refresh.access_token)}")
+    return client
+
 
 @pytest.mark.django_db
-def test_update_candidate(api_client):
-    # Arrange — créer un candidat initial
+def test_update_candidate():
+    client = _auth_client()
+
     candidate = Candidate.objects.create(
         first_name="Jean",
         last_name="Dupont",
@@ -12,7 +30,6 @@ def test_update_candidate(api_client):
         phone="0600000001",
     )
 
-    # Nouveau payload à mettre à jour
     payload = {
         "first_name": "Jean-Michel",
         "last_name": "Dupont",
@@ -20,17 +37,19 @@ def test_update_candidate(api_client):
         "phone": "0600000002",
     }
 
-    # Act — appel PUT sur l’endpoint détail
     url = reverse("candidates-detail", args=[candidate.id])
-    response = api_client.put(url, payload, format="json")
+    response = client.put(url, payload, format="json")
 
-    # Assert — statut OK
     assert response.status_code == 200
 
-    # Recharger depuis la base
     candidate.refresh_from_db()
 
-    # Assert — données mises à jour
     assert candidate.first_name == "Jean-Michel"
+    assert candidate.last_name == "Dupont"
     assert candidate.email == "jean.michel@example.com"
     assert candidate.phone == "0600000002"
+
+    # Optional: validate API response mirrors persisted state
+    assert response.data["id"] == candidate.id
+    assert response.data["first_name"] == "Jean-Michel"
+    assert response.data["email"] == "jean.michel@example.com"

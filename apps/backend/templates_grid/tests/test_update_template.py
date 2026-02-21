@@ -6,14 +6,12 @@ from templates_grid.models import Template
 def test_update_template(api_client):
     # Create initial template
     template = Template.objects.create(
-        nom="Grille Backend Junior",
-        type="technique",
-        poste_id=1,
+        name ="Grille Backend Junior"
     )
 
     # New data to update
     payload = {
-        "nom": "Grille Backend Senior",
+        "name": "Grille Backend Senior",
         "type": "technique",
         "poste_id": 2,
     }
@@ -28,6 +26,4 @@ def test_update_template(api_client):
     template.refresh_from_db()
 
     # Check updated values
-    assert template.nom == "Grille Backend Senior"
-    assert template.type == "technique"
-    assert template.poste_id == 2
+    assert template.name == "Grille Backend Senior"
