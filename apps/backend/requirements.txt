@@ -1,5 +1,6 @@
 django
 djangorestframework
+djangorestframework-simplejwt
 pytest
 pytest-django
 factory_boy

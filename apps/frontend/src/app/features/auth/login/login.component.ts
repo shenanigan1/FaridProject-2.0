@@ -1,8 +1,8 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../core/auth/auth.service';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-login',
@@ -17,7 +17,7 @@ export class LoginComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private auth: AuthService,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -27,19 +27,22 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  submit() {
+  submit(): void {
     this.error = null;
 
     if (this.form.invalid) {
-      this.error = 'Veuillez remplir tous les champs.';
+      this.error = 'Veuillez remplir un email valide et un mot de passe.';
+      this.form.markAllAsTouched();
       return;
     }
 
-    const { email, password } = this.form.value;
+    const { email, password } = this.form.getRawValue();
 
-    this.auth.login(email!, password!).subscribe({
+    this.auth.login(email, password).subscribe({
       next: () => this.router.navigate(['/dashboard']),
-      error: () => (this.error = 'Identifiants incorrects.'),
+      error: () => {
+        this.error = 'Identifiants incorrects.';
+      },
     });
   }
 }

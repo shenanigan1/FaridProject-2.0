@@ -1,9 +1,12 @@
 import pytest
 from django.contrib.auth.hashers import make_password
-from rest_framework.test import APIClient
-from rest_framework_simplejwt.tokens import RefreshToken
-from users.models import User, UserRoles
 from django.urls import reverse
+from rest_framework.test import APIClient
+
+from users.models import User, UserRoles
+
+simplejwt = pytest.importorskip("rest_framework_simplejwt.tokens")
+RefreshToken = simplejwt.RefreshToken
 
 
 def auth_client(user):
@@ -19,7 +22,7 @@ def test_admin_permission():
     user = User.objects.create(
         email="admin@test.com",
         password=make_password("pass"),
-        role=UserRoles.ADMIN
+        role=UserRoles.ADMIN,
     )
 
     client = auth_client(user)
@@ -33,7 +36,7 @@ def test_hr_permission():
     user = User.objects.create(
         email="hr@test.com",
         password=make_password("pass"),
-        role=UserRoles.HR
+        role=UserRoles.HR,
     )
 
     client = auth_client(user)
@@ -47,7 +50,7 @@ def test_forbidden_for_wrong_role():
     user = User.objects.create(
         email="employee@test.com",
         password=make_password("pass"),
-        role=UserRoles.EMPLOYEE
+        role=UserRoles.EMPLOYEE,
     )
 
     client = auth_client(user)

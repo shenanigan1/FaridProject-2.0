@@ -1,4 +1,3 @@
-import os
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -15,7 +14,6 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "django_filters",
     "rest_framework",
     "users",
     "candidates",
@@ -23,15 +21,18 @@ INSTALLED_APPS = [
     "templates_grid",
 ]
 
-REST_FRAMEWORK = {
-    "DEFAULT_FILTER_BACKENDS": [ 
-        "django_filters.rest_framework.DjangoFilterBackend", 
-        ],
-    
-    "DEFAULT_AUTHENTICATION_CLASSES": (
+REST_FRAMEWORK = {}
+
+try:
+    import rest_framework_simplejwt  # noqa: F401
+except ImportError:
+    REST_FRAMEWORK["DEFAULT_AUTHENTICATION_CLASSES"] = (
+        "rest_framework.authentication.SessionAuthentication",
+    )
+else:
+    REST_FRAMEWORK["DEFAULT_AUTHENTICATION_CLASSES"] = (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
-    ),
-}
+    )
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
