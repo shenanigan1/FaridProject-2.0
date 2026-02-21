@@ -2,6 +2,26 @@ import pytest
 from django.urls import reverse
 
 from candidates.models import Candidate
+from users.models import User, UserRoles
+
+
+def _auth_client() -> APIClient:
+    user = User.objects.create_user(
+        email="tester@farid.com",
+        password="password123",
+        role=UserRoles.HR,
+    )
+    refresh = RefreshToken.for_user(user)
+    client = APIClient()
+    client.credentials(HTTP_AUTHORIZATION=f"Bearer {str(refresh.access_token)}")
+    return client
+
+
+def _extract_items(response_data):
+    if isinstance(response_data, dict) and "results" in response_data:
+        return response_data["results"]
+    return response_data
+
 
 
 @pytest.mark.django_db

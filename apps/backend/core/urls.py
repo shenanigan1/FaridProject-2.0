@@ -8,4 +8,5 @@ urlpatterns = [
     path("", include("positions.routes")),
     path("", include("templates_grid.routes")),
     path("", include("users.routes")),
+    path("", include("evaluations.routes")),
 ]
