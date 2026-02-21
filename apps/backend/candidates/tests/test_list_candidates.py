@@ -1,10 +1,34 @@
 import pytest
 from django.urls import reverse
+from rest_framework.test import APIClient
+from rest_framework_simplejwt.tokens import RefreshToken
+
 from candidates.models import Candidate
+from users.models import User, UserRoles
+
+
+def _auth_client() -> APIClient:
+    user = User.objects.create_user(
+        email="tester@farid.com",
+        password="password123",
+        role=UserRoles.HR,
+    )
+    refresh = RefreshToken.for_user(user)
+    client = APIClient()
+    client.credentials(HTTP_AUTHORIZATION=f"Bearer {str(refresh.access_token)}")
+    return client
+
+
+def _extract_items(response_data):
+    if isinstance(response_data, dict) and "results" in response_data:
+        return response_data["results"]
+    return response_data
+
 
 @pytest.mark.django_db
-def test_list_candidates(api_client):
-    # Arrange — créer plusieurs candidats
+def test_list_candidates():
+    client = _auth_client()
+
     Candidate.objects.create(
         first_name="Jean",
         last_name="Dupont",
@@ -18,19 +42,14 @@ def test_list_candidates(api_client):
         phone="0600000002",
     )
 
-    # Act — appeler l’endpoint
-    url = reverse("candidates-list")  # DRF router basename='candidates'
-    response = api_client.get(url)
+    url = reverse("candidates-list")
+    response = client.get(url)
 
-    # Assert — statut OK
     assert response.status_code == 200
 
-    # Assert — format liste
-    assert isinstance(response.data, list)
+    items = _extract_items(response.data)
+    assert isinstance(items, list)
+    assert len(items) == 2
 
-    # Assert — 2 candidats retournés
-    assert len(response.data) == 2
-
-    # Vérification basique du contenu
-    assert response.data[0]["first_name"] in ["Jean", "Marie"]
-    assert response.data[1]["first_name"] in ["Jean", "Marie"]
+    returned_emails = {c["email"] for c in items}
+    assert returned_emails == {"jean@example.com", "marie@example.com"}

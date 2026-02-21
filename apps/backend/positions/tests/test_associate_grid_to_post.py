@@ -1,7 +1,7 @@
 import pytest
 from django.urls import reverse
 from positions.models import Position
-from templates_grid.models.template import Template  # supposé module futur
+from templates_grid.models import Template
 
 @pytest.mark.django_db
 def test_associate_template_to_post(api_client):

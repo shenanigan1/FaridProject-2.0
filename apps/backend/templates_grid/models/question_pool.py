@@ -2,15 +2,30 @@ from django.db import models
 
 
 class QuestionPool(models.Model):
-    """
-    A pool of questions used inside a template grid.
-    Can contain soft skills, hard skills, or any future skill type.
-    """
     name = models.CharField(max_length=255)
-    description = models.TextField(blank=True, null=True)
-
-    # Example: "soft_skills_pool", "backend_hard_skills", etc.
     code = models.CharField(max_length=100, unique=True)
+    description = models.TextField(blank=True)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
+    
+class VersionedPool(models.Model):
+    template_version = models.ForeignKey(
+        "templates_grid.TemplateVersion",
+        on_delete=models.CASCADE,
+        related_name="pools",
+    )
+
+    name = models.CharField(max_length=255)
+    code = models.CharField(max_length=100)
+    description = models.TextField(blank=True)
+    order = models.PositiveSmallIntegerField(default=0)
+
+    class Meta:
+        ordering = ["order", "id"]
+        indexes = [
+            models.Index(fields=["template_version", "order"]),
+        ]
+
+    def __str__(self) -> str:
+        return f"{self.template_version} — {self.name}"

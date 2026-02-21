@@ -4,3 +4,4 @@ pytest
 pytest-django
 factory_boy
 faker
+freezegun
