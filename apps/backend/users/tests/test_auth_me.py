@@ -1,22 +1,19 @@
 import pytest
+from django.contrib.auth.hashers import make_password
 from django.urls import reverse
 from rest_framework.test import APIClient
-from rest_framework_simplejwt.tokens import RefreshToken
 
-from users.models import User, UserRoles
+from users.models import User
+
+from rest_framework_simplejwt.tokens import RefreshToken
 
 
 @pytest.mark.django_db
 def test_auth_me_success():
-    """
-    Ensure authenticated user can retrieve their own profile.
-    """
-
-    # Enterprise clean: use the manager to create users (password hashing + defaults)
-    user = User.objects.create_user(
+    user = User.objects.create(
         email="me@test.com",
-        password="password123",
-        role=UserRoles.HR,  # stored value is "hr"
+        password=make_password("password123"),
+        role="hr",
     )
 
     refresh = RefreshToken.for_user(user)
@@ -30,8 +27,5 @@ def test_auth_me_success():
 
     assert response.status_code == 200
     assert response.data["email"] == "me@test.com"
-
-    # Enterprise clean: assert stored value, not label
-    assert response.data["role"] == UserRoles.HR
-
+    assert response.data["role"] == "hr"
     assert "id" in response.data

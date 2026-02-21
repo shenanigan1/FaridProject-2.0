@@ -19,20 +19,9 @@ class PositionViewSet(ModelViewSet):
     )
     def associate_template(self, request, pk=None):
         position = self.get_object()
-        grid_id = request.data.get("grid_id")  # <-- FIX
-
-        if not grid_id:
-            return Response(
-                {"grid_id": ["This field is required."]},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-        try:
-            template = Template.objects.get(id=grid_id)
-        except Template.DoesNotExist:
-           return Response(
-               {"grid_id": ["Template not found."]},
-               status=status.HTTP_404_NOT_FOUND
+        result = associate_template_to_position(
+            position=position,
+            template_id=request.data.get("template_id"),
         )
 
         return Response(result.payload, status=result.status_code)
