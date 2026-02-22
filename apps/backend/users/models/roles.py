@@ -6,4 +6,3 @@ class UserRoles(models.TextChoices):
     MANAGER = "manager", "Manager"
     DIRECTOR = "director", "Director"
     EMPLOYEE = "employee", "Employee"
-

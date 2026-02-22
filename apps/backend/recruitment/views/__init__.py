@@ -1,0 +1,1 @@
+from .job_application_view import JobApplicationViewSet

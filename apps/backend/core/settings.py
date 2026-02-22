@@ -17,12 +17,15 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django_filters",
     "rest_framework",
-    "users",
     "candidates",
-    "positions",
-    "templates_grid",
+    "companies",
+    "driver_tests",
+    "employees",
     "evaluations",
-    
+    "positions",
+    "recruitment",
+    "templates_grid",
+    "users",
 ]
 
 REST_FRAMEWORK = {

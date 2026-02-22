@@ -1,1 +1,1 @@
-from .evaluation_view import EvaluationViewSet
+from .evaluation import EvaluationViewSet

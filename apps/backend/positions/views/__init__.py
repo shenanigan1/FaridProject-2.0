@@ -1,1 +1,1 @@
-from .position_view import PositionViewSet
+from .position import PositionViewSet

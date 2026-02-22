@@ -1,1 +1,0 @@
-from .position_routes import urlpatterns

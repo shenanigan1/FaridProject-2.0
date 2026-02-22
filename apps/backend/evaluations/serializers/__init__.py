@@ -1,3 +1,2 @@
-from .skill_answer_serializer import SkillAnswerSerializer
-from .evaluation_serializer import EvaluationSerializer
-from .start_evaluation_serializer import StartEvaluationSerializer
+from .answer import SkillAnswerSerializer
+from .evaluation import EvaluationSerializer, StartEvaluationSerializer

@@ -1,1 +1,1 @@
-from .candidate_view import CandidateViewSet
+from .candidate import CandidateViewSet
