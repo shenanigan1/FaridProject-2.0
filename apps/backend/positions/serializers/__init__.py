@@ -1,1 +1,1 @@
-from .position_serializer import PositionSerializer
+from .position import PositionSerializer

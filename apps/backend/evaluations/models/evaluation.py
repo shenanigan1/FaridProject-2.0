@@ -1,40 +1,63 @@
+from django.conf import settings
 from django.db import models
-from candidates.models import Candidate
-from templates_grid.models import Template
-from users.models import User
-
 
 class EvaluationStatus(models.TextChoices):
     IN_PROGRESS = "in_progress", "In progress"
     COMPLETED = "completed", "Completed"
     VALIDATED = "validated", "Validated"
 
-
 class Evaluation(models.Model):
-    candidate = models.ForeignKey(
-        Candidate,
-        on_delete=models.CASCADE,
+    subject = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="evaluations")
+
+    # For candidates: link to application (recommended). For employees: can be null.
+    application = models.ForeignKey(
+        "recruitment.JobApplication",
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
         related_name="evaluations",
     )
-    template = models.ForeignKey(
-        Template,
-        on_delete=models.CASCADE,
+
+    position = models.ForeignKey(
+        "positions.Position",
+        on_delete=models.PROTECT,
+        related_name="evaluations",
+        null=True,
+        blank=True,
+    )
+
+    template_version = models.ForeignKey(
+        "templates_grid.TemplateVersion",
+        on_delete=models.PROTECT,
         related_name="evaluations",
     )
+
     assigned_to = models.ForeignKey(
-        User,
+        settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
+        blank=True,
         related_name="assigned_evaluations",
     )
 
-    status = models.CharField(
-        max_length=20,
-        choices=EvaluationStatus.choices,
-        default=EvaluationStatus.IN_PROGRESS,
-    )
+    status = models.CharField(max_length=20, choices=EvaluationStatus.choices, default=EvaluationStatus.IN_PROGRESS)
+
+    # Results visibility
+    subject_comment = models.TextField(blank=True)     # visible to candidate/employee
+    internal_comment = models.TextField(blank=True)    # HR/management only
 
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
-    def __str__(self):
-        return f"Evaluation #{self.id} — {self.candidate} — {self.status}"
+    completed_at = models.DateTimeField(null=True, blank=True)
+    validated_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=["status", "created_at"]),
+            models.Index(fields=["subject", "created_at"]),
+            models.Index(fields=["position", "created_at"]),
+        ]
+
+    def __str__(self) -> str:
+        return f"Evaluation #{self.id} — {self.subject} — {self.status}"

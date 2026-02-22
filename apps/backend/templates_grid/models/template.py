@@ -1,9 +1,13 @@
+# templates_grid/models/template.py
 from django.db import models
-from .question_pool import QuestionPool
 
 class Template(models.Model):
     name = models.CharField(max_length=255)
-    pools = models.ManyToManyField(QuestionPool, related_name="templates")
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
+    class Meta:
+        indexes = [models.Index(fields=["is_active"])]
+
+    def __str__(self) -> str:
         return self.name

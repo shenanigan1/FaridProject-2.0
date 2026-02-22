@@ -1,1 +1,1 @@
-from .candidate_serializer import CandidateSerializer
+from .candidate import CandidateSerializer

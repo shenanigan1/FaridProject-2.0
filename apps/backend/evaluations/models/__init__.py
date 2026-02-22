@@ -1,2 +1,5 @@
 from .skill_answer import SkillAnswer
-from .evaluation import Evaluation
+from .evaluation_comment import EvaluationComment
+from .evaluation_section_assignment import EvaluationSectionAssignment
+from .evaluation_question import EvaluationQuestion
+from .evaluation import Evaluation, EvaluationStatus

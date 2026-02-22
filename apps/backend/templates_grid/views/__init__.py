@@ -1,1 +1,1 @@
-from .template_view import TemplateViewSet
+from .templates import TemplateViewSet

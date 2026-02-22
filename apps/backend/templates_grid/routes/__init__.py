@@ -1,1 +1,0 @@
-from .template_route import urlpatterns
