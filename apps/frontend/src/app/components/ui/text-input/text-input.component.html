@@ -1,0 +1,17 @@
+<label class="block">
+  <span class="text-sm font-medium text-gray-700">{{ label }}</span>
+
+  <input
+    class="mt-1 w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-gray-900
+           outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-300"
+    [class.border-red-300]="!!error"
+    [attr.type]="type"
+    [attr.placeholder]="placeholder"
+    [disabled]="disabled"
+    [value]="value"
+    (input)="handleInput($event)"
+    (blur)="onTouched()"
+  />
+
+  <p *ngIf="error" class="mt-1 text-xs text-red-600">{{ error }}</p>
+</label>

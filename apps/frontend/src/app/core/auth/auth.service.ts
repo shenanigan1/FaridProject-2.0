@@ -1,75 +1,26 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { tap } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
+import { LoginRequest, LoginResponse } from './auth.models';
 
-interface LoginResponse {
-  access: string;
-  refresh: string;
-}
-
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class AuthService {
-  private readonly API_URL = '/api/auth/login/';
+  // ✅ Mets ici ton endpoint JWT
+  private readonly loginUrl = '/api/auth/login/';
 
-  constructor(private http: HttpClient) {}
+  constructor(private readonly http: HttpClient) {}
 
-  /**
-   * Login: POST email/password → store tokens
-   */
-  login(email: string, password: string): Observable<LoginResponse> {
-    return this.http
-      .post<LoginResponse>(this.API_URL, { email, password })
-      .pipe(
-        tap((tokens) => {
-          localStorage.setItem('access', tokens.access);
-          localStorage.setItem('refresh', tokens.refresh);
-        })
-      );
-  }
-
-  /**
-   * Logout: remove tokens
-   */
-  logout(): void {
-    localStorage.removeItem('access');
-    localStorage.removeItem('refresh');
-  }
-
-  /**
-   * Decode JWT payload safely
-   */
-  private decodeToken(token: string | null): any | null {
-    if (!token) return null;
-
+  async login(payload: LoginRequest): Promise<LoginResponse> {
     try {
-      const payload = token.split('.')[1];
-      return JSON.parse(atob(payload));
-    } catch {
-      return null;
+      return await firstValueFrom(this.http.post<LoginResponse>(this.loginUrl, payload));
+    } catch (err: any) {
+      // tente de remonter un message utile (DRF)
+      const apiMsg =
+        err?.error?.detail ||
+        err?.error?.message ||
+        (typeof err?.error === 'string' ? err.error : null);
+
+      throw new Error(apiMsg ?? 'Login failed.');
     }
-  }
-
-  /**
-   * Return user info from access token
-   */
-  getUser(): any | null {
-    const token = localStorage.getItem('access');
-    return this.decodeToken(token);
-  }
-
-  /**
-   * Check if access token exists and is not expired
-   */
-  isAuthenticated(): boolean {
-    const token = localStorage.getItem('access');
-    const payload = this.decodeToken(token);
-
-    if (!payload || !payload.exp) return false;
-
-    const now = Math.floor(Date.now() / 1000);
-    return payload.exp > now;
   }
 }
