@@ -1,1 +1,17 @@
-<router-outlet></router-outlet>
+<app-top-bar
+  title="Recruitment Overview"
+  subtitle="Fleet Management Hub"
+  [notificationCount]="1"
+  [user]="{ fullName: 'Farid' }"
+/>
+
+<router-outlet />
+
+<app-menu-bar
+  [items]="[
+    { label: 'Dashboard', icon: '📊', route: '/dashboard' },
+    { label: 'Candidates', icon: '👥', route: '/candidates' },
+    { label: 'Tests', icon: '🧪', route: '/tests' },
+    { label: 'Profile', icon: '👤', route: '/profile' }
+  ]"
+/>
