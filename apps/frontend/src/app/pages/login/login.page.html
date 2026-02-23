@@ -65,9 +65,9 @@
     </div>
 
     <form (ngSubmit)="submit()" [formGroup]="form" class="space-y-4">
-      <!-- Identifier -->
+      <!-- email -->
       <div>
-        <label class="text-xs text-slate-300 block mb-2">{{ identifierLabel() }}</label>
+        <label class="text-xs text-slate-300 block mb-2">{{ emailLabel() }}</label>
         <div class="relative">
           <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
             <!-- user icon -->
@@ -77,14 +77,14 @@
             </svg>
           </span>
           <input
-            formControlName="identifier"
+            formControlName="email"
             class="w-full rounded-xl border border-slate-700 bg-slate-900/60 px-10 py-3 text-sm
                    outline-none focus:ring-2 focus:ring-sky-500/30 focus:border-sky-500/60"
             placeholder="Enter your credentials"
             autocomplete="username"
           />
         </div>
-        <p *ngIf="form.controls.identifier.touched && form.controls.identifier.invalid" class="mt-1 text-xs text-red-300">
+        <p *ngIf="form.controls.email.touched && form.controls.email.invalid" class="mt-1 text-xs text-red-300">
           This field is required.
         </p>
       </div>

@@ -2,36 +2,35 @@ import { Component, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { AuthService } from '../../core/auth/auth.service';
-import { TokenStorageService } from '../../core/auth/token-storage.service';
 
-type Profile = 'driver' | 'manager' | 'hr';
+import { AuthService} from '../../core/auth/services/auth.service';
+import { LoginProfile } from '../../core/auth/auth.models';
+import { TokenStorageService } from '../../core/auth/services/token-storage.service';
 
 @Component({
   standalone: true,
   selector: 'app-login-page',
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './login.page.html',
-  styleUrls: ['../../../styles.scss'],
 })
 export class LoginPage {
-  readonly profiles: { key: Profile; label: string }[] = [
+  readonly profiles: { key: LoginProfile; label: string }[] = [
     { key: 'driver', label: 'DRIVER' },
     { key: 'manager', label: 'MANAGER' },
     { key: 'hr', label: 'HR/ADMIN' },
   ];
 
-  readonly selectedProfile = signal<Profile>('driver');
+  readonly selectedProfile = signal<LoginProfile>('driver');
   readonly passwordVisible = signal<boolean>(false);
   readonly loading = signal<boolean>(false);
   readonly errorMessage = signal<string | null>(null);
 
-  readonly identifierLabel = computed(() =>
-    this.selectedProfile() === 'driver' ? 'Email or Driver ID' : 'Email'
+  readonly emailLabel = computed(() =>
+    this.selectedProfile() === 'driver' ? 'Driver Email' : 'Email'
   );
 
-  form = new FormGroup({
-    identifier: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
+  readonly form = new FormGroup({
+    email: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
     password: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
     rememberMe: new FormControl<boolean>(true, { nonNullable: true }),
   });
@@ -39,10 +38,10 @@ export class LoginPage {
   constructor(
     private readonly auth: AuthService,
     private readonly tokenStorage: TokenStorageService,
-    private readonly router: Router,
+    private readonly router: Router
   ) {}
 
-  selectProfile(p: Profile) {
+  selectProfile(p: LoginProfile) {
     this.selectedProfile.set(p);
     this.errorMessage.set(null);
   }
@@ -51,7 +50,7 @@ export class LoginPage {
     this.passwordVisible.set(!this.passwordVisible());
   }
 
-  async submit() {
+  submit(): void {
     this.errorMessage.set(null);
 
     if (this.form.invalid) {
@@ -59,25 +58,33 @@ export class LoginPage {
       return;
     }
 
-    const { identifier, password, rememberMe } = this.form.getRawValue();
+    const { email, password, rememberMe } = this.form.getRawValue();
 
     this.loading.set(true);
-    try {
-      const res = await this.auth.login({
+    this.auth
+      .login({
         profile: this.selectedProfile(),
-        identifier,
+        email,
         password,
+      })
+      .subscribe({
+        next: (res) => {
+          this.tokenStorage.saveTokens(res.access, res.refresh, rememberMe);
+          this.router.navigateByUrl('/dashboard');
+        },
+        error: (err) => {
+          // adapte selon ton API (DRF renvoie souvent err.error.detail ou err.error)
+          const msg =
+            err?.error?.detail ??
+            err?.error?.non_field_errors?.[0] ??
+            err?.error ??
+            'Invalid credentials.';
+          this.errorMessage.set(String(msg));
+          this.loading.set(false);
+        },
+        complete: () => {
+          this.loading.set(false);
+        },
       });
-
-      this.tokenStorage.saveTokens(res.access, res.refresh, rememberMe);
-
-      // 👉 redirige où tu veux après login
-      await this.router.navigateByUrl('/dashboard');
-    } catch (e: any) {
-      // message simple (à adapter selon ton API)
-      this.errorMessage.set(e?.message ?? 'Invalid credentials.');
-    } finally {
-      this.loading.set(false);
-    }
   }
 }
