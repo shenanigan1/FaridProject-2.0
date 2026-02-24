@@ -1,22 +1,15 @@
 from rest_framework.permissions import BasePermission
 from users.models import UserRoles
 
+class HasAnyRole(BasePermission):
+    allowed_roles: set[str] = set()
 
-class IsAdmin(BasePermission):
     def has_permission(self, request, view):
-        return request.user.is_authenticated and request.user.role == UserRoles.ADMIN
+        return (
+            request.user
+            and request.user.is_authenticated
+            and request.user.role in self.allowed_roles
+        )
 
-
-class IsHR(BasePermission):
-    def has_permission(self, request, view):
-        return request.user.is_authenticated and request.user.role == UserRoles.HR
-
-
-class IsManager(BasePermission):
-    def has_permission(self, request, view):
-        return request.user.is_authenticated and request.user.role == UserRoles.MANAGER
-
-
-class IsDirector(BasePermission):
-    def has_permission(self, request, view):
-        return request.user.is_authenticated and request.user.role == UserRoles.DIRECTOR
+class IsHrAdminOrDirector(HasAnyRole):
+    allowed_roles = {UserRoles.HR, UserRoles.ADMIN, UserRoles.DIRECTOR}

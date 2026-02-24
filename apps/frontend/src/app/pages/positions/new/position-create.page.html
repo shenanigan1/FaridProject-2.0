@@ -1,0 +1,18 @@
+<app-form-page-shell title="Add Position" subtitle="Create a new job offer">
+  <div shell-actions>
+    <a routerLink="/positions"
+       class="h-9 px-4 rounded-xl border border-slate-800 bg-slate-900 hover:bg-slate-800 transition text-sm inline-flex items-center">
+      Back
+    </a>
+  </div>
+
+  <app-position-form
+    [mode]="'create'"
+    [form]="form"
+    [isSubmitting]="isSubmitting"
+    [apiError]="apiError"
+    [fieldErrors]="fieldErrors"
+    (submitForm)="submit()"
+    (cancel)="cancel()"
+  />
+</app-form-page-shell>

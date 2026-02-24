@@ -1,0 +1,89 @@
+<app-form-card>
+  <app-form-error-banner [message]="apiError"></app-form-error-banner>
+
+  <div *ngIf="isLoading" class="text-sm text-slate-400">Loading...</div>
+
+  <form *ngIf="!isLoading" [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <app-form-field label="Company ID" [error]="backendError('company')">
+        <input
+          type="number"
+          formControlName="company"
+          class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2
+                 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
+        />
+      </app-form-field>
+
+      <app-form-field label="Contract type" [error]="backendError('contract_type')">
+        <input
+          type="text"
+          formControlName="contract_type"
+          class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2
+                 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
+        />
+      </app-form-field>
+    </div>
+
+    <app-form-field label="Title" [error]="backendError('title')">
+      <input
+        type="text"
+        formControlName="title"
+        class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2
+               focus:outline-none focus:ring-2 focus:ring-blue-500/40"
+      />
+    </app-form-field>
+
+    <app-form-field label="Department" [error]="backendError('department')">
+      <input
+        type="text"
+        formControlName="department"
+        class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2
+               focus:outline-none focus:ring-2 focus:ring-blue-500/40"
+      />
+    </app-form-field>
+
+    <app-form-field label="Description">
+      <textarea
+        rows="4"
+        formControlName="description"
+        class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2
+               focus:outline-none focus:ring-2 focus:ring-blue-500/40"
+      ></textarea>
+    </app-form-field>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <app-form-field label="Location">
+        <input
+          type="text"
+          formControlName="location"
+          class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2
+                 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
+        />
+      </app-form-field>
+
+      <app-form-field label="Salary">
+        <input
+          type="number"
+          formControlName="salary"
+          class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2
+                 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
+        />
+      </app-form-field>
+    </div>
+
+    <label class="flex items-center gap-2 text-sm text-slate-300">
+      <input type="checkbox" formControlName="is_active" class="accent-blue-500" />
+      Active
+    </label>
+
+    <div class="flex justify-end gap-3 pt-2">
+      <app-secondary-button (click)="cancel.emit()" [disabled]="isSubmitting">
+        Cancel
+      </app-secondary-button>
+
+      <app-primary-button type="submit" [disabled]="isSubmitting">
+        {{ isSubmitting ? (mode === 'create' ? 'Creating...' : 'Saving...') : (mode === 'create' ? 'Create' : 'Save changes') }}
+      </app-primary-button>
+    </div>
+  </form>
+</app-form-card>
