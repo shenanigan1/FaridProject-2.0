@@ -47,11 +47,11 @@
       <div class="flex items-start justify-between gap-3">
         <div class="min-w-0 flex-1">
           <p class="text-[10px] font-semibold tracking-wide text-sky-300">
-            {{ badgeLabel(q.type) }}
+            {{ badgeLabel(q.format) }}
           </p>
 
           <p class="mt-1 text-sm font-medium text-slate-100">
-            {{ q.prompt }}
+            {{ q.text }}
           </p>
         </div>
 
@@ -72,7 +72,7 @@
       <div class="mt-3 flex items-center justify-between text-xs text-slate-500">
         <span>
           Mandatory:
-          <span class="text-slate-200">{{ q.isMandatory ? 'Yes' : 'No' }}</span>
+          <span class="text-slate-200">{{ q.is_mandatory ? 'Yes' : 'No' }}</span>
         </span>
 
         <span>
@@ -137,7 +137,7 @@
             class="mt-2 w-full resize-none rounded-2xl bg-slate-900/60 px-4 py-3 text-sm ring-1 ring-white/10 focus:outline-none"
           ></textarea>
 
-          <p *ngIf="form.controls.prompt.touched && form.controls.prompt.invalid"
+          <p *ngIf="form.controls.text.touched && form.controls.text.invalid"
              class="mt-2 text-xs text-red-300">
             Prompt is required (min 5 chars).
           </p>

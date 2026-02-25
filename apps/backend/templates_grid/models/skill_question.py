@@ -41,12 +41,12 @@ class SkillQuestion(models.Model):
     rubric = models.JSONField(blank=True, default=dict)  # for practical grading
 
     order = models.PositiveIntegerField(default=0)
-
+    
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ["pool_id", "order", "id"]
+        ordering = ["order", "id"]
         indexes = [
             models.Index(fields=["pool", "format"]),
             models.Index(fields=["pool", "order"]),
