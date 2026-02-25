@@ -43,6 +43,15 @@ export const routes: Routes = [
     data: { roles: ['hr', 'admin', 'director', 'manager'] },
   },
 
+  {
+    path: 'templates',
+    loadChildren: ()=>
+      import('@features/templates_eval/templates_eval.routes')
+        .then(m => m.TEMPLATES_ROUTES),
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['hr', 'admin', 'director', 'manager'] },
+  },
+
   { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
   { path: '**', redirectTo: 'dashboard' },
 ];

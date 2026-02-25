@@ -23,7 +23,7 @@
       "@env/*": ["src/environments/*"],
       "@pages/*": ["src/app/pages/*"],
       "@components/*": ["src/app/components/*"],
-      "@authService/*": ["src/app/core/auth/services/*"]
+      "@auth/*": ["src/app/core/auth/*"]
     }
   },
   "angularCompilerOptions": {

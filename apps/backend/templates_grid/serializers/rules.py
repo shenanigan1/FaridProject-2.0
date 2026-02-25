@@ -7,3 +7,4 @@ class TemplatePoolRuleSerializer(serializers.ModelSerializer):
         model = TemplatePoolRule
         fields = ["id", "template", "section", "pool", "random_count", "order"]
         read_only_fields = ["id"]
+        
