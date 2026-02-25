@@ -1,8 +1,14 @@
 import { Component, computed, inject, input, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+
 import { SkillQuestionsStore } from '@features/questions/services/skill-questions.store';
-import { SkillQuestion, QuestionType } from '@features/questions/models/skill-question.model';
+import {
+  SkillQuestion,
+  QuestionFormat,
+  Difficulty,
+} from '@features/questions/models/skill-question.model';
 
 @Component({
   selector: 'app-pool-questions-panel',
@@ -15,26 +21,32 @@ export class PoolQuestionsPanelComponent {
 
   private readonly store = inject(SkillQuestionsStore);
   private readonly fb = inject(FormBuilder);
+  private readonly router = inject(Router);
 
   readonly query = signal('');
   readonly items = this.store.items;
   readonly isLoading = this.store.isLoading;
   readonly error = this.store.error;
 
-  // modal state
+  // (Optional) keep modal state if you still want inline edit later
   readonly isEditOpen = signal(false);
   readonly editing = signal<SkillQuestion | null>(null);
 
+  // ✅ v2 form (matches backend fields)
   readonly form = this.fb.nonNullable.group({
-    type: this.fb.nonNullable.control<QuestionType>('text', [Validators.required]),
-    prompt: this.fb.nonNullable.control('', [
+    format: this.fb.nonNullable.control<QuestionFormat>('mcq', [Validators.required]),
+    title: this.fb.nonNullable.control('', [Validators.maxLength(255)]),
+    text: this.fb.nonNullable.control('', [
       Validators.required,
       Validators.minLength(5),
-      Validators.maxLength(2000),
+      Validators.maxLength(2500),
     ]),
-    isMandatory: this.fb.nonNullable.control(false),
-    minScore: this.fb.nonNullable.control(0, [Validators.min(0)]),
-    maxScore: this.fb.nonNullable.control(5, [Validators.min(0)]),
+    explanation: this.fb.nonNullable.control(''),
+    is_mandatory: this.fb.nonNullable.control(false),
+
+    points: this.fb.nonNullable.control(10, [Validators.required, Validators.min(1), Validators.max(1000)]),
+    difficulty: this.fb.nonNullable.control<Difficulty>('intermediate', [Validators.required]),
+    order: this.fb.nonNullable.control(0, [Validators.min(0)]),
   });
 
   readonly filtered = computed(() => {
@@ -42,9 +54,10 @@ export class PoolQuestionsPanelComponent {
     const list = this.items();
     if (!q) return list;
 
-    return list.filter(x =>
-      x.prompt.toLowerCase().includes(q) ||
-      x.type.toLowerCase().includes(q) ||
+    return list.filter((x) =>
+      (x.title ?? '').toLowerCase().includes(q) ||
+      (x.text ?? '').toLowerCase().includes(q) ||
+      x.format.toLowerCase().includes(q) ||
       x.id.toLowerCase().includes(q)
     );
   });
@@ -62,19 +75,28 @@ export class PoolQuestionsPanelComponent {
   }
 
   addQuestion(): void {
-    alert('Add Question: next step');
+    this.router.navigate(['/pools', this.poolId(), 'questions', 'new']);
   }
 
   openEdit(q: SkillQuestion): void {
+    this.router.navigate(['/pools', this.poolId(), 'questions', q.id]);
+  }
+
+  // Optional: modal editing (if you ever reopen it)
+  openInlineEdit(q: SkillQuestion): void {
     this.editing.set(q);
-    this.form.reset({
-      type: q.type,
-      prompt: q.prompt,
-      isMandatory: q.isMandatory,
-      minScore: q.minScore,
-      maxScore: q.maxScore,
-    });
     this.isEditOpen.set(true);
+
+    this.form.reset({
+      format: q.format,
+      title: q.title ?? '',
+      text: q.text ?? '',
+      explanation: q.explanation ?? '',
+      is_mandatory: !!q.is_mandatory,
+      points: q.points ?? 10,
+      difficulty: q.difficulty ?? 'intermediate',
+      order: q.order ?? 0,
+    });
   }
 
   closeEdit(): void {
@@ -82,6 +104,7 @@ export class PoolQuestionsPanelComponent {
     this.editing.set(null);
   }
 
+  // ✅ v2 dto for PATCH /api/skillquestions/:id/
   saveEdit(): void {
     const q = this.editing();
     if (!q) return;
@@ -92,19 +115,22 @@ export class PoolQuestionsPanelComponent {
     }
 
     const dto = {
-      type: this.form.controls.type.value,
-      prompt: this.form.controls.prompt.value.trim(),
-      isMandatory: this.form.controls.isMandatory.value,
-      minScore: this.form.controls.minScore.value,
-      maxScore: this.form.controls.maxScore.value,
+      format: this.form.controls.format.value,
+      title: this.form.controls.title.value.trim(),
+      text: this.form.controls.text.value.trim(),
+      explanation: this.form.controls.explanation.value.trim(),
+      is_mandatory: this.form.controls.is_mandatory.value,
+      points: this.form.controls.points.value,
+      difficulty: this.form.controls.difficulty.value,
+      order: this.form.controls.order.value,
     };
 
     this.store.update(q.id, dto, () => this.closeEdit());
   }
 
-  badgeLabel(type: QuestionType): string {
-    if (type === 'multiple_choice') return 'MULTIPLE CHOICE';
-    if (type === 'true_false') return 'TRUE/FALSE';
-    return 'TEXT';
+  badgeLabel(format: QuestionFormat): string {
+    if (format === 'mcq') return 'MULTIPLE CHOICE';
+    if (format === 'true_false') return 'TRUE/FALSE';
+    return 'PRACTICAL';
   }
 }

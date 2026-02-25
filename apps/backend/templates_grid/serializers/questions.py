@@ -4,35 +4,24 @@ from templates_grid.models import QuestionFormat, Difficulty
 
 
 class SkillQuestionSerializer(serializers.ModelSerializer):
-    pool_id = serializers.IntegerField(source="pool.id", read_only=True)
-
     class Meta:
         model = SkillQuestion
         fields = [
             "id",
             "pool",
-            "pool_id",
-
-            # Authoring
             "format",
             "title",
             "text",
             "explanation",
             "rubric",
-
-            # Scoring/meta
             "is_mandatory",
             "points",
             "difficulty",
-
-            # Ordering
             "order",
-
-            # audit
             "created_at",
             "updated_at",
         ]
-        read_only_fields = ["id", "pool_id", "created_at", "updated_at"]
+        read_only_fields = ["id", "pool", "created_at", "updated_at"]
 
     def validate_format(self, value: str) -> str:
         value = (value or "").strip()
