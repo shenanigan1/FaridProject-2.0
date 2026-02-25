@@ -35,14 +35,14 @@ export const routes: Routes = [
   },
 
   {
-  path: 'positions/:id',
-    loadComponent: () =>
-      import('./pages/positions/[id]/position-edit.page')
-        .then(m => m.PositionEditPage),
+    path: 'pools',
+    loadChildren: () =>
+      import('@features/pools/pool.routes')
+        .then(m => m.POOLS_ROUTES),
     canActivate: [AuthGuard, RoleGuard],
-    data: { roles: ['hr', 'admin', 'director', 'manager'] }, // adjust
+    data: { roles: ['hr', 'admin', 'director', 'manager'] },
   },
 
-  { path: '', pathMatch: 'full', redirectTo: 'login' },
-  { path: '**', redirectTo: 'login' },
+  { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
+  { path: '**', redirectTo: 'dashboard' },
 ];

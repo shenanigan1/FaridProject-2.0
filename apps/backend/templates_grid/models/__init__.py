@@ -1,5 +1,5 @@
 from .template import Template
-from .skill_question import SkillQuestion, SkillType
+from .skill_question import SkillQuestion, QuestionFormat, Difficulty
 from .question_pool import QuestionPool
 from .template_version import TemplateVersion
 from .template_section import TemplateSection

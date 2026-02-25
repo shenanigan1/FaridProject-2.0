@@ -1,32 +1,59 @@
 from django.db import models
-from django.db.models import Q, F
+from django.db.models import Q
 
-class SkillType(models.TextChoices):
-    SOFT = "soft", "Soft Skill"
-    HARD = "hard", "Hard Skill"
+class QuestionFormat(models.TextChoices):
+    MCQ = "mcq", "Multiple Choice"
+    TRUE_FALSE = "true_false", "True/False"
+    PRACTICAL = "practical", "Practical"
+
+class Difficulty(models.TextChoices):
+    EASY = "easy", "Easy"
+    INTERMEDIATE = "intermediate", "Intermediate"
+    HARD = "hard", "Hard"
+
 
 class SkillQuestion(models.Model):
-    pool = models.ForeignKey("templates_grid.QuestionPool", on_delete=models.CASCADE, related_name="questions")
+    pool = models.ForeignKey(
+        "templates_grid.QuestionPool",
+        on_delete=models.CASCADE,
+        related_name="questions",
+    )
 
-    label = models.CharField(max_length=255)
-    type = models.CharField(max_length=10, choices=SkillType.choices)
+    format = models.CharField(
+        max_length=20,
+        choices=QuestionFormat.choices,
+        default=QuestionFormat.MCQ,
+    )
+
+    title = models.CharField(max_length=255, blank=True, default="")
+    text = models.TextField()
+
+    explanation = models.TextField(blank=True, default="")
 
     is_mandatory = models.BooleanField(default=False)
+    points = models.PositiveIntegerField(default=10)
+    difficulty = models.CharField(
+        max_length=20,
+        choices=Difficulty.choices,
+        default=Difficulty.INTERMEDIATE,
+    )
 
-    min_score = models.IntegerField(default=0)
-    max_score = models.IntegerField(default=5)
+    rubric = models.JSONField(blank=True, default=dict)  # for practical grading
 
     order = models.PositiveIntegerField(default=0)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ["pool_id", "order", "id"]
         indexes = [
-            models.Index(fields=["pool", "type"]),
+            models.Index(fields=["pool", "format"]),
             models.Index(fields=["pool", "order"]),
         ]
         constraints = [
-            models.CheckConstraint(condition=Q(min_score__lte=F("max_score")), name="ck_question_min_le_max"),
+            models.CheckConstraint(condition=Q(points__gte=1), name="ck_question_points_gte_1"),
         ]
 
-    def __str__(self) -> str:
-        return f"{self.type.upper()} — {self.label}"
+    def __str__(self):
+        return f"{self.format.upper()} — {self.title or self.text[:50]}"
