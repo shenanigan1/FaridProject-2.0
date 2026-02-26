@@ -1,7 +1,7 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { finalize } from 'rxjs';
 import { PoolsApiService } from './pools-api.service';
-import { QuestionPool } from '../models/question-pool.model';
+import { QuestionPool } from '@pools/models/question-pool.model';
 
 type PoolsApiItem = {
   id: number | string;

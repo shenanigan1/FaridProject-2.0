@@ -3,12 +3,12 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { SkillQuestionsStore } from '@features/questions/services/skill-questions.store';
+import { SkillQuestionsStore } from 'src/app/features/questions/services/skill-questions.store';
 import {
   SkillQuestion,
   QuestionFormat,
   Difficulty,
-} from '@features/questions/models/skill-question.model';
+} from 'src/app/features/questions/models/skill-question.model';
 
 @Component({
   selector: 'app-pool-questions-panel',

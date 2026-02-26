@@ -1,5 +1,5 @@
 import { Injectable, signal, computed } from '@angular/core';
-import { QuestionPool } from '../models/question-pool.model';
+import { QuestionPool } from '@pools/models/question-pool.model';
 
 @Injectable({ providedIn: 'root' })
 export class PoolsService {

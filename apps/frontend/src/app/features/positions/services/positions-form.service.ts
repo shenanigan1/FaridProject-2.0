@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { PositionCreatePayload, PositionDto } from '../services/positions-api.service';
+import { PositionCreatePayload, PositionDto } from '@positions/services/positions-api.service';
 
 export type PositionFormGroup = FormGroup<{
   company: FormControl<number | null>;

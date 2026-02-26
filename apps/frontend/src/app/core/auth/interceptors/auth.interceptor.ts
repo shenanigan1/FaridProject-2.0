@@ -8,8 +8,8 @@ import {
   HttpErrorResponse,
 } from '@angular/common/http';
 import { catchError, Observable, switchMap, throwError } from 'rxjs';
-import { AuthService } from '@auth/services/auth.service';
-import { TokenStorageService } from '@auth/services/token-storage.service';
+import { AuthService } from 'src/app/core/auth/services/auth.service';
+import { TokenStorageService } from 'src/app/core/auth/services/token-storage.service';
 
 export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next: HttpHandlerFn): Observable<HttpEvent<any>> => {
   const tokenStorage = inject(TokenStorageService);

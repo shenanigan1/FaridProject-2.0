@@ -17,13 +17,33 @@
 
     "baseUrl": ".",
     "paths": {
-      "@shared/*": ["src/app/shared/*"],
-      "@features/*": ["src/app/features/*"],
+      // Core aliases
       "@core/*": ["src/app/core/*"],
+      "@auth/*": ["src/app/core/auth/*"],
+      "guard/*": ["src/app/core/guard/*"],
+      "interceptor/*": ["src/app/core/interceptor/*"],
+
+      //Feature aliases
+      "@features/*": ["src/app/features/*"],
+      "@dashboard/*": ["src/app/features/dashboard/*"],
+      "@evaluations/*": ["src/app/features/evaluations/*"],
+      "@pools/*": ["src/app/features/pools/*"],
+      "@positions/*": ["src/app/features/positions/*"],
+      "@questions/*": ["src/app/features/questions/*"],
+      "@test-templates/*": ["src/app/features/test-templates/*"],
+
+      // Layout aliases
+      "@layout/*": ["src/app/layout/*"],
+
+      // Shared aliases
+      "@shared/*": ["src/app/shared/*"],
+      "@ui/*": ["src/app/shared/ui/*"],
+
+      // Environment aliases
       "@env/*": ["src/environments/*"],
-      "@pages/*": ["src/app/pages/*"],
-      "@components/*": ["src/app/components/*"],
-      "@auth/*": ["src/app/core/auth/*"]
+
+      //test aliases
+      "@test/*": ["src/test/*"]
     }
   },
   "angularCompilerOptions": {

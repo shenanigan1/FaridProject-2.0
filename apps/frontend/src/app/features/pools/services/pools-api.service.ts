@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { QuestionPool } from '../models/question-pool.model';
+import { QuestionPool } from '@pools/models/question-pool.model';
 
 export type CreatePoolDto = Pick<QuestionPool, 'code' | 'name' | 'description'>;
 export type UpdatePoolDto = Partial<Pick<QuestionPool, 'code' | 'name' | 'description'>>;

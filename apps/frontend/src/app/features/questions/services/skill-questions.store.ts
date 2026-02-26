@@ -10,7 +10,7 @@ import {
   SkillQuestion,
   SkillQuestionDto,
   QuestionType, // keep if other parts still use it
-} from '@features/questions/models/skill-question.model';
+} from 'src/app/features/questions/models/skill-question.model';
 
 @Injectable({ providedIn: 'root' })
 export class SkillQuestionsStore {
@@ -64,7 +64,7 @@ export class SkillQuestionsStore {
   createInPool(poolId: string, dto: CreateSkillQuestionDto, onSuccess?: (created: SkillQuestion) => void): void {
     this._isLoading.set(true);
     this._error.set(null);
-    
+
     this.api
       .createInPool(poolId, dto)
       .pipe(finalize(() => this._isLoading.set(false)))

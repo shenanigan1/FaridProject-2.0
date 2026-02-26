@@ -1,0 +1,59 @@
+/**
+ * ----------------------------------------------------------------------------
+ * UiTextareaComponent (CVA)
+ * ----------------------------------------------------------------------------
+ * Reusable textarea with error + hint.
+ * Layer: shared/ui
+ * ----------------------------------------------------------------------------
+ */
+import { ChangeDetectionStrategy, Component, Input, forwardRef, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+
+@Component({
+  standalone: true,
+  selector: 'ui-textarea',
+  imports: [CommonModule],
+  templateUrl: './textarea.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => UiTextareaComponent), multi: true },
+  ],
+})
+export class UiTextareaComponent implements ControlValueAccessor {
+  @Input() label: string | null = null;
+  @Input() hint: string | null = null;
+  @Input() error: string | null = null;
+
+  @Input() placeholder = '';
+  @Input() rows = 4;
+
+  readonly value = signal('');
+  readonly disabled = signal(false);
+
+  private onChange: (v: string) => void = () => {};
+  private onTouched: () => void = () => {};
+
+  writeValue(value: string | null): void {
+    this.value.set(value ?? '');
+  }
+  registerOnChange(fn: (v: string) => void): void {
+    this.onChange = fn;
+  }
+  registerOnTouched(fn: () => void): void {
+    this.onTouched = fn;
+  }
+  setDisabledState(isDisabled: boolean): void {
+    this.disabled.set(isDisabled);
+  }
+
+  handleInput(e: Event): void {
+    const v = (e.target as HTMLTextAreaElement).value;
+    this.value.set(v);
+    this.onChange(v);
+  }
+
+  blur(): void {
+    this.onTouched();
+  }
+}

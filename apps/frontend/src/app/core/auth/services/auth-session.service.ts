@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of, switchMap, take, tap } from 'rxjs';
 import { AuthService } from './auth.service';
 import { TokenStorageService } from './token-storage.service';
-import { LoginRequest, LoginResponse, MeResponse } from '../auth.models';
+import { LoginRequest, LoginResponse, MeResponse } from '@auth/models/auth.models';
 
 @Injectable({ providedIn: 'root' })
 export class AuthSessionService {

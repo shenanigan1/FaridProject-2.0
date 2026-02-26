@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, UrlTree } from '@angular/router';
 import { Observable, map } from 'rxjs';
-import { AuthSessionService } from '../auth/services/auth-session.service';
+import { AuthSessionService } from '@auth/services/auth-session.service';
 
 type AllowedRole = 'admin' | 'hr' | 'director' | 'manager' | 'employee' | 'candidate';
 

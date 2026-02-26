@@ -1,9 +1,0 @@
-<button
-  class="w-full rounded-xl bg-gray-900 px-4 py-3 text-white font-medium
-         hover:bg-gray-800 disabled:opacity-60 disabled:cursor-not-allowed"
-  [attr.type]="type"
-  [disabled]="disabled || loading"
->
-  <span *ngIf="!loading"><ng-content></ng-content></span>
-  <span *ngIf="loading">Signing in…</span>
-</button>
