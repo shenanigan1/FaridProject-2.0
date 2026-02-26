@@ -1,13 +1,17 @@
-// src/app/pages/templates_eval/templates_eval-edit.page.ts
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { finalize } from 'rxjs';
 
-import { TemplatesApi } from 'src/app/features/test-templates/services/test-templates.api';
-import { PoolsStore } from 'src/app/features/pools/services/pools.store';
-import { QuestionPool } from 'src/app/features/pools/models/question-pool.model';
+import { TemplatesApi } from '@features/test-templates/services/test-templates.api';
+import { PoolsStore } from '@features/pools/services/pools.store';
+import { QuestionPool } from '@features/pools/models/question-pool.model';
+
+import { UiIconButtonComponent } from '@shared/ui/icon-button/icon-button.component';
+import { UiButtonPrimaryComponent } from '@shared/ui/button-primary/button-primary.component';
+import { UiButtonSecondaryComponent } from '@shared/ui/button-secondary/button-secondary.component';
+import { UiProgressBarComponent } from '@shared/ui/progress-bar/progress-bar.component';
 
 type Difficulty = 'easy' | 'medium' | 'hard';
 
@@ -38,9 +42,16 @@ function uid(): string {
 }
 
 @Component({
-  selector: 'app-templates-eval-edit-page',
+  selector: 'app-test-templates-edit-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    UiIconButtonComponent,
+    UiButtonPrimaryComponent,
+    UiButtonSecondaryComponent,
+    UiProgressBarComponent,
+  ],
   templateUrl: './test-templates-edit.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -58,14 +69,10 @@ export class TemplatesEvalEditPage {
   readonly isSaving = signal(false);
   readonly apiError = signal<string | null>(null);
 
-  // ✅ View-first: starts locked
+  /** View-first: starts locked */
   readonly isEditMode = signal(false);
 
-  // Keep a snapshot for cancel-edit
-  private templateSnapshot: {
-    formValue: any;
-    sections: SectionVm[];
-  } | null = null;
+  private templateSnapshot: { formValue: any; sections: SectionVm[] } | null = null;
 
   readonly poolQuery = signal('');
 
@@ -84,15 +91,13 @@ export class TemplatesEvalEditPage {
 
   readonly sections = signal<SectionVm[]>([]);
 
-  // ---- derived ----
   readonly filteredPools = computed(() => {
     const q = this.poolQuery().trim().toLowerCase();
     const items = this.pools();
     if (!q) return items;
 
-    return items.filter(p =>
-      (p.name ?? '').toLowerCase().includes(q) ||
-      (p.code ?? '').toLowerCase().includes(q)
+    return items.filter(
+      (p) => (p.name ?? '').toLowerCase().includes(q) || (p.code ?? '').toLowerCase().includes(q)
     );
   });
 
@@ -117,45 +122,16 @@ export class TemplatesEvalEditPage {
 
   readonly completion = computed(() => {
     let score = 0;
-    // In view mode, validators still exist but controls are disabled.
-    // We check based on raw values:
     const v = this.form.getRawValue();
+
     if ((v.name ?? '').trim().length >= 3) score += 30;
     if (Number.isFinite(v.duration_minutes) && v.duration_minutes > 0) score += 15;
     if (Number.isFinite(v.min_pass_score) && v.min_pass_score >= 0) score += 15;
     if (this.sections().length > 0) score += 10;
     if (this.totalWeight() === 100) score += 30;
+
     return Math.min(100, Math.max(0, score));
   });
-
-  readonly normalizedWeights = computed(() => {
-    const items = this.sections();
-    const sum = items.reduce((acc, s) => acc + (Number(s.weight) || 0), 0);
-
-    if (sum <= 0) {
-      return items.map(s => ({ id: s.id, pct: 0 }));
-    }
-
-    return items.map(s => ({
-      id: s.id,
-      pct: Math.round(((Number(s.weight) || 0) / sum) * 100),
-    }));
-  });
-
-  weightSegments(): { label: string; weight: number }[] {
-    const items = this.sections();
-    const sum = items.reduce((acc, s) => acc + (Number(s.weight) || 0), 0);
-
-    return items.map(s => {
-      const raw = Number(s.weight) || 0;
-      const pct = sum > 0 ? (raw / sum) * 100 : 0;
-
-      return {
-        label: s.title || 'Untitled',
-        weight: pct,
-      };
-    });
-  }
 
   constructor() {
     this.poolsStore.loadAll();
@@ -207,9 +183,7 @@ export class TemplatesEvalEditPage {
           }));
 
           this.sections.set(mapped);
-
-          // keep it locked by default
-          this.setEditMode(false, /*takeSnapshot*/ true);
+          this.setEditMode(false, true);
         },
         error: (err) => {
           this.pageError.set(err?.error?.detail ?? err?.error?.message ?? 'Failed to load template.');
@@ -217,12 +191,12 @@ export class TemplatesEvalEditPage {
       });
   }
 
-  // ✅ Toggle edit mode
+  // ---- view/edit mode ----
+
   toggleEdit(): void {
-    this.setEditMode(!this.isEditMode(), /*takeSnapshot*/ true);
+    this.setEditMode(!this.isEditMode(), true);
   }
 
-  // ✅ Cancel edit (revert to snapshot)
   cancelEdit(): void {
     if (!this.templateSnapshot) {
       this.setEditMode(false, false);
@@ -251,6 +225,7 @@ export class TemplatesEvalEditPage {
   }
 
   // ---- UI helpers ----
+
   trackByPoolId(_: number, item: QuestionPool): string {
     return item.id;
   }
@@ -259,12 +234,28 @@ export class TemplatesEvalEditPage {
     this.poolQuery.set(value ?? '');
   }
 
-  // ---- sections actions (only used when edit mode) ----
+  weightSegments(): { label: string; weight: number }[] {
+    const items = this.sections();
+    const sum = items.reduce((acc, s) => acc + (Number(s.weight) || 0), 0);
+
+    return items.map((s) => {
+      const raw = Number(s.weight) || 0;
+      const pct = sum > 0 ? (raw / sum) * 100 : 0;
+      return { label: s.title || 'Untitled', weight: pct };
+    });
+  }
+
+  poolName(poolId: string): string {
+    return this.pools().find((p) => p.id === poolId)?.name ?? `Pool #${poolId}`;
+  }
+
+  // ---- sections actions ----
+
   addSection(): void {
     if (!this.isEditMode()) return;
 
     const nextIndex = this.sections().length + 1;
-    this.sections.update(list => [
+    this.sections.update((list) => [
       ...list,
       { id: uid(), title: `Section ${nextIndex}`, description: '', weight: 0, questions: [], pools: [] },
     ]);
@@ -272,25 +263,23 @@ export class TemplatesEvalEditPage {
 
   removeSection(sectionId: string): void {
     if (!this.isEditMode()) return;
-    this.sections.update(list => list.filter(s => s.id !== sectionId));
+    this.sections.update((list) => list.filter((s) => s.id !== sectionId));
+  }
+
+  updateSectionTitle(sectionId: string, title: string): void {
+    if (!this.isEditMode()) return;
+    this.sections.update((list) => list.map((s) => (s.id === sectionId ? { ...s, title: title ?? '' } : s)));
   }
 
   updateSectionWeight(sectionId: string, weight: number): void {
     if (!this.isEditMode()) return;
 
     const w = Number.isFinite(weight) ? Math.max(0, Math.min(100, Math.floor(weight))) : 0;
-    this.sections.update(list => list.map(s => (s.id === sectionId ? { ...s, weight: w } : s)));
-  }
-
-  updateSectionTitle(sectionId: string, title: string): void {
-    if (!this.isEditMode()) return;
-
-    this.sections.update(list => list.map(s => (s.id === sectionId ? { ...s, title: title ?? '' } : s)));
+    this.sections.update((list) => list.map((s) => (s.id === sectionId ? { ...s, weight: w } : s)));
   }
 
   assignSection(sectionId: string): void {
     if (!this.isEditMode()) return;
-    // TODO: Button for assign à manager to the section
     void sectionId;
   }
 
@@ -298,11 +287,10 @@ export class TemplatesEvalEditPage {
     if (!this.isEditMode()) return;
     if (!poolId) return;
 
-    this.sections.update(list =>
-      list.map(s => {
+    this.sections.update((list) =>
+      list.map((s) => {
         if (s.id !== sectionId) return s;
-        const exists = s.pools.some(p => p.poolId === poolId);
-        if (exists) return s;
+        if (s.pools.some((p) => p.poolId === poolId)) return s;
         return { ...s, pools: [...s.pools, { poolId, randomCount: 3 }] };
       })
     );
@@ -311,8 +299,8 @@ export class TemplatesEvalEditPage {
   detachPool(sectionId: string, poolId: string): void {
     if (!this.isEditMode()) return;
 
-    this.sections.update(list =>
-      list.map(s => (s.id === sectionId ? { ...s, pools: s.pools.filter(p => p.poolId !== poolId) } : s))
+    this.sections.update((list) =>
+      list.map((s) => (s.id === sectionId ? { ...s, pools: s.pools.filter((p) => p.poolId !== poolId) } : s))
     );
   }
 
@@ -320,24 +308,22 @@ export class TemplatesEvalEditPage {
     if (!this.isEditMode()) return;
 
     const c = Math.max(0, Math.floor(Number(count) || 0));
-    this.sections.update(list =>
-      list.map(s => {
+    this.sections.update((list) =>
+      list.map((s) => {
         if (s.id !== sectionId) return s;
-        return { ...s, pools: s.pools.map(p => (p.poolId === poolId ? { ...p, randomCount: c } : p)) };
+        return { ...s, pools: s.pools.map((p) => (p.poolId === poolId ? { ...p, randomCount: c } : p)) };
       })
     );
   }
 
-  poolName(poolId: string): string {
-    return this.pools().find(p => p.id === poolId)?.name ?? `Pool #${poolId}`;
-  }
-
   // ---- navigation ----
+
   discard(): void {
     void this.router.navigate(['/templates']);
   }
 
   // ---- save ----
+
   save(): void {
     if (!this.isEditMode()) return;
 
@@ -360,7 +346,6 @@ export class TemplatesEvalEditPage {
       .pipe(finalize(() => this.isSaving.set(false)))
       .subscribe({
         next: () => {
-          // After save: lock again and refresh snapshot
           this.setEditMode(false, true);
         },
         error: (err) => {

@@ -1,16 +1,36 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterModule, Router } from '@angular/router';
-import { PoolsStore } from 'src/app/features/pools/services/pools.store';
+import { Router, RouterModule } from '@angular/router';
 
-const CODE_PATTERN = /^[A-Z][A-Z0-9_]*$/; // ex: DRIVING_CORE
+import { PoolsStore } from '@features/pools/services/pools.store';
+
+import { UiAlertComponent } from '@shared/ui/alert/alert.component';
+import { UiButtonPrimaryComponent } from '@shared/ui/button-primary/button-primary.component';
+import { UiIconButtonComponent } from '@shared/ui/icon-button/icon-button.component';
+import { UiTextInputComponent } from '@shared/ui/text-input/text-input.component';
+import { UiTextareaComponent } from '@shared/ui/textarea/textarea.component';
+import { UiCardComponent } from '@shared/ui/card/card.component';
+
+const CODE_PATTERN = /^[A-Z][A-Z0-9_]*$/;
 
 @Component({
   selector: 'app-pool-create-page',
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    RouterModule,
+    ReactiveFormsModule,
+
+    UiAlertComponent,
+    UiButtonPrimaryComponent,
+    UiIconButtonComponent,
+    UiTextInputComponent,
+    UiTextareaComponent,
+    UiCardComponent,
+  ],
   templateUrl: './pool-create.page.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PoolCreatePageComponent {
   private readonly fb = inject(FormBuilder);
@@ -28,9 +48,7 @@ export class PoolCreatePageComponent {
       Validators.minLength(3),
       Validators.maxLength(50),
     ]),
-    description: this.fb.nonNullable.control('', [
-      Validators.maxLength(500),
-    ]),
+    description: this.fb.nonNullable.control('', [Validators.maxLength(500)]),
   });
 
   back(): void {
@@ -48,19 +66,17 @@ export class PoolCreatePageComponent {
   }
 
   submit(): void {
-    if (this.form.invalid) {
+    if (this.form.invalid || this.isLoading()) {
       this.form.markAllAsTouched();
       return;
     }
 
     const dto = {
       name: this.form.controls.name.value.trim(),
-      description: this.form.controls.description.value.trim(), // TODO: add description field to form
+      description: this.form.controls.description.value.trim(),
       code: this.form.controls.code.value.trim(),
     };
 
-    this.store.create(dto, () => {
-      this.router.navigateByUrl('/pools');
-    });
+    this.store.create(dto, () => this.back());
   }
 }

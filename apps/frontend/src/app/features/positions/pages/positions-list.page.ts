@@ -3,25 +3,39 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { BehaviorSubject, combineLatest, map, startWith } from 'rxjs';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { PositionsApiService, PositionDto } from '@positions/services/positions-api.service';
 
-type SelectOption<T extends string> = { label: string; value: T };
+import { PositionsApiService, PositionDto } from '@features/positions/services/positions-api.service';
+
+import { UiBadgeComponent, UiBadgeTone } from '@shared/ui/badge/badge.component';
+import { UiSelectComponent, UiSelectOption } from '@shared/ui/select/select.component';
+import { UiTextInputComponent } from '@shared/ui/text-input/text-input.component';
 
 type LocationValue = 'all' | 'chicago' | 'dallas' | 'phoenix' | 'remote';
 type TruckTypeValue = 'all' | 'long-haul' | 'dry-van' | 'tanker' | 'flatbed';
 type PriorityValue = 'all' | 'urgent' | 'medium' | 'low';
 
+type BadgeVm = { label: string; tone: UiBadgeTone };
+
 @Component({
   standalone: true,
   selector: 'app-positions-list-page',
-  imports: [CommonModule, RouterModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    RouterModule,
+    ReactiveFormsModule,
+    UiTextInputComponent,
+    UiSelectComponent,
+    UiBadgeComponent,
+  ],
   templateUrl: './positions-list.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PositionsListPage {
+  private readonly api = inject(PositionsApiService);
+  private readonly cdr = inject(ChangeDetectorRef);
+
   private readonly positionsSubject = new BehaviorSubject<PositionDto[]>([]);
   readonly positions$ = this.positionsSubject.asObservable();
-  private readonly api = inject(PositionsApiService);
 
   // Search + dropdown filters
   readonly searchCtrl = new FormControl('', { nonNullable: true });
@@ -29,8 +43,8 @@ export class PositionsListPage {
   readonly truckTypeCtrl = new FormControl<TruckTypeValue>('all', { nonNullable: true });
   readonly priorityCtrl = new FormControl<PriorityValue>('all', { nonNullable: true });
 
-  // Dropdown options
-  readonly locationOptions: SelectOption<LocationValue>[] = [
+  // Dropdown options (CVA select)
+  readonly locationOptions: UiSelectOption<LocationValue>[] = [
     { label: 'Location', value: 'all' },
     { label: 'Chicago, IL', value: 'chicago' },
     { label: 'Dallas, TX', value: 'dallas' },
@@ -38,7 +52,7 @@ export class PositionsListPage {
     { label: 'Remote', value: 'remote' },
   ];
 
-  readonly truckTypeOptions: SelectOption<TruckTypeValue>[] = [
+  readonly truckTypeOptions: UiSelectOption<TruckTypeValue>[] = [
     { label: 'Truck Type', value: 'all' },
     { label: 'Long Haul', value: 'long-haul' },
     { label: 'Dry Van', value: 'dry-van' },
@@ -46,7 +60,7 @@ export class PositionsListPage {
     { label: 'Flatbed', value: 'flatbed' },
   ];
 
-  readonly priorityOptions: SelectOption<PriorityValue>[] = [
+  readonly priorityOptions: UiSelectOption<PriorityValue>[] = [
     { label: 'Priority', value: 'all' },
     { label: 'Urgent', value: 'urgent' },
     { label: 'Medium', value: 'medium' },
@@ -82,10 +96,11 @@ export class PositionsListPage {
           (truckType === 'tanker' && blob.includes('tanker')) ||
           (truckType === 'flatbed' && blob.includes('flatbed'));
 
+        const title = p.title.toLowerCase();
         const matchesPriority =
           priority === 'all' ||
-          (priority === 'urgent' && p.title.toLowerCase().includes('senior')) ||
-          (priority === 'medium' && p.title.toLowerCase().includes('tanker')) ||
+          (priority === 'urgent' && title.includes('senior')) ||
+          (priority === 'medium' && title.includes('tanker')) ||
           (priority === 'low' && p.is_active === false);
 
         return matchesSearch && matchesLocation && matchesTruckType && matchesPriority;
@@ -96,52 +111,38 @@ export class PositionsListPage {
   isLoading = true;
   error: string | null = null;
 
-  constructor(
-    private readonly cdr: ChangeDetectorRef
-  ) {
+  constructor() {
     this.load();
   }
 
   private load(): void {
     this.isLoading = true;
     this.error = null;
-    this.cdr.markForCheck(); // ✅ ensure UI shows loading immediately
+    this.cdr.markForCheck();
 
     this.api.list().subscribe({
       next: (data) => {
-        // If your API returns { results: [...] } sometimes:
         const list = Array.isArray(data) ? data : ((data as any)?.results ?? []);
         this.positionsSubject.next(list);
 
         this.isLoading = false;
-        this.cdr.markForCheck(); // ✅ FIX: release loading without user interaction
+        this.cdr.markForCheck();
       },
       error: () => {
         this.error = 'Unable to load positions.';
         this.isLoading = false;
-        this.cdr.markForCheck(); // ✅ FIX
+        this.cdr.markForCheck();
       },
     });
   }
 
-  getBadge(p: PositionDto): { label: string; tone: 'urgent' | 'medium' | 'active' | 'low' } {
-    if (p.is_active === false) return { label: 'INACTIVE', tone: 'low' };
-    const t = p.title.toLowerCase();
-    if (t.includes('senior')) return { label: 'URGENT', tone: 'urgent' };
-    if (t.includes('tanker')) return { label: 'MEDIUM', tone: 'medium' };
-    return { label: 'ACTIVE', tone: 'active' };
-  }
+  getBadge(p: PositionDto): BadgeVm {
+    if (p.is_active === false) return { label: 'INACTIVE', tone: 'neutral' };
 
-  badgeClass(tone: 'urgent' | 'medium' | 'active' | 'low'): string {
-    switch (tone) {
-      case 'urgent':
-        return 'bg-red-500/15 text-red-300 border border-red-500/25';
-      case 'medium':
-        return 'bg-amber-500/15 text-amber-300 border border-amber-500/25';
-      case 'active':
-        return 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/25';
-      default:
-        return 'bg-slate-500/15 text-slate-300 border border-slate-500/25';
-    }
+    const t = p.title.toLowerCase();
+    if (t.includes('senior')) return { label: 'URGENT', tone: 'danger' };
+    if (t.includes('tanker')) return { label: 'MEDIUM', tone: 'warning' };
+
+    return { label: 'ACTIVE', tone: 'success' };
   }
 }

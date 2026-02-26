@@ -3,7 +3,7 @@ import { Routes } from '@angular/router';
 export const TEMPLATES_ROUTES: Routes = [
   { path: '',
     loadComponent: () => import('src/app/features/test-templates/pages/test-templates-list.page')
-      .then(m => m.TemplatesListComponent),
+      .then(m => m.TemplatesListPage),
   },
 
   //Create/Edit restricted to HR/DIRECTOR/ADMIN (adjust if needed)

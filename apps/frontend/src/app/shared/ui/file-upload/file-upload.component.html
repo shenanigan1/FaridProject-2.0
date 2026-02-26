@@ -1,0 +1,36 @@
+<div
+  class="rounded-2xl border border-dashed p-6 text-center transition
+         cursor-pointer"
+  [class.border-blue-500]="dragActive()"
+  (dragover)="onDragOver($event)"
+  (dragleave)="onDragLeave()"
+  (drop)="onDrop($event)"
+>
+  <input
+    type="file"
+    class="hidden"
+    [attr.accept]="accept"
+    [attr.multiple]="multiple ? '' : null"
+    [disabled]="disabled"
+    (change)="onFileChange($event)"
+    #fileInput
+  />
+
+  <p class="font-medium mb-2">{{ label }}</p>
+  <p *ngIf="hint" class="text-sm text-slate-400 mb-2">{{ hint }}</p>
+
+  <button
+    type="button"
+    class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700"
+    (click)="fileInput.click()"
+    [disabled]="disabled"
+  >
+    Browse
+  </button>
+
+  <ul *ngIf="fileNames().length" class="mt-4 text-sm text-slate-300">
+    <li *ngFor="let name of fileNames()">
+      {{ name }}
+    </li>
+  </ul>
+</div>

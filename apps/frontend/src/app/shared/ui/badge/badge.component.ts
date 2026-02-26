@@ -11,8 +11,8 @@
  */
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
-type UiBadgeTone = 'neutral' | 'success' | 'warning' | 'danger' | 'info';
-type UiBadgeSize = 'sm' | 'md';
+export type UiBadgeTone = 'neutral' | 'success' | 'warning' | 'danger' | 'info';
+export type UiBadgeSize = 'sm' | 'md';
 
 @Component({
   standalone: true,

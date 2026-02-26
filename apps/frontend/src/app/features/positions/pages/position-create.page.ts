@@ -1,56 +1,58 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
+import { Router } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { PageShellComponent } from '@layout/page-shell/page-shell.component';
-import { PositionFormComponent } from 'src/app/features/positions/components/position-form/position-form.component';
+import { PositionFormComponent } from '@features/positions/components/position-form/position-form.component';
 import { PositionFormService, PositionFormGroup } from '@features/positions/services/positions-form.service';
 import { PositionsApiService, PositionCreatePayload } from '@features/positions/services/positions-api.service';
+
+import { UiLinkButtonComponent } from '@shared/ui/link-button/ui-link-button.component';
 
 @Component({
   standalone: true,
   selector: 'app-position-create-page',
-  imports: [CommonModule, RouterModule, PageShellComponent, PositionFormComponent],
+  imports: [CommonModule, PageShellComponent, PositionFormComponent, UiLinkButtonComponent],
   templateUrl: './position-create.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PositionCreatePage {
-  readonly form: PositionFormGroup;
+  private readonly formService = inject(PositionFormService);
+  private readonly api = inject(PositionsApiService);
+  private readonly router = inject(Router);
 
-  isSubmitting = false;
-  apiError: string | null = null;
-  fieldErrors: Record<string, string[]> = {};
+  readonly form: PositionFormGroup = this.formService.build();
 
-  constructor(
-    private readonly formService: PositionFormService,
-    private readonly api: PositionsApiService,
-    private readonly router: Router
-  ) {
-    this.form = this.formService.build();
-  }
+  readonly isSubmitting = signal(false);
+  readonly apiError = signal<string | null>(null);
+  readonly fieldErrors = signal<Record<string, string[]>>({});
 
   submit(): void {
-    this.apiError = null;
-    this.fieldErrors = {};
+    this.apiError.set(null);
+    this.fieldErrors.set({});
 
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
 
-    this.isSubmitting = true;
+    this.isSubmitting.set(true);
     const payload: PositionCreatePayload = this.formService.toPayload(this.form);
 
-    this.api.create(payload).subscribe({
-      next: async () => {
-        this.isSubmitting = false;
-        await this.router.navigateByUrl('/positions');
-      },
-      error: (err) => {
-        this.isSubmitting = false;
-        this.handleApiError(err);
-      },
-    });
+    this.api
+      .create(payload)
+      .pipe(takeUntilDestroyed())
+      .subscribe({
+        next: () => {
+          this.isSubmitting.set(false);
+          void this.router.navigateByUrl('/positions');
+        },
+        error: (err: unknown) => {
+          this.isSubmitting.set(false);
+          this.handleApiError(err);
+        },
+      });
   }
 
   cancel(): void {
@@ -58,17 +60,25 @@ export class PositionCreatePage {
   }
 
   private handleApiError(err: unknown): void {
-    const data: any = (err as any)?.error;
+    const data = (err as any)?.error;
+
     if (data && typeof data === 'object' && !Array.isArray(data)) {
-      if (typeof data.detail === 'string') {
-        this.apiError = data.detail;
+      if (typeof (data as any).detail === 'string') {
+        this.apiError.set((data as any).detail);
         return;
       }
-      this.fieldErrors = Object.fromEntries(
-        Object.entries(data).map(([k, v]) => [k, Array.isArray(v) ? v.map(String) : [String(v)]])
+
+      const mapped: Record<string, string[]> = Object.fromEntries(
+        Object.entries(data as Record<string, unknown>).map(([k, v]) => [
+          k,
+          Array.isArray(v) ? v.map(String) : [String(v)],
+        ])
       );
+
+      this.fieldErrors.set(mapped);
       return;
     }
-    this.apiError = 'Unable to create position.';
+
+    this.apiError.set('Unable to create position.');
   }
 }

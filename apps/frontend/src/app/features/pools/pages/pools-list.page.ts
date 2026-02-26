@@ -1,31 +1,51 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
-import { RouterModule, Router } from '@angular/router';
-import { PoolsStore } from 'src/app/features/pools/services/pools.store';
-import { QuestionPool } from 'src/app/features/pools/models/question-pool.model';
+import { Router, RouterModule } from '@angular/router';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+
+import { PoolsStore } from '@features/pools/services/pools.store';
+import { QuestionPool } from '@features/pools/models/question-pool.model';
+
+// shared/ui
+import { UiTextInputComponent } from '@shared/ui/text-input/text-input.component';
+import { UiEmptyStateComponent } from '@shared/ui/empty-state/empty-state.component';
+import { UiButtonPrimaryComponent } from '@shared/ui/button-primary/button-primary.component';
+import { UiIconButtonComponent } from '@shared/ui/icon-button/icon-button.component';
+import { UiAlertComponent } from '@shared/ui/alert/alert.component';
 
 @Component({
-  selector: 'app-pools-list-page',
   standalone: true,
-  imports: [CommonModule, RouterModule, DatePipe],
+  selector: 'app-pools-list-page',
+  imports: [
+    CommonModule,
+    RouterModule,
+    DatePipe,
+    ReactiveFormsModule,
+    UiTextInputComponent,
+    UiEmptyStateComponent,
+    UiButtonPrimaryComponent,
+    UiIconButtonComponent,
+    UiAlertComponent,
+  ],
   templateUrl: './pools-list.page.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PoolsListPageComponent {
   private readonly store = inject(PoolsStore);
-
-  readonly query = signal('');
-
   private readonly router = inject(Router);
+
+  readonly queryCtrl = new FormControl<string>('', { nonNullable: true });
+
   readonly pools = this.store.pools;
   readonly isLoading = this.store.isLoading;
   readonly error = this.store.error;
 
   readonly filtered = computed(() => {
-    const q = this.query().trim().toLowerCase();
+    const q = this.queryCtrl.value.trim().toLowerCase();
     const items = this.pools();
     if (!q) return items;
 
-    return items.filter(p =>
+    return items.filter((p) =>
       (p.name ?? '').toLowerCase().includes(q) ||
       (p.code ?? '').toLowerCase().includes(q)
     );
@@ -35,19 +55,15 @@ export class PoolsListPageComponent {
     this.store.loadAll();
   }
 
-  trackById(_: number, item: QuestionPool) {
+  trackById(_: number, item: QuestionPool): string {
     return item.id;
   }
 
-  onSearch(value: string) {
-    this.query.set(value);
-  }
-
-  onRetry() {
+  onRetry(): void {
     this.store.loadAll();
   }
 
-  onCreate() {
+  onCreate(): void {
     this.router.navigate(['/pools/new']);
   }
 }

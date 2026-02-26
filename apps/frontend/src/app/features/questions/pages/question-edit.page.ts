@@ -1,18 +1,41 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { SkillQuestionsStore } from 'src/app/features/questions/services/skill-questions.store';
+
+import { SkillQuestionsStore } from '@features/questions/services/skill-questions.store';
+
+import { UiTabsComponent, UiTabItem } from '@shared/ui/tabs/tabs.component';
+import { UiButtonPrimaryComponent } from '@shared/ui/button-primary/button-primary.component';
+import { UiButtonSecondaryComponent } from '@shared/ui/button-secondary/button-secondary.component';
+import { UiIconButtonComponent } from '@shared/ui/icon-button/icon-button.component';
+import { UiSelectComponent, UiSelectOption } from '@shared/ui/select/select.component';
+import { UiTextInputComponent } from '@shared/ui/text-input/text-input.component';
 
 type TabKey = 'editor' | 'preview' | 'settings' | 'history';
 type Format = 'mcq' | 'true_false' | 'practical';
 type Difficulty = 'easy' | 'intermediate' | 'hard';
+type Rubric = Record<string, unknown>;
+
+const DEFAULT_RUBRIC: Rubric = {};
 
 @Component({
   selector: 'app-question-edit-page',
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    RouterModule,
+    ReactiveFormsModule,
+
+    UiIconButtonComponent,
+    UiButtonPrimaryComponent,
+    UiButtonSecondaryComponent,
+    UiTabsComponent,
+    UiSelectComponent,
+    UiTextInputComponent,
+  ],
   templateUrl: './question-edit.page.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class QuestionEditPageComponent {
   private readonly route = inject(ActivatedRoute);
@@ -30,12 +53,29 @@ export class QuestionEditPageComponent {
 
   readonly isEditMode = computed(() => !!this.questionId());
 
+  readonly tabs: UiTabItem<TabKey>[] = [
+    { key: 'editor', label: 'Editor' },
+    { key: 'preview', label: 'Preview' },
+    { key: 'settings', label: 'Settings' },
+    { key: 'history', label: 'History' },
+  ];
+
+  readonly difficultyOptions: UiSelectOption<Difficulty>[] = [
+    { value: 'easy', label: 'Easy' },
+    { value: 'intermediate', label: 'Intermediate' },
+    { value: 'hard', label: 'Hard' },
+  ];
+
   readonly form = this.fb.nonNullable.group({
     format: this.fb.nonNullable.control<Format>('mcq', [Validators.required]),
     title: this.fb.nonNullable.control('', [Validators.maxLength(255)]),
-    text: this.fb.nonNullable.control('', [Validators.required, Validators.minLength(5), Validators.maxLength(2500)]),
+    text: this.fb.nonNullable.control('', [
+      Validators.required,
+      Validators.minLength(5),
+      Validators.maxLength(2500),
+    ]),
     explanation: this.fb.nonNullable.control(''),
-    rubric: this.fb.nonNullable.control<any>({}),
+    rubric: this.fb.nonNullable.control<Rubric>(DEFAULT_RUBRIC),
     is_mandatory: this.fb.nonNullable.control(false),
 
     points: this.fb.nonNullable.control(10, [Validators.required, Validators.min(1), Validators.max(1000)]),
@@ -49,7 +89,7 @@ export class QuestionEditPageComponent {
     const qid = this.route.snapshot.paramMap.get('questionId');
 
     if (!poolId) {
-      this.router.navigateByUrl('/pools');
+      void this.router.navigateByUrl('/pools');
       return;
     }
 
@@ -59,21 +99,21 @@ export class QuestionEditPageComponent {
     if (qid) {
       this.store.loadOne(qid, (row) => {
         this.form.reset({
-          format: row.format,
+          format: (row.format ?? 'mcq') as Format,
           title: row.title ?? '',
           text: row.text ?? '',
           explanation: row.explanation ?? '',
-          rubric: row.rubric ?? {},
+          rubric: (row.rubric ?? DEFAULT_RUBRIC) as Rubric,
           is_mandatory: !!row.is_mandatory,
           points: row.points ?? 10,
-          difficulty: row.difficulty ?? 'intermediate',
+          difficulty: (row.difficulty ?? 'intermediate') as Difficulty,
         });
       });
     }
   }
 
   back(): void {
-    this.router.navigate(['/pools', this.poolId()]);
+    void this.router.navigate(['/pools', this.poolId()]);
   }
 
   setTab(t: TabKey): void {
@@ -95,7 +135,7 @@ export class QuestionEditPageComponent {
       title: this.form.controls.title.value.trim(),
       text: this.form.controls.text.value.trim(),
       explanation: this.form.controls.explanation.value.trim(),
-      rubric: this.form.controls.rubric.value ?? {},
+      rubric: this.form.controls.rubric.value ?? DEFAULT_RUBRIC,
       is_mandatory: this.form.controls.is_mandatory.value,
       points: this.form.controls.points.value,
       difficulty: this.form.controls.difficulty.value,
