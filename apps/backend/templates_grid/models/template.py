@@ -14,6 +14,6 @@ class Template(models.Model):
 
     class Meta:
         indexes = [models.Index(fields=["is_active"])]
-
+ 
     def __str__(self) -> str:
         return self.name

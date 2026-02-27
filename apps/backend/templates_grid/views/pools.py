@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
 
+
 from templates_grid.models import QuestionPool, SkillQuestion
 from templates_grid.serializers import QuestionPoolSerializer, SkillQuestionSerializer
 
@@ -11,6 +12,8 @@ from templates_grid.serializers import QuestionPoolSerializer, SkillQuestionSeri
 class QuestionPoolViewSet(ModelViewSet):
     queryset = QuestionPool.objects.all().order_by("id")
     serializer_class = QuestionPoolSerializer
+    
+    search_fields = ["name", "code"]
 
     @action(detail=True, methods=["get", "post"], url_path="questions")
     def questions(self, request, pk=None):

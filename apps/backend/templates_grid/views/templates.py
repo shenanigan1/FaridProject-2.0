@@ -15,6 +15,17 @@ class TemplateViewSet(ModelViewSet):
 
         # retrieve/create/update should return full editor payload (with sections)
         return TemplateEditorSerializer
+    
+    filterset_fields = {
+        "difficulty": ["exact"],
+        "is_active": ["exact"],
+    }
+
+    # ✅ enables ?search=...
+    search_fields = ["name"]  # add more if needed: ["name", "description"]
+
+    ordering_fields = ["created_at", "updated_at", "name"]
+    ordering = ["-updated_at"]
 
 
 class TemplateSectionViewSet(ModelViewSet):
