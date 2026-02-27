@@ -1,0 +1,37 @@
+<app-form-page-shell [title]="shellTitle()" [subtitle]="shellSubtitle()">
+  <div shell-actions>
+    <ui-link-button
+      [routerLink]="['/positions']"
+      label="Back"
+      variant="secondary"
+      size="sm"
+    />
+  </div>
+
+  <ng-container *ngIf="state() as state">
+    <!-- READY -->
+    <app-position-form
+      *ngIf="state.status === 'ready'"
+      [mode]="mode()"
+      [form]="form"
+      [isSubmitting]="isSubmitting()"
+      [apiError]="apiError()"
+      [fieldErrors]="fieldErrors()"
+      (submitForm)="submit()"
+      (cancel)="cancel()"
+    />
+
+    <!-- LOADING (edit only) -->
+    <ui-card *ngIf="state.status === 'loading'">
+      <div class="text-sm text-slate-400">Loading...</div>
+    </ui-card>
+
+    <!-- ERROR -->
+    <div
+      *ngIf="state.status === 'error'"
+      class="rounded-xl border border-red-500/25 bg-red-500/10 p-3 text-sm text-red-200"
+    >
+      {{ state.message }}
+    </div>
+  </ng-container>
+</app-form-page-shell>

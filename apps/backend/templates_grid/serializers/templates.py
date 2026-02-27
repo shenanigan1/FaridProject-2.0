@@ -21,11 +21,18 @@ class TemplateSerializer(serializers.ModelSerializer):
 
 
 class TemplateSectionSerializer(serializers.ModelSerializer):
-    template = TemplateSerializer(read_only=True)
-    name = serializers.CharField(source="name")
-    description = serializers.CharField(source="description")
-    weight = serializers.IntegerField(source="weight")
-    order = serializers.IntegerField(source="order")
+    template = serializers.PrimaryKeyRelatedField(queryset=Template.objects.all())
+    class Meta:
+        model = TemplateSection
+        fields = [
+            "id",
+            "template",
+            "name",
+            "description",
+            "weight",
+            "order",
+        ]
+        read_only_fields = ["id", "template"]
 
 # -------------------------
 # WRITE (input) serializers

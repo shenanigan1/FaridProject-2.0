@@ -2,6 +2,8 @@
 import pytest
 from django.urls import reverse
 
+from farid_tests.factories.users import UserFactory
+from users.models.roles import UserRoles
 from farid_tests.factories.templates_grid import (
     QuestionPoolFactory,
     TemplateFactory,
@@ -43,23 +45,24 @@ def test_create_question_pool_duplicate_code_rejected(api_client):
 
 
 def test_create_skill_question_success(api_client):
-    pool = QuestionPoolFactory.create(name="Pool", code="pool_code")
+    user = UserFactory.create(is_staff=True, role=UserRoles.ADMIN)
+    api_client.force_authenticate(user=user)
+    pool = QuestionPoolFactory.create(name="Pool", code="POOL_CODE")
     url = reverse(f"{BASENAME_QUESTIONS}-list")
 
     payload = {
         "pool": pool.id,
-        "label": "Communication",
-        "type": "soft",
+        "title": "Communication",
+        "text": "TESTING",
         "is_mandatory": True,
-        "min_score": 0,
-        "max_score": 5,
+        "points": 1,
         "order": 1,
     }
 
     res = api_client.post(url, payload, format="json")
 
-    assert res.status_code == 201
-    assert res.data["label"] == "Communication"
+    assert res.status_code == 201, res.data
+    assert res.data["title"] == "Communication"
     assert res.data["pool"] == pool.id
 
 

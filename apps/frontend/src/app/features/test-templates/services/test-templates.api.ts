@@ -1,11 +1,12 @@
+// features/test-templates/services/test-templates.api.ts
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { TemplateListItem, TemplateDifficulty } from 'src/app/features/test-templates/models/test-templates.model';
+import type { TemplateListItem, TemplateDifficulty, TemplateDetailDto, TemplateUpsertPayload} from '@features/test-templates/models/test-templates.model';
 
 export interface TemplatesListQuery {
   search?: string;
-  difficulty?: TemplateDifficulty; // omit for "all"
+  difficulty?: TemplateDifficulty;
   isActive?: boolean;
 }
 
@@ -23,15 +24,15 @@ export class TemplatesApi {
     return this.http.get<TemplateListItem[]>(`${this.baseUrl}/`, { params });
   }
 
-  get(id: number): Observable<TemplateListItem> {
-    return this.http.get<TemplateListItem>(`${this.baseUrl}/${id}/`);
+  get(id: number): Observable<TemplateDetailDto> {
+    return this.http.get<TemplateDetailDto>(`${this.baseUrl}/${id}/`);
   }
 
-  create(payload: Pick<TemplateListItem, 'name' | 'is_active'>): Observable<TemplateListItem> {
-    return this.http.post<TemplateListItem>(`${this.baseUrl}/`, payload);
+  create(payload: TemplateUpsertPayload): Observable<TemplateDetailDto> {
+    return this.http.post<TemplateDetailDto>(`${this.baseUrl}/`, payload);
   }
 
-  update(id: number, payload: Partial<Pick<TemplateListItem, 'name' | 'is_active'>>): Observable<TemplateListItem> {
-    return this.http.patch<TemplateListItem>(`${this.baseUrl}/${id}/`, payload);
+  update(id: number, payload: Partial<TemplateUpsertPayload>): Observable<TemplateDetailDto> {
+    return this.http.patch<TemplateDetailDto>(`${this.baseUrl}/${id}/`, payload);
   }
 }

@@ -1,8 +1,10 @@
 import os
 from pathlib import Path
 from datetime import timedelta
+from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(BASE_DIR / ".env")  # Explicitly load .env for pytest
 
 SECRET_KEY = "dev-secret-key"
 DEBUG = True
@@ -80,5 +82,11 @@ DATABASES = {
         "PORT": os.getenv("DB_PORT", "5433"),
     }
 }
+
+print("ENV DB_HOST:", os.getenv("DB_HOST"))
+print("ENV DB_PORT:", os.getenv("DB_PORT"))
+print("ENV DB_USER:", os.getenv("DB_USER"))
+print("ENV DB_NAME:", os.getenv("DB_NAME"))
+print("ENV DB_PASSWORD is None?:", os.getenv("DB_PASSWORD") is None)
 
 STATIC_URL = "/static/"

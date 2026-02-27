@@ -1,24 +1,17 @@
+// templates.routes.ts
 import { Routes } from '@angular/router';
 
 export const TEMPLATES_ROUTES: Routes = [
-  { path: '',
-    loadComponent: () => import('src/app/features/test-templates/pages/test-templates-list.page')
-      .then(m => m.TemplatesListPage),
+  {
+    path: '',
+    loadComponent: () => import('./pages/test-templates-list.page').then(m => m.TemplatesListPage),
   },
-
-  //Create/Edit restricted to HR/DIRECTOR/ADMIN (adjust if needed)
   {
     path: 'new',
-    loadComponent: () => import('src/app/features/test-templates/pages/test-templates-create.page')
-      .then(m => m.TemplatesEvalCreatePage),
+    loadComponent: () => import('./pages/test-templates-editor.page').then(m => m.TestTemplateEditorPage),
   },
-
   {
-  path: ':id',
-  loadComponent: () =>
-    import('src/app/features/test-templates/pages/test-templates-edit.page')
-      .then(m => m.TemplatesEvalEditPage),
-  }
+    path: ':id',
+    loadComponent: () => import('./pages/test-templates-editor.page').then(m => m.TestTemplateEditorPage),
+  },
 ];
-
-

@@ -15,3 +15,46 @@ export interface TemplateListItem {
   updated_at?: string;
   is_active: boolean;
 }
+
+export interface TemplateSectionPoolRuleDto {
+  poolId: string;
+  randomCount: number;
+  mandatoryCount?: number;
+}
+
+export interface TemplateQuestionDto {
+  id: number;
+  text: string;
+  points: number;
+  mandatory?: boolean;
+}
+
+export interface TemplateSectionDto {
+  id: string;            // backend might be number; we normalize to string in UI
+  title: string;
+  description?: string;
+  weight: number;
+  questions: TemplateQuestionDto[];
+  pools: TemplateSectionPoolRuleDto[];
+}
+
+export interface TemplateDetailDto {
+  id: number;
+  name: string;
+  duration_minutes: number;
+  min_pass_score: number;
+  difficulty: TemplateDifficulty;
+  is_active: boolean;
+  sections: TemplateSectionDto[];
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface TemplateUpsertPayload {
+  name: string;
+  duration_minutes: number;
+  min_pass_score: number;
+  difficulty?: TemplateDifficulty;
+  is_active?: boolean;
+  sections: TemplateSectionDto[];
+}

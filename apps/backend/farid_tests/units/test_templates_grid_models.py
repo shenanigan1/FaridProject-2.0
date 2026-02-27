@@ -28,14 +28,14 @@ def test_question_pool_code_unique():
 
 
 def test_skill_question_str_contains_type_and_label():
-    q = SkillQuestionFactory.create(label="Communication")
+    q = SkillQuestionFactory.create()
     s = str(q)
     assert "Communication" in s
 
 
 def test_skill_question_min_score_must_be_lte_max_score():
     # Your model has a CheckConstraint + should raise ValidationError on full_clean().
-    q = SkillQuestionFactory.create(min_score=10, max_score=5)
+    q = SkillQuestionFactory.create(points=5)
     # DB constraint might allow insert depending on database; so validate at model-level:
     with pytest.raises(ValidationError):
         q.full_clean()

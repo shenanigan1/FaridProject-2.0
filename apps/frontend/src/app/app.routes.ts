@@ -18,20 +18,11 @@ export const routes: Routes = [
 
   {
   path: 'positions',
-  loadComponent: () =>
-    import('./features/positions/pages/positions-list.page')
-      .then(m => m.PositionsListPage),
+  loadChildren: () =>
+    import('./features/positions/positions.routes')
+      .then(m => m.POSITIONS_ROUTES),
     canActivate: [AuthGuard, RoleGuard],
     data: { roles: ['hr', 'admin', 'director', 'manager'] },
-  },
-
-  {
-    path: 'positions/new',
-    loadComponent: () =>
-      import('./features/positions/pages/position-create.page')
-        .then(m => m.PositionCreatePage),
-    canActivate: [AuthGuard, RoleGuard],
-    data: { roles: ['hr', 'admin', 'director'] },
   },
 
   {

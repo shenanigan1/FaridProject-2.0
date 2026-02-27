@@ -4,7 +4,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from templates_grid.models.question_pool import QuestionPool
-from templates_grid.models.skill_question import SkillQuestion, SkillType
+from templates_grid.models.skill_question import SkillQuestion
 from templates_grid.models.template import Template
 from templates_grid.models.template_section import TemplateSection
 from templates_grid.models.template_pool_rule import TemplatePoolRule
@@ -34,11 +34,9 @@ class SkillQuestionFactory:
     def create(
         *,
         pool: QuestionPool | None = None,
-        label: str = "Communication",
-        type: str = SkillType.SOFT,
+        title: str = "Communication",
         is_mandatory: bool = False,
-        min_score: int = 0,
-        max_score: int = 5,
+        points: int = 1,
         order: int = 0,
         persist: bool = True,
     ) -> SkillQuestion:
@@ -46,16 +44,14 @@ class SkillQuestionFactory:
 
         obj = SkillQuestion(
             pool=pool,
-            label=label,
-            type=type,
+            title=title,
             is_mandatory=is_mandatory,
-            min_score=min_score,
-            max_score=max_score,
+            points=points,
             order=order,
         )
 
         # ✅ If invalid, NEVER hit the DB constraint: return unsaved instance
-        if min_score > max_score:
+        if points > 0:
             return obj
 
         if persist:

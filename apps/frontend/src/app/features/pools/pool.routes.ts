@@ -12,26 +12,26 @@ export const POOLS_ROUTES: Routes = [
   {
     path: 'new',
     loadComponent: () =>
-      import('src/app/features/pools/pages/pool-create.page')
-        .then(m => m.PoolCreatePageComponent),
+      import('src/app/features/pools/pages/pool-editor.page')
+        .then(m => m.PoolEditorPageComponent),
   },
    // Edit Pool(Questions View)
   {
     path: ':id',
     loadComponent: () =>
-      import('src/app/features/pools/pages/pool-edit.page')
-        .then(m => m.PoolEditPageComponent),
+      import('src/app/features/pools/pages/pool-editor.page')
+        .then(m => m.PoolEditorPageComponent),
   },
    // Create Question
   {
     path: ':poolId/questions/new',
     loadComponent: () =>
-      import('src/app/features/questions/pages/question-create.page').then(m => m.QuestionCreatePageComponent),
+      import('src/app/features/questions/pages/question-editor.page').then(m => m.QuestionEditorPageComponent),
   },
   // Edit Question
   {
     path: ':poolId/questions/:questionId',
     loadComponent: () =>
-      import('src/app/features/questions/pages/question-edit.page').then(m => m.QuestionEditPageComponent),
+      import('src/app/features/questions/pages/question-editor.page').then(m => m.QuestionEditorPageComponent),
   },
 ];
