@@ -1,1 +1,3 @@
-from .candidate import CandidateViewSet
+from .candidate import CandidateViewSet as CandidateViewSet
+
+__all__ = ["CandidateViewSet"]

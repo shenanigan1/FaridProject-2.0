@@ -1,1 +1,3 @@
-from .templates import TemplateViewSet
+from .templates import TemplateViewSet as TemplateViewSet
+
+__all__ = ["TemplateViewSet"]
