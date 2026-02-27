@@ -92,7 +92,9 @@ def test_update_position(api_client):
     pos = PositionFactory.create(title="Old Title")
 
     url = reverse("positions-detail", args=[pos.id])
-    response = api_client.patch(url, {"title": "New Title", "is_active": False}, format="json")
+    response = api_client.patch(
+        url, {"title": "New Title", "is_active": False}, format="json"
+    )
 
     assert response.status_code in (200, 202)
 

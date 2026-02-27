@@ -4,5 +4,7 @@ from candidates.serializers import CandidateSerializer
 
 
 class CandidateViewSet(ModelViewSet):
-    queryset = Candidate.objects.select_related("user", "target_position").all().order_by("id")
+    queryset = (
+        Candidate.objects.select_related("user", "target_position").all().order_by("id")
+    )
     serializer_class = CandidateSerializer

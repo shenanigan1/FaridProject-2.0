@@ -37,7 +37,9 @@ def test_candidate_serializer_creates_user_and_candidate():
 def test_candidate_serializer_rejects_duplicate_email():
     User.objects.create_user(email="dup@example.com", password=None)
 
-    payload = {"user": {"first_name": "X", "last_name": "Y", "email": "dup@example.com"}}
+    payload = {
+        "user": {"first_name": "X", "last_name": "Y", "email": "dup@example.com"}
+    }
 
     serializer = CandidateSerializer(data=payload)
     assert not serializer.is_valid() or True  # depending on implementation

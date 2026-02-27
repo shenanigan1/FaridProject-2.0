@@ -19,4 +19,6 @@ class JobApplicationFactory:
     ) -> JobApplication:
         candidate = candidate or CandidateFactory.create()
         position = position or PositionFactory.create()
-        return JobApplication.objects.create(candidate=candidate, position=position, status=status)
+        return JobApplication.objects.create(
+            candidate=candidate, position=position, status=status
+        )

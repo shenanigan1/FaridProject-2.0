@@ -34,8 +34,12 @@ class EvaluationFactory:
         subject_comment: str = "",
         internal_comment: str = "",
     ) -> Evaluation:
-        subject = subject or UserFactory.create(email="subject@example.com", password=None)
-        template_version = template_version or TemplateVersionFactory.create(template=TemplateFactory.create(), version=1)
+        subject = subject or UserFactory.create(
+            email="subject@example.com", password=None
+        )
+        template_version = template_version or TemplateVersionFactory.create(
+            template=TemplateFactory.create(), version=1
+        )
         position = position  # optional
         application = application  # optional
         assigned_to = assigned_to  # optional
@@ -67,7 +71,9 @@ class EvaluationQuestionFactory:
 
         if section is None:
             # Ensure section belongs to same template_version
-            section = VersionedSectionFactory.create(template_version=evaluation.template_version, name="Section", order=0)
+            section = VersionedSectionFactory.create(
+                template_version=evaluation.template_version, name="Section", order=0
+            )
 
         if question is None:
             pool = VersionedPoolFactory.create(
@@ -131,9 +137,13 @@ class EvaluationSectionAssignmentFactory:
         evaluation = evaluation or EvaluationFactory.create()
 
         if section is None:
-            section = VersionedSectionFactory.create(template_version=evaluation.template_version, name="Section", order=0)
+            section = VersionedSectionFactory.create(
+                template_version=evaluation.template_version, name="Section", order=0
+            )
 
-        assigned_to = assigned_to or UserFactory.create(email="manager@example.com", password=None)
+        assigned_to = assigned_to or UserFactory.create(
+            email="manager@example.com", password=None
+        )
 
         return EvaluationSectionAssignment.objects.create(
             evaluation=evaluation,

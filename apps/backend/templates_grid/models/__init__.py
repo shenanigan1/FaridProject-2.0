@@ -10,7 +10,8 @@ from .versioned_pool import VersionedPool as VersionedPool
 from .versioned_question import VersionedQuestion as VersionedQuestion
 from .versioned_section import VersionedSection as VersionedSection
 
-__all__ = [ "Template",
+__all__ = [
+    "Template",
     "SkillQuestion",
     "QuestionFormat",
     "Difficulty",

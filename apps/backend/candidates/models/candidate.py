@@ -1,16 +1,24 @@
 from django.conf import settings
 from django.db import models
 
+
 class CandidateStatus(models.TextChoices):
     PENDING = "pending", "Pending"
     IN_REVIEW = "in_review", "In review"
     HIRED = "hired", "Hired"
     REJECTED = "rejected", "Rejected"
 
-class Candidate(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="candidate_profile")
 
-    status = models.CharField(max_length=50, choices=CandidateStatus.choices, default=CandidateStatus.PENDING)
+class Candidate(models.Model):
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.PROTECT,
+        related_name="candidate_profile",
+    )
+
+    status = models.CharField(
+        max_length=50, choices=CandidateStatus.choices, default=CandidateStatus.PENDING
+    )
 
     target_position = models.ForeignKey(
         "positions.Position",

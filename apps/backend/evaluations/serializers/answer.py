@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from templates_grid.models import SkillQuestion
 
+
 class SkillAnswerSerializer(serializers.Serializer):
     question_id = serializers.IntegerField()
     value = serializers.IntegerField()

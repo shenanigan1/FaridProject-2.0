@@ -5,24 +5,38 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
-        ('evaluations', '0001_initial'),
+        ("evaluations", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='DrivingSession',
+            name="DrivingSession",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('vehicle', models.CharField(blank=True, max_length=255)),
-                ('route', models.CharField(blank=True, max_length=255)),
-                ('started_at', models.DateTimeField(blank=True, null=True)),
-                ('ended_at', models.DateTimeField(blank=True, null=True)),
-                ('notes', models.TextField(blank=True)),
-                ('evaluation', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='driving_session', to='evaluations.evaluation')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("vehicle", models.CharField(blank=True, max_length=255)),
+                ("route", models.CharField(blank=True, max_length=255)),
+                ("started_at", models.DateTimeField(blank=True, null=True)),
+                ("ended_at", models.DateTimeField(blank=True, null=True)),
+                ("notes", models.TextField(blank=True)),
+                (
+                    "evaluation",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="driving_session",
+                        to="evaluations.evaluation",
+                    ),
+                ),
             ],
         ),
     ]

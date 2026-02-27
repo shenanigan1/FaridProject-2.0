@@ -30,4 +30,5 @@ class LoginSerializer(serializers.Serializer):
 
 class MeSerializer(UserSerializer):
     """Alias: utile si tu veux un profil différent plus tard."""
+
     pass

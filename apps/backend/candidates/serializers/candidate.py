@@ -22,7 +22,15 @@ class CandidateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Candidate
-        fields = ["id", "user", "status", "target_position", "flag", "created_at", "updated_at"]
+        fields = [
+            "id",
+            "user",
+            "status",
+            "target_position",
+            "flag",
+            "created_at",
+            "updated_at",
+        ]
         read_only_fields = ["id", "created_at", "updated_at"]
 
     def create(self, validated_data):
@@ -37,10 +45,12 @@ class CandidateSerializer(serializers.ModelSerializer):
                 phone=user_data.get("phone", ""),
             )
         except (IntegrityError, DjangoValidationError):
-            raise serializers.ValidationError({"user": {"email": ["This email is already used."]}})
+            raise serializers.ValidationError(
+                {"user": {"email": ["This email is already used."]}}
+            )
 
         return Candidate.objects.create(user=user, **validated_data)
-    
+
     def update(self, instance, validated_data):
         user_data = validated_data.pop("user", None)
 

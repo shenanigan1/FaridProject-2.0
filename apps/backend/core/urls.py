@@ -26,12 +26,13 @@ router.register("questionpools", QuestionPoolViewSet, basename="questionpools")
 router.register("skillquestions", SkillQuestionViewSet, basename="skillquestions")
 router.register("templates", TemplateViewSet, basename="templates")
 router.register("templatesections", TemplateSectionViewSet, basename="templatesections")
-router.register("templatepoolrules", TemplatePoolRuleViewSet, basename="templatepoolrules")
+router.register(
+    "templatepoolrules", TemplatePoolRuleViewSet, basename="templatepoolrules"
+)
 
 router.register("evaluations", EvaluationViewSet, basename="evaluations")
 
 urlpatterns = [
-
     path("api/", include(router.urls)),
     path("api/auth/", include("users.routes.auth")),
     # Keep auth include only if it exists and does not break imports:

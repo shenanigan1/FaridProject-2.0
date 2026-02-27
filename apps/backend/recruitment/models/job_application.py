@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class ApplicationStatus(models.TextChoices):
     APPLIED = "applied", "Applied"
     IN_REVIEW = "in_review", "In review"
@@ -8,18 +9,30 @@ class ApplicationStatus(models.TextChoices):
     HIRED = "hired", "Hired"
     REJECTED = "rejected", "Rejected"
 
-class JobApplication(models.Model):
-    candidate = models.ForeignKey("candidates.Candidate", on_delete=models.PROTECT, related_name="applications")
-    position = models.ForeignKey("positions.Position", on_delete=models.PROTECT, related_name="applications")
 
-    status = models.CharField(max_length=20, choices=ApplicationStatus.choices, default=ApplicationStatus.APPLIED)
+class JobApplication(models.Model):
+    candidate = models.ForeignKey(
+        "candidates.Candidate", on_delete=models.PROTECT, related_name="applications"
+    )
+    position = models.ForeignKey(
+        "positions.Position", on_delete=models.PROTECT, related_name="applications"
+    )
+
+    status = models.CharField(
+        max_length=20,
+        choices=ApplicationStatus.choices,
+        default=ApplicationStatus.APPLIED,
+    )
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=["candidate", "position"], name="uniq_candidate_position_application"),
+            models.UniqueConstraint(
+                fields=["candidate", "position"],
+                name="uniq_candidate_position_application",
+            ),
         ]
         indexes = [
             models.Index(fields=["position", "status"]),

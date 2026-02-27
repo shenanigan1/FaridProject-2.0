@@ -16,7 +16,14 @@ class EmployeeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Employee
-        fields = ["id", "user", "employee_number", "department", "created_at", "updated_at"]
+        fields = [
+            "id",
+            "user",
+            "employee_number",
+            "department",
+            "created_at",
+            "updated_at",
+        ]
         read_only_fields = ["id", "created_at", "updated_at"]
 
     def create(self, validated_data):
@@ -31,13 +38,17 @@ class EmployeeSerializer(serializers.ModelSerializer):
                 phone=user_data.get("phone", ""),
             )
         except IntegrityError:
-            raise serializers.ValidationError({"user": {"email": ["This email is already used."]}})
+            raise serializers.ValidationError(
+                {"user": {"email": ["This email is already used."]}}
+            )
 
         try:
             return Employee.objects.create(user=user, **validated_data)
         except IntegrityError:
             # employee_number uniqueness
-            raise serializers.ValidationError({"employee_number": ["This employee number is already used."]})
+            raise serializers.ValidationError(
+                {"employee_number": ["This employee number is already used."]}
+            )
 
     def update(self, instance, validated_data):
         user_data = validated_data.pop("user", None)

@@ -17,5 +17,5 @@ __all__ = [
     "JobApplicationFactory",
     "TemplateFactory",
     "TemplateVersionFactory",
-    "UserFactory" 
+    "UserFactory",
 ]

@@ -1,7 +1,12 @@
 from django.db import models
 
+
 class DrivingSession(models.Model):
-    evaluation = models.OneToOneField("evaluations.Evaluation", on_delete=models.CASCADE, related_name="driving_session")
+    evaluation = models.OneToOneField(
+        "evaluations.Evaluation",
+        on_delete=models.CASCADE,
+        related_name="driving_session",
+    )
 
     vehicle = models.CharField(max_length=255, blank=True)
     route = models.CharField(max_length=255, blank=True)
