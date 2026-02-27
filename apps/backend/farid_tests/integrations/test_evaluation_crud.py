@@ -5,7 +5,6 @@ from django.urls import reverse
 from evaluations.models.evaluation import Evaluation
 from farid_tests.factories.users import UserFactory
 from farid_tests.factories.positions import PositionFactory
-from farid_tests.factories.recruitment import JobApplicationFactory
 from farid_tests.factories.templates_grid import TemplateFactory, TemplateVersionFactory
 
 pytestmark = pytest.mark.django_db

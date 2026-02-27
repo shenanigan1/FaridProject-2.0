@@ -1,7 +1,7 @@
 from rest_framework.viewsets import ModelViewSet
 from positions.models import Position
 from positions.serializers import PositionSerializer
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import IsAuthenticated
 from users.permissions import IsHrAdminOrDirector
 
 

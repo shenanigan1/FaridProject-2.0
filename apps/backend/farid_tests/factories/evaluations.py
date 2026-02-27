@@ -11,8 +11,6 @@ from evaluations.models.evaluation_section_assignment import EvaluationSectionAs
 from evaluations.models.evaluation_comment import EvaluationComment
 
 from farid_tests.factories.users import UserFactory
-from farid_tests.factories.positions import PositionFactory
-from farid_tests.factories.recruitment import JobApplicationFactory
 from farid_tests.factories.templates_grid import (
     TemplateFactory,
     TemplateVersionFactory,
