@@ -1,18 +1,16 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject, Observable, of, switchMap, take, tap } from 'rxjs';
 import { AuthService } from './auth.service';
 import { TokenStorageService } from './token-storage.service';
-import { MeResponse } from '../auth.models';
+import { MeResponse } from '@auth/models/auth.models';
 
 @Injectable({ providedIn: 'root' })
 export class AuthStateService {
+  private readonly auth = inject(AuthService);
+  private readonly tokens = inject(TokenStorageService);
+
   private readonly meSubject = new BehaviorSubject<MeResponse | null>(null);
   readonly me$ = this.meSubject.asObservable();
-
-  constructor(
-    private readonly auth: AuthService,
-    private readonly tokens: TokenStorageService
-  ) {}
 
   /** Fast check (token presence). Does not guarantee token validity. */
   isAuthenticated(): boolean {
@@ -30,9 +28,7 @@ export class AuthStateService {
         if (cached) return of(cached);
         if (!this.isAuthenticated()) return of(null);
 
-        return this.auth.me().pipe(
-          tap((me) => this.meSubject.next(me))
-        );
+        return this.auth.me().pipe(tap((me) => this.meSubject.next(me)));
       })
     );
   }

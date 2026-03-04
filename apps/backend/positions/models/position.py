@@ -1,7 +1,10 @@
 from django.db import models
 
+
 class Position(models.Model):
-    company = models.ForeignKey("companies.Company", on_delete=models.PROTECT, related_name="positions")
+    company = models.ForeignKey(
+        "companies.Company", on_delete=models.PROTECT, related_name="positions"
+    )
 
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True)

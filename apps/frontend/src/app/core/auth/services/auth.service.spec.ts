@@ -1,10 +1,15 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+
 import { AuthService } from './auth.service';
+import { environment } from '@env/environment';
+import { LoginRequest, LoginResponse, MeResponse } from '@auth/models/auth.models';
 
 describe('AuthService', () => {
   let service: AuthService;
   let httpMock: HttpTestingController;
+
+  const base = `${environment.apiBaseUrl}/api/auth`;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -14,32 +19,66 @@ describe('AuthService', () => {
 
     service = TestBed.inject(AuthService);
     httpMock = TestBed.inject(HttpTestingController);
-
-    localStorage.clear();
   });
 
   afterEach(() => {
     httpMock.verify();
   });
 
-  it('should send POST request and store token', () => {
-    const mockResponse = {
+  it('login should POST /login/ with LoginRequest payload and return LoginResponse', () => {
+    const payload: LoginRequest = {
+      profile: 'driver',
+      email: 'test@test.com',
+      password: 'password123',
+    };
+
+    const mockResponse: LoginResponse = {
       access: 'ACCESS_TOKEN',
       refresh: 'REFRESH_TOKEN',
     };
 
-    service.login('test@test.com', 'password123').subscribe((res) => {
+    service.login(payload).subscribe((res) => {
       expect(res).toEqual(mockResponse);
-      expect(localStorage.getItem('access')).toBe('ACCESS_TOKEN');
-      expect(localStorage.getItem('refresh')).toBe('REFRESH_TOKEN');
     });
 
-    const req = httpMock.expectOne('/api/auth/login/');
+    const req = httpMock.expectOne(`${base}/login/`);
     expect(req.request.method).toBe('POST');
-    expect(req.request.body).toEqual({
-      email: 'test@test.com',
-      password: 'password123',
+    expect(req.request.body).toEqual(payload);
+
+    req.flush(mockResponse);
+  });
+
+  it('me should GET /me/ and return MeResponse', () => {
+    // If you know the real shape, fill it here.
+    const mockResponse: MeResponse = {
+      // e.g. id: 1, email: 'test@test.com', role: 'driver'
+    } as unknown as MeResponse;
+
+    service.me().subscribe((res) => {
+      expect(res).toEqual(mockResponse);
     });
+
+    const req = httpMock.expectOne(`${base}/me/`);
+    expect(req.request.method).toBe('GET');
+
+    req.flush(mockResponse);
+  });
+
+  it('refresh should POST /refresh/ with refresh token and return new tokens', () => {
+    const refreshToken = 'REFRESH_TOKEN';
+
+    const mockResponse: { access: string; refresh?: string } = {
+      access: 'NEW_ACCESS_TOKEN',
+      refresh: 'NEW_REFRESH_TOKEN',
+    };
+
+    service.refresh(refreshToken).subscribe((res) => {
+      expect(res).toEqual(mockResponse);
+    });
+
+    const req = httpMock.expectOne(`${base}/refresh/`);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual({ refresh: refreshToken });
 
     req.flush(mockResponse);
   });

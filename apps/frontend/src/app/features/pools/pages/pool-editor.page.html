@@ -1,0 +1,158 @@
+<div class="min-h-screen bg-slate-950 text-slate-100">
+  <div class="mx-auto w-full max-w-sm px-4 pt-6 pb-24">
+
+    <!-- Header -->
+    <div class="flex items-start justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <app-ui-icon-button ariaLabel="Back" (click)="back()">
+          <svg viewBox="0 0 24 24" class="h-5 w-5 fill-none stroke-current" stroke-width="2">
+            <path d="M15 18l-6-6 6-6" />
+          </svg>
+        </app-ui-icon-button>
+
+        <div class="min-w-0">
+          @if (pageMode() === 'create') {
+            <h1 class="text-lg font-semibold">Create Pool</h1>
+            <p class="mt-1 text-xs text-slate-400">Create a reusable question pool.</p>
+          } @else {
+            <h1 class="text-lg font-semibold truncate">
+              {{ (pool()?.name ?? 'Pool') }}
+            </h1>
+
+            @if (pool(); as p) {
+              <p class="mt-1 text-xs text-slate-400">
+                <span class="font-mono text-slate-300">{{ p.code }}</span>
+
+                @if (p.updatedAt) {
+                  <span> • Updated {{ p.updatedAt | date:'MMM d, y, HH:mm' }}</span>
+                }
+              </p>
+            }
+          }
+        </div>
+      </div>
+
+      <!-- Top right action (detail only) -->
+      @if (pageMode() === 'detail') {
+        <div class="shrink-0">
+          @if (pool() && !isEditing()) {
+            <app-ui-icon-button ariaLabel="Edit" (click)="startEdit()">
+              <svg viewBox="0 0 24 24" class="h-5 w-5 fill-none stroke-current" stroke-width="2">
+                <path d="M12 20h9" />
+                <path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4 12.5-12.5z" />
+              </svg>
+            </app-ui-icon-button>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Tabs (detail only) -->
+    @if (pageMode() === 'detail') {
+      <div class="mt-5">
+        <app-ui-tabs [items]="tabs()" [activeKey]="tab()" (activeKeyChange)="setTab($event)" />
+      </div>
+    }
+
+    <!-- Loading -->
+    @if (isLoading()) {
+      <app-ui-card class="mt-5">
+        <div class="flex items-center gap-3 text-sm text-slate-300">
+          <app-ui-spinner />
+          Loading…
+        </div>
+      </app-ui-card>
+    }
+
+    <!-- Error -->
+    <app-ui-alert class="mt-5" variant="error" [message]="error()"></app-ui-alert>
+
+    @if (error() && pageMode() === 'detail') {
+      <app-ui-card class="mt-5">
+        <app-ui-button-primary block (click)="retry()">Retry</app-ui-button-primary>
+      </app-ui-card>
+    }
+
+    <!-- CREATE MODE: just the form -->
+    @if (pageMode() === 'create') {
+      <app-pool-form
+        [mode]="formMode()"
+        [form]="form"
+        [isLoading]="isLoading()"
+        [apiError]="error()"
+        (normalize)="normalizeCode()"
+        (submitForm)="submit()"
+        (cancel)="cancelEdit()"
+      />
+    }
+
+    <!-- DETAIL MODE -->
+    @if (pageMode() === 'detail' && !isLoading() && !error()) {
+
+      @if (pool(); as p) {
+
+        <!-- QUESTIONS -->
+        @if (tab() === 'questions') {
+          <app-ui-card class="mt-5">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm font-semibold">Questions</p>
+                <p class="mt-1 text-xs text-slate-400">Manage questions inside this pool.</p>
+              </div>
+
+              @if (!isEditing()) {
+                <app-ui-button-secondary (click)="startEdit()">
+                  Edit pool
+                </app-ui-button-secondary>
+              }
+            </div>
+          </app-ui-card>
+
+          <div class="mt-5">
+            <app-pool-questions-panel [poolId]="p.id" />
+          </div>
+        }
+
+        <!-- SETTINGS -->
+        @if (tab() === 'settings') {
+
+          <app-ui-card class="mt-5">
+            <div class="flex items-start justify-between gap-3">
+              <div>
+                <p class="text-sm font-semibold">Pool settings</p>
+                <p class="mt-1 text-xs text-slate-400">Name, code, description.</p>
+              </div>
+
+              @if (isEditing()) {
+                <div class="flex flex-col gap-2">
+                  <app-ui-button-primary [disabled]="isLoading()" (click)="submit()">Save</app-ui-button-primary>
+                  <app-ui-button-secondary (click)="cancelEdit()">Cancel</app-ui-button-secondary>
+                </div>
+              } @else {
+                <app-ui-button-secondary (click)="startEdit()">Edit</app-ui-button-secondary>
+              }
+            </div>
+          </app-ui-card>
+
+          <app-pool-form
+            [mode]="formMode()"
+            [form]="form"
+            [isLoading]="isLoading()"
+            [apiError]="error()"
+            (normalize)="normalizeCode()"
+            (submitForm)="submit()"
+            (cancel)="cancelEdit()"
+          />
+        }
+
+      } @else {
+        <app-ui-empty-state
+          class="mt-5"
+          title="Pool not found"
+          description="This pool doesn't exist or you don't have access."
+        />
+      }
+    }
+
+  </div>
+</div>

@@ -17,4 +17,8 @@ export interface MenuItem {
 })
 export class MenuBarComponent {
   @Input({ required: true }) items!: MenuItem[];
+
+  trackByRoute(_: number, item: { route: string }): string {
+  return item.route;
+}
 }

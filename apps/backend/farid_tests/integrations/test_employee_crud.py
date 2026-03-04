@@ -93,7 +93,9 @@ def test_retrieve_employee(api_client):
 
 
 def test_update_employee_department(api_client):
-    emp = EmployeeFactory.create(email="u1@example.com", employee_number="EMP-U1", department="Old")
+    emp = EmployeeFactory.create(
+        email="u1@example.com", employee_number="EMP-U1", department="Old"
+    )
 
     url = reverse(f"{BASENAME}-detail", args=[emp.id])
     res = api_client.patch(url, {"department": "New"}, format="json")

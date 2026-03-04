@@ -1,21 +1,22 @@
-// src/app/core/auth/auth.interceptor.ts
 import { inject } from '@angular/core';
 import {
+  HttpErrorResponse,
   HttpEvent,
   HttpHandlerFn,
   HttpInterceptorFn,
   HttpRequest,
-  HttpErrorResponse,
 } from '@angular/common/http';
 import { catchError, Observable, switchMap, throwError } from 'rxjs';
-import { AuthService } from '@auth/services/auth.service';
-import { TokenStorageService } from '@auth/services/token-storage.service';
+import { AuthService } from 'src/app/core/auth/services/auth.service';
+import { TokenStorageService } from 'src/app/core/auth/services/token-storage.service';
 
-export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next: HttpHandlerFn): Observable<HttpEvent<any>> => {
+export const authInterceptor: HttpInterceptorFn = (
+  req: HttpRequest<unknown>,
+  next: HttpHandlerFn
+): Observable<HttpEvent<unknown>> => {
   const tokenStorage = inject(TokenStorageService);
   const authService = inject(AuthService);
 
-  // Ne pas ajouter Authorization sur login/refresh
   const isAuthEndpoint =
     req.url.includes('/api/auth/login') || req.url.includes('/api/auth/refresh');
 
@@ -30,7 +31,6 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next: 
     catchError((err: unknown) => {
       if (!(err instanceof HttpErrorResponse)) return throwError(() => err);
 
-      // 401: on tente refresh (si on a un refresh token)
       if (err.status === 401 && !isAuthEndpoint) {
         const refresh = tokenStorage.getRefreshToken();
         if (!refresh) {
@@ -40,13 +40,19 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next: 
 
         return authService.refresh(refresh).pipe(
           switchMap((res) => {
-            tokenStorage.saveTokens(res.access, res.refresh ?? refresh, tokenStorage.getRememberMe());
+            tokenStorage.saveTokens(
+              res.access,
+              res.refresh ?? refresh,
+              tokenStorage.getRememberMe()
+            );
+
             const retryReq = req.clone({
               setHeaders: { Authorization: `Bearer ${res.access}` },
             });
+
             return next(retryReq);
           }),
-          catchError((refreshErr) => {
+          catchError((refreshErr: unknown) => {
             tokenStorage.clear();
             return throwError(() => refreshErr);
           })

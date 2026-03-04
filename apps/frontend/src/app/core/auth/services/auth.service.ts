@@ -1,14 +1,14 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from '../../../../environments/environment';
-import { LoginRequest, LoginResponse, MeResponse } from './../auth.models';
+import { environment } from '@env/environment';
+import { LoginRequest, LoginResponse, MeResponse } from '@auth/models/auth.models';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private readonly base = `${environment.apiBaseUrl}/api/auth`;
+  private readonly http = inject(HttpClient);
 
-  constructor(private readonly http: HttpClient) {}
+  private readonly base = `${environment.apiBaseUrl}/api/auth`;
 
   login(payload: LoginRequest): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.base}/login/`, payload);

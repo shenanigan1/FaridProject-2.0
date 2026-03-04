@@ -50,8 +50,12 @@ def test_create_job_application_duplicate_rejected(api_client):
 
 def test_list_job_applications(api_client):
     JobApplication.objects.all().delete()
-    JobApplication.objects.create(candidate=CandidateFactory.create(), position=PositionFactory.create())
-    JobApplication.objects.create(candidate=CandidateFactory.create(), position=PositionFactory.create())
+    JobApplication.objects.create(
+        candidate=CandidateFactory.create(), position=PositionFactory.create()
+    )
+    JobApplication.objects.create(
+        candidate=CandidateFactory.create(), position=PositionFactory.create()
+    )
 
     url = reverse(f"{BASENAME}-list")
     res = api_client.get(url)
@@ -62,7 +66,9 @@ def test_list_job_applications(api_client):
 
 
 def test_retrieve_job_application(api_client):
-    app = JobApplication.objects.create(candidate=CandidateFactory.create(), position=PositionFactory.create())
+    app = JobApplication.objects.create(
+        candidate=CandidateFactory.create(), position=PositionFactory.create()
+    )
 
     url = reverse(f"{BASENAME}-detail", args=[app.id])
     res = api_client.get(url)
@@ -72,7 +78,9 @@ def test_retrieve_job_application(api_client):
 
 
 def test_update_job_application_status(api_client):
-    app = JobApplication.objects.create(candidate=CandidateFactory.create(), position=PositionFactory.create())
+    app = JobApplication.objects.create(
+        candidate=CandidateFactory.create(), position=PositionFactory.create()
+    )
 
     url = reverse(f"{BASENAME}-detail", args=[app.id])
     res = api_client.patch(url, {"status": "in_review"}, format="json")

@@ -1,8 +1,10 @@
 import os
 from pathlib import Path
 from datetime import timedelta
+from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(BASE_DIR / ".env")  # Explicitly load .env for pytest
 
 SECRET_KEY = "dev-secret-key"
 DEBUG = True
@@ -39,10 +41,10 @@ INSTALLED_APPS = [
 ]
 
 REST_FRAMEWORK = {
-    "DEFAULT_FILTER_BACKENDS": [ 
-        "django_filters.rest_framework.DjangoFilterBackend", 
-        ],
-    
+    "DEFAULT_FILTER_BACKENDS": [
+        "django_filters.rest_framework.DjangoFilterBackend",
+        "rest_framework.filters.SearchFilter",
+    ],
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
@@ -60,8 +62,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:4200",
 ]
 
-#if you want to allow coockies and sessions
-#CORS_ALLOW_CREDENTIALS = True
+# if you want to allow coockies and sessions
+# CORS_ALLOW_CREDENTIALS = True
 
 AUTHENTICATION_BACKENDS = [
     "core.auth_backend.EmailAuthBackend",
@@ -79,5 +81,11 @@ DATABASES = {
         "PORT": os.getenv("DB_PORT", "5433"),
     }
 }
+
+print("ENV DB_HOST:", os.getenv("DB_HOST"))
+print("ENV DB_PORT:", os.getenv("DB_PORT"))
+print("ENV DB_USER:", os.getenv("DB_USER"))
+print("ENV DB_NAME:", os.getenv("DB_NAME"))
+print("ENV DB_PASSWORD is None?:", os.getenv("DB_PASSWORD") is None)
 
 STATIC_URL = "/static/"

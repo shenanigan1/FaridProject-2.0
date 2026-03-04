@@ -4,6 +4,7 @@ from candidates.models import Candidate
 from templates_grid.models import Template
 from users.models import User
 
+
 class EvaluationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Evaluation
@@ -22,7 +23,13 @@ class EvaluationSerializer(serializers.ModelSerializer):
             "completed_at",
             "validated_at",
         ]
-        read_only_fields = ["id", "created_at", "updated_at", "completed_at", "validated_at"]
+        read_only_fields = [
+            "id",
+            "created_at",
+            "updated_at",
+            "completed_at",
+            "validated_at",
+        ]
 
 
 class StartEvaluationSerializer(serializers.Serializer):
@@ -54,5 +61,5 @@ class StartEvaluationSerializer(serializers.Serializer):
             candidate=validated_data["candidate"],
             template=validated_data["template"],
             assigned_to=validated_data["evaluator"],
-            status="in_progress"
+            status="in_progress",
         )

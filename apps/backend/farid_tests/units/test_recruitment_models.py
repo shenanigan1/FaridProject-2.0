@@ -29,7 +29,9 @@ def test_job_application_unique_candidate_position():
 
 
 def test_job_application_str_contains_candidate_and_position():
-    candidate = CandidateFactory.create(first_name="Jean", last_name="Dupont", email="jd@app.com")
+    candidate = CandidateFactory.create(
+        first_name="Jean", last_name="Dupont", email="jd@app.com"
+    )
     position = PositionFactory.create(title="Driver")
 
     app = JobApplication.objects.create(candidate=candidate, position=position)

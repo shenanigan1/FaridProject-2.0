@@ -1,6 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.db import models
 
+
 class SkillAnswer(models.Model):
     evaluation_question = models.OneToOneField(
         "evaluations.EvaluationQuestion",
@@ -22,7 +23,9 @@ class SkillAnswer(models.Model):
         if not q or self.value is None:
             return
         if self.value < q.min_score or self.value > q.max_score:
-            raise ValidationError({"value": f"Value must be between {q.min_score} and {q.max_score}."})
+            raise ValidationError(
+                {"value": f"Value must be between {q.min_score} and {q.max_score}."}
+            )
 
     def __str__(self) -> str:
         return f"{self.evaluation_question_id} = {self.value}"

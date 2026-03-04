@@ -5,7 +5,6 @@ from django.urls import reverse
 from evaluations.models.evaluation import Evaluation
 from farid_tests.factories.users import UserFactory
 from farid_tests.factories.positions import PositionFactory
-from farid_tests.factories.recruitment import JobApplicationFactory
 from farid_tests.factories.templates_grid import TemplateFactory, TemplateVersionFactory
 
 pytestmark = pytest.mark.django_db
@@ -58,10 +57,16 @@ def test_create_evaluation_missing_fields(api_client):
 def test_list_evaluations(api_client):
     # Create 2 evals via ORM (independent of API create)
     subject = UserFactory.create(email="s1@example.com", password=None)
-    template_version = TemplateVersionFactory.create(template=TemplateFactory.create(), version=1)
+    template_version = TemplateVersionFactory.create(
+        template=TemplateFactory.create(), version=1
+    )
 
-    Evaluation.objects.create(subject=subject, template_version=template_version, status="in_progress")
-    Evaluation.objects.create(subject=subject, template_version=template_version, status="completed")
+    Evaluation.objects.create(
+        subject=subject, template_version=template_version, status="in_progress"
+    )
+    Evaluation.objects.create(
+        subject=subject, template_version=template_version, status="completed"
+    )
 
     url = reverse(f"{BASENAME}-list")
     res = api_client.get(url)
@@ -73,8 +78,12 @@ def test_list_evaluations(api_client):
 
 def test_retrieve_evaluation(api_client):
     subject = UserFactory.create(email="s2@example.com", password=None)
-    template_version = TemplateVersionFactory.create(template=TemplateFactory.create(), version=1)
-    ev = Evaluation.objects.create(subject=subject, template_version=template_version, status="in_progress")
+    template_version = TemplateVersionFactory.create(
+        template=TemplateFactory.create(), version=1
+    )
+    ev = Evaluation.objects.create(
+        subject=subject, template_version=template_version, status="in_progress"
+    )
 
     url = reverse(f"{BASENAME}-detail", args=[ev.id])
     res = api_client.get(url)
@@ -85,8 +94,12 @@ def test_retrieve_evaluation(api_client):
 
 def test_update_evaluation_status(api_client):
     subject = UserFactory.create(email="s3@example.com", password=None)
-    template_version = TemplateVersionFactory.create(template=TemplateFactory.create(), version=1)
-    ev = Evaluation.objects.create(subject=subject, template_version=template_version, status="in_progress")
+    template_version = TemplateVersionFactory.create(
+        template=TemplateFactory.create(), version=1
+    )
+    ev = Evaluation.objects.create(
+        subject=subject, template_version=template_version, status="in_progress"
+    )
 
     url = reverse(f"{BASENAME}-detail", args=[ev.id])
     res = api_client.patch(url, {"status": "completed"}, format="json")

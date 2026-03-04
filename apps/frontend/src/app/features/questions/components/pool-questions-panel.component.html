@@ -6,6 +6,7 @@
         <path d="M21 21l-4.3-4.3" />
         <circle cx="11" cy="11" r="7" />
       </svg>
+
       <input
         type="search"
         class="w-full bg-transparent text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none"
@@ -28,166 +29,178 @@
   </div>
 
   <!-- Loading -->
-  <div *ngIf="isLoading()" class="rounded-2xl bg-slate-900/60 p-4 ring-1 ring-white/10">
-    <p class="text-sm text-slate-300">Loading questions…</p>
-  </div>
+  @if (isLoading()) {
+    <div class="rounded-2xl bg-slate-900/60 p-4 ring-1 ring-white/10">
+      <p class="text-sm text-slate-300">Loading questions…</p>
+    </div>
+  }
 
   <!-- Error -->
-  <div *ngIf="error()" class="rounded-2xl bg-red-500/10 p-4 ring-1 ring-red-500/30">
-    <p class="text-sm text-red-200">{{ error() }}</p>
-  </div>
+  @if (error()) {
+    <div class="rounded-2xl bg-red-500/10 p-4 ring-1 ring-red-500/30">
+      <p class="text-sm text-red-200">{{ error() }}</p>
+    </div>
+  }
 
   <!-- Cards -->
-  <div class="space-y-3" *ngIf="!isLoading() && !error()">
+  @if (!isLoading() && !error()) {
+    <div class="space-y-3">
+      @for (q of filtered(); track q.id) {
+        <div class="rounded-2xl bg-slate-900/60 p-4 ring-1 ring-white/10">
+          <div class="flex items-start justify-between gap-3">
+            <div class="min-w-0 flex-1">
+              <p class="text-[10px] font-semibold tracking-wide text-sky-300">
+                {{ badgeLabel(q.format) }}
+              </p>
 
-    <div
-      *ngFor="let q of filtered(); trackBy: trackById"
-      class="rounded-2xl bg-slate-900/60 p-4 ring-1 ring-white/10"
-    >
-      <div class="flex items-start justify-between gap-3">
-        <div class="min-w-0 flex-1">
-          <p class="text-[10px] font-semibold tracking-wide text-sky-300">
-            {{ badgeLabel(q.format) }}
-          </p>
+              <p class="mt-1 text-sm font-medium text-slate-100">
+                {{ q.text }}
+              </p>
+            </div>
 
-          <p class="mt-1 text-sm font-medium text-slate-100">
-            {{ q.text }}
+            <!-- Pencil -->
+            <button
+              type="button"
+              class="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-slate-900/60 ring-1 ring-white/10 hover:bg-slate-900"
+              (click)="openEdit(q)"
+              aria-label="Edit question"
+            >
+              <svg viewBox="0 0 24 24" class="h-5 w-5 fill-none stroke-slate-200" stroke-width="2">
+                <path d="M12 20h9" />
+                <path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4 12.5-12.5z" />
+              </svg>
+            </button>
+          </div>
+
+          <div class="mt-3 flex items-center justify-between text-xs text-slate-500">
+            <span>
+              Mandatory:
+              <span class="text-slate-200">{{ q.is_mandatory ? 'Yes' : 'No' }}</span>
+            </span>
+
+            <span>
+              ID:
+              <span class="font-mono text-slate-300">{{ q.id }}</span>
+            </span>
+          </div>
+        </div>
+      }
+
+      @if (filtered().length === 0) {
+        <div class="rounded-2xl bg-slate-900/60 p-6 text-center ring-1 ring-white/10">
+          <p class="text-sm font-semibold">No questions</p>
+          <p class="mt-2 text-xs text-slate-400">
+            Add your first question to this pool.
           </p>
         </div>
-
-        <!-- Pencil -->
-        <button
-          type="button"
-          class="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-slate-900/60 ring-1 ring-white/10 hover:bg-slate-900"
-          (click)="openEdit(q)"
-          aria-label="Edit question"
-        >
-          <svg viewBox="0 0 24 24" class="h-5 w-5 fill-none stroke-slate-200" stroke-width="2">
-            <path d="M12 20h9" />
-            <path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4 12.5-12.5z" />
-          </svg>
-        </button>
-      </div>
-
-      <div class="mt-3 flex items-center justify-between text-xs text-slate-500">
-        <span>
-          Mandatory:
-          <span class="text-slate-200">{{ q.is_mandatory ? 'Yes' : 'No' }}</span>
-        </span>
-
-        <span>
-          ID:
-          <span class="font-mono text-slate-300">{{ q.id }}</span>
-        </span>
-      </div>
+      }
     </div>
-
-    <div *ngIf="filtered().length === 0"
-         class="rounded-2xl bg-slate-900/60 p-6 text-center ring-1 ring-white/10">
-      <p class="text-sm font-semibold">No questions</p>
-      <p class="mt-2 text-xs text-slate-400">
-        Add your first question to this pool.
-      </p>
-    </div>
-
-  </div>
+  }
 </div>
 
 <!-- EDIT MODAL -->
-<div *ngIf="isEditOpen()" class="fixed inset-0 z-50 flex items-end justify-center bg-black/60 p-4">
-  <div class="w-full max-w-sm rounded-3xl bg-slate-950 text-slate-100 ring-1 ring-white/10">
-    <div class="p-4">
+@if (isEditOpen()) {
+  <div class="fixed inset-0 z-50 flex items-end justify-center bg-black/60 p-4">
+    <div class="w-full max-w-sm rounded-3xl bg-slate-950 text-slate-100 ring-1 ring-white/10">
+      <div class="p-4">
 
-      <div class="flex items-start justify-between gap-3">
-        <div>
-          <h3 class="text-sm font-semibold">Edit Question</h3>
-          <p class="mt-1 text-xs text-slate-400">Update question content.</p>
-        </div>
-
-        <button
-          type="button"
-          class="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-slate-900/60 ring-1 ring-white/10 hover:bg-slate-900"
-          (click)="closeEdit()"
-        >
-          <svg viewBox="0 0 24 24" class="h-5 w-5 fill-none stroke-slate-200" stroke-width="2">
-            <path d="M6 6l12 12M18 6L6 18" />
-          </svg>
-        </button>
-      </div>
-
-      <form class="mt-4 space-y-4" [formGroup]="form">
-
-        <div>
-          <label class="text-xs font-medium text-slate-300">Type</label>
-          <select
-            formControlName="type"
-            class="mt-2 w-full rounded-2xl bg-slate-900/60 px-4 py-3 text-sm ring-1 ring-white/10 focus:outline-none"
-          >
-            <option value="multiple_choice">Multiple choice</option>
-            <option value="true_false">True/False</option>
-            <option value="text">Text</option>
-          </select>
-        </div>
-
-        <div>
-          <label class="text-xs font-medium text-slate-300">Prompt</label>
-          <textarea
-            rows="4"
-            formControlName="prompt"
-            class="mt-2 w-full resize-none rounded-2xl bg-slate-900/60 px-4 py-3 text-sm ring-1 ring-white/10 focus:outline-none"
-          ></textarea>
-
-          <p *ngIf="form.controls.text.touched && form.controls.text.invalid"
-             class="mt-2 text-xs text-red-300">
-            Prompt is required (min 5 chars).
-          </p>
-        </div>
-
-        <div class="flex items-center justify-between rounded-2xl bg-slate-900/60 px-4 py-3 ring-1 ring-white/10">
-          <span class="text-sm text-slate-200">Mandatory</span>
-          <input type="checkbox" formControlName="isMandatory" class="h-5 w-5" />
-        </div>
-
-        <div class="grid grid-cols-2 gap-3">
+        <div class="flex items-start justify-between gap-3">
           <div>
-            <label class="text-xs font-medium text-slate-300">Min score</label>
-            <input
-              type="number"
-              formControlName="minScore"
-              class="mt-2 w-full rounded-2xl bg-slate-900/60 px-4 py-3 text-sm ring-1 ring-white/10 focus:outline-none"
-            />
+            <h3 class="text-sm font-semibold">Edit Question</h3>
+            <p class="mt-1 text-xs text-slate-400">Update question content.</p>
           </div>
-
-          <div>
-            <label class="text-xs font-medium text-slate-300">Max score</label>
-            <input
-              type="number"
-              formControlName="maxScore"
-              class="mt-2 w-full rounded-2xl bg-slate-900/60 px-4 py-3 text-sm ring-1 ring-white/10 focus:outline-none"
-            />
-          </div>
-        </div>
-
-        <div class="pt-2">
-          <button
-            type="button"
-            class="inline-flex w-full items-center justify-center rounded-2xl bg-sky-600 px-4 py-3 text-sm font-semibold text-white hover:bg-sky-500 disabled:opacity-60"
-            [disabled]="isLoading()"
-            (click)="saveEdit()"
-          >
-            Save changes
-          </button>
 
           <button
             type="button"
-            class="mt-3 inline-flex w-full items-center justify-center rounded-2xl bg-slate-900/60 px-4 py-3 text-sm font-semibold text-slate-200 ring-1 ring-white/10 hover:bg-slate-900"
+            class="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-slate-900/60 ring-1 ring-white/10 hover:bg-slate-900"
             (click)="closeEdit()"
+            aria-label="Close edit"
           >
-            Cancel
+            <svg viewBox="0 0 24 24" class="h-5 w-5 fill-none stroke-slate-200" stroke-width="2">
+              <path d="M6 6l12 12M18 6L6 18" />
+            </svg>
           </button>
         </div>
 
-      </form>
+        <form class="mt-4 space-y-4" [formGroup]="form">
+
+          <div>
+            <label class="text-xs font-medium text-slate-300" for="q-type">Type</label>
+            <select
+              id="q-type"
+              formControlName="type"
+              class="mt-2 w-full rounded-2xl bg-slate-900/60 px-4 py-3 text-sm ring-1 ring-white/10 focus:outline-none"
+            >
+              <option value="multiple_choice">Multiple choice</option>
+              <option value="true_false">True/False</option>
+              <option value="text">Text</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="text-xs font-medium text-slate-300" for="q-prompt">Prompt</label>
+            <textarea
+              id="q-prompt"
+              rows="4"
+              formControlName="prompt"
+              class="mt-2 w-full resize-none rounded-2xl bg-slate-900/60 px-4 py-3 text-sm ring-1 ring-white/10 focus:outline-none"
+            ></textarea>
+
+            @if (form.controls.text.touched && form.controls.text.invalid) {
+              <p class="mt-2 text-xs text-red-300">
+                Prompt is required (min 5 chars).
+              </p>
+            }
+          </div>
+
+          <div class="flex items-center justify-between rounded-2xl bg-slate-900/60 px-4 py-3 ring-1 ring-white/10">
+            <label class="text-sm text-slate-200" for="q-mandatory">Mandatory</label>
+            <input id="q-mandatory" type="checkbox" formControlName="isMandatory" class="h-5 w-5" />
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="text-xs font-medium text-slate-300" for="q-minScore">Min score</label>
+              <input
+                id="q-minScore"
+                type="number"
+                formControlName="minScore"
+                class="mt-2 w-full rounded-2xl bg-slate-900/60 px-4 py-3 text-sm ring-1 ring-white/10 focus:outline-none"
+              />
+            </div>
+
+            <div>
+              <label class="text-xs font-medium text-slate-300" for="q-maxScore">Max score</label>
+              <input
+                id="q-maxScore"
+                type="number"
+                formControlName="maxScore"
+                class="mt-2 w-full rounded-2xl bg-slate-900/60 px-4 py-3 text-sm ring-1 ring-white/10 focus:outline-none"
+              />
+            </div>
+          </div>
+
+          <div class="pt-2">
+            <button
+              type="button"
+              class="inline-flex w-full items-center justify-center rounded-2xl bg-sky-600 px-4 py-3 text-sm font-semibold text-white hover:bg-sky-500 disabled:opacity-60"
+              [disabled]="isLoading()"
+              (click)="saveEdit()"
+            >
+              Save changes
+            </button>
+
+            <button
+              type="button"
+              class="mt-3 inline-flex w-full items-center justify-center rounded-2xl bg-slate-900/60 px-4 py-3 text-sm font-semibold text-slate-200 ring-1 ring-white/10 hover:bg-slate-900"
+              (click)="closeEdit()"
+            >
+              Cancel
+            </button>
+          </div>
+
+        </form>
+      </div>
     </div>
   </div>
-</div>
+}

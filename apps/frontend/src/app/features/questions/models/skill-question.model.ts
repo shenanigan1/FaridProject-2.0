@@ -3,11 +3,13 @@
  * Keep only while migrating old UI components that still use prompt/minScore/maxScore/type.
  * TODO: remove after migration to v2 is complete.
  */
+
+/** eslint-disable @typescript-eslint/no-unused-vars */
 export type QuestionType = 'multiple_choice' | 'true_false' | 'text';
 
 export interface SkillQuestionLegacy {
-  id: string;          // normalized string
-  poolId: string;      // normalized string
+  id: string; // normalized string
+  poolId: string; // normalized string
   type: QuestionType;
   prompt: string;
   is_mandatory: boolean;
@@ -15,6 +17,7 @@ export interface SkillQuestionLegacy {
   maxScore: number;
   updatedAt: string;
 }
+/** eslint-enable @typescript-eslint/no-unused-vars */
 
 /**
  * V2 (current)
@@ -23,17 +26,24 @@ export interface SkillQuestionLegacy {
 export type QuestionFormat = 'mcq' | 'true_false' | 'practical';
 export type Difficulty = 'easy' | 'intermediate' | 'hard';
 
+/**
+ * Practical rubric payload:
+ * - backend can store structured JSON
+ * - keep it flexible but typed (no `any`)
+ */
+export type PracticalRubric = Record<string, unknown> | null;
+
 export interface SkillQuestion {
-  id: string;          // normalized string
-  poolId: string;      // normalized string
+  id: string; // normalized string
+  poolId: string; // normalized string
 
   format: QuestionFormat;
 
   // Authoring content
-  title: string;       // optional label (can be empty)
-  text: string;        // main question text (required)
+  title: string; // optional label (can be empty)
+  text: string; // main question text (required)
   explanation: string; // optional explanation
-  rubric: any;         // practical grading rubric / structured content
+  rubric: PracticalRubric;
 
   // Meta/scoring
   is_mandatory: boolean;
@@ -60,7 +70,7 @@ export interface SkillQuestionDto {
   title: string;
   text: string;
   explanation: string;
-  rubric: any;
+  rubric: PracticalRubric;
 
   is_mandatory: boolean;
   points: number;

@@ -10,7 +10,9 @@ def test_login_success(api_client):
     user = UserFactory.create(email="u1@example.com", password="Passw0rd!")
     url = reverse("auth-login")
 
-    res = api_client.post(url, {"email": user.email, "password": "Passw0rd!"}, format="json")
+    res = api_client.post(
+        url, {"email": user.email, "password": "Passw0rd!"}, format="json"
+    )
 
     assert res.status_code == 200
     assert "access" in res.data
@@ -23,7 +25,9 @@ def test_login_invalid_credentials(api_client):
     UserFactory.create(email="u2@example.com", password="Passw0rd!")
     url = reverse("auth-login")
 
-    res = api_client.post(url, {"email": "u2@example.com", "password": "wrong"}, format="json")
+    res = api_client.post(
+        url, {"email": "u2@example.com", "password": "wrong"}, format="json"
+    )
 
     assert res.status_code == 400
     assert "detail" in res.data
@@ -40,7 +44,9 @@ def test_me_success(api_client):
     login_url = reverse("auth-login")
     me_url = reverse("auth-me")
 
-    login = api_client.post(login_url, {"email": user.email, "password": "Passw0rd!"}, format="json")
+    login = api_client.post(
+        login_url, {"email": user.email, "password": "Passw0rd!"}, format="json"
+    )
     token = login.data["access"]
 
     api_client.credentials(HTTP_AUTHORIZATION=f"Bearer {token}")

@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from templates_grid.models import SkillQuestion 
-from templates_grid.models import QuestionFormat, Difficulty 
+from templates_grid.models import SkillQuestion
+from templates_grid.models import QuestionFormat, Difficulty
 
 
 class SkillQuestionSerializer(serializers.ModelSerializer):
@@ -21,7 +21,7 @@ class SkillQuestionSerializer(serializers.ModelSerializer):
             "created_at",
             "updated_at",
         ]
-        read_only_fields = ["id", "pool", "created_at", "updated_at"]
+        read_only_fields = ["id", "created_at", "updated_at"]
 
     def validate_format(self, value: str) -> str:
         value = (value or "").strip()
@@ -51,9 +51,9 @@ class SkillQuestionSerializer(serializers.ModelSerializer):
             # You can decide if rubric is required or just recommended.
             # Here: enforce not empty dict/list/None.
             if rubric in (None, "", {}, []):
-                raise serializers.ValidationError({
-                    "rubric": "Rubric is required for practical questions."
-                })
+                raise serializers.ValidationError(
+                    {"rubric": "Rubric is required for practical questions."}
+                )
 
         points = attrs.get("points", getattr(self.instance, "points", None))
         if points is not None and points < 1:
@@ -61,7 +61,9 @@ class SkillQuestionSerializer(serializers.ModelSerializer):
 
         text = attrs.get("text", getattr(self.instance, "text", None))
         if text is not None and len(text.strip()) < 5:
-            raise serializers.ValidationError({"text": "Text must be at least 5 characters."})
+            raise serializers.ValidationError(
+                {"text": "Text must be at least 5 characters."}
+            )
 
         title = attrs.get("title", getattr(self.instance, "title", ""))
         if title is not None and len(title) > 255:

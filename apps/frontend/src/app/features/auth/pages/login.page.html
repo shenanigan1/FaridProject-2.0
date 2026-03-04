@@ -1,0 +1,60 @@
+<div class="min-h-screen flex items-center justify-center bg-slate-950 p-4">
+  <div class="w-full max-w-sm rounded-2xl bg-slate-900/60 border border-slate-700/50 shadow-xl p-6">
+
+    <!-- Header -->
+    <div class="text-center mb-6">
+      <h1 class="text-xl font-semibold text-white">FleetConnect HR</h1>
+      <p class="text-xs text-slate-400">Logistics & Recruitment Portal</p>
+    </div>
+
+    <!-- Profile selector -->
+    <div class="grid grid-cols-3 gap-2 mb-5">
+      @for (p of profiles; track p.key) {
+        <button
+          type="button"
+          class="rounded-lg border px-2 py-3 text-xs font-semibold transition text-white"
+          [class.border-sky-500]="selectedProfile() === p.key"
+          (click)="selectProfile(p.key)"
+        >
+          {{ p.label }}
+        </button>
+      }
+    </div>
+
+    <app-ui-alert [message]="errorMessage()"></app-ui-alert>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" class="space-y-4">
+
+      <app-ui-text-input
+        formControlName="email"
+        [label]="emailLabel()"
+        placeholder="Enter your credentials">
+      </app-ui-text-input>
+
+      <app-ui-password-input
+        formControlName="password"
+        label="Password"
+        placeholder="••••••••">
+      </app-ui-password-input>
+
+      <label class="flex items-center gap-2 text-xs text-slate-300">
+        <input type="checkbox" formControlName="rememberMe" />
+        Remember me
+      </label>
+
+      <app-ui-button-primary
+        type="submit"
+        variant="primary"
+        [loading]="loading()"
+        block>
+        Sign In
+      </app-ui-button-primary>
+
+    </form>
+
+    <div class="mt-6 text-center text-xs text-slate-400">
+      <a routerLink="/support" class="text-sky-400">Contact Dispatch</a>
+    </div>
+
+  </div>
+</div>

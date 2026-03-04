@@ -5,33 +5,33 @@ export const POOLS_ROUTES: Routes = [
   {
     path: '',
     loadComponent: () =>
-      import('@pages/pools/pools-list.page')
+      import('src/app/features/pools/pages/pools-list.page')
         .then(m => m.PoolsListPageComponent),
   },
     // Create Pool
   {
     path: 'new',
     loadComponent: () =>
-      import('@pages/pools/new/pool-create.page')
-        .then(m => m.PoolCreatePageComponent),
+      import('src/app/features/pools/pages/pool-editor.page')
+        .then(m => m.PoolEditorPageComponent),
   },
    // Edit Pool(Questions View)
   {
     path: ':id',
     loadComponent: () =>
-      import('@pages/pools/[id]/pool-edit.page')
-        .then(m => m.PoolEditPageComponent),
+      import('src/app/features/pools/pages/pool-editor.page')
+        .then(m => m.PoolEditorPageComponent),
   },
    // Create Question
   {
     path: ':poolId/questions/new',
     loadComponent: () =>
-      import('@pages/pools/[id]/questions/new/question-create.page').then(m => m.QuestionCreatePageComponent),
+      import('src/app/features/questions/pages/question-editor.page').then(m => m.QuestionEditorPageComponent),
   },
   // Edit Question
   {
     path: ':poolId/questions/:questionId',
     loadComponent: () =>
-      import('@pages/pools/[id]/questions/[id]/question-edit.page').then(m => m.QuestionEditPageComponent),
+      import('src/app/features/questions/pages/question-editor.page').then(m => m.QuestionEditorPageComponent),
   },
 ];

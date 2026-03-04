@@ -1,1 +1,3 @@
-from .candidate import CandidateSerializer
+from .candidate import CandidateSerializer as CandidateSerializer
+
+__all__ = ["CandidateSerializer"]

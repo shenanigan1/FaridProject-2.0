@@ -2,5 +2,9 @@
   "private": true,
   "workspaces": [
     "apps/frontend"
-  ]
+  ],
+  
+  "scripts": {
+    "lint:eslint": "ng lint"
+  }
 }

@@ -4,7 +4,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from templates_grid.models.question_pool import QuestionPool
-from templates_grid.models.skill_question import SkillQuestion, SkillType
+from templates_grid.models.skill_question import SkillQuestion
 from templates_grid.models.template import Template
 from templates_grid.models.template_section import TemplateSection
 from templates_grid.models.template_pool_rule import TemplatePoolRule
@@ -25,7 +25,9 @@ class QuestionPoolFactory:
         code: str = "soft_skills_pool",
         description: str = "",
     ) -> QuestionPool:
-        return QuestionPool.objects.create(name=name, code=code, description=description)
+        return QuestionPool.objects.create(
+            name=name, code=code, description=description
+        )
 
 
 @dataclass(frozen=True)
@@ -34,11 +36,9 @@ class SkillQuestionFactory:
     def create(
         *,
         pool: QuestionPool | None = None,
-        label: str = "Communication",
-        type: str = SkillType.SOFT,
+        title: str = "Communication",
         is_mandatory: bool = False,
-        min_score: int = 0,
-        max_score: int = 5,
+        points: int = 1,
         order: int = 0,
         persist: bool = True,
     ) -> SkillQuestion:
@@ -46,16 +46,14 @@ class SkillQuestionFactory:
 
         obj = SkillQuestion(
             pool=pool,
-            label=label,
-            type=type,
+            title=title,
             is_mandatory=is_mandatory,
-            min_score=min_score,
-            max_score=max_score,
+            points=points,
             order=order,
         )
 
         # ✅ If invalid, NEVER hit the DB constraint: return unsaved instance
-        if min_score > max_score:
+        if points > 0:
             return obj
 
         if persist:
@@ -109,10 +107,13 @@ class TemplatePoolRuleFactory:
 
 # ---- Versioning factories (if you created those models) ----
 
+
 @dataclass(frozen=True)
 class TemplateVersionFactory:
     @staticmethod
-    def create(*, template: Template | None = None, version: int = 1) -> TemplateVersion:
+    def create(
+        *, template: Template | None = None, version: int = 1
+    ) -> TemplateVersion:
         template = template or TemplateFactory.create()
         return TemplateVersion.objects.create(template=template, version=version)
 
@@ -120,9 +121,16 @@ class TemplateVersionFactory:
 @dataclass(frozen=True)
 class VersionedSectionFactory:
     @staticmethod
-    def create(*, template_version: TemplateVersion | None = None, name: str = "VSection", order: int = 0) -> VersionedSection:
+    def create(
+        *,
+        template_version: TemplateVersion | None = None,
+        name: str = "VSection",
+        order: int = 0,
+    ) -> VersionedSection:
         template_version = template_version or TemplateVersionFactory.create()
-        return VersionedSection.objects.create(template_version=template_version, name=name, order=order)
+        return VersionedSection.objects.create(
+            template_version=template_version, name=name, order=order
+        )
 
 
 @dataclass(frozen=True)
@@ -138,7 +146,9 @@ class VersionedPoolFactory:
         order: int = 0,
     ) -> VersionedPool:
         template_version = template_version or TemplateVersionFactory.create()
-        section = section or VersionedSectionFactory.create(template_version=template_version)
+        section = section or VersionedSectionFactory.create(
+            template_version=template_version
+        )
         return VersionedPool.objects.create(
             template_version=template_version,
             section=section,

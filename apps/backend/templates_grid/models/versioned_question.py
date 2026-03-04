@@ -1,8 +1,13 @@
 from django.db import models
 from django.db.models import Q, F
 
+
 class VersionedQuestion(models.Model):
-    pool = models.ForeignKey("templates_grid.VersionedPool", on_delete=models.CASCADE, related_name="questions")
+    pool = models.ForeignKey(
+        "templates_grid.VersionedPool",
+        on_delete=models.CASCADE,
+        related_name="questions",
+    )
 
     label = models.CharField(max_length=255)
     type = models.CharField(max_length=10)
@@ -18,7 +23,10 @@ class VersionedQuestion(models.Model):
         ordering = ["order", "id"]
         indexes = [models.Index(fields=["pool", "order"])]
         constraints = [
-            models.CheckConstraint(condition=Q(min_score__lte=F("max_score")), name="ck_vquestion_min_le_max"),
+            models.CheckConstraint(
+                condition=Q(min_score__lte=F("max_score")),
+                name="ck_vquestion_min_le_max",
+            ),
         ]
 
     def __str__(self) -> str:

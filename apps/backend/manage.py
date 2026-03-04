@@ -4,12 +4,13 @@ import sys
 from dotenv import load_dotenv
 
 
-
 def main():
-    load_dotenv()  # charge ./ .env par défaut
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings')
+    load_dotenv()  # load ./env
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "core.settings")
     from django.core.management import execute_from_command_line
+
     execute_from_command_line(sys.argv)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()

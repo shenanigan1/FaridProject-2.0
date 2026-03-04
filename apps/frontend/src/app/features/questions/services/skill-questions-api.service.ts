@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { SkillQuestionDto } from '@features/questions/models/skill-question.model';
+import { SkillQuestionDto } from 'src/app/features/questions/models/skill-question.model';
 
 
 export type CreateSkillQuestionDto = Partial<Pick<

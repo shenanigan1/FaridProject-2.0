@@ -1,16 +1,17 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 import { finalize } from 'rxjs';
 import { PoolsApiService } from './pools-api.service';
-import { QuestionPool } from '../models/question-pool.model';
+import { QuestionPool } from '@pools/models/question-pool.model';
 
-type PoolsApiItem = {
+interface PoolsApiItem {
   id: number | string;
   code: string;
   name: string;
   description?: string | null;
   created_at?: string | null;
   updated_at?: string | null;
-};
+}
 
 @Injectable({ providedIn: 'root' })
 export class PoolsStore {
@@ -26,7 +27,6 @@ export class PoolsStore {
   readonly error = computed(() => this._error());
   readonly selectedPool = computed(() => this._selectedPool());
 
-
   loadAll(): void {
     this._isLoading.set(true);
     this._error.set(null);
@@ -36,16 +36,45 @@ export class PoolsStore {
       .pipe(finalize(() => this._isLoading.set(false)))
       .subscribe({
         next: (items) => {
-          const mapped = ((items as unknown as PoolsApiItem[] | null | undefined) ?? []).map((p) =>
-            this.mapApiToUi(p),
-          );
-          this._pools.set(mapped);
+          const list = (items ?? []) as unknown as PoolsApiItem[];
+          this._pools.set(list.map((p) => this.mapApiToUi(p)));
         },
-        error: (err) => this._error.set(this.toMessage(err)),
+        error: (err: unknown) => this._error.set(this.toMessage(err)),
       });
   }
 
-  create(dto: { code: string; name: string; description?: string }, onSuccess?: () => void): void {
+  loadOne(id: string): void {
+    this._isLoading.set(true);
+    this._error.set(null);
+
+    this.api
+      .get(id)
+      .pipe(finalize(() => this._isLoading.set(false)))
+      .subscribe({
+        next: (item) => {
+          const mapped = this.mapApiToUi(item as unknown as PoolsApiItem);
+          this._selectedPool.set(mapped);
+
+          // keep list cache in sync
+          const current = this._pools();
+          const idx = current.findIndex((p) => p.id === mapped.id);
+
+          if (idx >= 0) {
+            const nextArr = current.slice();
+            nextArr[idx] = mapped;
+            this._pools.set(nextArr);
+          } else {
+            this._pools.set([mapped, ...current]);
+          }
+        },
+        error: (err: unknown) => this._error.set(this.toMessage(err)),
+      });
+  }
+
+  create(
+    dto: { code: string; name: string; description?: string },
+    onSuccess?: () => void
+  ): void {
     this._isLoading.set(true);
     this._error.set(null);
 
@@ -57,8 +86,45 @@ export class PoolsStore {
           this.loadAll();
           onSuccess?.();
         },
-        error: (err) => this._error.set(this.toMessage(err)),
+        error: (err: unknown) => this._error.set(this.toMessage(err)),
       });
+  }
+
+  update(
+    id: string,
+    dto: { name?: string; code?: string; description?: string },
+    onSuccess?: () => void
+  ): void {
+    this._isLoading.set(true);
+    this._error.set(null);
+
+    this.api
+      .update(id, dto)
+      .pipe(finalize(() => this._isLoading.set(false)))
+      .subscribe({
+        next: (item) => {
+          const mapped = this.mapApiToUi(item as unknown as PoolsApiItem);
+          this._selectedPool.set(mapped);
+
+          const current = this._pools();
+          const idx = current.findIndex((p) => p.id === mapped.id);
+
+          if (idx >= 0) {
+            const nextArr = current.slice();
+            nextArr[idx] = mapped;
+            this._pools.set(nextArr);
+          } else {
+            this._pools.set([mapped, ...current]);
+          }
+
+          onSuccess?.();
+        },
+        error: (err: unknown) => this._error.set(this.toMessage(err)),
+      });
+  }
+
+  clearSelected(): void {
+    this._selectedPool.set(null);
   }
 
   private mapApiToUi(p: PoolsApiItem): QuestionPool {
@@ -74,84 +140,36 @@ export class PoolsStore {
   }
 
   private toMessage(err: unknown): string {
-    if (typeof err === 'object' && err && 'status' in err) {
-      const status = (err as any).status;
-      if (status === 0) return 'Network error (API unreachable).';
-      if (status === 401) return 'Unauthorized. Please login again.';
-      if (status === 403) return 'Forbidden.';
+    if (!(err instanceof HttpErrorResponse)) return 'Unexpected error.';
 
-      const apiErr = err as any;
-      const detail =
-        apiErr?.error?.detail ||
-        apiErr?.error?.code?.[0] ||
-        apiErr?.error?.name?.[0] ||
-        apiErr?.error?.description?.[0];
+    if (err.status === 0) return 'Network error (API unreachable).';
+    if (err.status === 401) return 'Unauthorized. Please login again.';
+    if (err.status === 403) return 'Forbidden.';
 
-      return detail ? String(detail) : `Request failed (status ${status}).`;
+    const payload = this.asRecord(err.error);
+
+    const detail =
+      this.pickFirstString(payload?.['detail']) ??
+      this.pickFirstString(this.asRecord(payload?.['error'])?.['detail']) ??
+      this.pickFirstString(this.asRecord(payload?.['code'])?.[0]) ??
+      this.pickFirstString(this.asRecord(payload?.['name'])?.[0]) ??
+      this.pickFirstString(this.asRecord(payload?.['description'])?.[0]);
+
+    return detail ?? `Request failed (status ${err.status}).`;
+  }
+
+  private asRecord(value: unknown): Record<string, unknown> | null {
+    return value && typeof value === 'object' ? (value as Record<string, unknown>) : null;
+  }
+
+  private pickFirstString(value: unknown): string | null {
+    if (typeof value === 'string') return value;
+
+    if (Array.isArray(value) && value.length > 0) {
+      const first = value[0];
+      return typeof first === 'string' ? first : null;
     }
-    return 'Unexpected error.';
+
+    return null;
   }
-
-  loadOne(id: string): void {
-    this._isLoading.set(true);
-    this._error.set(null);
-
-    this.api
-      .get(id)
-      .pipe(finalize(() => this._isLoading.set(false)))
-      .subscribe({
-        next: (item: any) => {
-          const mapped = this.mapApiToUi(item);
-          this._selectedPool.set(mapped);
-
-          // Optional: keep list cache in sync
-          const current = this._pools();
-          const idx = current.findIndex((p) => p.id === mapped.id);
-          if (idx >= 0) {
-            const next = current.slice();
-            next[idx] = mapped;
-            this._pools.set(next);
-          } else {
-            this._pools.set([mapped, ...current]);
-          }
-        },
-        error: (err) => this._error.set(this.toMessage(err)),
-      });
-  }
-
-  clearSelected(): void {
-    this._selectedPool.set(null);
-  }
-
-  update(
-  id: string,
-  dto: { name?: string; code?: string; description?: string },
-  onSuccess?: () => void
-): void {
-  this._isLoading.set(true);
-  this._error.set(null);
-
-  this.api
-    .update(id, dto)
-    .pipe(finalize(() => this._isLoading.set(false)))
-    .subscribe({
-      next: (item: any) => {
-        const mapped = this.mapApiToUi(item);
-        this._selectedPool.set(mapped);
-
-        const current = this._pools();
-        const idx = current.findIndex(p => p.id === mapped.id);
-        if (idx >= 0) {
-          const nextArr = current.slice();
-          nextArr[idx] = mapped;
-          this._pools.set(nextArr);
-        } else {
-          this._pools.set([mapped, ...current]);
-        }
-
-        onSuccess?.();
-      },
-      error: (err) => this._error.set(this.toMessage(err)),
-    });
-}
 }

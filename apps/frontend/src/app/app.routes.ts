@@ -6,38 +6,29 @@ export const routes: Routes = [
   {
     path: 'login',
     loadComponent: () =>
-      import('./pages/login/login.page').then((m) => m.LoginPage),
+      import('./features/auth/pages/login.page').then((m) => m.LoginPage),
   },
 
   {
     path: 'dashboard',
     canActivate: [AuthGuard],
     loadComponent: () =>
-      import('./pages/dashboard/dashboard.page').then((m) => m.DashboardPage),
+      import('./features/dashboard/pages/dashboard.page').then((m) => m.DashboardPage),
   },
 
   {
   path: 'positions',
-  loadComponent: () =>
-    import('./pages/positions/positions-list.page')
-      .then(m => m.PositionsListPage),
+  loadChildren: () =>
+    import('./features/positions/positions.routes')
+      .then(m => m.POSITIONS_ROUTES),
     canActivate: [AuthGuard, RoleGuard],
     data: { roles: ['hr', 'admin', 'director', 'manager'] },
   },
 
   {
-    path: 'positions/new',
-    loadComponent: () =>
-      import('./pages/positions/new/position-create.page')
-        .then(m => m.PositionCreatePage),
-    canActivate: [AuthGuard, RoleGuard],
-    data: { roles: ['hr', 'admin', 'director'] },
-  },
-
-  {
     path: 'pools',
     loadChildren: () =>
-      import('@features/pools/pool.routes')
+      import('src/app/features/pools/pool.routes')
         .then(m => m.POOLS_ROUTES),
     canActivate: [AuthGuard, RoleGuard],
     data: { roles: ['hr', 'admin', 'director', 'manager'] },
@@ -46,7 +37,7 @@ export const routes: Routes = [
   {
     path: 'templates',
     loadChildren: ()=>
-      import('@features/templates_eval/templates_eval.routes')
+      import('src/app/features/test-templates/test-templates.routes')
         .then(m => m.TEMPLATES_ROUTES),
     canActivate: [AuthGuard, RoleGuard],
     data: { roles: ['hr', 'admin', 'director', 'manager'] },

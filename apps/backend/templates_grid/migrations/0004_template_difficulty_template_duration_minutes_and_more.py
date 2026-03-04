@@ -4,55 +4,58 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('templates_grid', '0003_alter_skillquestion_options_and_more'),
+        ("templates_grid", "0003_alter_skillquestion_options_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='template',
-            name='difficulty',
-            field=models.CharField(choices=[('easy', 'easy'), ('medium', 'medium'), ('hard', 'hard')], default='medium', max_length=10),
+            model_name="template",
+            name="difficulty",
+            field=models.CharField(
+                choices=[("easy", "easy"), ("medium", "medium"), ("hard", "hard")],
+                default="medium",
+                max_length=10,
+            ),
         ),
         migrations.AddField(
-            model_name='template',
-            name='duration_minutes',
+            model_name="template",
+            name="duration_minutes",
             field=models.PositiveIntegerField(default=45),
         ),
         migrations.AddField(
-            model_name='template',
-            name='min_pass_score',
+            model_name="template",
+            name="min_pass_score",
             field=models.PositiveIntegerField(default=80),
         ),
         migrations.AddField(
-            model_name='template',
-            name='updated_at',
+            model_name="template",
+            name="updated_at",
             field=models.DateTimeField(auto_now=True),
         ),
         migrations.AddField(
-            model_name='templatesection',
-            name='description',
-            field=models.TextField(blank=True, default=''),
+            model_name="templatesection",
+            name="description",
+            field=models.TextField(blank=True, default=""),
         ),
         migrations.AddField(
-            model_name='templatesection',
-            name='weight',
+            model_name="templatesection",
+            name="weight",
             field=models.PositiveIntegerField(default=0),
         ),
         migrations.AlterField(
-            model_name='skillquestion',
-            name='created_at',
+            model_name="skillquestion",
+            name="created_at",
             field=models.DateTimeField(auto_now_add=True),
         ),
         migrations.AlterField(
-            model_name='skillquestion',
-            name='text',
+            model_name="skillquestion",
+            name="text",
             field=models.TextField(),
         ),
         migrations.AlterField(
-            model_name='skillquestion',
-            name='updated_at',
+            model_name="skillquestion",
+            name="updated_at",
             field=models.DateTimeField(auto_now=True),
         ),
     ]

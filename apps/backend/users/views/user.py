@@ -17,8 +17,7 @@ class UserViewSet(ModelViewSet):
         if not serializer.is_valid():
             if "email" in serializer.errors:
                 return Response(
-                    {"error": "Email already exists."},
-                    status=status.HTTP_409_CONFLICT
+                    {"error": "Email already exists."}, status=status.HTTP_409_CONFLICT
                 )
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -32,8 +31,7 @@ class UserViewSet(ModelViewSet):
         if not serializer.is_valid():
             if "email" in serializer.errors:
                 return Response(
-                    {"error": "Email already exists."},
-                    status=status.HTTP_409_CONFLICT
+                    {"error": "Email already exists."}, status=status.HTTP_409_CONFLICT
                 )
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
