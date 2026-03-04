@@ -10,15 +10,15 @@ import { ChangeDetectionStrategy, Component, Input, forwardRef, signal } from '@
 import { CommonModule } from '@angular/common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
-export type UiSelectOption<T extends string = string> = {
+export interface UiSelectOption<T extends string = string> {
   value: T;
   label: string;
   disabled?: boolean;
-};
+}
 
 @Component({
   standalone: true,
-  selector: 'ui-select',
+  selector: 'app-ui-select',
   imports: [CommonModule],
   templateUrl: './select.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -31,14 +31,15 @@ export class UiSelectComponent<T extends string = string> implements ControlValu
   @Input() hint: string | null = null;
   @Input() error: string | null = null;
 
-  @Input() placeholder: string = 'Select...';
+  @Input() placeholder = 'Select...';
   @Input() options: UiSelectOption<T>[] = [];
 
   readonly value = signal<T | null>(null);
   readonly disabled = signal(false);
 
-  private onChange: (v: T | null) => void = () => {};
-  private onTouched: () => void = () => {};
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  private onChange: (v: T | null) => void = (_v: T | null) => void 0;
+  private onTouched: () => void = () => void 0;
 
   writeValue(value: T | null): void {
     this.value.set(value);

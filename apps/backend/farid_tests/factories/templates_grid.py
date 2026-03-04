@@ -25,7 +25,9 @@ class QuestionPoolFactory:
         code: str = "soft_skills_pool",
         description: str = "",
     ) -> QuestionPool:
-        return QuestionPool.objects.create(name=name, code=code, description=description)
+        return QuestionPool.objects.create(
+            name=name, code=code, description=description
+        )
 
 
 @dataclass(frozen=True)
@@ -105,10 +107,13 @@ class TemplatePoolRuleFactory:
 
 # ---- Versioning factories (if you created those models) ----
 
+
 @dataclass(frozen=True)
 class TemplateVersionFactory:
     @staticmethod
-    def create(*, template: Template | None = None, version: int = 1) -> TemplateVersion:
+    def create(
+        *, template: Template | None = None, version: int = 1
+    ) -> TemplateVersion:
         template = template or TemplateFactory.create()
         return TemplateVersion.objects.create(template=template, version=version)
 
@@ -116,9 +121,16 @@ class TemplateVersionFactory:
 @dataclass(frozen=True)
 class VersionedSectionFactory:
     @staticmethod
-    def create(*, template_version: TemplateVersion | None = None, name: str = "VSection", order: int = 0) -> VersionedSection:
+    def create(
+        *,
+        template_version: TemplateVersion | None = None,
+        name: str = "VSection",
+        order: int = 0,
+    ) -> VersionedSection:
         template_version = template_version or TemplateVersionFactory.create()
-        return VersionedSection.objects.create(template_version=template_version, name=name, order=order)
+        return VersionedSection.objects.create(
+            template_version=template_version, name=name, order=order
+        )
 
 
 @dataclass(frozen=True)
@@ -134,7 +146,9 @@ class VersionedPoolFactory:
         order: int = 0,
     ) -> VersionedPool:
         template_version = template_version or TemplateVersionFactory.create()
-        section = section or VersionedSectionFactory.create(template_version=template_version)
+        section = section or VersionedSectionFactory.create(
+            template_version=template_version
+        )
         return VersionedPool.objects.create(
             template_version=template_version,
             section=section,

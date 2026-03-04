@@ -6,16 +6,18 @@ export interface LoginRequest {
   password: string;
 }
 
-export interface LoginResponse {
-  access: string;
-  refresh: string;
-  user?: any;
-}
-
-export type MeResponse = {
+export interface MeResponse {
   id: number;
   email: string;
   first_name: string;
   last_name: string;
-  role?: string | null;
-};
+  role?: AllowedRole  | null;
+}
+
+export interface LoginResponse {
+  access: string;
+  refresh: string;
+  user?: MeResponse | null;
+}
+
+export type AllowedRole = 'admin' | 'hr' | 'director' | 'manager' | 'employee' | 'candidate';

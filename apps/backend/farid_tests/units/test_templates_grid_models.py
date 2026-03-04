@@ -58,10 +58,14 @@ def test_template_pool_rule_unique_template_pool():
     section = TemplateSectionFactory.create(template=template, name="Sec A")
     pool = QuestionPoolFactory.create(code="p1")
 
-    TemplatePoolRuleFactory.create(template=template, section=section, pool=pool, random_count=2)
+    TemplatePoolRuleFactory.create(
+        template=template, section=section, pool=pool, random_count=2
+    )
 
     with pytest.raises(IntegrityError):
-        TemplatePoolRuleFactory.create(template=template, section=section, pool=pool, random_count=1)
+        TemplatePoolRuleFactory.create(
+            template=template, section=section, pool=pool, random_count=1
+        )
 
 
 def test_template_version_unique_per_template():

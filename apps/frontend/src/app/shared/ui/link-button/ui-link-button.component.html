@@ -1,7 +1,8 @@
 <a
   [routerLink]="routerLink"
   [class]="classes"
-  [attr.aria-label]="ariaLabel || label"
+  [attr.aria-label]="computedAriaLabel"
 >
   {{ label }}
+  <ng-content></ng-content>
 </a>

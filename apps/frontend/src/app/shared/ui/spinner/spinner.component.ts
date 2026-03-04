@@ -13,7 +13,7 @@ type UiSpinnerSize = 'sm' | 'md' | 'lg';
 
 @Component({
   standalone: true,
-  selector: 'ui-spinner',
+  selector: 'app-ui-spinner',
   imports: [CommonModule],
   template: `
     <span

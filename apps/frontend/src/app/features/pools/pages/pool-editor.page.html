@@ -4,67 +4,77 @@
     <!-- Header -->
     <div class="flex items-start justify-between gap-3">
       <div class="flex items-center gap-3">
-        <ui-icon-button ariaLabel="Back" (click)="back()">
+        <app-ui-icon-button ariaLabel="Back" (click)="back()">
           <svg viewBox="0 0 24 24" class="h-5 w-5 fill-none stroke-current" stroke-width="2">
             <path d="M15 18l-6-6 6-6" />
           </svg>
-        </ui-icon-button>
+        </app-ui-icon-button>
 
         <div class="min-w-0">
-          <ng-container *ngIf="pageMode() === 'create'; else detailTitle">
+          @if (pageMode() === 'create') {
             <h1 class="text-lg font-semibold">Create Pool</h1>
             <p class="mt-1 text-xs text-slate-400">Create a reusable question pool.</p>
-          </ng-container>
-
-          <ng-template #detailTitle>
+          } @else {
             <h1 class="text-lg font-semibold truncate">
               {{ (pool()?.name ?? 'Pool') }}
             </h1>
-            <p class="mt-1 text-xs text-slate-400" *ngIf="pool() as p">
-              <span class="font-mono text-slate-300">{{ p.code }}</span>
-              <span *ngIf="p.updatedAt"> • Updated {{ p.updatedAt | date:'MMM d, y, HH:mm' }}</span>
-            </p>
-          </ng-template>
+
+            @if (pool(); as p) {
+              <p class="mt-1 text-xs text-slate-400">
+                <span class="font-mono text-slate-300">{{ p.code }}</span>
+
+                @if (p.updatedAt) {
+                  <span> • Updated {{ p.updatedAt | date:'MMM d, y, HH:mm' }}</span>
+                }
+              </p>
+            }
+          }
         </div>
       </div>
 
       <!-- Top right action (detail only) -->
-      <div class="shrink-0" *ngIf="pageMode() === 'detail'">
-        <ui-icon-button
-          *ngIf="pool() && !isEditing()"
-          ariaLabel="Edit"
-          (click)="startEdit()"
-        >
-          <svg viewBox="0 0 24 24" class="h-5 w-5 fill-none stroke-current" stroke-width="2">
-            <path d="M12 20h9" />
-            <path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4 12.5-12.5z" />
-          </svg>
-        </ui-icon-button>
-      </div>
+      @if (pageMode() === 'detail') {
+        <div class="shrink-0">
+          @if (pool() && !isEditing()) {
+            <app-ui-icon-button ariaLabel="Edit" (click)="startEdit()">
+              <svg viewBox="0 0 24 24" class="h-5 w-5 fill-none stroke-current" stroke-width="2">
+                <path d="M12 20h9" />
+                <path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4 12.5-12.5z" />
+              </svg>
+            </app-ui-icon-button>
+          }
+        </div>
+      }
     </div>
 
     <!-- Tabs (detail only) -->
-    <div class="mt-5" *ngIf="pageMode() === 'detail'">
-      <ui-tabs [items]="tabs()" [activeKey]="tab()" (activeKeyChange)="setTab($event)" />
-    </div>
+    @if (pageMode() === 'detail') {
+      <div class="mt-5">
+        <app-ui-tabs [items]="tabs()" [activeKey]="tab()" (activeKeyChange)="setTab($event)" />
+      </div>
+    }
 
     <!-- Loading -->
-    <ui-card class="mt-5" *ngIf="isLoading()">
-      <div class="flex items-center gap-3 text-sm text-slate-300">
-        <ui-spinner />
-        Loading…
-      </div>
-    </ui-card>
+    @if (isLoading()) {
+      <app-ui-card class="mt-5">
+        <div class="flex items-center gap-3 text-sm text-slate-300">
+          <app-ui-spinner />
+          Loading…
+        </div>
+      </app-ui-card>
+    }
 
     <!-- Error -->
-    <ui-alert class="mt-5" variant="error" [message]="error()"></ui-alert>
+    <app-ui-alert class="mt-5" variant="error" [message]="error()"></app-ui-alert>
 
-    <ui-card class="mt-5" *ngIf="error() && pageMode() === 'detail'">
-      <ui-button-primary block (click)="retry()">Retry</ui-button-primary>
-    </ui-card>
+    @if (error() && pageMode() === 'detail') {
+      <app-ui-card class="mt-5">
+        <app-ui-button-primary block (click)="retry()">Retry</app-ui-button-primary>
+      </app-ui-card>
+    }
 
     <!-- CREATE MODE: just the form -->
-    <ng-container *ngIf="pageMode() === 'create'">
+    @if (pageMode() === 'create') {
       <app-pool-form
         [mode]="formMode()"
         [form]="form"
@@ -74,49 +84,55 @@
         (submitForm)="submit()"
         (cancel)="cancelEdit()"
       />
-    </ng-container>
+    }
 
     <!-- DETAIL MODE -->
-    <ng-container *ngIf="pageMode() === 'detail' && !isLoading() && !error()">
-      <ng-container *ngIf="pool() as p; else missingPool">
+    @if (pageMode() === 'detail' && !isLoading() && !error()) {
+
+      @if (pool(); as p) {
 
         <!-- QUESTIONS -->
-        <ng-container *ngIf="tab() === 'questions'">
-          <ui-card class="mt-5">
+        @if (tab() === 'questions') {
+          <app-ui-card class="mt-5">
             <div class="flex items-center justify-between">
               <div>
                 <p class="text-sm font-semibold">Questions</p>
                 <p class="mt-1 text-xs text-slate-400">Manage questions inside this pool.</p>
               </div>
 
-              <ui-button-secondary *ngIf="!isEditing()" (click)="startEdit()">
-                Edit pool
-              </ui-button-secondary>
+              @if (!isEditing()) {
+                <app-ui-button-secondary (click)="startEdit()">
+                  Edit pool
+                </app-ui-button-secondary>
+              }
             </div>
-          </ui-card>
+          </app-ui-card>
 
           <div class="mt-5">
             <app-pool-questions-panel [poolId]="p.id" />
           </div>
-        </ng-container>
+        }
 
         <!-- SETTINGS -->
-        <ng-container *ngIf="tab() === 'settings'">
-          <ui-card class="mt-5">
+        @if (tab() === 'settings') {
+
+          <app-ui-card class="mt-5">
             <div class="flex items-start justify-between gap-3">
               <div>
                 <p class="text-sm font-semibold">Pool settings</p>
                 <p class="mt-1 text-xs text-slate-400">Name, code, description.</p>
               </div>
 
-              <div class="flex flex-col gap-2" *ngIf="isEditing()">
-                <ui-button-primary [disabled]="isLoading()" (click)="submit()">Save</ui-button-primary>
-                <ui-button-secondary (click)="cancelEdit()">Cancel</ui-button-secondary>
-              </div>
-
-              <ui-button-secondary *ngIf="!isEditing()" (click)="startEdit()">Edit</ui-button-secondary>
+              @if (isEditing()) {
+                <div class="flex flex-col gap-2">
+                  <app-ui-button-primary [disabled]="isLoading()" (click)="submit()">Save</app-ui-button-primary>
+                  <app-ui-button-secondary (click)="cancelEdit()">Cancel</app-ui-button-secondary>
+                </div>
+              } @else {
+                <app-ui-button-secondary (click)="startEdit()">Edit</app-ui-button-secondary>
+              }
             </div>
-          </ui-card>
+          </app-ui-card>
 
           <app-pool-form
             [mode]="formMode()"
@@ -127,18 +143,16 @@
             (submitForm)="submit()"
             (cancel)="cancelEdit()"
           />
-        </ng-container>
+        }
 
-      </ng-container>
-
-      <ng-template #missingPool>
-        <ui-empty-state
+      } @else {
+        <app-ui-empty-state
           class="mt-5"
           title="Pool not found"
           description="This pool doesn't exist or you don't have access."
         />
-      </ng-template>
-    </ng-container>
+      }
+    }
 
   </div>
 </div>

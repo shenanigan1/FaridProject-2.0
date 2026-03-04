@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import { UiAlertComponent } from '@shared/ui/alert/alert.component';
 import { UiCardComponent } from '@shared/ui/card/card.component';
@@ -11,9 +11,9 @@ import { UiButtonPrimaryComponent } from '@shared/ui/button-primary/button-prima
 export type PoolFormMode = 'create' | 'edit' | 'view';
 
 export type PoolFormGroup = FormGroup<{
-  name: any;
-  code: any;
-  description: any;
+  name: FormControl<string>;
+  code: FormControl<string>;
+  description: FormControl<string | null>;
 }>;
 
 @Component({
@@ -38,12 +38,12 @@ export class PoolFormComponent {
   @Input() isLoading = false;
   @Input() apiError: string | null = null;
 
-  /** Utilisé surtout en view/edit */
+  /** Mostly useful in view/edit */
   @Input() showNormalizeHint = true;
 
   @Output() normalize = new EventEmitter<void>();
   @Output() submitForm = new EventEmitter<void>();
-  @Output() cancel = new EventEmitter<void>();
+  @Output() cancelForm = new EventEmitter<void>();
 
   get isView(): boolean {
     return this.mode === 'view';

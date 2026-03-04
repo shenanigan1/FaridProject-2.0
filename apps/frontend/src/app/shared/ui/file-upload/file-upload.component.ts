@@ -9,7 +9,7 @@ import {
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'ui-file-upload',
+  selector: 'app-ui-file-upload',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './file-upload.component.html',

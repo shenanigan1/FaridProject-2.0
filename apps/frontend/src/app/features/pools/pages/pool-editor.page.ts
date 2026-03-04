@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { PoolsStore } from '@features/pools/services/pools.store';
 import { PoolQuestionsPanelComponent } from '@features/questions/components/pool-questions-panel.component';
 
 import { POOL_CODE_PATTERN, normalizePoolCode } from '@features/pools/models/pool-code';
-import { PoolFormComponent, PoolFormMode } from '@features/pools/components/pool-form.component';
+import { PoolFormComponent, PoolFormGroup, PoolFormMode } from '@features/pools/components/pool-form.component';
 
 import { UiTabsComponent, UiTabItem } from '@shared/ui/tabs/tabs.component';
 import { UiIconButtonComponent } from '@shared/ui/icon-button/icon-button.component';
@@ -71,7 +71,7 @@ export class PoolEditorPageComponent implements OnInit {
   ]);
 
   // Shared form (create + edit)
-  readonly form = this.fb.nonNullable.group({
+  readonly form: PoolFormGroup = new FormGroup({
     name: this.fb.nonNullable.control('', [Validators.required, Validators.minLength(2)]),
     code: this.fb.nonNullable.control('', [
       Validators.required,
@@ -79,7 +79,7 @@ export class PoolEditorPageComponent implements OnInit {
       Validators.minLength(3),
       Validators.maxLength(50),
     ]),
-    description: this.fb.nonNullable.control('', [Validators.maxLength(500)]),
+    description: new FormControl<string | null>(null, { validators: [Validators.maxLength(500)], nonNullable: false }),
   });
 
   // app-pool-form mode
@@ -155,7 +155,7 @@ export class PoolEditorPageComponent implements OnInit {
     const dto = {
       name: this.form.controls.name.value.trim(),
       code: this.form.controls.code.value.trim(),
-      description: this.form.controls.description.value.trim(),
+      description: this.form.controls.description.value?.trim() ?? '',
     };
 
     if (this.pageMode() === 'create') {

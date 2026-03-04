@@ -2,7 +2,6 @@ from django.contrib.auth import authenticate
 from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from users.models import User
 from users.serializers.user import UserSerializer
 
 
@@ -31,4 +30,5 @@ class LoginSerializer(serializers.Serializer):
 
 class MeSerializer(UserSerializer):
     """Alias: utile si tu veux un profil différent plus tard."""
+
     pass

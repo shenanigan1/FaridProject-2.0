@@ -10,7 +10,7 @@ import { QuillModule } from 'ngx-quill';
 import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'ui-rich-text-editor',
+  selector: 'app-ui-rich-text-editor',
   standalone: true,
   imports: [CommonModule, QuillModule, FormsModule],
   templateUrl: './rich-text-editor.component.html',
@@ -29,8 +29,9 @@ export class UiRichTextEditorComponent implements ControlValueAccessor {
 
   value = '';
 
-  private onChange: (value: string) => void = () => {};
-  private onTouched: () => void = () => {};
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  private onChange: (v: string) => void = (_v: string) => void 0;
+  private onTouched: () => void = () => void 0;
 
   writeValue(value: string | null): void {
     this.value = value ?? '';

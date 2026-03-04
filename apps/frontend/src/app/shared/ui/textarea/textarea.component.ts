@@ -12,7 +12,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
   standalone: true,
-  selector: 'ui-textarea',
+  selector: 'app-ui-textarea',
   imports: [CommonModule],
   templateUrl: './textarea.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -31,8 +31,9 @@ export class UiTextareaComponent implements ControlValueAccessor {
   readonly value = signal('');
   readonly disabled = signal(false);
 
-  private onChange: (v: string) => void = () => {};
-  private onTouched: () => void = () => {};
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  private onChange: (v: string) => void = (_v: string) => void 0;
+  private onTouched: () => void = () => void 0;
 
   writeValue(value: string | null): void {
     this.value.set(value ?? '');

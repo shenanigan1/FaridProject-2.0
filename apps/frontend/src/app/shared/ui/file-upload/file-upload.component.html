@@ -17,7 +17,10 @@
   />
 
   <p class="font-medium mb-2">{{ label }}</p>
-  <p *ngIf="hint" class="text-sm text-slate-400 mb-2">{{ hint }}</p>
+
+  @if (hint) {
+    <p class="text-sm text-slate-400 mb-2">{{ hint }}</p>
+  }
 
   <button
     type="button"
@@ -28,9 +31,11 @@
     Browse
   </button>
 
-  <ul *ngIf="fileNames().length" class="mt-4 text-sm text-slate-300">
-    <li *ngFor="let name of fileNames()">
-      {{ name }}
-    </li>
-  </ul>
+  @if (fileNames().length) {
+    <ul class="mt-4 text-sm text-slate-300">
+      @for (name of fileNames(); track name) {
+        <li>{{ name }}</li>
+      }
+    </ul>
+  }
 </div>

@@ -1,21 +1,27 @@
 import { TestBed } from '@angular/core/testing';
-import { Router } from '@angular/router';
+import { Router, UrlTree } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
+
 import { AuthGuard } from './auth.guard';
-import { AuthService } from 'src/app/core/auth/services/auth.service';
+import { AuthSessionService } from '../services/auth-session.service';
 
 describe('AuthGuard', () => {
   let guard: AuthGuard;
-  let authServiceSpy: jasmine.SpyObj<AuthService>;
+  let sessionSpy: jasmine.SpyObj<AuthSessionService>;
   let routerSpy: jasmine.SpyObj<Router>;
 
   beforeEach(() => {
-    authServiceSpy = jasmine.createSpyObj('AuthService', ['isAuthenticated']);
-    routerSpy = jasmine.createSpyObj('Router', ['navigate']);
+    sessionSpy = jasmine.createSpyObj<AuthSessionService>('AuthSessionService', [
+      'isAuthenticated',
+    ]);
+
+    routerSpy = jasmine.createSpyObj<Router>('Router', ['createUrlTree']);
+    routerSpy.createUrlTree.and.returnValue({} as UrlTree);
 
     TestBed.configureTestingModule({
       providers: [
         AuthGuard,
-        { provide: AuthService, useValue: authServiceSpy },
+        { provide: AuthSessionService, useValue: sessionSpy },
         { provide: Router, useValue: routerSpy },
       ],
     });
@@ -23,21 +29,21 @@ describe('AuthGuard', () => {
     guard = TestBed.inject(AuthGuard);
   });
 
-  it('should allow access when authenticated', () => {
-    authServiceSpy.isAuthenticated.and.returnValue(true);
+  it('should allow access when authenticated', async () => {
+    sessionSpy.isAuthenticated.and.returnValue(true);
 
-    const result = guard.canActivate();
+    const result = await firstValueFrom(guard.canActivate());
 
     expect(result).toBeTrue();
-    expect(routerSpy.navigate).not.toHaveBeenCalled();
+    expect(routerSpy.createUrlTree).not.toHaveBeenCalled();
   });
 
-  it('should redirect to login when not authenticated', () => {
-    authServiceSpy.isAuthenticated.and.returnValue(false);
+  it('should redirect to /login when not authenticated', async () => {
+    sessionSpy.isAuthenticated.and.returnValue(false);
 
-    const result = guard.canActivate();
+    const result = await firstValueFrom(guard.canActivate());
 
-    expect(result).toBeFalse();
-    expect(routerSpy.navigate).toHaveBeenCalledWith(['/login']);
+    expect(routerSpy.createUrlTree).toHaveBeenCalledWith(['/login']);
+    expect(result).toBe(routerSpy.createUrlTree.calls.mostRecent().returnValue);
   });
 });

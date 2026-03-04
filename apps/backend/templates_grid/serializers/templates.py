@@ -1,7 +1,13 @@
 from rest_framework import serializers
 from django.db import transaction
 
-from templates_grid.models import QuestionPool, Template, TemplateSection, TemplatePoolRule
+from templates_grid.models import (
+    QuestionPool,
+    Template,
+    TemplateSection,
+    TemplatePoolRule,
+)
+
 
 class TemplateSerializer(serializers.ModelSerializer):
     class Meta:
@@ -15,13 +21,14 @@ class TemplateSerializer(serializers.ModelSerializer):
             "min_pass_score",
             "created_at",
             "updated_at",
-            ]
-        
+        ]
+
         read_only_fields = ["id", "created_at", "updated_at"]
 
 
 class TemplateSectionSerializer(serializers.ModelSerializer):
     template = serializers.PrimaryKeyRelatedField(queryset=Template.objects.all())
+
     class Meta:
         model = TemplateSection
         fields = [
@@ -34,9 +41,11 @@ class TemplateSectionSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ["id", "template"]
 
+
 # -------------------------
 # WRITE (input) serializers
 # -------------------------
+
 
 class PoolRuleInSerializer(serializers.Serializer):
     poolId = serializers.IntegerField()
@@ -54,6 +63,7 @@ class SectionInSerializer(serializers.Serializer):
 # READ (output) serializers
 # -------------------------
 
+
 class TemplatePoolRuleReadSerializer(serializers.ModelSerializer):
     poolId = serializers.CharField(source="pool_id")
     randomCount = serializers.IntegerField(source="random_count")
@@ -67,6 +77,7 @@ class TemplateSectionReadSerializer(serializers.ModelSerializer):
     title = serializers.CharField(source="name")
     pools = TemplatePoolRuleReadSerializer(many=True, source="pool_rules")
     weight = serializers.IntegerField(min_value=0, max_value=1000000)
+
     class Meta:
         model = TemplateSection
         fields = ["id", "title", "description", "weight", "order", "pools"]
@@ -77,7 +88,9 @@ class TemplateEditorSerializer(serializers.ModelSerializer):
     sections = SectionInSerializer(many=True, required=False, write_only=True)
 
     # READ output
-    sections_read = TemplateSectionReadSerializer(many=True, source="sections", read_only=True)
+    sections_read = TemplateSectionReadSerializer(
+        many=True, source="sections", read_only=True
+    )
 
     class Meta:
         model = Template
@@ -88,8 +101,8 @@ class TemplateEditorSerializer(serializers.ModelSerializer):
             "difficulty",
             "duration_minutes",
             "min_pass_score",
-            "sections",        # write-only
-            "sections_read",   # read-only
+            "sections",  # write-only
+            "sections_read",  # read-only
             "created_at",
             "updated_at",
         ]
@@ -141,7 +154,9 @@ class TemplateEditorSerializer(serializers.ModelSerializer):
 
         missing = [pid for pid in pool_ids if pid not in pools_by_id]
         if missing:
-            raise serializers.ValidationError({"sections": [f"Unknown poolId(s): {missing}"]})
+            raise serializers.ValidationError(
+                {"sections": [f"Unknown poolId(s): {missing}"]}
+            )
 
         for order, s in enumerate(sections_data):
             section = TemplateSection.objects.create(
@@ -169,5 +184,3 @@ class TemplateEditorSerializer(serializers.ModelSerializer):
         data = super().to_representation(instance)
         data["sections"] = data.pop("sections_read", [])
         return data
-    
-    

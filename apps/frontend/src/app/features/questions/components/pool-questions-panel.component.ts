@@ -1,4 +1,4 @@
-import { Component, computed, inject, input, signal } from '@angular/core';
+import { Component, computed, inject, input, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -16,7 +16,7 @@ import {
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './pool-questions-panel.component.html',
 })
-export class PoolQuestionsPanelComponent {
+export class PoolQuestionsPanelComponent implements OnInit {
   poolId = input.required<string>();
 
   private readonly store = inject(SkillQuestionsStore);

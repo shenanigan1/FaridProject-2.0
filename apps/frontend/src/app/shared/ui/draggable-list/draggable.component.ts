@@ -4,7 +4,7 @@ import { CdkDrag, CdkDragPlaceholder, CdkDragPreview } from '@angular/cdk/drag-d
 
 @Component({
   standalone: true,
-  selector: 'ui-draggable',
+  selector: 'app-ui-draggable',
   imports: [CommonModule, CdkDrag, CdkDragPreview, CdkDragPlaceholder],
   template: `
     <div

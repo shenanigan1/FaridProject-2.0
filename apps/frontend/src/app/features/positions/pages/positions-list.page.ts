@@ -3,18 +3,40 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { BehaviorSubject, combineLatest, map, startWith } from 'rxjs';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { PositionsApiService, PositionDto } from '@features/positions/services/positions-api.service';
 
 import { UiBadgeComponent, UiBadgeTone } from '@shared/ui/badge/badge.component';
 import { UiSelectComponent, UiSelectOption } from '@shared/ui/select/select.component';
-import { UiTextInputComponent } from '@shared/ui/text-input/text-input.component';
 
 type LocationValue = 'all' | 'chicago' | 'dallas' | 'phoenix' | 'remote';
 type TruckTypeValue = 'all' | 'long-haul' | 'dry-van' | 'tanker' | 'flatbed';
 type PriorityValue = 'all' | 'urgent' | 'medium' | 'low';
 
-type BadgeVm = { label: string; tone: UiBadgeTone };
+interface BadgeVm {
+  label: string;
+  tone: UiBadgeTone;
+}
+
+interface Paginated<T> { results: T[] };
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function asArrayOrResults<T>(value: unknown): T[] {
+  if (Array.isArray(value)) return value;
+
+  if (isRecord(value)) {
+    const maybePaginated = value as Partial<Paginated<T>>;
+    if (Array.isArray(maybePaginated.results)) {
+      return maybePaginated.results;
+    }
+  }
+
+  return [];
+}
 
 @Component({
   standalone: true,
@@ -23,7 +45,6 @@ type BadgeVm = { label: string; tone: UiBadgeTone };
     CommonModule,
     RouterModule,
     ReactiveFormsModule,
-    UiTextInputComponent,
     UiSelectComponent,
     UiBadgeComponent,
   ],
@@ -105,7 +126,7 @@ export class PositionsListPage {
 
         return matchesSearch && matchesLocation && matchesTruckType && matchesPriority;
       });
-    })
+    }),
   );
 
   isLoading = true;
@@ -120,20 +141,23 @@ export class PositionsListPage {
     this.error = null;
     this.cdr.markForCheck();
 
-    this.api.list().subscribe({
-      next: (data) => {
-        const list = Array.isArray(data) ? data : ((data as any)?.results ?? []);
-        this.positionsSubject.next(list);
+    this.api
+      .list()
+      .pipe(takeUntilDestroyed())
+      .subscribe({
+        next: (data: unknown) => {
+          const list = asArrayOrResults<PositionDto>(data);
+          this.positionsSubject.next(list);
 
-        this.isLoading = false;
-        this.cdr.markForCheck();
-      },
-      error: () => {
-        this.error = 'Unable to load positions.';
-        this.isLoading = false;
-        this.cdr.markForCheck();
-      },
-    });
+          this.isLoading = false;
+          this.cdr.markForCheck();
+        },
+        error: () => {
+          this.error = 'Unable to load positions.';
+          this.isLoading = false;
+          this.cdr.markForCheck();
+        },
+      });
   }
 
   getBadge(p: PositionDto): BadgeVm {

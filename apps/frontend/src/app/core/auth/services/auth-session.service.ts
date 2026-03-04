@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject, Observable, of, switchMap, take, tap } from 'rxjs';
 import { AuthService } from './auth.service';
 import { TokenStorageService } from './token-storage.service';
@@ -6,13 +6,11 @@ import { LoginRequest, LoginResponse, MeResponse } from '@auth/models/auth.model
 
 @Injectable({ providedIn: 'root' })
 export class AuthSessionService {
+  private readonly api = inject(AuthService);
+  private readonly tokens = inject(TokenStorageService);
+
   private readonly meSubject = new BehaviorSubject<MeResponse | null>(null);
   readonly me$ = this.meSubject.asObservable();
-
-  constructor(
-    private readonly api: AuthService,
-    private readonly tokens: TokenStorageService
-  ) {}
 
   isAuthenticated(): boolean {
     return this.tokens.isAuthenticated();
@@ -25,7 +23,6 @@ export class AuthSessionService {
   login(payload: LoginRequest, rememberMe: boolean): Observable<LoginResponse> {
     return this.api.login(payload).pipe(
       tap((res) => {
-        // Assumes LoginResponse contains access & refresh
         this.tokens.saveTokens(res.access, res.refresh, rememberMe);
       })
     );

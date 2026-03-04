@@ -6,28 +6,68 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
-        ('positions', '0001_initial'),
+        ("positions", "0001_initial"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Candidate',
+            name="Candidate",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('status', models.CharField(choices=[('pending', 'Pending'), ('in_review', 'In review'), ('hired', 'Hired'), ('rejected', 'Rejected')], default='pending', max_length=50)),
-                ('flag', models.BooleanField(default=False)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('target_position', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='targeted_by_candidates', to='positions.position')),
-                ('user', models.OneToOneField(on_delete=django.db.models.deletion.PROTECT, related_name='candidate_profile', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "status",
+                    models.CharField(
+                        choices=[
+                            ("pending", "Pending"),
+                            ("in_review", "In review"),
+                            ("hired", "Hired"),
+                            ("rejected", "Rejected"),
+                        ],
+                        default="pending",
+                        max_length=50,
+                    ),
+                ),
+                ("flag", models.BooleanField(default=False)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                (
+                    "target_position",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="targeted_by_candidates",
+                        to="positions.position",
+                    ),
+                ),
+                (
+                    "user",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name="candidate_profile",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'indexes': [models.Index(fields=['status'], name='candidates__status_0f124f_idx'), models.Index(fields=['flag'], name='candidates__flag_f1893b_idx')],
+                "indexes": [
+                    models.Index(
+                        fields=["status"], name="candidates__status_0f124f_idx"
+                    ),
+                    models.Index(fields=["flag"], name="candidates__flag_f1893b_idx"),
+                ],
             },
         ),
     ]

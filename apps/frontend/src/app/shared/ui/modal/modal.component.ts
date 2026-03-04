@@ -1,25 +1,3 @@
-/**
- * ----------------------------------------------------------------------------
- * UiModalComponent
- * ----------------------------------------------------------------------------
- * Reusable modal/dialog component with:
- * - Controlled open state (open/openChange)
- * - Backdrop click + Escape close
- * - Body scroll lock while open
- * - Slots: content + [modal-actions]
- *
- * Layer: shared/ui
- * ----------------------------------------------------------------------------
- * <ui-modal [(open)]="confirmOpen" title="Discard changes?">
- *  Unsaved changes will be lost.
- *
- *  <div modal-actions>
- *   <ui-button-secondary (click)="confirmOpen=false">Cancel</ui-button-secondary>
- *   <ui-button-primary (click)="discard()">Discard</ui-button-primary>
- *  </div>
- * </ui-modal>
- */
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -35,9 +13,11 @@ import { CommonModule } from '@angular/common';
 
 type UiModalSize = 'sm' | 'md' | 'lg';
 
+let nextId = 0;
+
 @Component({
   standalone: true,
-  selector: 'ui-modal',
+  selector: 'app-ui-modal',
   imports: [CommonModule],
   templateUrl: './modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -50,14 +30,14 @@ export class UiModalComponent implements OnChanges, OnDestroy {
   @Input() size: UiModalSize = 'md';
   @Input() closeOnBackdrop = true;
 
+  /** used for aria-labelledby */
+  readonly titleId = `ui-modal-title-${++nextId}`;
+
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['open']) {
-      this.syncBodyScrollLock();
-    }
+    if (changes['open']) this.syncBodyScrollLock();
   }
 
   ngOnDestroy(): void {
-    // ensure unlock if component is destroyed while open
     document.body.style.overflow = '';
   }
 
@@ -70,6 +50,16 @@ export class UiModalComponent implements OnChanges, OnDestroy {
   backdropClick(): void {
     if (!this.closeOnBackdrop) return;
     this.close();
+  }
+
+  backdropKeydown(e: KeyboardEvent): void {
+    if (!this.closeOnBackdrop) return;
+
+    // Enter / Space => close
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      this.close();
+    }
   }
 
   close(): void {

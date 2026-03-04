@@ -6,15 +6,8 @@ import { catchError, map, of, startWith, switchMap, tap } from 'rxjs';
 
 import { PageShellComponent } from '@layout/page-shell/page-shell.component';
 import { PositionFormComponent } from '@features/positions/components/position-form/position-form.component';
-import {
-  PositionFormService,
-  PositionFormGroup,
-} from '@features/positions/services/positions-form.service';
-import {
-  PositionsApiService,
-  PositionCreatePayload,
-  PositionDto,
-} from '@features/positions/services/positions-api.service';
+import { PositionFormService, PositionFormGroup } from '@features/positions/services/positions-form.service';
+import { PositionsApiService, PositionCreatePayload, PositionDto } from '@features/positions/services/positions-api.service';
 
 import { UiLinkButtonComponent } from '@shared/ui/link-button/ui-link-button.component';
 import { UiCardComponent } from '@shared/ui/card/card.component';
@@ -24,7 +17,14 @@ type Mode = 'create' | 'edit';
 type PageState =
   | { status: 'loading' }
   | { status: 'error'; message: string }
-  | { status: 'ready'; positionId: number; dto: PositionDto };
+  | { status: 'ready-create' }
+  | { status: 'ready-edit'; positionId: number; dto: PositionDto };
+
+type ApiErrorBody = Record<string, unknown>;
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
 
 @Component({
   standalone: true,
@@ -51,55 +51,60 @@ export class PositionEditorPage {
   readonly apiError = signal<string | null>(null);
   readonly fieldErrors = signal<Record<string, string[]>>({});
 
-  // if route has :id -> edit, otherwise create
-  private readonly positionId = toSignal(
-    this.route.paramMap.pipe(
-      map((pm) => pm.get('id')),
-      map((idParam) => {
-        if (!idParam) return null;
-        const id = Number(idParam);
-        return Number.isNaN(id) ? null : id;
-      }),
-    ),
-    { initialValue: null },
+  // ✅ Observable id
+  private readonly positionId$ = this.route.paramMap.pipe(
+    map((pm) => pm.get('id')),
+    map((idParam) => {
+      if (!idParam) return null;
+      const id = Number(idParam);
+      return Number.isNaN(id) ? null : id;
+    }),
   );
+
+  // ✅ Signal id
+  private readonly positionId = toSignal(this.positionId$, { initialValue: null });
+
+  readonly mode = computed<Mode>(() => (this.positionId() !== null ? 'edit' : 'create'));
 
   readonly shellTitle = computed(() =>
     this.mode() === 'edit' ? 'Manage Position' : 'Add Position',
   );
+
   readonly shellSubtitle = computed(() =>
     this.mode() === 'edit' ? 'Edit job offer details' : 'Create a new job offer',
   );
 
-  readonly mode = signal<Mode>('create'); // ou computed selon route
+  // ✅ Observable state (from positionId$)
+  private readonly state$ = this.positionId$.pipe(
+    switchMap((id) => {
+      // edit
+      if (id !== null) {
+        return this.api.getById(id).pipe(
+          tap((dto) => this.formService.patchFromDto(this.form, dto)),
+          map(
+            (dto): PageState => ({
+              status: 'ready-edit',
+              positionId: id,
+              dto,
+            }),
+          ),
+          catchError(() =>
+            of<PageState>({
+              status: 'error',
+              message: 'Unable to load this position.',
+            }),
+          ),
+        );
+      }
 
-  readonly state = toSignal(
-    this.route.paramMap.pipe(
-      map((pm) => pm.get('id')),
-      map((idParam) => {
-        const id = Number(idParam);
-        return !idParam || Number.isNaN(id) ? null : id;
-      }),
-      switchMap((id) => {
-        // edit
-        if (id) {
-          this.mode.set('edit');
-          return this.api.getById(id).pipe(
-            tap((dto) => this.formService.patchFromDto(this.form, dto)),
-            map((dto) => ({ status: 'ready', positionId: id, dto }) as const),
-            catchError(() =>
-              of({ status: 'error', message: 'Unable to load this position.' } as const),
-            ),
-          );
-        }
-
-        // create
-        this.mode.set('create');
-        return of({ status: 'ready', positionId: 0, dto: null as any } as const); // ou un ready sans dto
-      }),
-      startWith({ status: 'loading' } as const),
-    ),
+      // create
+      return of<PageState>({ status: 'ready-create' });
+    }),
+    startWith<PageState>({ status: 'loading' }),
   );
+
+  // ✅ Signal state
+  readonly state = toSignal(this.state$, { initialValue: { status: 'loading' } as const });
 
   submit(): void {
     this.apiError.set(null);
@@ -111,10 +116,11 @@ export class PositionEditorPage {
     }
 
     this.isSubmitting.set(true);
-    const payload: PositionCreatePayload = this.formService.toPayload(this.form);
 
+    const payload: PositionCreatePayload = this.formService.toPayload(this.form);
     const id = this.positionId();
-    const req$ = id ? this.api.patch(id, payload) : this.api.create(payload);
+
+    const req$ = id !== null ? this.api.patch(id, payload) : this.api.create(payload);
 
     req$.pipe(takeUntilDestroyed()).subscribe({
       next: () => {
@@ -123,7 +129,10 @@ export class PositionEditorPage {
       },
       error: (err: unknown) => {
         this.isSubmitting.set(false);
-        this.handleApiError(err, id ? 'Unable to save changes.' : 'Unable to create position.');
+        this.handleApiError(
+          err,
+          id !== null ? 'Unable to save changes.' : 'Unable to create position.',
+        );
       },
     });
   }
@@ -133,16 +142,19 @@ export class PositionEditorPage {
   }
 
   private handleApiError(err: unknown, fallback: string): void {
-    const data = (err as any)?.error;
+    const httpLike = isRecord(err) ? err : null;
+    const body = httpLike && 'error' in httpLike ? httpLike['error'] : null;
+    const data: unknown = body;
 
-    if (data && typeof data === 'object' && !Array.isArray(data)) {
-      if (typeof (data as any).detail === 'string') {
-        this.apiError.set((data as any).detail);
+    if (isRecord(data)) {
+      const detail = data['detail'];
+      if (typeof detail === 'string') {
+        this.apiError.set(detail);
         return;
       }
 
       const mapped: Record<string, string[]> = Object.fromEntries(
-        Object.entries(data as Record<string, unknown>).map(([k, v]) => [
+        Object.entries(data as ApiErrorBody).map(([k, v]) => [
           k,
           Array.isArray(v) ? v.map(String) : [String(v)],
         ]),

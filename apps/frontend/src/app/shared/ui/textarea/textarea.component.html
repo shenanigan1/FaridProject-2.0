@@ -1,5 +1,7 @@
 <label class="block">
-  <span *ngIf="label" class="text-sm font-medium text-slate-300">{{ label }}</span>
+  @if (label) {
+    <span class="text-sm font-medium text-slate-300">{{ label }}</span>
+  }
 
   <textarea
     class="mt-1 w-full rounded-xl border border-slate-800 bg-slate-900 px-4 py-3 text-slate-100
@@ -13,6 +15,9 @@
     (blur)="blur()"
   ></textarea>
 
-  <p *ngIf="error" class="mt-1 text-xs text-red-300">{{ error }}</p>
-  <p *ngIf="hint && !error" class="mt-1 text-xs text-slate-500">{{ hint }}</p>
+  @if (error) {
+    <p class="mt-1 text-xs text-red-300">{{ error }}</p>
+  } @else if (hint) {
+    <p class="mt-1 text-xs text-slate-500">{{ hint }}</p>
+  }
 </label>

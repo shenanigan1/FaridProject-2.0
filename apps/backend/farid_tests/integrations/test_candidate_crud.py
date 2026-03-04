@@ -93,7 +93,11 @@ def test_list_candidates(api_client):
 
     assert response.status_code == 200
     # Supports both list and paginated responses
-    data = response.data["results"] if isinstance(response.data, dict) and "results" in response.data else response.data
+    data = (
+        response.data["results"]
+        if isinstance(response.data, dict) and "results" in response.data
+        else response.data
+    )
     assert len(data) >= 2
 
 

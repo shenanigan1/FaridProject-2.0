@@ -1,84 +1,93 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+// import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+// import { CommonModule } from '@angular/common';
+// import { Router } from '@angular/router';
+// import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
-import { PageShellComponent } from '@layout/page-shell/page-shell.component';
-import { PositionFormComponent } from '@features/positions/components/position-form/position-form.component';
-import { PositionFormService, PositionFormGroup } from '@features/positions/services/positions-form.service';
-import { PositionsApiService, PositionCreatePayload } from '@features/positions/services/positions-api.service';
+// import { PageShellComponent } from '@layout/page-shell/page-shell.component';
+// import { PositionFormComponent } from '@features/positions/components/position-form/position-form.component';
+// import { PositionFormService, PositionFormGroup } from '@features/positions/services/positions-form.service';
+// import { PositionsApiService, PositionCreatePayload } from '@features/positions/services/positions-api.service';
 
-import { UiLinkButtonComponent } from '@shared/ui/link-button/ui-link-button.component';
+// import { UiLinkButtonComponent } from '@shared/ui/link-button/ui-link-button.component';
 
-@Component({
-  standalone: true,
-  selector: 'app-position-create-page',
-  imports: [CommonModule, PageShellComponent, PositionFormComponent, UiLinkButtonComponent],
-  templateUrl: './position-create.page.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class PositionCreatePage {
-  private readonly formService = inject(PositionFormService);
-  private readonly api = inject(PositionsApiService);
-  private readonly router = inject(Router);
+// type ApiErrorBody = Record<string, unknown>;
 
-  readonly form: PositionFormGroup = this.formService.build();
+// function isRecord(value: unknown): value is Record<string, unknown> {
+//   return typeof value === 'object' && value !== null && !Array.isArray(value);
+// }
 
-  readonly isSubmitting = signal(false);
-  readonly apiError = signal<string | null>(null);
-  readonly fieldErrors = signal<Record<string, string[]>>({});
+// @Component({
+//   standalone: true,
+//   selector: 'app-position-create-page',
+//   imports: [CommonModule, PageShellComponent, PositionFormComponent, UiLinkButtonComponent],
+//   templateUrl: './position-create.page.html',
+//   changeDetection: ChangeDetectionStrategy.OnPush,
+// })
+// export class PositionCreatePage {
+//   private readonly formService = inject(PositionFormService);
+//   private readonly api = inject(PositionsApiService);
+//   private readonly router = inject(Router);
 
-  submit(): void {
-    this.apiError.set(null);
-    this.fieldErrors.set({});
+//   readonly form: PositionFormGroup = this.formService.build();
 
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
-      return;
-    }
+//   readonly isSubmitting = signal(false);
+//   readonly apiError = signal<string | null>(null);
+//   readonly fieldErrors = signal<Record<string, string[]>>({});
 
-    this.isSubmitting.set(true);
-    const payload: PositionCreatePayload = this.formService.toPayload(this.form);
+//   submit(): void {
+//     this.apiError.set(null);
+//     this.fieldErrors.set({});
 
-    this.api
-      .create(payload)
-      .pipe(takeUntilDestroyed())
-      .subscribe({
-        next: () => {
-          this.isSubmitting.set(false);
-          void this.router.navigateByUrl('/positions');
-        },
-        error: (err: unknown) => {
-          this.isSubmitting.set(false);
-          this.handleApiError(err);
-        },
-      });
-  }
+//     if (this.form.invalid) {
+//       this.form.markAllAsTouched();
+//       return;
+//     }
 
-  cancel(): void {
-    void this.router.navigateByUrl('/positions');
-  }
+//     this.isSubmitting.set(true);
+//     const payload: PositionCreatePayload = this.formService.toPayload(this.form);
 
-  private handleApiError(err: unknown): void {
-    const data = (err as any)?.error;
+//     this.api
+//       .create(payload)
+//       .pipe(takeUntilDestroyed())
+//       .subscribe({
+//         next: () => {
+//           this.isSubmitting.set(false);
+//           void this.router.navigateByUrl('/positions');
+//         },
+//         error: (err: unknown) => {
+//           this.isSubmitting.set(false);
+//           this.handleApiError(err);
+//         },
+//       });
+//   }
 
-    if (data && typeof data === 'object' && !Array.isArray(data)) {
-      if (typeof (data as any).detail === 'string') {
-        this.apiError.set((data as any).detail);
-        return;
-      }
+//   cancel(): void {
+//     void this.router.navigateByUrl('/positions');
+//   }
 
-      const mapped: Record<string, string[]> = Object.fromEntries(
-        Object.entries(data as Record<string, unknown>).map(([k, v]) => [
-          k,
-          Array.isArray(v) ? v.map(String) : [String(v)],
-        ])
-      );
+//   private handleApiError(err: unknown): void {
+//     const httpLike = isRecord(err) ? err : null;
+//     const body = httpLike && 'error' in httpLike ? httpLike['error'] : null;
+//     const data: unknown = body;
 
-      this.fieldErrors.set(mapped);
-      return;
-    }
+//     if (isRecord(data)) {
+//       const detail = data['detail'];
+//       if (typeof detail === 'string') {
+//         this.apiError.set(detail);
+//         return;
+//       }
 
-    this.apiError.set('Unable to create position.');
-  }
-}
+//       const mapped: Record<string, string[]> = Object.fromEntries(
+//         Object.entries(data as ApiErrorBody).map(([k, v]) => [
+//           k,
+//           Array.isArray(v) ? v.map(String) : [String(v)],
+//         ])
+//       );
+
+//       this.fieldErrors.set(mapped);
+//       return;
+//     }
+
+//     this.apiError.set('Unable to create position.');
+//   }
+// }

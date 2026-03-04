@@ -68,6 +68,8 @@ def test_section_assignment_unique_per_eval_section():
 
 
 def test_comment_visibility_flag_persists():
-    c = EvaluationCommentFactory.create(is_visible_to_subject=True, text="Visible comment")
+    c = EvaluationCommentFactory.create(
+        is_visible_to_subject=True, text="Visible comment"
+    )
     assert c.is_visible_to_subject is True
     assert c.text == "Visible comment"

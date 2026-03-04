@@ -32,19 +32,25 @@ def test_create_user_sets_password_when_provided():
 
 
 def test_create_superuser_flags():
-    admin = User.objects.create_superuser(email="admin@example.com", password="Admin-123")
+    admin = User.objects.create_superuser(
+        email="admin@example.com", password="Admin-123"
+    )
     assert admin.is_staff is True
     assert admin.is_superuser is True
 
 
 def test_user_str_prefers_full_name():
-    user = User.objects.create_user(email="name@example.com", password=None, first_name="Jean", last_name="Dupont")
+    user = User.objects.create_user(
+        email="name@example.com", password=None, first_name="Jean", last_name="Dupont"
+    )
     s = str(user)
     assert "Jean" in s or "Dupont" in s
 
 
 def test_user_str_falls_back_to_email():
-    user = User.objects.create_user(email="email-only@example.com", password=None, first_name="", last_name="")
+    user = User.objects.create_user(
+        email="email-only@example.com", password=None, first_name="", last_name=""
+    )
     assert str(user) == "email-only@example.com"
 
 

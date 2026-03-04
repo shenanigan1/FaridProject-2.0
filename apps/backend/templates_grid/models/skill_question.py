@@ -1,10 +1,12 @@
 from django.db import models
 from django.db.models import Q
 
+
 class QuestionFormat(models.TextChoices):
     MCQ = "mcq", "Multiple Choice"
     TRUE_FALSE = "true_false", "True/False"
     PRACTICAL = "practical", "Practical"
+
 
 class Difficulty(models.TextChoices):
     EASY = "easy", "Easy"
@@ -41,7 +43,7 @@ class SkillQuestion(models.Model):
     rubric = models.JSONField(blank=True, default=dict)  # for practical grading
 
     order = models.PositiveIntegerField(default=0)
-    
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -52,7 +54,9 @@ class SkillQuestion(models.Model):
             models.Index(fields=["pool", "order"]),
         ]
         constraints = [
-            models.CheckConstraint(condition=Q(points__gte=1), name="ck_question_points_gte_1"),
+            models.CheckConstraint(
+                condition=Q(points__gte=1), name="ck_question_points_gte_1"
+            ),
         ]
 
     def __str__(self):

@@ -6,8 +6,8 @@
  * Layer: shared/ui (pure presentational)
  * ----------------------------------------------------------------------------
  * Usage :
- * <ui-badge tone="success">ACTIVE</ui-badge>
- * <ui-badge tone="danger">HARD</ui-badge>
+ * <app-ui-badge tone="success">ACTIVE</app-ui-badge>
+ * <app-ui-badge tone="danger">HARD</app-ui-badge>
  */
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
@@ -16,7 +16,7 @@ export type UiBadgeSize = 'sm' | 'md';
 
 @Component({
   standalone: true,
-  selector: 'ui-badge',
+  selector: 'app-ui-badge',
   template: `
     <span [class]="classes">
       <ng-content></ng-content>

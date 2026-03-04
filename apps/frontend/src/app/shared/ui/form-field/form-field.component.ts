@@ -3,18 +3,30 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   standalone: true,
-  selector: 'ui-form-field',
+  selector: 'app-ui-form-field',
   imports: [CommonModule],
   template: `
     <div>
-      <label *ngIf="label" class="text-sm text-slate-300">{{ label }}</label>
+      @if (label) {
+        <!-- not a native <label> to avoid association lint error -->
+        <div class="text-sm text-slate-300">
+          {{ label }}
+        </div>
+      }
 
       <div [class.mt-1]="!!label">
         <ng-content></ng-content>
       </div>
 
-      <p *ngIf="error" class="mt-1 text-xs text-red-300">{{ error }}</p>
-      <p *ngIf="hint && !error" class="mt-1 text-xs text-slate-500">{{ hint }}</p>
+      @if (error) {
+        <p class="mt-1 text-xs text-red-300">
+          {{ error }}
+        </p>
+      } @else if (hint) {
+        <p class="mt-1 text-xs text-slate-500">
+          {{ hint }}
+        </p>
+      }
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

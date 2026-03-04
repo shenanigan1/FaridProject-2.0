@@ -11,8 +11,14 @@ import { CommonModule } from '@angular/common';
         <div class="mb-6 flex items-start justify-between gap-4">
           <div>
             <h2 class="text-xl font-semibold">{{ title }}</h2>
-            <p *ngIf="subtitle" class="text-sm text-slate-400">{{ subtitle }}</p>
+
+            @if (subtitle) {
+              <p class="text-sm text-slate-400">
+                {{ subtitle }}
+              </p>
+            }
           </div>
+
           <ng-content select="[shell-actions]"></ng-content>
         </div>
 

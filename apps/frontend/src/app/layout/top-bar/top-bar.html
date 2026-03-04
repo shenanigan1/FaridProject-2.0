@@ -17,9 +17,12 @@
       <div class="text-white font-semibold text-sm sm:text-base">
         {{ title }}
       </div>
-      <div *ngIf="subtitle" class="text-slate-400 text-xs">
-        {{ subtitle }}
-      </div>
+
+      @if (subtitle) {
+        <div class="text-slate-400 text-xs">
+          {{ subtitle }}
+        </div>
+      }
     </div>
   </div>
 
@@ -36,36 +39,38 @@
     >
       <span class="text-slate-200 text-lg">🔔</span>
 
-      <span
-        *ngIf="notificationCount > 0"
-        class="absolute -top-1 -right-1 min-w-5 h-5 px-1
-               rounded-full bg-red-500 text-white text-[11px]
-               flex items-center justify-center border border-slate-900"
-      >
-        {{ notificationCount }}
-      </span>
+      @if (notificationCount > 0) {
+        <span
+          class="absolute -top-1 -right-1 min-w-5 h-5 px-1
+                 rounded-full bg-red-500 text-white text-[11px]
+                 flex items-center justify-center border border-slate-900"
+        >
+          {{ notificationCount }}
+        </span>
+      }
     </button>
 
     <!-- Avatar -->
-    <div
-      *ngIf="user"
-      class="h-10 w-10 rounded-full overflow-hidden
-             bg-slate-700 border border-slate-600
-             flex items-center justify-center
-             shadow-sm"
-      aria-label="User avatar"
-    >
-      <img
-        *ngIf="user.avatarUrl; else initials"
-        [src]="user.avatarUrl"
-        alt="avatar"
-        class="h-full w-full object-cover"
-      />
-      <ng-template #initials>
-        <span class="text-white font-semibold">
-          {{ user.fullName }}
-        </span>
-      </ng-template>
-    </div>
+    @if (user) {
+      <div
+        class="h-10 w-10 rounded-full overflow-hidden
+               bg-slate-700 border border-slate-600
+               flex items-center justify-center
+               shadow-sm"
+        aria-label="User avatar"
+      >
+        @if (user.avatarUrl) {
+          <img
+            [src]="user.avatarUrl"
+            alt="avatar"
+            class="h-full w-full object-cover"
+          />
+        } @else {
+          <span class="text-white font-semibold">
+            {{ user.fullName }}
+          </span>
+        }
+      </div>
+    }
   </div>
 </header>

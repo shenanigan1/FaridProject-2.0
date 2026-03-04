@@ -1,13 +1,17 @@
 from django.conf import settings
 from django.db import models
 
+
 class EvaluationStatus(models.TextChoices):
     IN_PROGRESS = "in_progress", "In progress"
     COMPLETED = "completed", "Completed"
     VALIDATED = "validated", "Validated"
 
+
 class Evaluation(models.Model):
-    subject = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="evaluations")
+    subject = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="evaluations"
+    )
 
     # For candidates: link to application (recommended). For employees: can be null.
     application = models.ForeignKey(
@@ -40,11 +44,15 @@ class Evaluation(models.Model):
         related_name="assigned_evaluations",
     )
 
-    status = models.CharField(max_length=20, choices=EvaluationStatus.choices, default=EvaluationStatus.IN_PROGRESS)
+    status = models.CharField(
+        max_length=20,
+        choices=EvaluationStatus.choices,
+        default=EvaluationStatus.IN_PROGRESS,
+    )
 
     # Results visibility
-    subject_comment = models.TextField(blank=True)     # visible to candidate/employee
-    internal_comment = models.TextField(blank=True)    # HR/management only
+    subject_comment = models.TextField(blank=True)  # visible to candidate/employee
+    internal_comment = models.TextField(blank=True)  # HR/management only
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

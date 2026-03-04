@@ -11,22 +11,27 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   standalone: true,
-  selector: 'ui-progress-bar',
+  selector: 'app-ui-progress-bar',
   imports: [CommonModule],
   template: `
     <div class="w-full rounded-full bg-slate-800/60 h-2 overflow-hidden">
-      <div
-        *ngIf="!indeterminate"
-        class="h-full bg-blue-500 transition-all"
-        [style.width.%]="clamped"
-        aria-label="Progress"
-      ></div>
+      @if(!indeterminate)
+        {
+          <div
+              class="h-full bg-blue-500 transition-all"
+              [style.width.%]="clamped"
+              aria-label="Progress"
+          ></div>
+        }
 
-      <div
-        *ngIf="indeterminate"
-        class="h-full w-1/3 bg-blue-500 animate-pulse"
-        aria-label="Loading"
-      ></div>
+      @else
+        {
+          <div
+            class="h-full w-1/3 bg-blue-500 animate-pulse"
+            aria-label="Loading"
+          ></div>
+        }
+
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

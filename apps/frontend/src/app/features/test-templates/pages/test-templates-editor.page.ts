@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { finalize } from 'rxjs';
+import { finalize, Observable } from 'rxjs';
 
 import { TemplatesApi } from '@features/test-templates/services/test-templates.api';
 import { PoolsStore } from '@features/pools/services/pools.store';
@@ -21,11 +21,13 @@ interface QuestionVm {
   points: number;
   mandatory?: boolean;
 }
+
 interface SectionPoolRuleVm {
   poolId: string;
   randomCount: number;
   mandatoryCount?: number;
 }
+
 interface SectionVm {
   id: string;
   title: string;
@@ -35,11 +37,53 @@ interface SectionVm {
   pools: SectionPoolRuleVm[];
 }
 
+type Mode = 'create' | 'view' | 'edit';
+
+interface TemplateFormValue {
+  name: string;
+  duration_minutes: number;
+  min_pass_score: number;
+  difficulty: Difficulty;
+  is_active: boolean;
+};
+
+type TemplatePayload = TemplateFormValue & { sections: SectionVm[] };
+
+// type TemplateSaved = { id: number | string };
+
 function uid(): string {
   return Math.random().toString(16).slice(2) + Date.now().toString(16);
 }
 
-type Mode = 'create' | 'view' | 'edit';
+/// ---- safe parsing helpers (0 any) ----
+type UnknownRecord = Record<string, unknown>;
+
+function isRecord(v: unknown): v is UnknownRecord {
+  return typeof v === 'object' && v !== null && !Array.isArray(v);
+}
+
+function asString(v: unknown, fallback = ''): string {
+  return typeof v === 'string' ? v : fallback;
+}
+
+function asNumber(v: unknown, fallback = 0): number {
+  return typeof v === 'number' && Number.isFinite(v) ? v : fallback;
+}
+
+function asBoolean(v: unknown, fallback = false): boolean {
+  return typeof v === 'boolean' ? v : fallback;
+}
+
+function asArray(v: unknown): unknown[] {
+  return Array.isArray(v) ? v : [];
+}
+
+function pick(v: UnknownRecord, ...keys: string[]): unknown {
+  for (const k of keys) {
+    if (k in v) return v[k];
+  }
+  return undefined;
+}
 
 @Component({
   selector: 'app-test-template-editor-page',
@@ -64,7 +108,7 @@ export class TestTemplateEditorPage {
   private readonly poolsStore = inject(PoolsStore);
 
   // --- routing ---
-  readonly templateId = computed(() => {
+  readonly templateId = computed<number | null>(() => {
     const raw = this.route.snapshot.paramMap.get('id');
     const id = raw ? Number(raw) : NaN;
     return Number.isFinite(id) ? id : null;
@@ -79,7 +123,7 @@ export class TestTemplateEditorPage {
   readonly apiError = signal<string | null>(null);
 
   // snapshot for cancel edit
-  private snapshot: { formValue: any; sections: SectionVm[] } | null = null;
+  private snapshot: { formValue: TemplateFormValue; sections: SectionVm[] } | null = null;
 
   // pools sidebar
   readonly poolQuery = signal('');
@@ -87,13 +131,28 @@ export class TestTemplateEditorPage {
   readonly poolsLoading = this.poolsStore.isLoading;
   readonly poolsError = this.poolsStore.error;
 
+  // optional: helps avoid “unused” for assignSection and is useful later
+  readonly assigningSectionId = signal<string | null>(null);
+
   // form
   readonly form = this.fb.nonNullable.group({
-    name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(120)]],
-    duration_minutes: [45, [Validators.required, Validators.min(1), Validators.max(600)]],
-    min_pass_score: [80, [Validators.required, Validators.min(0), Validators.max(100)]],
-    difficulty: ['medium' as Difficulty, [Validators.required]],
-    is_active: [true],
+    name: this.fb.nonNullable.control('', [
+      Validators.required,
+      Validators.minLength(3),
+      Validators.maxLength(120),
+    ]),
+    duration_minutes: this.fb.nonNullable.control(45, [
+      Validators.required,
+      Validators.min(1),
+      Validators.max(600),
+    ]),
+    min_pass_score: this.fb.nonNullable.control(80, [
+      Validators.required,
+      Validators.min(0),
+      Validators.max(100),
+    ]),
+    difficulty: this.fb.nonNullable.control<Difficulty>('medium', [Validators.required]),
+    is_active: this.fb.nonNullable.control(true),
   });
 
   readonly sections = signal<SectionVm[]>([]);
@@ -105,17 +164,27 @@ export class TestTemplateEditorPage {
     const q = this.poolQuery().trim().toLowerCase();
     const items = this.pools();
     if (!q) return items;
-    return items.filter(p => (p.name ?? '').toLowerCase().includes(q) || (p.code ?? '').toLowerCase().includes(q));
+
+    return items.filter(
+      (p) =>
+        (p.name ?? '').toLowerCase().includes(q) ||
+        (p.code ?? '').toLowerCase().includes(q),
+    );
   });
 
   readonly totalWeight = computed(() =>
-    this.sections().reduce((acc, s) => acc + (Number.isFinite(s.weight) ? s.weight : 0), 0)
+    this.sections().reduce((acc, s) => acc + (Number.isFinite(s.weight) ? s.weight : 0), 0),
   );
 
-  readonly totalQuestions = computed(() => this.sections().reduce((acc, s) => acc + s.questions.length, 0));
+  readonly totalQuestions = computed(() =>
+    this.sections().reduce((acc, s) => acc + s.questions.length, 0),
+  );
 
   readonly totalPoints = computed(() =>
-    this.sections().reduce((acc, s) => acc + s.questions.reduce((a, q) => a + (q.points ?? 0), 0), 0)
+    this.sections().reduce(
+      (acc, s) => acc + s.questions.reduce((a, q) => a + (q.points ?? 0), 0),
+      0,
+    ),
   );
 
   readonly avgTimePerQuestion = computed(() => {
@@ -144,7 +213,10 @@ export class TestTemplateEditorPage {
     if (id === null) {
       // /templates/new
       this.mode.set('create');
-      this.snapshot = { formValue: this.form.getRawValue(), sections: structuredClone(this.sections()) };
+      this.snapshot = {
+        formValue: this.form.getRawValue(),
+        sections: structuredClone(this.sections()),
+      };
       return;
     }
 
@@ -163,47 +235,77 @@ export class TestTemplateEditorPage {
       .get(id)
       .pipe(finalize(() => this.pageLoading.set(false)))
       .subscribe({
-        next: (dto) => {
+        next: (dtoUnknown: unknown) => {
+          const dto = isRecord(dtoUnknown) ? dtoUnknown : {};
+
           this.form.patchValue({
-            name: dto?.name ?? '',
-            duration_minutes: dto?.duration_minutes ?? 45,
-            min_pass_score: dto?.min_pass_score ?? 80,
-            difficulty: (dto?.difficulty ?? 'medium') as Difficulty,
-            is_active: dto?.is_active ?? true,
+            name: asString(dto['name'], ''),
+            duration_minutes: asNumber(dto['duration_minutes'], 45),
+            min_pass_score: asNumber(dto['min_pass_score'], 80),
+            difficulty: (asString(dto['difficulty'], 'medium') as Difficulty) || 'medium',
+            is_active: asBoolean(dto['is_active'], true),
           });
 
-          const dtoSections = Array.isArray(dto?.sections) ? dto.sections : [];
-          const mapped: SectionVm[] = dtoSections.map((s: any) => ({
-            id: String(s?.id ?? uid()),
-            title: s?.title ?? s?.name ?? 'Untitled Section',
-            description: s?.description ?? '',
-            weight: Number.isFinite(s?.weight) ? s.weight : 0,
-            questions: Array.isArray(s?.questions)
-              ? s.questions.map((q: any) => ({
-                  id: Number(q?.id ?? 0),
-                  text: String(q?.text ?? q?.label ?? 'Question'),
-                  points: Number(q?.points ?? 0),
-                  mandatory: Boolean(q?.mandatory ?? false),
-                }))
-              : [],
-            pools: Array.isArray(s?.pools)
-              ? s.pools.map((pr: any) => ({
-                  poolId: String(pr?.poolId ?? pr?.pool_id ?? pr?.pool ?? ''),
-                  randomCount: Number(pr?.randomCount ?? pr?.random_count ?? 0),
-                  mandatoryCount: pr?.mandatoryCount ?? pr?.mandatory_count ?? undefined,
-                }))
-              : [],
-          }));
+          const dtoSections = asArray(dto['sections']);
+          const mapped: SectionVm[] = dtoSections.map((sUnknown) => this.mapSection(sUnknown));
 
           this.sections.set(mapped);
 
-          // snapshot for “cancel edit”
-          this.snapshot = { formValue: this.form.getRawValue(), sections: structuredClone(this.sections()) };
+          this.snapshot = {
+            formValue: this.form.getRawValue(),
+            sections: structuredClone(this.sections()),
+          };
         },
-        error: (err) => {
-          this.pageError.set(err?.error?.detail ?? err?.error?.message ?? 'Failed to load template.');
+        error: (err: unknown) => {
+          this.pageError.set(this.extractErrorMessage(err, 'Failed to load template.'));
         },
       });
+  }
+
+  private mapSection(sUnknown: unknown): SectionVm {
+    const s = isRecord(sUnknown) ? sUnknown : {};
+
+    const id = asString(pick(s, 'id'), uid());
+    const title = asString(pick(s, 'title', 'name'), 'Untitled Section');
+    const description = asString(pick(s, 'description'), '');
+    const weight = Math.max(0, Math.min(100, Math.floor(asNumber(pick(s, 'weight'), 0))));
+
+    const questions = asArray(pick(s, 'questions')).map((qUnknown): QuestionVm => {
+      const q = isRecord(qUnknown) ? qUnknown : {};
+      return {
+        id: asNumber(pick(q, 'id'), 0),
+        text: asString(pick(q, 'text', 'label'), 'Question'),
+        points: asNumber(pick(q, 'points'), 0),
+        mandatory: asBoolean(pick(q, 'mandatory'), false),
+      };
+    });
+
+    const pools = asArray(pick(s, 'pools')).map((prUnknown): SectionPoolRuleVm => {
+      const pr = isRecord(prUnknown) ? prUnknown : {};
+      const poolId = asString(pick(pr, 'poolId', 'pool_id', 'pool'), '');
+      const randomCount = Math.max(0, Math.floor(asNumber(pick(pr, 'randomCount', 'random_count'), 0)));
+
+      const mandatoryRaw = pick(pr, 'mandatoryCount', 'mandatory_count');
+      const mandatoryCount =
+        typeof mandatoryRaw === 'number' && Number.isFinite(mandatoryRaw)
+          ? Math.max(0, Math.floor(mandatoryRaw))
+          : undefined;
+
+      return { poolId, randomCount, mandatoryCount };
+    });
+
+    return { id, title, description, weight, questions, pools };
+  }
+
+  private extractErrorMessage(err: unknown, fallback: string): string {
+    if (!isRecord(err)) return fallback;
+    const e = err['error'];
+    if (!isRecord(e)) return fallback;
+    const detail = e['detail'];
+    const message = e['message'];
+    if (typeof detail === 'string' && detail.trim()) return detail;
+    if (typeof message === 'string' && message.trim()) return message;
+    return fallback;
   }
 
   // ---- header actions ----
@@ -212,22 +314,23 @@ export class TestTemplateEditorPage {
   }
 
   toggleEdit(): void {
-    if (this.templateId() === null) return; // create already editable
+    if (this.templateId() === null) return;
 
     if (this.mode() === 'view') {
-      this.snapshot = { formValue: this.form.getRawValue(), sections: structuredClone(this.sections()) };
+      this.snapshot = {
+        formValue: this.form.getRawValue(),
+        sections: structuredClone(this.sections()),
+      };
       this.mode.set('edit');
       this.form.enable({ emitEvent: false });
       return;
     }
 
-    // if already edit -> go back to view
     this.cancelEdit();
   }
 
   cancelEdit(): void {
     if (this.templateId() === null) {
-      // create mode: cancel just goes back to list
       this.discard();
       return;
     }
@@ -236,6 +339,7 @@ export class TestTemplateEditorPage {
       this.form.reset(this.snapshot.formValue);
       this.sections.set(structuredClone(this.snapshot.sections));
     }
+
     this.mode.set('view');
     this.form.disable({ emitEvent: false });
   }
@@ -244,9 +348,11 @@ export class TestTemplateEditorPage {
   trackByPoolId(_: number, item: QuestionPool): string {
     return item.id;
   }
+
   setPoolSearch(value: string): void {
     this.poolQuery.set(value ?? '');
   }
+
   poolName(poolId: string): string {
     return this.pools().find((p) => p.id === poolId)?.name ?? `Pool #${poolId}`;
   }
@@ -254,8 +360,8 @@ export class TestTemplateEditorPage {
   // ---- sections actions ----
   addSection(): void {
     if (!this.isEditMode()) return;
-    const nextIndex = this.sections().length + 1;
 
+    const nextIndex = this.sections().length + 1;
     this.sections.update((list) => [
       ...list,
       { id: uid(), title: `Section ${nextIndex}`, description: '', weight: 0, questions: [], pools: [] },
@@ -269,18 +375,25 @@ export class TestTemplateEditorPage {
 
   updateSectionTitle(sectionId: string, title: string): void {
     if (!this.isEditMode()) return;
-    this.sections.update((list) => list.map((s) => (s.id === sectionId ? { ...s, title: title ?? '' } : s)));
+    this.sections.update((list) =>
+      list.map((s) => (s.id === sectionId ? { ...s, title: title ?? '' } : s)),
+    );
   }
 
   updateSectionWeight(sectionId: string, weight: number): void {
     if (!this.isEditMode()) return;
     const w = Number.isFinite(weight) ? Math.max(0, Math.min(100, Math.floor(weight))) : 0;
-    this.sections.update((list) => list.map((s) => (s.id === sectionId ? { ...s, weight: w } : s)));
+
+    this.sections.update((list) =>
+      list.map((s) => (s.id === sectionId ? { ...s, weight: w } : s)),
+    );
   }
 
   assignSection(sectionId: string): void {
     if (!this.isEditMode()) return;
-    void sectionId;
+    // Placeholder utile (et plus propre que "void sectionId")
+    this.assigningSectionId.set(sectionId);
+    this.apiError.set('Assign UI not implemented yet.');
   }
 
   attachPoolToSection(sectionId: string, poolId: string): void {
@@ -292,25 +405,29 @@ export class TestTemplateEditorPage {
         if (s.id !== sectionId) return s;
         if (s.pools.some((p) => p.poolId === poolId)) return s;
         return { ...s, pools: [...s.pools, { poolId, randomCount: 3 }] };
-      })
+      }),
     );
   }
 
   detachPool(sectionId: string, poolId: string): void {
     if (!this.isEditMode()) return;
+
     this.sections.update((list) =>
-      list.map((s) => (s.id === sectionId ? { ...s, pools: s.pools.filter((p) => p.poolId !== poolId) } : s))
+      list.map((s) =>
+        s.id === sectionId ? { ...s, pools: s.pools.filter((p) => p.poolId !== poolId) } : s,
+      ),
     );
   }
 
   updatePoolRandomCount(sectionId: string, poolId: string, count: number): void {
     if (!this.isEditMode()) return;
     const c = Math.max(0, Math.floor(Number(count) || 0));
+
     this.sections.update((list) =>
       list.map((s) => {
         if (s.id !== sectionId) return s;
         return { ...s, pools: s.pools.map((p) => (p.poolId === poolId ? { ...p, randomCount: c } : p)) };
-      })
+      }),
     );
   }
 
@@ -339,30 +456,42 @@ export class TestTemplateEditorPage {
 
     this.isSaving.set(true);
 
-    const payload = {
+    const payload: TemplatePayload = {
       ...this.form.getRawValue(),
       sections: this.sections(),
     };
 
     const id = this.templateId();
-    const req$ = id === null ? this.api.create(payload as any) : this.api.update(id, payload as any);
+
+    // Si tes méthodes API sont typées, enlève les casts.
+    const req$: Observable<unknown> = id === null
+      ? this.api.create(payload)
+      : this.api.update(id, payload);
 
     req$.pipe(finalize(() => this.isSaving.set(false))).subscribe({
-      next: (saved: any) => {
-        // after save:
+      next: (savedUnknown: unknown) => {
+        const saved = isRecord(savedUnknown) ? savedUnknown : {};
+        const savedId = saved['id'];
+
         if (id === null) {
-          // created => redirect to view
-          void this.router.navigate(['/templates', saved?.id]);
+          if (typeof savedId === 'number' || typeof savedId === 'string') {
+            void this.router.navigate(['/templates', savedId]);
+          } else {
+            // fallback si API ne renvoie pas l'id
+            void this.router.navigate(['/templates']);
+          }
           return;
         }
 
-        // edit => lock + refresh snapshot
         this.mode.set('view');
         this.form.disable({ emitEvent: false });
-        this.snapshot = { formValue: this.form.getRawValue(), sections: structuredClone(this.sections()) };
+        this.snapshot = {
+          formValue: this.form.getRawValue(),
+          sections: structuredClone(this.sections()),
+        };
       },
-      error: (err) => {
-        this.apiError.set(err?.error?.detail ?? err?.error?.message ?? 'Save failed. Please try again.');
+      error: (err: unknown) => {
+        this.apiError.set(this.extractErrorMessage(err, 'Save failed. Please try again.'));
       },
     });
   }

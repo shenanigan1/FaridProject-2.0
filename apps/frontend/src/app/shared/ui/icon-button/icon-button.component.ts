@@ -10,9 +10,9 @@
  * - Use for micro-actions (edit/delete/menu), not primary CTAs.
  * ----------------------------------------------------------------------------
  *  Usage :
- *  <ui-icon-button ariaLabel="Open menu">
+ *  <app-ui-icon-button ariaLabel="Open menu">
  *   ⋮
- *  </ui-icon-button>
+ *  </app-ui-icon-button>
  */
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
@@ -21,7 +21,7 @@ type UiIconButtonSize = 'sm' | 'md' | 'lg';
 
 @Component({
   standalone: true,
-  selector: 'ui-icon-button',
+  selector: 'app-ui-icon-button',
   template: `
     <button
       [attr.type]="type"

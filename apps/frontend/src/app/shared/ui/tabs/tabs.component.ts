@@ -23,29 +23,30 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-export type UiTabItem<K extends string = string> = {
+export interface UiTabItem<K extends string = string> {
   key: K;
   label: string;
   disabled?: boolean;
-};
+}
 
 type UiTabsVariant = 'pill' | 'underline';
 
 @Component({
   standalone: true,
-  selector: 'ui-tabs',
+  selector: 'app-ui-tabs',
   imports: [CommonModule],
   template: `
     <div [class]="containerClasses">
-      <button
-        *ngFor="let t of items"
-        type="button"
-        [disabled]="t.disabled"
-        [class]="tabClasses(t.key, !!t.disabled)"
-        (click)="setActive(t.key)"
-      >
-        {{ t.label }}
-      </button>
+     @for (t of items; track t.key) {
+        <button
+          type="button"
+          [disabled]="t.disabled"
+          [class]="tabClasses(t.key, !!t.disabled)"
+          (click)="setActive(t.key)"
+        >
+          {{ t.label }}
+        </button>
+      }
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

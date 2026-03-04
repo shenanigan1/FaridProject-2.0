@@ -12,7 +12,7 @@ from templates_grid.serializers import QuestionPoolSerializer, SkillQuestionSeri
 class QuestionPoolViewSet(ModelViewSet):
     queryset = QuestionPool.objects.all().order_by("id")
     serializer_class = QuestionPoolSerializer
-    
+
     search_fields = ["name", "code"]
 
     @action(detail=True, methods=["get", "post"], url_path="questions")
@@ -23,11 +23,7 @@ class QuestionPoolViewSet(ModelViewSet):
         # GET → list questions
         # -------------------------
         if request.method == "GET":
-            qs = (
-                SkillQuestion.objects
-                .filter(pool=pool)
-                .order_by("order", "id")
-            )
+            qs = SkillQuestion.objects.filter(pool=pool).order_by("order", "id")
             serializer = SkillQuestionSerializer(qs, many=True)
             return Response(serializer.data)
 
@@ -35,11 +31,9 @@ class QuestionPoolViewSet(ModelViewSet):
         # POST → create question
         # -------------------------
         if request.method == "POST":
-
             # Compute next order safely
             max_order = (
-                SkillQuestion.objects
-                .filter(pool=pool)
+                SkillQuestion.objects.filter(pool=pool)
                 .aggregate(models.Max("order"))
                 .get("order__max")
             ) or 0

@@ -17,7 +17,7 @@ type UiChipTone = 'neutral' | 'info';
 
 @Component({
   standalone: true,
-  selector: 'ui-chip',
+  selector: 'app-ui-chip',
   imports: [CommonModule],
   template: `
     <button
@@ -27,14 +27,16 @@ type UiChipTone = 'neutral' | 'info';
       (click)="onToggle()"
     >
       <ng-content></ng-content>
-
-      <span *ngIf="removable"
-            class="ml-2 inline-flex h-5 w-5 items-center justify-center rounded-md
+      @if(removable)
+        {
+          <span class="ml-2 inline-flex h-5 w-5 items-center justify-center rounded-md
                    hover:bg-slate-700/40"
             (click)="onRemove($event)"
             aria-hidden="true">
-        ×
-      </span>
+            ×
+          </span>
+        }
+
     </button>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -45,7 +47,7 @@ export class UiChipComponent {
   @Input() removable = false;
   @Input() tone: UiChipTone = 'neutral';
 
-  @Output() toggle = new EventEmitter<boolean>();
+  @Output() toggleChip = new EventEmitter<boolean>();
   @Output() remove = new EventEmitter<void>();
 
   get classes(): string {
@@ -70,7 +72,7 @@ export class UiChipComponent {
 
   onToggle(): void {
     if (this.disabled) return;
-    this.toggle.emit(!this.selected);
+    this.toggleChip.emit(!this.selected);
   }
 
   onRemove(e: MouseEvent): void {

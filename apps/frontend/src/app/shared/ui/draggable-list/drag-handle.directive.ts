@@ -3,7 +3,7 @@
  * UiDragHandleDirective
  * ----------------------------------------------------------------------------
  * Re-export CDK drag handle directive with a semantic selector.
- * Use: <span uiDragHandle>⠿</span>
+ * Use: <span appUiDragHandle>⠿</span>
  * Layer: shared/ui
  * ----------------------------------------------------------------------------
  */
@@ -13,6 +13,6 @@ import { CdkDragHandle } from '@angular/cdk/drag-drop';
 
 @Directive({
   standalone: true,
-  selector: '[uiDragHandle]',
+  selector: '[appUiDragHandle]',
 })
 export class UiDragHandleDirective extends CdkDragHandle {}

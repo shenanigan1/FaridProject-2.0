@@ -5,31 +5,56 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
-        ('companies', '0001_initial'),
+        ("companies", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Position',
+            name="Position",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(max_length=255)),
-                ('description', models.TextField(blank=True)),
-                ('department', models.CharField(max_length=255)),
-                ('contract_type', models.CharField(max_length=100)),
-                ('location', models.CharField(blank=True, max_length=255)),
-                ('salary', models.PositiveIntegerField(blank=True, null=True)),
-                ('is_active', models.BooleanField(default=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('company', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='positions', to='companies.company')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("title", models.CharField(max_length=255)),
+                ("description", models.TextField(blank=True)),
+                ("department", models.CharField(max_length=255)),
+                ("contract_type", models.CharField(max_length=100)),
+                ("location", models.CharField(blank=True, max_length=255)),
+                ("salary", models.PositiveIntegerField(blank=True, null=True)),
+                ("is_active", models.BooleanField(default=True)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                (
+                    "company",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name="positions",
+                        to="companies.company",
+                    ),
+                ),
             ],
             options={
-                'indexes': [models.Index(fields=['company', 'is_active'], name='positions_p_company_b4fd1e_idx'), models.Index(fields=['department'], name='positions_p_departm_b1b4c0_idx'), models.Index(fields=['contract_type'], name='positions_p_contrac_7d2730_idx')],
+                "indexes": [
+                    models.Index(
+                        fields=["company", "is_active"],
+                        name="positions_p_company_b4fd1e_idx",
+                    ),
+                    models.Index(
+                        fields=["department"], name="positions_p_departm_b1b4c0_idx"
+                    ),
+                    models.Index(
+                        fields=["contract_type"], name="positions_p_contrac_7d2730_idx"
+                    ),
+                ],
             },
         ),
     ]

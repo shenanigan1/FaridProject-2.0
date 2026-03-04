@@ -9,9 +9,9 @@
 import { Injectable, signal } from '@angular/core';
 import { UiToast, UiToastTone } from './toast.models';
 
-type ToastOptions = {
+interface ToastOptions {
   durationMs?: number;
-};
+}
 
 @Injectable({ providedIn: 'root' })
 export class ToastService {

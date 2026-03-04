@@ -7,7 +7,6 @@ import { PoolsStore } from '@features/pools/services/pools.store';
 import { QuestionPool } from '@features/pools/models/question-pool.model';
 
 // shared/ui
-import { UiTextInputComponent } from '@shared/ui/text-input/text-input.component';
 import { UiEmptyStateComponent } from '@shared/ui/empty-state/empty-state.component';
 import { UiButtonPrimaryComponent } from '@shared/ui/button-primary/button-primary.component';
 import { UiIconButtonComponent } from '@shared/ui/icon-button/icon-button.component';
@@ -21,7 +20,6 @@ import { UiAlertComponent } from '@shared/ui/alert/alert.component';
     RouterModule,
     DatePipe,
     ReactiveFormsModule,
-    UiTextInputComponent,
     UiEmptyStateComponent,
     UiButtonPrimaryComponent,
     UiIconButtonComponent,

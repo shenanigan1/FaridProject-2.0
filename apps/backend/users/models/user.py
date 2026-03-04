@@ -1,7 +1,8 @@
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.db import models
 from users.models.roles import UserRoles
 from users.models.managers import UserManager
+
 
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
@@ -11,7 +12,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     phone = models.CharField(max_length=32, blank=True)
 
     # Keep as a "primary role" (UI default). For scalable permissions use Groups/Permissions too.
-    role = models.CharField(max_length=20, choices=UserRoles.choices, default=UserRoles.EMPLOYEE)
+    role = models.CharField(
+        max_length=20, choices=UserRoles.choices, default=UserRoles.EMPLOYEE
+    )
 
     anonymized_at = models.DateTimeField(null=True, blank=True)
 

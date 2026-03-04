@@ -1,22 +1,28 @@
 <nav
+  role="navigation"
+  aria-label="Main navigation"
   class="h-[72px] bg-slate-900 border-t border-slate-800
          flex items-center justify-around px-2"
 >
-  <a
-    *ngFor="let item of items"
-    [routerLink]="item.route"
-    routerLinkActive="text-blue-400 bg-slate-800/40"
-    class="group flex flex-col items-center justify-center gap-1
-           px-3 py-2 rounded-xl
-           text-slate-400 hover:text-white hover:bg-slate-800/30
-           transition"
-  >
-    <span class="text-lg leading-none">
-      {{ item.icon }}
-    </span>
+  @for (item of items; track item.route) {
+    <a
+      [routerLink]="item.route"
+      routerLinkActive="text-blue-400 bg-slate-800/40"
+      [routerLinkActiveOptions]="{ exact: true }"
+      #rla="routerLinkActive"
+      [attr.aria-current]="rla.isActive ? 'page' : null"
+      class="group flex flex-col items-center justify-center gap-1
+             px-3 py-2 rounded-xl
+             text-slate-400 hover:text-white hover:bg-slate-800/30
+             transition focus:outline-none focus:ring-2 focus:ring-blue-500/40"
+    >
+      <span class="text-lg leading-none" aria-hidden="true">
+        {{ item.icon }}
+      </span>
 
-    <span class="text-[11px] font-medium">
-      {{ item.label }}
-    </span>
-  </a>
+      <span class="text-[11px] font-medium">
+        {{ item.label }}
+      </span>
+    </a>
+  }
 </nav>

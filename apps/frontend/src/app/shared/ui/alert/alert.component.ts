@@ -1,18 +1,22 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-type UiAlertVariant = 'error' | 'success' | 'warning' | 'info';
+export type UiAlertVariant = 'error' | 'success' | 'warning' | 'info';
 
 @Component({
   standalone: true,
-  selector: 'ui-alert',
+  selector: 'app-ui-alert',
   imports: [CommonModule],
   template: `
-    <div *ngIf="message"
-         [class]="classes">
-      <ng-content *ngIf="!message"></ng-content>
-      <span *ngIf="message">{{ message }}</span>
-    </div>
+    @if (message) {
+      <div [class]="classes">
+        <span>{{ message }}</span>
+      </div>
+    } @else {
+      <div [class]="classes">
+        <ng-content></ng-content>
+      </div>
+    }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

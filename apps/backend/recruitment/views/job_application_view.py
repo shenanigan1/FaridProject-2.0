@@ -4,5 +4,9 @@ from recruitment.serializers import JobApplicationSerializer
 
 
 class JobApplicationViewSet(ModelViewSet):
-    queryset = JobApplication.objects.select_related("candidate", "position").all().order_by("id")
+    queryset = (
+        JobApplication.objects.select_related("candidate", "position")
+        .all()
+        .order_by("id")
+    )
     serializer_class = JobApplicationSerializer

@@ -1,7 +1,12 @@
 from django.db import models
 
+
 class VersionedSection(models.Model):
-    template_version = models.ForeignKey("templates_grid.TemplateVersion", on_delete=models.CASCADE, related_name="sections")
+    template_version = models.ForeignKey(
+        "templates_grid.TemplateVersion",
+        on_delete=models.CASCADE,
+        related_name="sections",
+    )
     name = models.CharField(max_length=255)
     order = models.PositiveIntegerField(default=0)
 

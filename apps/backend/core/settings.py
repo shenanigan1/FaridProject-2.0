@@ -41,11 +41,10 @@ INSTALLED_APPS = [
 ]
 
 REST_FRAMEWORK = {
-    "DEFAULT_FILTER_BACKENDS": [ 
+    "DEFAULT_FILTER_BACKENDS": [
         "django_filters.rest_framework.DjangoFilterBackend",
-        "rest_framework.filters.SearchFilter", 
-        ],
-    
+        "rest_framework.filters.SearchFilter",
+    ],
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
@@ -63,8 +62,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:4200",
 ]
 
-#if you want to allow coockies and sessions
-#CORS_ALLOW_CREDENTIALS = True
+# if you want to allow coockies and sessions
+# CORS_ALLOW_CREDENTIALS = True
 
 AUTHENTICATION_BACKENDS = [
     "core.auth_backend.EmailAuthBackend",

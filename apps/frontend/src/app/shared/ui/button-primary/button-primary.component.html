@@ -7,14 +7,12 @@
          transition
          disabled:opacity-60 disabled:cursor-not-allowed">
 
-  <ng-container *ngIf="!loading; else loadingTpl">
+  @if (!loading) {
     <ng-content></ng-content>
-  </ng-container>
-
-  <ng-template #loadingTpl>
+  } @else {
     <span class="animate-pulse">
       <ng-content select="[loading]"></ng-content>
     </span>
-  </ng-template>
+  }
 
 </button>

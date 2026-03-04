@@ -21,7 +21,7 @@ import { UiToast } from './toast.models';
 
 @Component({
   standalone: true,
-  selector: 'ui-toast-container',
+  selector: 'app-ui-toast-container',
   imports: [CommonModule],
   templateUrl: './toast-container.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

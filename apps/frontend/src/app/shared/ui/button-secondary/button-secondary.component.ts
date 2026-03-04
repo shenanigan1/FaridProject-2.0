@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'ui-button-secondary',
+  selector: 'app-ui-button-secondary',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './button-secondary.component.html',

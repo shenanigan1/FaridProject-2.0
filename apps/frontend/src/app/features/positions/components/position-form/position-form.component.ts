@@ -40,7 +40,7 @@ export class PositionFormComponent {
   @Input() fieldErrors: Record<string, string[]> = {};
 
   @Output() submitForm = new EventEmitter<void>();
-  @Output() cancel = new EventEmitter<void>();
+  @Output() cancelForm = new EventEmitter<void>();
 
   backendError(field: keyof PositionCreatePayload): string | null {
     const errors = this.fieldErrors?.[String(field)];

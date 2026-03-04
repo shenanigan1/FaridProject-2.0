@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthSessionService } from '@auth/services/auth-session.service';
@@ -10,7 +10,8 @@ import { AuthSessionService } from '@auth/services/auth-session.service';
   templateUrl: './dashboard.page.html',
 })
 export class DashboardPage {
-  constructor(private readonly auth: AuthSessionService, private readonly router: Router) {}
+  private readonly auth = inject(AuthSessionService);
+  private readonly router = inject(Router);
 
   logout(): void {
     this.auth.logout();

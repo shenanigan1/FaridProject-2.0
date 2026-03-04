@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'ui-button-primary',
+  selector: 'app-ui-button-primary',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './button-primary.component.html',

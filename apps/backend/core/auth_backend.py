@@ -1,6 +1,7 @@
 from django.contrib.auth.backends import ModelBackend
 from users.models.user import User
 
+
 class EmailAuthBackend(ModelBackend):
     """
     Authenticate using email instead of username.

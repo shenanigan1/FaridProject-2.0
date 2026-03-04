@@ -1,9 +1,14 @@
 from django.conf import settings
 from django.db import models
 
+
 class EvaluationComment(models.Model):
-    evaluation = models.ForeignKey("evaluations.Evaluation", on_delete=models.CASCADE, related_name="comments")
-    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
+    evaluation = models.ForeignKey(
+        "evaluations.Evaluation", on_delete=models.CASCADE, related_name="comments"
+    )
+    author = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True
+    )
 
     text = models.TextField()
     is_visible_to_subject = models.BooleanField(default=False)

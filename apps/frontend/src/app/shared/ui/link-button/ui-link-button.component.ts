@@ -5,21 +5,39 @@ import { RouterModule } from '@angular/router';
 type Variant = 'primary' | 'secondary' | 'ghost';
 type Size = 'sm' | 'md';
 
+/**
+ * RouterLink input type (avoids `any[]`).
+ * - string: '/templates/new'
+ * - array:  ['/templates', id]
+ */
+type RouterLinkInput = string | readonly (string | number)[];
+
 @Component({
   standalone: true,
-  selector: 'ui-link-button',
+  selector: 'app-ui-link-button',
   imports: [CommonModule, RouterModule],
   templateUrl: './ui-link-button.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UiLinkButtonComponent {
-  @Input({ required: true }) routerLink!: string | any[];
+  @Input({ required: true }) routerLink!: RouterLinkInput;
+
+  /** Visible label inside the button (can be empty if icon-only). */
   @Input() label = '';
+
+  /** Accessibility label (recommended when label is empty). */
   @Input() ariaLabel: string | null = null;
 
   @Input() variant: Variant = 'secondary';
   @Input() size: Size = 'md';
   @Input() fullWidth = false;
+
+  /** Always provide a usable aria-label (icon-only buttons). */
+  get computedAriaLabel(): string | null {
+    const txt = this.label.trim();
+    if (txt.length > 0) return txt;
+    return this.ariaLabel?.trim() ? this.ariaLabel.trim() : null;
+  }
 
   get classes(): string {
     const base =

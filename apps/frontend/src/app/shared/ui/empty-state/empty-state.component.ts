@@ -6,12 +6,12 @@
  * Layer: shared/ui
  * ----------------------------------------------------------------------------
  * Usage :
- * <ui-empty-state title="No positions yet" subtitle="Create your first job offer.">
+ * <app-ui-empty-state title="No positions yet" subtitle="Create your first job offer.">
  *  <span icon>📄</span>
  *  <div actions>
- *   <ui-button-primary (click)="create()">Create position</ui-button-primary>
+ *   <app-ui-button-primary (click)="create()">Create position</app-ui-button-primary>
  *  </div>
- * </ui-empty-state>
+ * </app-ui-empty-state>
  */
 
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
@@ -19,7 +19,7 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   standalone: true,
-  selector: 'ui-empty-state',
+  selector: 'app-ui-empty-state',
   imports: [CommonModule],
   template: `
     <div class="rounded-2xl border border-slate-800 bg-slate-900/30 p-6 text-center">
@@ -28,7 +28,11 @@ import { CommonModule } from '@angular/common';
       </div>
 
       <h3 class="text-base font-semibold text-slate-100">{{ title }}</h3>
-      <p *ngIf="subtitle" class="mt-1 text-sm text-slate-400">{{ subtitle }}</p>
+
+      @if(subtitle)
+        {
+          <p class="mt-1 text-sm text-slate-400">{{ subtitle }}</p>
+        }
 
       <div class="mt-4 flex justify-center gap-2">
         <ng-content select="[actions]"></ng-content>

@@ -10,42 +10,51 @@ import { ChangeDetectionStrategy, Component, Input, forwardRef, signal } from '@
 import { CommonModule } from '@angular/common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
-export type UiRadioOption<T extends string = string> = {
+export interface UiRadioOption<T extends string = string> {
   value: T;
   label: string;
   disabled?: boolean;
-};
+}
 
 @Component({
   standalone: true,
-  selector: 'ui-radio-group',
+  selector: 'app-ui-radio-group',
   imports: [CommonModule],
   template: `
-    <div class="block">
-      <div *ngIf="label" class="text-sm font-medium text-slate-300 mb-2">{{ label }}</div>
+    <div class="block" role="radiogroup" [attr.aria-invalid]="error ? 'true' : null">
+
+      @if (label) {
+        <div class="mb-2 text-sm font-medium text-slate-300">{{ label }}</div>
+      }
 
       <div class="flex flex-wrap gap-2">
-        <label
-          *ngFor="let opt of options"
-          class="inline-flex items-center gap-2 rounded-xl border px-3 py-2 text-sm transition select-none
-                 border-slate-800 bg-slate-900/40 text-slate-200
-                 hover:bg-slate-800/50"
-          [class.opacity-60]="opt.disabled || disabled()"
-        >
-          <input
-            type="radio"
-            class="accent-blue-500"
-            [disabled]="disabled() || !!opt.disabled"
-            [checked]="value() === opt.value"
-            (change)="select(opt.value)"
-            (blur)="blur()"
-          />
-          {{ opt.label }}
-        </label>
+        @for (opt of options; track opt.value) {
+          <label
+            class="inline-flex items-center gap-2 rounded-xl border px-3 py-2 text-sm transition select-none
+                   border-slate-800 bg-slate-900/40 text-slate-200
+                   hover:bg-slate-800/50"
+            [class.opacity-60]="opt.disabled || disabled()"
+          >
+            <input
+              type="radio"
+              class="accent-blue-500"
+              [disabled]="disabled() || !!opt.disabled"
+              [checked]="value() === opt.value"
+              [attr.aria-invalid]="error ? 'true' : null"
+              (change)="select(opt.value)"
+              (blur)="handleBlur()"
+            />
+            {{ opt.label }}
+          </label>
+        }
       </div>
 
-      <p *ngIf="error" class="mt-1 text-xs text-red-300">{{ error }}</p>
-      <p *ngIf="hint && !error" class="mt-1 text-xs text-slate-500">{{ hint }}</p>
+      @if (error) {
+        <p class="mt-1 text-xs text-red-300">{{ error }}</p>
+      } @else if (hint) {
+        <p class="mt-1 text-xs text-slate-500">{{ hint }}</p>
+      }
+
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -63,18 +72,22 @@ export class UiRadioGroupComponent<T extends string = string> implements Control
   readonly value = signal<T | null>(null);
   readonly disabled = signal(false);
 
-  private onChange: (v: T | null) => void = () => {};
-  private onTouched: () => void = () => {};
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  private onChange: (v: T | null) => void = (_v: T | null) => void 0;
+  private onTouched: () => void = () => void 0;
 
   writeValue(value: T | null): void {
     this.value.set(value);
   }
+
   registerOnChange(fn: (v: T | null) => void): void {
     this.onChange = fn;
   }
+
   registerOnTouched(fn: () => void): void {
     this.onTouched = fn;
   }
+
   setDisabledState(isDisabled: boolean): void {
     this.disabled.set(isDisabled);
   }
@@ -86,7 +99,7 @@ export class UiRadioGroupComponent<T extends string = string> implements Control
     this.onTouched();
   }
 
-  blur(): void {
+  handleBlur(): void {
     this.onTouched();
   }
 }

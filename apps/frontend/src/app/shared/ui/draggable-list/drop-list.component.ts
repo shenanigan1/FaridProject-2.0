@@ -14,7 +14,7 @@ import { DragDropModule, CdkDragDrop } from '@angular/cdk/drag-drop';
 
 @Component({
   standalone: true,
-  selector: 'ui-drop-list',
+  selector: 'app-ui-drop-list',
   imports: [CommonModule, DragDropModule],
   template: `
     <div

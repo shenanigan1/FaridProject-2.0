@@ -5,177 +5,361 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='QuestionPool',
+            name="QuestionPool",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=255)),
-                ('description', models.TextField(blank=True)),
-                ('code', models.CharField(max_length=100, unique=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=255)),
+                ("description", models.TextField(blank=True)),
+                ("code", models.CharField(max_length=100, unique=True)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
             ],
         ),
         migrations.CreateModel(
-            name='Template',
+            name="Template",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=255)),
-                ('is_active', models.BooleanField(default=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=255)),
+                ("is_active", models.BooleanField(default=True)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
             ],
             options={
-                'indexes': [models.Index(fields=['is_active'], name='templates_g_is_acti_598314_idx')],
+                "indexes": [
+                    models.Index(
+                        fields=["is_active"], name="templates_g_is_acti_598314_idx"
+                    )
+                ],
             },
         ),
         migrations.CreateModel(
-            name='TemplateSection',
+            name="TemplateSection",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=255)),
-                ('order', models.PositiveIntegerField(default=0)),
-                ('template', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='sections', to='templates_grid.template')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=255)),
+                ("order", models.PositiveIntegerField(default=0)),
+                (
+                    "template",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="sections",
+                        to="templates_grid.template",
+                    ),
+                ),
             ],
             options={
-                'ordering': ['order', 'id'],
+                "ordering": ["order", "id"],
             },
         ),
         migrations.CreateModel(
-            name='TemplatePoolRule',
+            name="TemplatePoolRule",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('random_count', models.PositiveIntegerField(default=0)),
-                ('order', models.PositiveIntegerField(default=0)),
-                ('pool', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='template_rules', to='templates_grid.questionpool')),
-                ('template', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='pool_rules', to='templates_grid.template')),
-                ('section', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='pool_rules', to='templates_grid.templatesection')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("random_count", models.PositiveIntegerField(default=0)),
+                ("order", models.PositiveIntegerField(default=0)),
+                (
+                    "pool",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name="template_rules",
+                        to="templates_grid.questionpool",
+                    ),
+                ),
+                (
+                    "template",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="pool_rules",
+                        to="templates_grid.template",
+                    ),
+                ),
+                (
+                    "section",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="pool_rules",
+                        to="templates_grid.templatesection",
+                    ),
+                ),
             ],
             options={
-                'ordering': ['order', 'id'],
+                "ordering": ["order", "id"],
             },
         ),
         migrations.CreateModel(
-            name='TemplateVersion',
+            name="TemplateVersion",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('version', models.PositiveIntegerField()),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('template', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='versions', to='templates_grid.template')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("version", models.PositiveIntegerField()),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                (
+                    "template",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name="versions",
+                        to="templates_grid.template",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='VersionedPool',
+            name="VersionedPool",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=255)),
-                ('code', models.CharField(max_length=100)),
-                ('random_count', models.PositiveIntegerField(default=0)),
-                ('order', models.PositiveIntegerField(default=0)),
-                ('template_version', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='pools', to='templates_grid.templateversion')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=255)),
+                ("code", models.CharField(max_length=100)),
+                ("random_count", models.PositiveIntegerField(default=0)),
+                ("order", models.PositiveIntegerField(default=0)),
+                (
+                    "template_version",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="pools",
+                        to="templates_grid.templateversion",
+                    ),
+                ),
             ],
             options={
-                'ordering': ['order', 'id'],
+                "ordering": ["order", "id"],
             },
         ),
         migrations.CreateModel(
-            name='VersionedQuestion',
+            name="VersionedQuestion",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('label', models.CharField(max_length=255)),
-                ('type', models.CharField(max_length=10)),
-                ('is_mandatory', models.BooleanField(default=False)),
-                ('min_score', models.IntegerField(default=0)),
-                ('max_score', models.IntegerField(default=5)),
-                ('order', models.PositiveIntegerField(default=0)),
-                ('pool', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='questions', to='templates_grid.versionedpool')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("label", models.CharField(max_length=255)),
+                ("type", models.CharField(max_length=10)),
+                ("is_mandatory", models.BooleanField(default=False)),
+                ("min_score", models.IntegerField(default=0)),
+                ("max_score", models.IntegerField(default=5)),
+                ("order", models.PositiveIntegerField(default=0)),
+                (
+                    "pool",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="questions",
+                        to="templates_grid.versionedpool",
+                    ),
+                ),
             ],
             options={
-                'ordering': ['order', 'id'],
+                "ordering": ["order", "id"],
             },
         ),
         migrations.CreateModel(
-            name='VersionedSection',
+            name="VersionedSection",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=255)),
-                ('order', models.PositiveIntegerField(default=0)),
-                ('template_version', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='sections', to='templates_grid.templateversion')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=255)),
+                ("order", models.PositiveIntegerField(default=0)),
+                (
+                    "template_version",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="sections",
+                        to="templates_grid.templateversion",
+                    ),
+                ),
             ],
             options={
-                'ordering': ['order', 'id'],
+                "ordering": ["order", "id"],
             },
         ),
         migrations.AddField(
-            model_name='versionedpool',
-            name='section',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='pools', to='templates_grid.versionedsection'),
+            model_name="versionedpool",
+            name="section",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="pools",
+                to="templates_grid.versionedsection",
+            ),
         ),
         migrations.CreateModel(
-            name='SkillQuestion',
+            name="SkillQuestion",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('label', models.CharField(max_length=255)),
-                ('type', models.CharField(choices=[('soft', 'Soft Skill'), ('hard', 'Hard Skill')], max_length=10)),
-                ('is_mandatory', models.BooleanField(default=False)),
-                ('min_score', models.IntegerField(default=0)),
-                ('max_score', models.IntegerField(default=5)),
-                ('order', models.PositiveIntegerField(default=0)),
-                ('pool', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='questions', to='templates_grid.questionpool')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("label", models.CharField(max_length=255)),
+                (
+                    "type",
+                    models.CharField(
+                        choices=[("soft", "Soft Skill"), ("hard", "Hard Skill")],
+                        max_length=10,
+                    ),
+                ),
+                ("is_mandatory", models.BooleanField(default=False)),
+                ("min_score", models.IntegerField(default=0)),
+                ("max_score", models.IntegerField(default=5)),
+                ("order", models.PositiveIntegerField(default=0)),
+                (
+                    "pool",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="questions",
+                        to="templates_grid.questionpool",
+                    ),
+                ),
             ],
             options={
-                'ordering': ['pool_id', 'order', 'id'],
-                'indexes': [models.Index(fields=['pool', 'type'], name='templates_g_pool_id_418a1e_idx'), models.Index(fields=['pool', 'order'], name='templates_g_pool_id_8fab74_idx')],
-                'constraints': [models.CheckConstraint(condition=models.Q(('min_score__lte', models.F('max_score'))), name='ck_question_min_le_max')],
+                "ordering": ["pool_id", "order", "id"],
+                "indexes": [
+                    models.Index(
+                        fields=["pool", "type"], name="templates_g_pool_id_418a1e_idx"
+                    ),
+                    models.Index(
+                        fields=["pool", "order"], name="templates_g_pool_id_8fab74_idx"
+                    ),
+                ],
+                "constraints": [
+                    models.CheckConstraint(
+                        condition=models.Q(("min_score__lte", models.F("max_score"))),
+                        name="ck_question_min_le_max",
+                    )
+                ],
             },
         ),
         migrations.AddConstraint(
-            model_name='templatesection',
-            constraint=models.UniqueConstraint(fields=('template', 'name'), name='uniq_section_name_per_template'),
+            model_name="templatesection",
+            constraint=models.UniqueConstraint(
+                fields=("template", "name"), name="uniq_section_name_per_template"
+            ),
         ),
         migrations.AddIndex(
-            model_name='templatepoolrule',
-            index=models.Index(fields=['template', 'order'], name='templates_g_templat_f360c8_idx'),
+            model_name="templatepoolrule",
+            index=models.Index(
+                fields=["template", "order"], name="templates_g_templat_f360c8_idx"
+            ),
         ),
         migrations.AddIndex(
-            model_name='templatepoolrule',
-            index=models.Index(fields=['section', 'order'], name='templates_g_section_e15bdd_idx'),
+            model_name="templatepoolrule",
+            index=models.Index(
+                fields=["section", "order"], name="templates_g_section_e15bdd_idx"
+            ),
         ),
         migrations.AddConstraint(
-            model_name='templatepoolrule',
-            constraint=models.UniqueConstraint(fields=('template', 'pool'), name='uniq_template_pool_rule'),
+            model_name="templatepoolrule",
+            constraint=models.UniqueConstraint(
+                fields=("template", "pool"), name="uniq_template_pool_rule"
+            ),
         ),
         migrations.AddIndex(
-            model_name='templateversion',
-            index=models.Index(fields=['template', 'version'], name='templates_g_templat_7098db_idx'),
+            model_name="templateversion",
+            index=models.Index(
+                fields=["template", "version"], name="templates_g_templat_7098db_idx"
+            ),
         ),
         migrations.AddConstraint(
-            model_name='templateversion',
-            constraint=models.UniqueConstraint(fields=('template', 'version'), name='uniq_template_version'),
+            model_name="templateversion",
+            constraint=models.UniqueConstraint(
+                fields=("template", "version"), name="uniq_template_version"
+            ),
         ),
         migrations.AddIndex(
-            model_name='versionedquestion',
-            index=models.Index(fields=['pool', 'order'], name='templates_g_pool_id_3cd0d9_idx'),
+            model_name="versionedquestion",
+            index=models.Index(
+                fields=["pool", "order"], name="templates_g_pool_id_3cd0d9_idx"
+            ),
         ),
         migrations.AddConstraint(
-            model_name='versionedquestion',
-            constraint=models.CheckConstraint(condition=models.Q(('min_score__lte', models.F('max_score'))), name='ck_vquestion_min_le_max'),
+            model_name="versionedquestion",
+            constraint=models.CheckConstraint(
+                condition=models.Q(("min_score__lte", models.F("max_score"))),
+                name="ck_vquestion_min_le_max",
+            ),
         ),
         migrations.AddIndex(
-            model_name='versionedsection',
-            index=models.Index(fields=['template_version', 'order'], name='templates_g_templat_cf5cba_idx'),
+            model_name="versionedsection",
+            index=models.Index(
+                fields=["template_version", "order"],
+                name="templates_g_templat_cf5cba_idx",
+            ),
         ),
         migrations.AddIndex(
-            model_name='versionedpool',
-            index=models.Index(fields=['template_version', 'order'], name='templates_g_templat_2b1e63_idx'),
+            model_name="versionedpool",
+            index=models.Index(
+                fields=["template_version", "order"],
+                name="templates_g_templat_2b1e63_idx",
+            ),
         ),
         migrations.AddIndex(
-            model_name='versionedpool',
-            index=models.Index(fields=['section', 'order'], name='templates_g_section_1fabeb_idx'),
+            model_name="versionedpool",
+            index=models.Index(
+                fields=["section", "order"], name="templates_g_section_1fabeb_idx"
+            ),
         ),
     ]

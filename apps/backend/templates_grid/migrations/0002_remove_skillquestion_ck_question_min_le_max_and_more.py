@@ -28,7 +28,6 @@ def backfill_skillquestion_v2(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("templates_grid", "0001_initial"),
     ]
@@ -43,7 +42,6 @@ class Migration(migrations.Migration):
             model_name="skillquestion",
             name="templates_g_pool_id_418a1e_idx",
         ),
-
         # ✅ Add new fields as NULLABLE (no broken defaults)
         migrations.AddField(
             model_name="skillquestion",
@@ -59,7 +57,11 @@ class Migration(migrations.Migration):
             model_name="skillquestion",
             name="format",
             field=models.CharField(
-                choices=[("mcq", "Multiple Choice"), ("true_false", "True/False"), ("practical", "Practical")],
+                choices=[
+                    ("mcq", "Multiple Choice"),
+                    ("true_false", "True/False"),
+                    ("practical", "Practical"),
+                ],
                 default="mcq",
                 max_length=20,
             ),
@@ -68,7 +70,11 @@ class Migration(migrations.Migration):
             model_name="skillquestion",
             name="difficulty",
             field=models.CharField(
-                choices=[("easy", "Easy"), ("intermediate", "Intermediate"), ("hard", "Hard")],
+                choices=[
+                    ("easy", "Easy"),
+                    ("intermediate", "Intermediate"),
+                    ("hard", "Hard"),
+                ],
                 default="intermediate",
                 max_length=20,
             ),
@@ -98,7 +104,6 @@ class Migration(migrations.Migration):
             name="rubric",
             field=models.JSONField(blank=True, default=dict),
         ),
-
         # ✅ Backfill from legacy fields
         migrations.RunPython(backfill_skillquestion_v2, migrations.RunPython.noop),
     ]

@@ -4,48 +4,51 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('templates_grid', '0002_remove_skillquestion_ck_question_min_le_max_and_more'),
+        ("templates_grid", "0002_remove_skillquestion_ck_question_min_le_max_and_more"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='skillquestion',
-            options={'ordering': ['order', 'id']},
+            name="skillquestion",
+            options={"ordering": ["order", "id"]},
         ),
         migrations.RemoveField(
-            model_name='skillquestion',
-            name='label',
+            model_name="skillquestion",
+            name="label",
         ),
         migrations.RemoveField(
-            model_name='skillquestion',
-            name='max_score',
+            model_name="skillquestion",
+            name="max_score",
         ),
         migrations.RemoveField(
-            model_name='skillquestion',
-            name='min_score',
+            model_name="skillquestion",
+            name="min_score",
         ),
         migrations.RemoveField(
-            model_name='skillquestion',
-            name='type',
+            model_name="skillquestion",
+            name="type",
         ),
         migrations.AlterField(
-            model_name='skillquestion',
-            name='created_at',
+            model_name="skillquestion",
+            name="created_at",
             field=models.DateTimeField(auto_now_add=True, null=True),
         ),
         migrations.AlterField(
-            model_name='skillquestion',
-            name='updated_at',
+            model_name="skillquestion",
+            name="updated_at",
             field=models.DateTimeField(auto_now=True, null=True),
         ),
         migrations.AddIndex(
-            model_name='skillquestion',
-            index=models.Index(fields=['pool', 'format'], name='templates_g_pool_id_513db8_idx'),
+            model_name="skillquestion",
+            index=models.Index(
+                fields=["pool", "format"], name="templates_g_pool_id_513db8_idx"
+            ),
         ),
         migrations.AddConstraint(
-            model_name='skillquestion',
-            constraint=models.CheckConstraint(condition=models.Q(('points__gte', 1)), name='ck_question_points_gte_1'),
+            model_name="skillquestion",
+            constraint=models.CheckConstraint(
+                condition=models.Q(("points__gte", 1)), name="ck_question_points_gte_1"
+            ),
         ),
     ]

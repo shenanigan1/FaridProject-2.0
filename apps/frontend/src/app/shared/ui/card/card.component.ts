@@ -4,7 +4,7 @@ type UiCardVariant = 'default' | 'form';
 
 @Component({
   standalone: true,
-  selector: 'ui-card',
+  selector: 'app-ui-card',
   template: `
     <div [class]="classes">
       <ng-content></ng-content>

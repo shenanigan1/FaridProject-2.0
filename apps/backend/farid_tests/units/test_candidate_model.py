@@ -7,7 +7,9 @@ pytestmark = pytest.mark.django_db
 
 
 def test_candidate_str_uses_user_identity():
-    candidate = CandidateFactory.create(first_name="Jean", last_name="Dupont", email="jd@example.com")
+    candidate = CandidateFactory.create(
+        first_name="Jean", last_name="Dupont", email="jd@example.com"
+    )
     assert "Candidate:" in str(candidate)
     assert "Jean" in str(candidate) or "jd@example.com" in str(candidate)
 
