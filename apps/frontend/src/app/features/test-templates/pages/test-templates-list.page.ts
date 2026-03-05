@@ -11,6 +11,7 @@ import type { TemplateListItem, TemplateDifficulty } from '@features/test-templa
 import { UiTabsComponent, UiTabItem } from '@shared/ui/tabs/tabs.component';
 import { UiBadgeComponent, UiBadgeTone } from '@shared/ui/badge/badge.component';
 import { UiButtonPrimaryComponent } from '@shared/ui/button-primary/button-primary.component';
+import { UiTextInputComponent } from '@shared/ui/text-input/text-input.component';
 
 type DifficultyFilter = 'all' | TemplateDifficulty;
 
@@ -24,6 +25,7 @@ type DifficultyFilter = 'all' | TemplateDifficulty;
     UiTabsComponent,
     UiBadgeComponent,
     UiButtonPrimaryComponent,
+    UiTextInputComponent
   ],
   templateUrl: './test-templates-list.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
