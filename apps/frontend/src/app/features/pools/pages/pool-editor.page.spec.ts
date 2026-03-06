@@ -19,7 +19,7 @@ interface CreatePoolDto {
   description: string;
 }
 
-interface UpdatePoolDto extends CreatePoolDto {}
+type UpdatePoolDto = CreatePoolDto;
 
 interface PoolsStoreMock {
   isLoading: Signal<boolean>;
