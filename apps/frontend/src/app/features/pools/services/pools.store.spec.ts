@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpErrorResponse } from '@angular/common/http';
-import { of, Subject, throwError } from 'rxjs';
+import { Observable, of, Subject, throwError } from 'rxjs';
 
 import { PoolsStore } from './pools.store';
 import { PoolsApiService } from './pools-api.service';
@@ -16,14 +16,19 @@ interface PoolsApiItem {
 }
 
 interface PoolsApiServiceMock {
-  list: jasmine.Spy<() => ReturnType<typeof of<QuestionPool[]>>>;
-  get: jasmine.Spy<(id: string) => ReturnType<typeof of<QuestionPool>>>;
-  create: jasmine.Spy<(dto: { code: string; name: string; description?: string }) => ReturnType<typeof of<QuestionPool>>>;
-  update: jasmine.Spy<(id: string, dto: { name?: string; code?: string; description?: string }) => ReturnType<typeof of<QuestionPool>>>;
+  list: jasmine.Spy<() => Observable<QuestionPool[]>>;
+  get: jasmine.Spy<(id: string) => Observable<QuestionPool>>;
+  create: jasmine.Spy<(dto: { code: string; name: string; description?: string }) => Observable<QuestionPool>>;
+  update: jasmine.Spy<(id: string, dto: { name?: string; code?: string; description?: string }) => Observable<QuestionPool>>;
 }
 
-const asHttpError = (status: number, errorBody: unknown = {}): HttpErrorResponse =>
-  new HttpErrorResponse({ status, statusText: 'ERR', url: '/api/questionpools/', error: errorBody });
+const httpErr = (status: number, errorBody: unknown = {}): HttpErrorResponse =>
+  new HttpErrorResponse({
+    status,
+    statusText: 'ERR',
+    url: '/api/questionpools/',
+    error: errorBody,
+  });
 
 describe('PoolsStore', () => {
   let store: PoolsStore;
@@ -67,7 +72,7 @@ describe('PoolsStore', () => {
     ];
 
     const subject = new Subject<QuestionPool[]>();
-    apiMock.list.and.returnValue(subject.asObservable() as ReturnType<typeof of<QuestionPool[]>>);
+    apiMock.list.and.returnValue(subject.asObservable());
 
     expect(store.isLoading()).toBeFalse();
 
@@ -84,13 +89,15 @@ describe('PoolsStore', () => {
 
     const pools = store.pools();
     expect(pools.length).toBe(2);
+
     expect(pools[0]).toEqual({
       id: '1',
       code: 'pool-1',
       name: 'Pool 1',
       description: 'desc',
-      updatedAt: '2026-03-01T00:00:00.000Z',
+      updatedAt: '2026-03-01T00:00:00.000Z', // created_at used because updated_at null
     });
+
     expect(pools[1]).toEqual({
       id: '2',
       code: 'pool-2',
@@ -100,19 +107,17 @@ describe('PoolsStore', () => {
     });
   });
 
-  it('loadAll() should set a friendly error message on network error', () => {
-    const subject = new Subject<QuestionPool[]>();
-    apiMock.list.and.returnValue(subject.asObservable() as ReturnType<typeof of<QuestionPool[]>>);
+  it('loadAll() should set a friendly error message on network error (status 0)', () => {
+    apiMock.list.and.returnValue(throwError(() => httpErr(0)));
 
     store.loadAll();
-    subject.error(asHttpError(0));
 
     expect(store.isLoading()).toBeFalse();
     expect(store.error()).toBe('Network error (API unreachable).');
   });
 
   it('loadAll() should pick detail from payload.detail if present', () => {
-    apiMock.list.and.returnValue(throwError(() => asHttpError(400, { detail: 'Bad request.' })));
+    apiMock.list.and.returnValue(throwError(() => httpErr(400, { detail: 'Bad request.' })));
 
     store.loadAll();
 
@@ -182,10 +187,10 @@ describe('PoolsStore', () => {
   });
 
   it('create() should call api.create then loadAll and call onSuccess', () => {
-    const loadAllSpy = spyOn(store, 'loadAll').and.callThrough();
     apiMock.create.and.returnValue(of({} as QuestionPool));
     apiMock.list.and.returnValue(of([] as QuestionPool[]));
 
+    const loadAllSpy = spyOn(store, 'loadAll').and.callThrough();
     const onSuccess = jasmine.createSpy('onSuccess');
 
     store.create({ code: 'c', name: 'n', description: 'd' }, onSuccess);
@@ -196,11 +201,12 @@ describe('PoolsStore', () => {
   });
 
   it('create() should set error when api.create fails and should not call onSuccess', () => {
-    apiMock.create.and.returnValue(throwError(() => asHttpError(401)));
+    apiMock.create.and.returnValue(throwError(() => httpErr(401)));
     const onSuccess = jasmine.createSpy('onSuccess');
 
     store.create({ code: 'c', name: 'n' }, onSuccess);
 
+    expect(store.isLoading()).toBeFalse();
     expect(store.error()).toBe('Unauthorized. Please login again.');
     expect(onSuccess).not.toHaveBeenCalled();
   });

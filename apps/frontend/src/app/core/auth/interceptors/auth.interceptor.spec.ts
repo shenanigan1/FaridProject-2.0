@@ -99,10 +99,10 @@ describe('authInterceptor (HttpInterceptorFn)', () => {
     tokenStorageMock.getRememberMe.and.returnValue(true);
 
     authServiceMock.refresh.and.returnValue(
-      of({ access: 'NEW_ACCESS', refresh: 'NEW_REFRESH' } as any)
+      of({ access: 'NEW_ACCESS', refresh: 'NEW_REFRESH' } as {access: string, refresh: string})
     );
 
-    let responseBody: any;
+    let responseBody: { ok: boolean } | undefined;
     http.get('/api/protected').subscribe((res) => (responseBody = res));
 
     // First attempt (with OLD token)
