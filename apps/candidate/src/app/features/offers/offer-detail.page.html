@@ -1,0 +1,23 @@
+<section class="panel">
+  @if (!offer()) {
+    <p>Offre introuvable.</p>
+  } @else {
+    <h2>{{ offer()!.title }}</h2>
+    <p class="meta">{{ offer()!.location }} · {{ offer()!.contractType }}</p>
+    <p class="salary">{{ offer()!.salaryRange }}</p>
+    <p>{{ offer()!.description }}</p>
+
+    <h3>Prérequis</h3>
+    <ul>
+      @for (requirement of offer()!.requirements; track requirement) {
+        <li>{{ requirement }}</li>
+      }
+    </ul>
+
+    <button type="button" (click)="apply()">Postuler à cette offre</button>
+
+    @if (feedbackMessage) {
+      <p class="feedback">{{ feedbackMessage }}</p>
+    }
+  }
+</section>

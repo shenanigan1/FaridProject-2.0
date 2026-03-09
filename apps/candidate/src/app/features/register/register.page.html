@@ -1,0 +1,32 @@
+<section class="panel">
+  <h2>Compte candidat</h2>
+
+  @if (currentUser()) {
+    <div class="account-state">
+      <p>Connecté en tant que <strong>{{ currentUser()!.firstName }} {{ currentUser()!.lastName }}</strong> ({{ currentUser()!.email }}).</p>
+      <button type="button" (click)="logout()">Se déconnecter</button>
+    </div>
+  } @else {
+    <div class="forms-grid">
+      <form [formGroup]="registerForm" (ngSubmit)="register()" class="form-card">
+        <h3>Créer un compte</h3>
+        <input type="text" formControlName="firstName" placeholder="Prénom" />
+        <input type="text" formControlName="lastName" placeholder="Nom" />
+        <input type="email" formControlName="email" placeholder="Email" />
+        <input type="password" formControlName="password" placeholder="Mot de passe" />
+        <button type="submit">Créer mon compte</button>
+      </form>
+
+      <form [formGroup]="loginForm" (ngSubmit)="login()" class="form-card">
+        <h3>Se connecter</h3>
+        <input type="email" formControlName="email" placeholder="Email" />
+        <input type="password" formControlName="password" placeholder="Mot de passe" />
+        <button type="submit">Connexion</button>
+      </form>
+    </div>
+  }
+
+  @if (feedbackMessage) {
+    <p class="feedback">{{ feedbackMessage }}</p>
+  }
+</section>

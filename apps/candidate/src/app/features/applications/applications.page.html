@@ -1,0 +1,21 @@
+<section class="panel">
+  <h2>Mes candidatures</h2>
+
+  @if (!isAuthenticated()) {
+    <p>Connectez-vous pour consulter vos candidatures.</p>
+    <a routerLink="/account">Aller à mon compte</a>
+  } @else if (applications().length === 0) {
+    <p class="empty">Vous n'avez pas encore postulé à une offre.</p>
+  } @else {
+    <ul class="applications-list">
+      @for (application of applications(); track application.id) {
+        <li>
+          <h3>{{ application.offerTitle }}</h3>
+          <p>Statut : {{ application.status }}</p>
+          <p>Motivation : {{ application.motivation }}</p>
+          <p>Envoyée le {{ application.createdAt | date: 'shortDate' }}</p>
+        </li>
+      }
+    </ul>
+  }
+</section>

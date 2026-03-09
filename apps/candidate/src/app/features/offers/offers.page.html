@@ -1,0 +1,43 @@
+<section class="fleet-panel">
+  <header class="panel-header">
+    <div>
+      <h2>Fleet Candidates</h2>
+      <p>{{ filteredOffers().length }} offres actives</p>
+    </div>
+    <button type="button" class="icon-btn">☰</button>
+  </header>
+
+  <label class="search-box">
+    <span>🔎</span>
+    <input
+      type="search"
+      [value]="search()"
+      (input)="search.set($any($event.target).value)"
+      placeholder="Search by role or location..."
+    />
+  </label>
+
+  <div class="filters">
+    <button type="button" [class.active]="activeFilter() === 'all'" (click)="setFilter('all')">All</button>
+    <button type="button" [class.active]="activeFilter() === 'CDI'" (click)="setFilter('CDI')">CDI</button>
+    <button type="button" [class.active]="activeFilter() === 'CDD'" (click)="setFilter('CDD')">CDD</button>
+  </div>
+
+  <div class="offers-list">
+    @for (offer of filteredOffers(); track offer.id) {
+      <article class="offer-card">
+        <div class="avatar">🚚</div>
+        <div class="content">
+          <h3>{{ offer.title }}</h3>
+          <p>{{ offer.location }} · {{ offer.contractType }}</p>
+          <div class="chips">
+            <span class="chip">{{ offer.contractType }}</span>
+            <span class="chip">{{ offer.location }}</span>
+          </div>
+        </div>
+        <div class="score">{{ offer.salaryRange }}</div>
+        <a class="card-link" [routerLink]="['/offers', offer.id]">Voir détails</a>
+      </article>
+    }
+  </div>
+</section>

@@ -1,0 +1,25 @@
+.panel {
+  background: linear-gradient(180deg, #0b1729 0%, #091323 100%);
+  border: 1px solid #1e3a5f;
+  border-radius: 16px;
+  padding: 1rem;
+}
+
+.meta { color: #7ca1cf; }
+.salary { color: #6df5a0; font-weight: 700; }
+
+ul {
+  padding-left: 1rem;
+  color: #a6bddf;
+}
+
+button {
+  margin-top: 1rem;
+  background: #1f89ff;
+  color: #fff;
+  border: 0;
+  border-radius: 10px;
+  padding: 0.65rem 1rem;
+}
+
+.feedback { margin-top: 0.75rem; color: #7cc4ff; }

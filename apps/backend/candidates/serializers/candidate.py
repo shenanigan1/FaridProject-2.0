@@ -36,18 +36,35 @@ class CandidateSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user_data = validated_data.pop("user")
 
-        try:
-            user = User.objects.create_user(
-                email=user_data["email"],
-                password=None,
-                first_name=user_data.get("first_name", ""),
-                last_name=user_data.get("last_name", ""),
-                phone=user_data.get("phone", ""),
-            )
-        except (IntegrityError, DjangoValidationError):
-            raise serializers.ValidationError(
-                {"user": {"email": ["This email is already used."]}}
-            )
+        email = user_data["email"]
+        existing_user = User.objects.filter(email=email).first()
+
+        if existing_user:
+            user = existing_user
+            user.first_name = user_data.get("first_name", user.first_name)
+            user.last_name = user_data.get("last_name", user.last_name)
+            user.phone = user_data.get("phone", user.phone)
+            user.save()
+        else:
+            try:
+                user = User.objects.create_user(
+                    email=email,
+                    password=None,
+                    first_name=user_data.get("first_name", ""),
+                    last_name=user_data.get("last_name", ""),
+                    phone=user_data.get("phone", ""),
+                )
+            except (IntegrityError, DjangoValidationError):
+                raise serializers.ValidationError(
+                    {"user": {"email": ["This email is already used."]}}
+                )
+
+        candidate = Candidate.objects.filter(user=user).first()
+        if candidate:
+            for attr, value in validated_data.items():
+                setattr(candidate, attr, value)
+            candidate.save()
+            return candidate
 
         return Candidate.objects.create(user=user, **validated_data)
 

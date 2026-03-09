@@ -1,0 +1,143 @@
+.fleet-panel {
+  border: 1px solid #1e3a5f;
+  background: linear-gradient(180deg, #0d1422 0%, #091120 100%);
+  border-radius: 18px;
+  padding: 1rem;
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  h2 {
+    margin: 0;
+    font-size: 1.35rem;
+    color: #e8f0ff;
+  }
+
+  p {
+    margin: 0.2rem 0 0;
+    color: #7f98c5;
+    font-size: 0.85rem;
+  }
+}
+
+.icon-btn {
+  border: 1px solid #274b79;
+  background: #0f223d;
+  color: #dce8ff;
+  border-radius: 12px;
+  width: 2.2rem;
+  height: 2.2rem;
+}
+
+.search-box {
+  margin-top: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: #0c1a30;
+  border: 1px solid #1e3b61;
+  border-radius: 12px;
+  padding: 0.55rem 0.7rem;
+
+  input {
+    background: transparent;
+    border: 0;
+    color: #d8e5ff;
+    width: 100%;
+    outline: none;
+  }
+}
+
+.filters {
+  display: flex;
+  gap: 0.45rem;
+  margin-top: 0.8rem;
+
+  button {
+    border: 1px solid #1f3f66;
+    background: #0a182c;
+    color: #8fb3e3;
+    border-radius: 999px;
+    padding: 0.3rem 0.75rem;
+    font-size: 0.75rem;
+  }
+
+  .active {
+    background: #1683ff;
+    border-color: #1683ff;
+    color: #fff;
+  }
+}
+
+.offers-list {
+  margin-top: 1rem;
+  display: grid;
+  gap: 0.7rem;
+}
+
+.offer-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: 44px 1fr auto;
+  gap: 0.7rem;
+  align-items: start;
+  background: #0a172b;
+  border: 1px solid #1d3556;
+  border-radius: 14px;
+  padding: 0.7rem;
+
+  .avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: #123055;
+    display: grid;
+    place-items: center;
+  }
+
+  h3 {
+    margin: 0;
+    font-size: 1rem;
+    color: #f1f6ff;
+  }
+
+  p {
+    margin: 0.2rem 0;
+    color: #89a3c9;
+    font-size: 0.8rem;
+  }
+
+  .score {
+    border: 1px solid #2a8b4c;
+    background: #10371f;
+    color: #6eff9a;
+    border-radius: 9px;
+    padding: 0.2rem 0.5rem;
+    font-size: 0.75rem;
+  }
+
+  .chips {
+    display: flex;
+    gap: 0.35rem;
+    margin-top: 0.25rem;
+
+    .chip {
+      border-radius: 999px;
+      background: #0f2744;
+      color: #62b2ff;
+      font-size: 0.68rem;
+      padding: 0.15rem 0.45rem;
+    }
+  }
+
+  .card-link {
+    grid-column: 2 / 4;
+    justify-self: end;
+    color: #34a1ff;
+    text-decoration: none;
+    font-size: 0.8rem;
+  }
+}
