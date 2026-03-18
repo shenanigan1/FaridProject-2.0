@@ -9,8 +9,8 @@ import { PositionFormComponent } from '@features/positions/components/position-f
 import { PositionFormService, PositionFormGroup } from '@features/positions/services/positions-form.service';
 import { PositionsApiService, PositionCreatePayload, PositionDto } from '@features/positions/services/positions-api.service';
 
-import { UiLinkButtonComponent } from '@shared/ui/link-button/ui-link-button.component';
-import { UiCardComponent } from '@shared/ui/card/card.component';
+import { UiLinkButtonComponent } from '@lib-ui/link-button/ui-link-button.component';
+import { UiCardComponent } from '@lib-ui/card/card.component';
 
 type Mode = 'create' | 'edit';
 

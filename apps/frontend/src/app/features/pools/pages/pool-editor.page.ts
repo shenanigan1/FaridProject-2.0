@@ -9,14 +9,14 @@ import { PoolQuestionsPanelComponent } from '@features/questions/components/pool
 import { POOL_CODE_PATTERN, normalizePoolCode } from '@features/pools/models/pool-code';
 import { PoolFormComponent, PoolFormGroup, PoolFormMode } from '@features/pools/components/pool-form.component';
 
-import { UiTabsComponent, UiTabItem } from '@shared/ui/tabs/tabs.component';
-import { UiIconButtonComponent } from '@shared/ui/icon-button/icon-button.component';
-import { UiButtonPrimaryComponent } from '@shared/ui/button-primary/button-primary.component';
-import { UiButtonSecondaryComponent } from '@shared/ui/button-secondary/button-secondary.component';
-import { UiCardComponent } from '@shared/ui/card/card.component';
-import { UiAlertComponent } from '@shared/ui/alert/alert.component';
-import { UiSpinnerComponent } from '@shared/ui/spinner/spinner.component';
-import { UiEmptyStateComponent } from '@shared/ui/empty-state/empty-state.component';
+import { UiTabsComponent, UiTabItem } from '@lib-ui/tabs/tabs.component';
+import { UiIconButtonComponent } from '@lib-ui/icon-button/icon-button.component';
+import { UiButtonPrimaryComponent } from '@lib-ui/button-primary/button-primary.component';
+import { UiButtonSecondaryComponent } from '@lib-ui/button-secondary/button-secondary.component';
+import { UiCardComponent } from '@lib-ui/card/card.component';
+import { UiAlertComponent } from '@lib-ui/alert/alert.component';
+import { UiSpinnerComponent } from '@lib-ui/spinner/spinner.component';
+import { UiEmptyStateComponent } from '@lib-ui/empty-state/empty-state.component';
 
 type TabKey = 'questions' | 'settings';
 type EditorMode = 'create' | 'detail';

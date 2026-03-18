@@ -14,16 +14,16 @@
 // import { PoolQuestionsPanelComponent } from '@features/questions/components/pool-questions-panel.component';
 
 // // shared/ui
-// import { UiAlertComponent } from '@shared/ui/alert/alert.component';
-// import { UiCardComponent } from '@shared/ui/card/card.component';
-// import { UiTabsComponent, UiTabItem } from '@shared/ui/tabs/tabs.component';
-// import { UiIconButtonComponent } from '@shared/ui/icon-button/icon-button.component';
-// import { UiButtonPrimaryComponent } from '@shared/ui/button-primary/button-primary.component';
-// import { UiButtonSecondaryComponent } from '@shared/ui/button-secondary/button-secondary.component';
-// import { UiTextInputComponent } from '@shared/ui/text-input/text-input.component';
-// import { UiTextareaComponent } from '@shared/ui/textarea/textarea.component';
-// import { UiSpinnerComponent } from '@shared/ui/spinner/spinner.component';
-// import { UiEmptyStateComponent } from '@shared/ui/empty-state/empty-state.component';
+// import { UiAlertComponent } from '@lib-ui/alert/alert.component';
+// import { UiCardComponent } from '@lib-ui/card/card.component';
+// import { UiTabsComponent, UiTabItem } from '@lib-ui/tabs/tabs.component';
+// import { UiIconButtonComponent } from '@lib-ui/icon-button/icon-button.component';
+// import { UiButtonPrimaryComponent } from '@lib-ui/button-primary/button-primary.component';
+// import { UiButtonSecondaryComponent } from '@lib-ui/button-secondary/button-secondary.component';
+// import { UiTextInputComponent } from '@lib-ui/text-input/text-input.component';
+// import { UiTextareaComponent } from '@lib-ui/textarea/textarea.component';
+// import { UiSpinnerComponent } from '@lib-ui/spinner/spinner.component';
+// import { UiEmptyStateComponent } from '@lib-ui/empty-state/empty-state.component';
 
 // type TabKey = 'questions' | 'settings';
 // const CODE_PATTERN = /^[A-Z][A-Z0-9_]*$/;

@@ -8,13 +8,13 @@ export type UiAlertVariant = 'error' | 'success' | 'warning' | 'info';
   selector: 'app-ui-alert',
   imports: [CommonModule],
   template: `
-    @if (message) {
+    @if (hasContent) {
       <div [class]="classes">
-        <span>{{ message }}</span>
-      </div>
-    } @else {
-      <div [class]="classes">
-        <ng-content></ng-content>
+        @if (hasMessage) {
+          <span>{{ message }}</span>
+        } @else {
+          <ng-content></ng-content>
+        }
       </div>
     }
   `,
@@ -23,6 +23,14 @@ export type UiAlertVariant = 'error' | 'success' | 'warning' | 'info';
 export class UiAlertComponent {
   @Input() message: string | null = null;
   @Input() variant: UiAlertVariant = 'error';
+
+  get hasMessage(): boolean {
+    return !!this.message;
+  }
+
+  get hasContent(): boolean {
+    return this.hasMessage; // or extend later if ng-content is used
+  }
 
   get classes(): string {
     const base = 'mb-4 rounded-xl border p-3 text-sm';

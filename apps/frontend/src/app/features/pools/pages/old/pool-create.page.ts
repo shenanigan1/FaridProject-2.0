@@ -5,12 +5,12 @@
 
 // import { PoolsStore } from '@features/pools/services/pools.store';
 
-// import { UiAlertComponent } from '@shared/ui/alert/alert.component';
-// import { UiButtonPrimaryComponent } from '@shared/ui/button-primary/button-primary.component';
-// import { UiIconButtonComponent } from '@shared/ui/icon-button/icon-button.component';
-// import { UiTextInputComponent } from '@shared/ui/text-input/text-input.component';
-// import { UiTextareaComponent } from '@shared/ui/textarea/textarea.component';
-// import { UiCardComponent } from '@shared/ui/card/card.component';
+// import { UiAlertComponent } from '@lib-ui/alert/alert.component';
+// import { UiButtonPrimaryComponent } from '@lib-ui/button-primary/button-primary.component';
+// import { UiIconButtonComponent } from '@lib-ui/icon-button/icon-button.component';
+// import { UiTextInputComponent } from '@lib-ui/text-input/text-input.component';
+// import { UiTextareaComponent } from '@lib-ui/textarea/textarea.component';
+// import { UiCardComponent } from '@lib-ui/card/card.component';
 
 // const CODE_PATTERN = /^[A-Z][A-Z0-9_]*$/;
 
