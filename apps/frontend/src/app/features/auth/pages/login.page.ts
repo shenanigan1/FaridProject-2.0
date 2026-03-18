@@ -18,10 +18,10 @@ import { AuthService } from '@auth/services/auth.service';
 import { TokenStorageService } from '@auth/services/token-storage.service';
 import { LoginProfile } from '@auth/models/auth.models';
 
-import { UiTextInputComponent } from '@shared/ui/text-input/text-input.component';
-import { UiPasswordInputComponent } from '@shared/ui/password-input/password-input.component';
-import { UiButtonPrimaryComponent } from '@shared/ui/button-primary/button-primary.component';
-import { UiAlertComponent } from '@shared/ui/alert/alert.component';
+import { UiTextInputComponent } from '@lib-ui/text-input/text-input.component';
+import { UiPasswordInputComponent } from '@lib-ui/password-input/password-input.component';
+import { UiButtonPrimaryComponent } from '@lib-ui/button-primary/button-primary.component';
+import { UiAlertComponent } from '@lib-ui/alert/alert.component';
 
 @Component({
   standalone: true,

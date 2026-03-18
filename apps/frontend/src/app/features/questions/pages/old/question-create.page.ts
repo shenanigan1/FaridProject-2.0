@@ -5,12 +5,12 @@
 
 // import { SkillQuestionsStore } from '@features/questions/services/skill-questions.store';
 
-// import { UiTabsComponent, UiTabItem } from '@shared/ui/tabs/tabs.component';
-// import { UiButtonPrimaryComponent } from '@shared/ui/button-primary/button-primary.component';
-// import { UiButtonSecondaryComponent } from '@shared/ui/button-secondary/button-secondary.component';
-// import { UiIconButtonComponent } from '@shared/ui/icon-button/icon-button.component';
-// import { UiSelectComponent, UiSelectOption } from '@shared/ui/select/select.component';
-// import { UiTextInputComponent } from '@shared/ui/text-input/text-input.component';
+// import { UiTabsComponent, UiTabItem } from '@lib-ui/tabs/tabs.component';
+// import { UiButtonPrimaryComponent } from '@lib-ui/button-primary/button-primary.component';
+// import { UiButtonSecondaryComponent } from '@lib-ui/button-secondary/button-secondary.component';
+// import { UiIconButtonComponent } from '@lib-ui/icon-button/icon-button.component';
+// import { UiSelectComponent, UiSelectOption } from '@lib-ui/select/select.component';
+// import { UiTextInputComponent } from '@lib-ui/text-input/text-input.component';
 
 // type TabKey = 'editor' | 'preview' | 'settings' | 'history';
 // type Format = 'mcq' | 'true_false' | 'practical';

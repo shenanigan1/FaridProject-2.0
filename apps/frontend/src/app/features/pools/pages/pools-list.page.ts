@@ -7,10 +7,11 @@ import { PoolsStore } from '@features/pools/services/pools.store';
 import { QuestionPool } from '@features/pools/models/question-pool.model';
 
 // shared/ui
-import { UiEmptyStateComponent } from '@shared/ui/empty-state/empty-state.component';
-import { UiButtonPrimaryComponent } from '@shared/ui/button-primary/button-primary.component';
-import { UiIconButtonComponent } from '@shared/ui/icon-button/icon-button.component';
-import { UiAlertComponent } from '@shared/ui/alert/alert.component';
+import { UiEmptyStateComponent } from '@lib-ui/empty-state/empty-state.component';
+import { UiButtonPrimaryComponent } from '@lib-ui/button-primary/button-primary.component';
+import { UiIconButtonComponent } from '@lib-ui/icon-button/icon-button.component';
+import { UiAlertComponent } from '@lib-ui/alert/alert.component';
+import { UiTextInputComponent } from '@lib-ui/text-input/text-input.component';
 
 @Component({
   standalone: true,
@@ -24,6 +25,7 @@ import { UiAlertComponent } from '@shared/ui/alert/alert.component';
     UiButtonPrimaryComponent,
     UiIconButtonComponent,
     UiAlertComponent,
+    UiTextInputComponent
   ],
   templateUrl: './pools-list.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

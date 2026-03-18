@@ -20,8 +20,8 @@
       // Core aliases
       "@core/*": ["src/app/core/*"],
       "@auth/*": ["src/app/core/auth/*"],
-      "guard/*": ["src/app/core/guard/*"],
-      "interceptor/*": ["src/app/core/interceptor/*"],
+      "@guard/*": ["src/app/core/guard/*"],
+      "@interceptor/*": ["src/app/core/interceptor/*"],
 
       //Feature aliases
       "@features/*": ["src/app/features/*"],
@@ -38,6 +38,8 @@
       // Shared aliases
       "@shared/*": ["src/app/shared/*"],
       "@ui/*": ["src/app/shared/ui/*"],
+
+      "@lib-ui/*": ["../../libs/shared/ui/*"],
 
       // Environment aliases
       "@env/*": ["src/environments/*"],

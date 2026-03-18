@@ -2,11 +2,11 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from 
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
-import { UiAlertComponent } from '@shared/ui/alert/alert.component';
-import { UiCardComponent } from '@shared/ui/card/card.component';
-import { UiTextInputComponent } from '@shared/ui/text-input/text-input.component';
-import { UiTextareaComponent } from '@shared/ui/textarea/textarea.component';
-import { UiButtonPrimaryComponent } from '@shared/ui/button-primary/button-primary.component';
+import { UiAlertComponent } from '@lib-ui/alert/alert.component';
+import { UiCardComponent } from '@lib-ui/card/card.component';
+import { UiTextInputComponent } from '@lib-ui/text-input/text-input.component';
+import { UiTextareaComponent } from '@lib-ui/textarea/textarea.component';
+import { UiButtonPrimaryComponent } from '@lib-ui/button-primary/button-primary.component';
 
 export type PoolFormMode = 'create' | 'edit' | 'view';
 

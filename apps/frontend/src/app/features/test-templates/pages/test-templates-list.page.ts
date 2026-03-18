@@ -8,10 +8,10 @@ import { combineLatest, debounceTime, distinctUntilChanged, startWith, switchMap
 import { TemplatesApi } from '@features/test-templates/services/test-templates.api';
 import type { TemplateListItem, TemplateDifficulty } from '@features/test-templates/models/test-templates.model';
 
-import { UiTabsComponent, UiTabItem } from '@shared/ui/tabs/tabs.component';
-import { UiBadgeComponent, UiBadgeTone } from '@shared/ui/badge/badge.component';
-import { UiButtonPrimaryComponent } from '@shared/ui/button-primary/button-primary.component';
-import { UiTextInputComponent } from '@shared/ui/text-input/text-input.component';
+import { UiTabsComponent, UiTabItem } from '@lib-ui/tabs/tabs.component';
+import { UiBadgeComponent, UiBadgeTone } from '@lib-ui/badge/badge.component';
+import { UiButtonPrimaryComponent } from '@lib-ui/button-primary/button-primary.component';
+import { UiTextInputComponent } from '@lib-ui/text-input/text-input.component';
 
 type DifficultyFilter = 'all' | TemplateDifficulty;
 

@@ -7,8 +7,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { PositionsApiService, PositionDto } from '@features/positions/services/positions-api.service';
 
-import { UiBadgeComponent, UiBadgeTone } from '@shared/ui/badge/badge.component';
-import { UiSelectComponent, UiSelectOption } from '@shared/ui/select/select.component';
+import { UiBadgeComponent, UiBadgeTone } from '@lib-ui/badge/badge.component';
+import { UiSelectComponent, UiSelectOption } from '@lib-ui/select/select.component';
 
 type LocationValue = 'all' | 'chicago' | 'dallas' | 'phoenix' | 'remote';
 type TruckTypeValue = 'all' | 'long-haul' | 'dry-van' | 'tanker' | 'flatbed';

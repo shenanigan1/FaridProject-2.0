@@ -8,10 +8,10 @@
 // import { PoolsStore } from '@features/pools/services/pools.store';
 // import { QuestionPool } from '@features/pools/models/question-pool.model';
 
-// import { UiIconButtonComponent } from '@shared/ui/icon-button/icon-button.component';
-// import { UiButtonPrimaryComponent } from '@shared/ui/button-primary/button-primary.component';
-// import { UiButtonSecondaryComponent } from '@shared/ui/button-secondary/button-secondary.component';
-// import { UiProgressBarComponent } from '@shared/ui/progress-bar/progress-bar.component';
+// import { UiIconButtonComponent } from '@lib-ui/icon-button/icon-button.component';
+// import { UiButtonPrimaryComponent } from '@lib-ui/button-primary/button-primary.component';
+// import { UiButtonSecondaryComponent } from '@lib-ui/button-secondary/button-secondary.component';
+// import { UiProgressBarComponent } from '@lib-ui/progress-bar/progress-bar.component';
 
 // type Difficulty = 'easy' | 'medium' | 'hard';
 
