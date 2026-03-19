@@ -1,17 +1,12 @@
 export interface PublicJobOfferDto {
-  id: string;
+  id: number;
   title: string;
   location: string;
-  employment_type: string;
   contract_type: string;
-  category?: string;
-  priority: 'low' | 'medium' | 'high' | 'urgent';
-  status: 'active' | 'closed' | 'draft';
-  short_description?: string;
-  applicants_count?: number;
-  posted_at?: string;
-  closing_date?: string;
-  company_name?: string;
+  description: string;
+  department: string;
+  salary: number;
+  created_at: string;
 }
 
 export interface PaginatedResponseDto<T> {

@@ -1,7 +1,14 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  OnInit,
+  inject,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { catchError, map, of, switchMap } from 'rxjs';
+import { catchError, map, of, switchMap, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { JobCardComponent } from '@jobs/components/job-card/job-card.component';
@@ -19,13 +26,14 @@ type JobListViewState =
   selector: 'app-job-list-page',
   standalone: true,
   imports: [CommonModule, JobCardComponent, JobFiltersComponent],
-  templateUrl: './job-list-page.component.html',
+  templateUrl: './job-list.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class JobListPageComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly cdr = inject(ChangeDetectorRef);
   private readonly jobsPublicApiService = inject(JobPublicApiService);
 
   protected filters: JobOfferFilters = {
@@ -54,13 +62,17 @@ export class JobListPageComponent implements OnInit {
 
           this.filters = nextFilters;
           this.state = { kind: 'loading' };
+          this.cdr.markForCheck();
 
           return nextFilters;
         }),
         switchMap((filters) =>
           this.jobsPublicApiService.getJobOffers(filters).pipe(
+            tap((response) => {
+              console.log('[JobListPage] response:', response);
+            }),
             map((response) => {
-              if (response.results.length === 0) {
+              if (!response.results.length) {
                 return { kind: 'empty' } as JobListViewState;
               }
 
@@ -70,22 +82,25 @@ export class JobListPageComponent implements OnInit {
                 total: response.count,
               } as JobListViewState;
             }),
-            catchError(() =>
-              of({
+            catchError((error) => {
+              console.error('[JobListPage] error:', error);
+
+              return of({
                 kind: 'error',
                 message: 'An error occurred while loading job offers.',
-              } as JobListViewState),
-            ),
+              } as JobListViewState);
+            }),
           ),
         ),
         takeUntilDestroyed(this.destroyRef),
       )
       .subscribe((state) => {
         this.state = state;
+        this.cdr.markForCheck();
       });
   }
 
-  protected onFiltersChange(filters: Omit<JobOfferFilters, 'page'>): void {
+  public onFiltersChange(filters: Omit<JobOfferFilters, 'page'>): void {
     void this.router.navigate([], {
       relativeTo: this.route,
       queryParams: {
@@ -99,14 +114,14 @@ export class JobListPageComponent implements OnInit {
     });
   }
 
-  protected onResetFilters(): void {
+  public onResetFilters(): void {
     void this.router.navigate([], {
       relativeTo: this.route,
       queryParams: {},
     });
   }
 
-  protected trackByJobId(_: number, job: JobOffer): string {
+  public trackByJobId(_: number, job: JobOffer): number {
     return job.id;
   }
 }

@@ -2,20 +2,16 @@ export type JobPriority = 'low' | 'medium' | 'high' | 'urgent';
 export type JobStatus = 'active' | 'closed' | 'draft';
 
 export interface JobOffer {
-  id: string;
+  id: number;
   title: string;
   location: string;
-  employmentType: string;
   contractType: string;
-  category?: string;
-  priority: JobPriority;
-  status: JobStatus;
-  shortDescription?: string;
-  applicantsCount?: number;
-  postedAt?: string;
-  closingDate?: string;
-  companyName?: string;
+  description: string;
+  department: string;
+  salary: number;
+  createdAt: string;
 }
+
 
 export interface JobOfferFilters {
   search: string;
