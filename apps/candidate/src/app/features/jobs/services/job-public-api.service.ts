@@ -2,65 +2,40 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { map, Observable } from 'rxjs';
 
-import { JobOffer } from '@jobs/models/job-offer.model';
 import {
-  PaginatedResponseDto,
-  PublicJobOfferDto,
-} from '@jobs/models/job-offer.dto';
-
-export interface PaginatedResponse<T> {
-  count: number;
-  next: string | null;
-  previous: string | null;
-  results: T[];
-}
+  JobOffer,
+  JobOfferFilters,
+} from '@jobs/models/job-offer.model';
+import { PublicJobOfferDto, PaginatedResponseDto } from '@jobs/models/job-offer.dto';
 
 @Injectable({
   providedIn: 'root',
 })
 export class JobPublicApiService {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = '/api/positions';
+  private readonly baseUrl = 'http://localhost:8000/api/public/positions';
 
-  getJobOffers(params?: {
-    search?: string;
-    location?: string;
-    employmentType?: string;
-    priority?: string;
-    page?: number;
-  }): Observable<PaginatedResponse<JobOffer>> {
-    let httpParams = new HttpParams();
+  getJobOffers(
+    filters: Partial<JobOfferFilters>,
+  ): Observable<PaginatedResponseDto<JobOffer>> {
+    let params = new HttpParams();
 
-    if (params?.search) {
-      httpParams = httpParams.set('search', params.search);
+    if (filters.search) {
+      params = params.set('search', filters.search);
     }
 
-    if (params?.location) {
-      httpParams = httpParams.set('location', params.location);
-    }
-
-    if (params?.employmentType) {
-      httpParams = httpParams.set('employment_type', params.employmentType);
-    }
-
-    if (params?.priority) {
-      httpParams = httpParams.set('priority', params.priority);
-    }
-
-    if (params?.page) {
-      httpParams = httpParams.set('page', params.page);
+    if (filters.location) {
+      params = params.set('location', filters.location);
     }
 
     return this.http
-      .get<PaginatedResponseDto<PublicJobOfferDto>>(`${this.baseUrl}/`, {
-        params: httpParams,
-      })
+      .get<PublicJobOfferDto[]>(this.baseUrl, { params })
       .pipe(
-        map((response) => ({
-          count: response.count,
-          next: response.next,
-          previous: response.previous,
-          results: response.results.map((dto) => this.mapDtoToModel(dto)),
+        map((items) => ({
+          count: items.length,
+          next: null,
+          previous: null,
+          results: items.map((dto) => this.mapDtoToModel(dto)),
         })),
       );
   }
@@ -70,16 +45,11 @@ export class JobPublicApiService {
       id: dto.id,
       title: dto.title,
       location: dto.location,
-      employmentType: dto.employment_type,
       contractType: dto.contract_type,
-      category: dto.category,
-      priority: dto.priority,
-      status: dto.status,
-      shortDescription: dto.short_description,
-      applicantsCount: dto.applicants_count,
-      postedAt: dto.posted_at,
-      closingDate: dto.closing_date,
-      companyName: dto.company_name,
+      description: dto.description,
+      department: dto.department,
+      salary: dto.salary,
+      createdAt: dto.created_at,
     };
   }
 }

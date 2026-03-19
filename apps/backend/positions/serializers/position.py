@@ -19,3 +19,17 @@ class PositionSerializer(serializers.ModelSerializer):
             "updated_at",
         ]
         read_only_fields = ["id", "created_at", "updated_at"]
+
+class PublicPositionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Position
+        fields = [
+            "id",
+            "title",
+            "location",
+            "contract_type",
+            "description",
+            "department",
+            "salary",
+            "created_at",
+        ]
