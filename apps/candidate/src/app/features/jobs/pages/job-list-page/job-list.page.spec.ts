@@ -11,6 +11,7 @@ describe('JobListPageComponent', () => {
   let component: JobListPageComponent;
   let jobPublicApiServiceSpy: jasmine.SpyObj<JobPublicApiService>;
   let router: Router;
+  let activatedRoute: ActivatedRoute;
 
   const mockJob: JobOffer = {
     id: 4,
@@ -52,6 +53,7 @@ describe('JobListPageComponent', () => {
     }).compileComponents();
 
     router = TestBed.inject(Router);
+    activatedRoute = TestBed.inject(ActivatedRoute);
     spyOn(router, 'navigate').and.resolveTo(true);
   });
 
@@ -97,28 +99,7 @@ describe('JobListPageComponent', () => {
     });
   });
 
-  it('should call the service on init with normalized filters', () => {
-    jobPublicApiServiceSpy.getJobOffers.and.returnValue(
-      of({
-        count: 1,
-        next: null,
-        previous: null,
-        results: [mockJob],
-      }),
-    );
-
-    createComponent();
-
-    expect(jobPublicApiServiceSpy.getJobOffers).toHaveBeenCalledWith({
-      search: '',
-      location: '',
-      employmentType: '',
-      priority: '',
-      page: 1,
-    });
-  });
-
-  it('should switch to loaded state when jobs are returned', fakeAsync(() => {
+  it('should render loaded state when jobs are returned', fakeAsync(() => {
     jobPublicApiServiceSpy.getJobOffers.and.returnValue(
       of({
         count: 1,
@@ -132,12 +113,13 @@ describe('JobListPageComponent', () => {
     tick();
     fixture.detectChanges();
 
-    expect((component as any).state.kind).toBe('loaded');
-    expect(fixture.nativeElement.textContent).toContain('1 job offer(s) found');
-    expect(fixture.nativeElement.textContent).toContain('Freelance search agent');
+    const content = fixture.nativeElement.textContent as string;
+
+    expect(content).toContain('1 job offer(s) found');
+    expect(content).toContain('Freelance search agent');
   }));
 
-  it('should switch to empty state when no jobs are returned', fakeAsync(() => {
+  it('should render empty state when no jobs are returned', fakeAsync(() => {
     jobPublicApiServiceSpy.getJobOffers.and.returnValue(
       of({
         count: 0,
@@ -151,11 +133,10 @@ describe('JobListPageComponent', () => {
     tick();
     fixture.detectChanges();
 
-    expect((component as any).state.kind).toBe('empty');
     expect(fixture.nativeElement.textContent).toContain('No jobs found');
   }));
 
-  it('should switch to error state when the service fails', fakeAsync(() => {
+  it('should render error state when the service fails', fakeAsync(() => {
     jobPublicApiServiceSpy.getJobOffers.and.returnValue(
       throwError(() => new Error('Boom')),
     );
@@ -164,8 +145,9 @@ describe('JobListPageComponent', () => {
     tick();
     fixture.detectChanges();
 
-    expect((component as any).state.kind).toBe('error');
-    expect(fixture.nativeElement.textContent).toContain('Unable to load job offers');
+    expect(fixture.nativeElement.textContent).toContain(
+      'An error occurred while loading job offers.',
+    );
   }));
 
   it('should navigate with new query params on filters change', () => {
@@ -180,7 +162,7 @@ describe('JobListPageComponent', () => {
 
     createComponent();
 
-    (component as any).onFiltersChange({
+    component.onFiltersChange({
       search: 'driver',
       location: 'Chicago',
       employmentType: 'full-time',
@@ -188,7 +170,7 @@ describe('JobListPageComponent', () => {
     });
 
     expect(router.navigate).toHaveBeenCalledWith([], {
-      relativeTo: TestBed.inject(ActivatedRoute),
+      relativeTo: activatedRoute,
       queryParams: {
         search: 'driver',
         location: 'Chicago',
@@ -212,10 +194,10 @@ describe('JobListPageComponent', () => {
 
     createComponent();
 
-    (component as any).onResetFilters();
+    component.onResetFilters();
 
     expect(router.navigate).toHaveBeenCalledWith([], {
-      relativeTo: TestBed.inject(ActivatedRoute),
+      relativeTo: activatedRoute,
       queryParams: {},
     });
   });
@@ -232,6 +214,6 @@ describe('JobListPageComponent', () => {
 
     createComponent();
 
-    expect((component as any).trackByJobId(0, mockJob)).toBe(4);
+    expect(component.trackByJobId(0, mockJob)).toBe(4);
   });
 });

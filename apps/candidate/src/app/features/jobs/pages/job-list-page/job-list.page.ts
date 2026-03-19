@@ -100,7 +100,7 @@ export class JobListPageComponent implements OnInit {
       });
   }
 
-  protected onFiltersChange(filters: Omit<JobOfferFilters, 'page'>): void {
+  public onFiltersChange(filters: Omit<JobOfferFilters, 'page'>): void {
     void this.router.navigate([], {
       relativeTo: this.route,
       queryParams: {
@@ -114,14 +114,14 @@ export class JobListPageComponent implements OnInit {
     });
   }
 
-  protected onResetFilters(): void {
+  public onResetFilters(): void {
     void this.router.navigate([], {
       relativeTo: this.route,
       queryParams: {},
     });
   }
 
-  protected trackByJobId(_: number, job: JobOffer): number {
+  public trackByJobId(_: number, job: JobOffer): number {
     return job.id;
   }
 }

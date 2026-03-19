@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { provideRouter, RouterLink } from '@angular/router';
+import { provideRouter} from '@angular/router';
 
 import { JobCardComponent } from './job-card.component';
 import { JobOffer } from '../../models/job-offer.model';
