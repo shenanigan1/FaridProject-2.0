@@ -12,4 +12,8 @@ export class UiButtonSecondaryComponent {
   @Input() type: 'button' | 'submit' | 'reset' = 'button';
   @Input() disabled = false;
   @Input() loading = false;
+
+  get isDisabled(): boolean {
+    return this.disabled || this.loading;
+  }
 }

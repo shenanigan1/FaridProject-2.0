@@ -1,10 +1,13 @@
 from rest_framework.viewsets import ModelViewSet
 from positions.models import Position
-from positions.serializers import PositionSerializer, PublicPositionSerializer
-from rest_framework.permissions import IsAuthenticated
+from positions.serializers import PositionSerializer
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from users.permissions import IsHrAdminOrDirector
-from rest_framework.generics import ListAPIView
+<<<<<<< Updated upstream
+=======
 from rest_framework.permissions import AllowAny
+from rest_framework.viewsets import ReadOnlyModelViewSet
+>>>>>>> Stashed changes
 
 
 class PositionViewSet(ModelViewSet):
@@ -12,18 +15,17 @@ class PositionViewSet(ModelViewSet):
     serializer_class = PositionSerializer
 
     def get_permissions(self):
-        # Backoffice app: usually authenticated list/retrieve
         if self.action in ["list", "retrieve"]:
-            return [IsAuthenticated()]
+            return [AllowAny()]
 
-        # Only HR/Admin/Director can create/update/delete
         if self.action in ["create", "update", "partial_update", "destroy"]:
             return [IsAuthenticated(), IsHrAdminOrDirector()]
 
         return [IsAuthenticated()]
+<<<<<<< Updated upstream
+=======
 
-class PublicPositionListView(ListAPIView):
-    serializer_class = PublicPositionSerializer
+class PublicPositionViewSet(ReadOnlyModelViewSet):
     permission_classes = [AllowAny]
 
     def get_queryset(self):
@@ -33,3 +35,9 @@ class PublicPositionListView(ListAPIView):
             .select_related("company")
             .order_by("-created_at")
         )
+
+    def get_serializer_class(self):
+        if self.action == "retrieve":
+            return PublicPositionSerializer
+        return PublicPositionSerializer
+>>>>>>> Stashed changes

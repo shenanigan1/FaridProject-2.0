@@ -7,14 +7,12 @@
  * ----------------------------------------------------------------------------
  */
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 type UiSkeletonVariant = 'line' | 'block' | 'avatar';
 
 @Component({
   standalone: true,
   selector: 'app-ui-skeleton',
-  imports: [CommonModule],
   template: `
     <div
       class="animate-pulse bg-slate-800/60"

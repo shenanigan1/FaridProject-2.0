@@ -1,3 +1,7 @@
 from .position import PositionViewSet as PositionViewSet
-from .position import PublicPositionListView as PublicPositionListView
+<<<<<<< Updated upstream
+
+=======
+from .position import PublicPositionViewSet as PublicPositionViewSet
+>>>>>>> Stashed changes
 __all__ = ["PositionViewSet"]
