@@ -1,0 +1,34 @@
+<app-modal title="Postuler à cette offre" (close)="close.emit()">
+  <form class="space-y-4" [formGroup]="form" (ngSubmit)="submit()">
+    <div class="grid gap-4 sm:grid-cols-2">
+      <label class="text-sm text-slate-300">
+        First name
+        <input class="mt-1 w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2" formControlName="firstName" />
+      </label>
+      <label class="text-sm text-slate-300">
+        Last name
+        <input class="mt-1 w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2" formControlName="lastName" />
+      </label>
+    </div>
+
+    <div class="grid gap-4 sm:grid-cols-2">
+      <label class="text-sm text-slate-300">
+        Email
+        <input class="mt-1 w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2" formControlName="email" />
+      </label>
+      <label class="text-sm text-slate-300">
+        Phone
+        <input class="mt-1 w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2" formControlName="phone" />
+      </label>
+    </div>
+
+    <label class="block text-sm text-slate-300">
+      Cover letter
+      <textarea rows="5" class="mt-1 w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2" formControlName="coverLetter"></textarea>
+    </label>
+
+    <button type="submit" class="w-full rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold transition hover:bg-blue-500">
+      Envoyer ma candidature
+    </button>
+  </form>
+</app-modal>

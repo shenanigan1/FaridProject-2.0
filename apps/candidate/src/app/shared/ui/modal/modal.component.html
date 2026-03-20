@@ -1,0 +1,19 @@
+<div
+  class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/85 p-4"
+  (click)="onOverlayClick($event)"
+>
+  <section class="w-full max-w-xl rounded-2xl border border-slate-700 bg-slate-900 p-6 text-white shadow-2xl">
+    <header class="mb-5 flex items-center justify-between gap-4">
+      <h2 class="text-xl font-semibold">{{ title }}</h2>
+      <button
+        type="button"
+        (click)="close.emit()"
+        class="rounded-lg border border-slate-600 px-3 py-1 text-sm text-slate-200 transition hover:bg-slate-800"
+      >
+        Close
+      </button>
+    </header>
+
+    <ng-content />
+  </section>
+</div>

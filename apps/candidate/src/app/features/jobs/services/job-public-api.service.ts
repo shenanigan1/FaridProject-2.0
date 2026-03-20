@@ -2,10 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { map, Observable } from 'rxjs';
 
-import {
-  JobOffer,
-  JobOfferFilters,
-} from '@jobs/models/job-offer.model';
+import { JobOffer, JobOfferFilters } from '@jobs/models/job-offer.model';
 import { PublicJobOfferDto, PaginatedResponseDto } from '@jobs/models/job-offer.dto';
 
 @Injectable({
@@ -38,6 +35,12 @@ export class JobPublicApiService {
           results: items.map((dto) => this.mapDtoToModel(dto)),
         })),
       );
+  }
+
+  getJobOfferById(id: number): Observable<JobOffer> {
+    return this.http
+      .get<PublicJobOfferDto>(`${this.baseUrl}/${id}`)
+      .pipe(map((dto) => this.mapDtoToModel(dto)));
   }
 
   private mapDtoToModel(dto: PublicJobOfferDto): JobOffer {
