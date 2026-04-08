@@ -1,8 +1,6 @@
 from rest_framework import serializers
 from evaluations.models import Evaluation
-from candidates.models import Candidate
-from templates_grid.models import Template
-from users.models import User
+from evaluations.services.assign_test import AssignTestToApplicationService
 
 
 class EvaluationSerializer(serializers.ModelSerializer):
@@ -32,34 +30,17 @@ class EvaluationSerializer(serializers.ModelSerializer):
         ]
 
 
-class StartEvaluationSerializer(serializers.Serializer):
-    candidate_id = serializers.IntegerField(required=True)
-    grid_id = serializers.IntegerField(required=True)
+class AssignEvaluationSerializer(serializers.Serializer):
+    application_id = serializers.IntegerField(required=True)
     evaluator_id = serializers.IntegerField(required=True)
-
-    def validate(self, data):
-        # Vérifier existence des objets
-        try:
-            data["candidate"] = Candidate.objects.get(id=data["candidate_id"])
-        except Candidate.DoesNotExist:
-            raise serializers.ValidationError({"candidate_id": "Invalid candidate_id"})
-
-        try:
-            data["template"] = Template.objects.get(id=data["grid_id"])
-        except Template.DoesNotExist:
-            raise serializers.ValidationError({"grid_id": "Invalid grid_id"})
-
-        try:
-            data["evaluator"] = User.objects.get(id=data["evaluator_id"])
-        except User.DoesNotExist:
-            raise serializers.ValidationError({"evaluator_id": "Invalid evaluator_id"})
-
-        return data
+    template_id = serializers.IntegerField(required=False)
 
     def create(self, validated_data):
-        return Evaluation.objects.create(
-            candidate=validated_data["candidate"],
-            template=validated_data["template"],
-            assigned_to=validated_data["evaluator"],
-            status="in_progress",
+        return AssignTestToApplicationService.execute(
+            application_id=validated_data["application_id"],
+            evaluator_id=validated_data["evaluator_id"],
+            template_id=validated_data.get("template_id"),
         )
+
+    def to_representation(self, instance: Evaluation):
+        return EvaluationSerializer(instance).data
