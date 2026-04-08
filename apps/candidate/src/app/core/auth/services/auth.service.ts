@@ -4,6 +4,8 @@ import { Observable, catchError, map, of, switchMap, throwError } from 'rxjs';
 
 import { environment } from '@env/environment';
 
+import { TokenStorageService } from '@core/auth/services/token-storage.service';
+
 export interface AuthenticatedCandidate {
   candidateId: number;
   email: string;
@@ -49,16 +51,15 @@ interface CandidateDto {
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly http = inject(HttpClient);
+  private readonly tokenStorage = inject(TokenStorageService);
 
-  private readonly tokenKey = 'access_token';
-  private readonly refreshTokenKey = 'refresh_token';
   private readonly candidateProfileKey = 'candidate_profile';
 
   private readonly authBaseUrl = `${environment.apiBaseUrl}/api/auth`;
   private readonly candidatesUrl = `${environment.apiBaseUrl}/api/candidates/`;
 
   isAuthenticated(): boolean {
-    return !!localStorage.getItem(this.tokenKey);
+    return this.tokenStorage.isAuthenticated();
   }
 
   signIn(payload: SignInPayload): Observable<AuthenticatedCandidate> {
@@ -138,9 +139,14 @@ export class AuthService {
   }
 
   logout(): void {
-    localStorage.removeItem(this.tokenKey);
-    localStorage.removeItem(this.refreshTokenKey);
+    this.tokenStorage.clear();
     localStorage.removeItem(this.candidateProfileKey);
+  }
+
+  refresh(refreshToken: string): Observable<{ access: string; refresh?: string }> {
+    return this.http.post<{ access: string; refresh?: string }>(`${this.authBaseUrl}/refresh/`, {
+      refresh: refreshToken,
+    });
   }
 
   private resolveCandidateProfile(
@@ -184,8 +190,7 @@ export class AuthService {
   }
 
   private persistTokens(accessToken: string, refreshToken: string): void {
-    localStorage.setItem(this.tokenKey, accessToken);
-    localStorage.setItem(this.refreshTokenKey, refreshToken);
+    this.tokenStorage.saveTokens(accessToken, refreshToken);
   }
 
   private mapAuthError(error: unknown): Observable<never> {

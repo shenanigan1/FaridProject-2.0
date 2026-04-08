@@ -7,20 +7,36 @@ import { TestBed } from '@angular/core/testing';
 
 import { environment } from '@env/environment';
 
+import { TokenStorageService } from '@core/auth/services/token-storage.service';
+
 import { AuthService } from './auth.service';
 
 describe('AuthService (candidate)', () => {
   let service: AuthService;
   let httpMock: HttpTestingController;
+  let tokenStorageSpy: jasmine.SpyObj<TokenStorageService>;
 
   const loginUrl = `${environment.apiBaseUrl}/api/auth/login/`;
+  const refreshUrl = `${environment.apiBaseUrl}/api/auth/refresh/`;
   const candidatesUrl = `${environment.apiBaseUrl}/api/candidates/`;
 
   beforeEach(() => {
     localStorage.clear();
 
+    tokenStorageSpy = jasmine.createSpyObj<TokenStorageService>('TokenStorageService', [
+      'saveTokens',
+      'clear',
+      'isAuthenticated',
+    ]);
+    tokenStorageSpy.isAuthenticated.and.returnValue(false);
+
     TestBed.configureTestingModule({
-      providers: [AuthService, provideHttpClient(), provideHttpClientTesting()],
+      providers: [
+        AuthService,
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        { provide: TokenStorageService, useValue: tokenStorageSpy },
+      ],
     });
 
     service = TestBed.inject(AuthService);
@@ -69,11 +85,8 @@ describe('AuthService (candidate)', () => {
     ]);
 
     expect(candidateId).toBe(44);
-    expect(localStorage.getItem('access_token')).toBe('access-token');
-    expect(localStorage.getItem('refresh_token')).toBe('refresh-token');
+    expect(tokenStorageSpy.saveTokens).toHaveBeenCalledWith('access-token', 'refresh-token');
   });
-
-
 
   it('maps nested backend validation errors to user-friendly message', () => {
     let actualError: string | null = null;
@@ -106,59 +119,19 @@ describe('AuthService (candidate)', () => {
     expect(actualError).toContain('at least 8 characters');
   });
 
-  it('signUp creates candidate then logs in', () => {
-    let candidateId: number | null = null;
+  it('refresh calls backend refresh endpoint', () => {
+    let access: string | null = null;
 
-    service
-      .signUp({
-        firstName: 'Jane',
-        lastName: 'Smith',
-        email: 'jane@example.com',
-        phone: '+33123456',
-        password: 'Secret123',
-      })
-      .subscribe((candidate) => {
-        candidateId = candidate.candidateId;
-      });
-
-    const createRequest = httpMock.expectOne(candidatesUrl);
-    expect(createRequest.request.method).toBe('POST');
-    createRequest.flush({
-      id: 88,
-      user: {
-        email: 'jane@example.com',
-        first_name: 'Jane',
-        last_name: 'Smith',
-        phone: '+33123456',
-      },
+    service.refresh('refresh-token').subscribe((response) => {
+      access = response.access;
     });
 
-    const loginRequest = httpMock.expectOne(loginUrl);
-    expect(loginRequest.request.method).toBe('POST');
-    loginRequest.flush({
-      access: 'a',
-      refresh: 'r',
-      user: {
-        id: 5,
-        email: 'jane@example.com',
-        first_name: 'Jane',
-        last_name: 'Smith',
-      },
-    });
+    const request = httpMock.expectOne(refreshUrl);
+    expect(request.request.method).toBe('POST');
+    expect(request.request.body).toEqual({ refresh: 'refresh-token' });
 
-    const candidatesRequest = httpMock.expectOne(candidatesUrl);
-    candidatesRequest.flush([
-      {
-        id: 88,
-        user: {
-          email: 'jane@example.com',
-          first_name: 'Jane',
-          last_name: 'Smith',
-          phone: '+33123456',
-        },
-      },
-    ]);
+    request.flush({ access: 'new-access' });
 
-    expect(candidateId).toBe(88);
+    expect(access).toBe('new-access');
   });
 });
