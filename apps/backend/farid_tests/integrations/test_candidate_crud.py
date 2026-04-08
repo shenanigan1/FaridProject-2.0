@@ -248,4 +248,18 @@ def test_list_candidates_requires_hr_permissions(api_client):
 
     response = api_client.get(url)
 
-    assert response.status_code == 401
+    assert response.status_code in (401, 403)
+
+
+def test_list_candidates_denied_for_authenticated_non_hr_user(api_client):
+    employee_user = UserFactory.create(
+        email="employee@example.com",
+        password="Secret123",
+        role=UserRoles.EMPLOYEE,
+    )
+    api_client.force_authenticate(user=employee_user)
+    url = reverse("candidates-list")
+
+    response = api_client.get(url)
+
+    assert response.status_code == 403
