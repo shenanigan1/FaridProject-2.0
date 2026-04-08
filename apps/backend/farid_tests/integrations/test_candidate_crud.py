@@ -180,3 +180,34 @@ def test_update_candidate_target_position(api_client):
 
     candidate.refresh_from_db()
     assert candidate.target_position_id == pos.id
+
+
+def test_update_candidate_duplicate_email_rejected(api_client):
+    existing = CandidateFactory.create(email="existing@example.com")
+    candidate = CandidateFactory.create(email="to-update@example.com")
+
+    url = reverse("candidates-detail", args=[candidate.id])
+    response = api_client.patch(
+        url,
+        {"user": {"email": existing.user.email}},
+        format="json",
+    )
+
+    assert response.status_code == 400
+    assert "user" in response.data
+    assert "email" in response.data["user"]
+
+
+def test_update_candidate_with_weak_password_rejected(api_client):
+    candidate = CandidateFactory.create(email="candidate@example.com")
+
+    url = reverse("candidates-detail", args=[candidate.id])
+    response = api_client.patch(
+        url,
+        {"user": {"password": "123"}},
+        format="json",
+    )
+
+    assert response.status_code == 400
+    assert "user" in response.data
+    assert "password" in response.data["user"]
