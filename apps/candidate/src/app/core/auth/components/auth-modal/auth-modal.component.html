@@ -1,0 +1,34 @@
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
+  <div class="w-full max-w-md">
+
+    <app-auth-card
+      [title]="mode === 'signin' ? 'Sign in' : 'Create account'"
+      subtitle="Access your candidate space"
+    >
+
+      <!-- FORM PLACEHOLDER -->
+      <div class="space-y-4">
+
+        <input class="w-full rounded-xl bg-slate-900 border border-slate-800 p-3"
+               placeholder="Email" />
+
+        <input class="w-full rounded-xl bg-slate-900 border border-slate-800 p-3"
+               placeholder="Password"
+               type="password" />
+
+        <app-ui-button-primary (click)="onAuthSuccess()">
+          {{ mode === 'signin' ? 'Sign in' : 'Create account' }}
+        </app-ui-button-primary>
+
+        <button class="text-sm text-slate-400" (click)="switchMode()">
+          {{ mode === 'signin'
+            ? 'No account? Sign up'
+            : 'Already have an account? Sign in' }}
+        </button>
+
+      </div>
+
+    </app-auth-card>
+
+  </div>
+</div>

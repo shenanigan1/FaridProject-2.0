@@ -1,13 +1,10 @@
 from rest_framework.viewsets import ModelViewSet
 from positions.models import Position
-from positions.serializers import PositionSerializer
+from positions.serializers import PositionSerializer, PublicPositionSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from users.permissions import IsHrAdminOrDirector
-<<<<<<< Updated upstream
-=======
 from rest_framework.permissions import AllowAny
 from rest_framework.viewsets import ReadOnlyModelViewSet
->>>>>>> Stashed changes
 
 
 class PositionViewSet(ModelViewSet):
@@ -22,8 +19,6 @@ class PositionViewSet(ModelViewSet):
             return [IsAuthenticated(), IsHrAdminOrDirector()]
 
         return [IsAuthenticated()]
-<<<<<<< Updated upstream
-=======
 
 class PublicPositionViewSet(ReadOnlyModelViewSet):
     permission_classes = [AllowAny]
@@ -40,4 +35,3 @@ class PublicPositionViewSet(ReadOnlyModelViewSet):
         if self.action == "retrieve":
             return PublicPositionSerializer
         return PublicPositionSerializer
->>>>>>> Stashed changes

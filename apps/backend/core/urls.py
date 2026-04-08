@@ -3,11 +3,7 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
 from companies.views import CompanyViewSet
-<<<<<<< Updated upstream
-from positions.views import PositionViewSet
-=======
 from positions.views import PositionViewSet, PublicPositionViewSet
->>>>>>> Stashed changes
 from candidates.views import CandidateViewSet
 from employees.views import EmployeeViewSet
 from recruitment.views import JobApplicationViewSet

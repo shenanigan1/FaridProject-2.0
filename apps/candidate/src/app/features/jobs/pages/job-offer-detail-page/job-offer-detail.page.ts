@@ -14,6 +14,8 @@ import { UiIconButtonComponent } from '@lib-ui/icon-button/icon-button.component
 import { UiCardComponent } from '@lib-ui/card/card.component';
 import { UiSkeletonComponent } from '@lib-ui/skeleton/skeleton.component';
 import { UiEmptyStateComponent } from '@lib-ui/empty-state/empty-state.component';
+import { AuthService } from '@core/auth/services/auth.service';
+import { AuthModalComponent } from '@core/auth/components/auth-modal/auth-modal.component';
 
 type JobOfferDetailPageState = 'loading' | 'success' | 'not-found' | 'error';
 
@@ -22,6 +24,7 @@ type JobOfferDetailPageState = 'loading' | 'success' | 'not-found' | 'error';
   standalone: true,
   imports: [
     CommonModule,
+    AuthModalComponent,
     JobOfferDetailCardComponent,
     UiButtonPrimaryComponent,
     UiButtonSecondaryComponent,
@@ -37,7 +40,9 @@ type JobOfferDetailPageState = 'loading' | 'success' | 'not-found' | 'error';
 export class JobOfferDetailPageComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly jobPublicApiService = inject(JobPublicApiService);
+  private readonly authService = inject(AuthService);
 
+  authModalOpen = false;
   offer: JobOffer | null = null;
   state: JobOfferDetailPageState = 'loading';
 
@@ -53,7 +58,28 @@ export class JobOfferDetailPageComponent implements OnInit {
   }
 
   onApplyClicked(): void {
-    // Next step: redirect to application flow or open auth/apply modal.
+    if (!this.authService.isAuthenticated()) {
+      this.openAuthModal();
+      return;
+    }
+
+    this.openApplicationPreviewModal();
+  }
+
+
+  private openAuthModal(): void {
+    this.authModalOpen = true;
+  }
+
+  onAuthSuccess(): void {
+    this.authModalOpen = false;
+
+    // 🔥 KEY UX: resume flow
+    this.openApplicationPreviewModal();
+  }
+
+  private openApplicationPreviewModal(): void {
+    // temporary → next step
   }
 
   private getOfferIdFromRoute(): number | null {
