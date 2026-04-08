@@ -4,6 +4,7 @@ from django.urls import reverse
 
 from farid_tests.factories.candidates import CandidateFactory
 from farid_tests.factories.positions import PositionFactory
+from farid_tests.factories.templates_grid import TemplateFactory
 from recruitment.models.job_application import JobApplication
 
 pytestmark = pytest.mark.django_db
@@ -89,3 +90,19 @@ def test_update_job_application_status(api_client):
 
     app.refresh_from_db()
     assert app.status == "in_review"
+
+
+def test_assign_template_to_job_application(api_client):
+    app = JobApplication.objects.create(
+        candidate=CandidateFactory.create(),
+        position=PositionFactory.create(),
+    )
+    template = TemplateFactory.create(name="Driver Safety Test")
+
+    url = reverse(f"{BASENAME}-detail", args=[app.id])
+    res = api_client.patch(url, {"assigned_template": template.id}, format="json")
+
+    assert res.status_code in (200, 202)
+
+    app.refresh_from_db()
+    assert app.assigned_template_id == template.id

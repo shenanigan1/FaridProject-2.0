@@ -7,7 +7,15 @@ from recruitment.models.job_application import JobApplication
 class JobApplicationSerializer(serializers.ModelSerializer):
     class Meta:
         model = JobApplication
-        fields = ["id", "candidate", "position", "status", "created_at", "updated_at"]
+        fields = [
+            "id",
+            "candidate",
+            "position",
+            "status",
+            "assigned_template",
+            "created_at",
+            "updated_at",
+        ]
         read_only_fields = ["id", "created_at", "updated_at"]
         validators = [
             UniqueTogetherValidator(

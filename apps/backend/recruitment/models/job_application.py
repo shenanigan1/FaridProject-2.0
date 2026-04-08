@@ -17,6 +17,13 @@ class JobApplication(models.Model):
     position = models.ForeignKey(
         "positions.Position", on_delete=models.PROTECT, related_name="applications"
     )
+    assigned_template = models.ForeignKey(
+        "templates_grid.Template",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="job_applications",
+    )
 
     status = models.CharField(
         max_length=20,

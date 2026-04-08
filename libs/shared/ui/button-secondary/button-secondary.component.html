@@ -2,9 +2,18 @@
   [attr.type]="type"
   [disabled]="isDisabled"
   class="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-800 bg-slate-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
+  (click)="onButtonClicked()"
 >
   @if (!loading) {
-    <ng-content></ng-content>
+    @if (icon) {
+      <span class="material-symbols-outlined text-base" aria-hidden="true">{{ icon }}</span>
+    }
+
+    @if (label) {
+      <span>{{ label }}</span>
+    } @else {
+      <ng-content></ng-content>
+    }
   } @else {
     <span class="animate-pulse">
       <ng-content select="[loading]"></ng-content>
