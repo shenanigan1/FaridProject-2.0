@@ -39,8 +39,6 @@ def test_create_candidate_success(api_client):
     assert candidate.flag is False
 
 
-
-
 def test_create_candidate_with_password_can_login(api_client):
     candidate_url = reverse("candidates-list")
     payload = {
@@ -68,7 +66,6 @@ def test_create_candidate_with_password_can_login(api_client):
     assert "refresh" in login_res.data
 
 
-
 def test_create_candidate_with_weak_password_rejected(api_client):
     candidate_url = reverse("candidates-list")
     payload = {
@@ -86,6 +83,7 @@ def test_create_candidate_with_weak_password_rejected(api_client):
     assert response.status_code == 400
     assert "user" in response.data
     assert "password" in response.data["user"]
+
 
 def test_create_candidate_missing_user(api_client):
     url = reverse("candidates-list")
