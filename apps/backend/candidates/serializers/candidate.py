@@ -11,10 +11,11 @@ class CandidateUserSerializer(serializers.ModelSerializer):
     last_name = serializers.CharField(required=True, allow_blank=False)
     email = serializers.EmailField(required=True)
     phone = serializers.CharField(required=False, allow_blank=True)
+    password = serializers.CharField(required=False, write_only=True, min_length=6)
 
     class Meta:
         model = User
-        fields = ["first_name", "last_name", "email", "phone"]
+        fields = ["first_name", "last_name", "email", "phone", "password"]
 
 
 class CandidateSerializer(serializers.ModelSerializer):
@@ -35,11 +36,12 @@ class CandidateSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user_data = validated_data.pop("user")
+        raw_password = user_data.pop("password", None)
 
         try:
             user = User.objects.create_user(
                 email=user_data["email"],
-                password=None,
+                password=raw_password,
                 first_name=user_data.get("first_name", ""),
                 last_name=user_data.get("last_name", ""),
                 phone=user_data.get("phone", ""),
@@ -60,8 +62,14 @@ class CandidateSerializer(serializers.ModelSerializer):
 
         if user_data:
             user = instance.user
+            raw_password = user_data.pop("password", None)
+
             for attr, value in user_data.items():
                 setattr(user, attr, value)
+
+            if raw_password:
+                user.set_password(raw_password)
+
             user.save()
 
         return instance

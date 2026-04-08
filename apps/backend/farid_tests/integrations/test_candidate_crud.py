@@ -39,6 +39,34 @@ def test_create_candidate_success(api_client):
     assert candidate.flag is False
 
 
+
+
+def test_create_candidate_with_password_can_login(api_client):
+    candidate_url = reverse("candidates-list")
+    payload = {
+        "user": {
+            "first_name": "Lina",
+            "last_name": "Candidate",
+            "email": "lina.login@example.com",
+            "phone": "0600000000",
+            "password": "Secret123",
+        }
+    }
+
+    candidate_res = api_client.post(candidate_url, payload, format="json")
+    assert candidate_res.status_code == 201
+
+    login_url = reverse("auth-login")
+    login_res = api_client.post(
+        login_url,
+        {"email": "lina.login@example.com", "password": "Secret123"},
+        format="json",
+    )
+
+    assert login_res.status_code == 200
+    assert "access" in login_res.data
+    assert "refresh" in login_res.data
+
 def test_create_candidate_missing_user(api_client):
     url = reverse("candidates-list")
 

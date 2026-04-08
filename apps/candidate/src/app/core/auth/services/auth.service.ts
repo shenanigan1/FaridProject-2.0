@@ -1,4 +1,8 @@
-import { Injectable } from '@angular/core';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Injectable, inject } from '@angular/core';
+import { Observable, catchError, map, of, switchMap, throwError } from 'rxjs';
+
+import { environment } from '@env/environment';
 
 export interface AuthenticatedCandidate {
   candidateId: number;
@@ -8,43 +12,111 @@ export interface AuthenticatedCandidate {
   phone: string;
 }
 
-export interface CandidateAuthPayload {
+export interface SignInPayload {
   email: string;
   password: string;
-  firstName?: string;
-  lastName?: string;
-  phone?: string;
+}
+
+export interface SignUpPayload {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  password: string;
+}
+
+interface LoginResponseDto {
+  access: string;
+  refresh: string;
+  user?: {
+    id: number;
+    email: string;
+    first_name: string;
+    last_name: string;
+  } | null;
+}
+
+interface CandidateDto {
+  id: number;
+  user: {
+    email: string;
+    first_name: string;
+    last_name: string;
+    phone?: string;
+  };
 }
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+  private readonly http = inject(HttpClient);
+
   private readonly tokenKey = 'access_token';
+  private readonly refreshTokenKey = 'refresh_token';
   private readonly candidateProfileKey = 'candidate_profile';
+
+  private readonly authBaseUrl = `${environment.apiBaseUrl}/api/auth`;
+  private readonly candidatesUrl = `${environment.apiBaseUrl}/api/candidates/`;
 
   isAuthenticated(): boolean {
     return !!localStorage.getItem(this.tokenKey);
   }
 
-  setToken(token: string): void {
-    localStorage.setItem(this.tokenKey, token);
+  signIn(payload: SignInPayload): Observable<AuthenticatedCandidate> {
+    return this.http
+      .post<LoginResponseDto>(`${this.authBaseUrl}/login/`, {
+        email: payload.email,
+        password: payload.password,
+      })
+      .pipe(
+        switchMap((response) => {
+          this.persistTokens(response.access, response.refresh);
+
+          return this.resolveCandidateProfile(payload.email, {
+            firstName: response.user?.first_name ?? '',
+            lastName: response.user?.last_name ?? '',
+            phone: '',
+          });
+        }),
+        map((candidate) => {
+          this.saveAuthenticatedCandidate(candidate);
+          return candidate;
+        }),
+        catchError((error: unknown) => this.mapAuthError(error)),
+      );
   }
 
-  authenticate(payload: CandidateAuthPayload): AuthenticatedCandidate {
-    this.setToken(`candidate-token-${Date.now()}`);
-
-    const currentProfile = this.getAuthenticatedCandidate();
-    const fullName = this.extractNameFromEmail(payload.email);
-
-    const candidateProfile: AuthenticatedCandidate = {
-      candidateId: currentProfile?.candidateId ?? Date.now(),
-      email: payload.email,
-      firstName: payload.firstName?.trim() || currentProfile?.firstName || fullName.firstName,
-      lastName: payload.lastName?.trim() || currentProfile?.lastName || fullName.lastName,
-      phone: payload.phone?.trim() || currentProfile?.phone || '',
-    };
-
-    this.saveAuthenticatedCandidate(candidateProfile);
-    return candidateProfile;
+  signUp(payload: SignUpPayload): Observable<AuthenticatedCandidate> {
+    return this.http
+      .post<CandidateDto>(this.candidatesUrl, {
+        user: {
+          first_name: payload.firstName,
+          last_name: payload.lastName,
+          email: payload.email,
+          phone: payload.phone,
+          password: payload.password,
+        },
+      })
+      .pipe(
+        switchMap((createdCandidate) =>
+          this.signIn({
+            email: payload.email,
+            password: payload.password,
+          }).pipe(
+            map((signedInCandidate) => ({
+              ...signedInCandidate,
+              candidateId: createdCandidate.id,
+              firstName: signedInCandidate.firstName || payload.firstName,
+              lastName: signedInCandidate.lastName || payload.lastName,
+              phone: signedInCandidate.phone || payload.phone,
+            })),
+          ),
+        ),
+        map((candidate) => {
+          this.saveAuthenticatedCandidate(candidate);
+          return candidate;
+        }),
+        catchError((error: unknown) => this.mapAuthError(error)),
+      );
   }
 
   getAuthenticatedCandidate(): AuthenticatedCandidate | null {
@@ -67,27 +139,86 @@ export class AuthService {
 
   logout(): void {
     localStorage.removeItem(this.tokenKey);
+    localStorage.removeItem(this.refreshTokenKey);
     localStorage.removeItem(this.candidateProfileKey);
   }
 
-  private extractNameFromEmail(email: string): {
-    firstName: string;
-    lastName: string;
-  } {
-    const [localPart = 'candidate'] = email.split('@');
-    const chunks = localPart.split(/[._-]/).filter(Boolean);
+  private resolveCandidateProfile(
+    email: string,
+    fallback: { firstName: string; lastName: string; phone: string },
+  ): Observable<AuthenticatedCandidate> {
+    return this.http.get<CandidateDto[]>(this.candidatesUrl).pipe(
+      map((candidates) => {
+        const candidate = candidates.find(
+          (item) => item.user.email.toLowerCase() === email.toLowerCase(),
+        );
 
-    return {
-      firstName: this.capitalize(chunks[0] ?? 'Candidate'),
-      lastName: this.capitalize(chunks[1] ?? 'User'),
-    };
+        if (!candidate) {
+          return {
+            candidateId: Date.now(),
+            email,
+            firstName: fallback.firstName,
+            lastName: fallback.lastName,
+            phone: fallback.phone,
+          };
+        }
+
+        return {
+          candidateId: candidate.id,
+          email: candidate.user.email,
+          firstName: candidate.user.first_name,
+          lastName: candidate.user.last_name,
+          phone: candidate.user.phone ?? '',
+        };
+      }),
+      catchError(() =>
+        of({
+          candidateId: Date.now(),
+          email,
+          firstName: fallback.firstName,
+          lastName: fallback.lastName,
+          phone: fallback.phone,
+        }),
+      ),
+    );
   }
 
-  private capitalize(value: string): string {
-    if (!value) {
-      return '';
+  private persistTokens(accessToken: string, refreshToken: string): void {
+    localStorage.setItem(this.tokenKey, accessToken);
+    localStorage.setItem(this.refreshTokenKey, refreshToken);
+  }
+
+  private mapAuthError(error: unknown): Observable<never> {
+    if (!(error instanceof HttpErrorResponse)) {
+      return throwError(() => 'Unexpected authentication error.');
     }
 
-    return `${value[0].toUpperCase()}${value.slice(1).toLowerCase()}`;
+    if (error.status === 0) {
+      return throwError(() => 'Cannot reach authentication service.');
+    }
+
+    const detail = this.extractErrorDetail(error.error);
+    return throwError(() => detail || 'Authentication failed.');
+  }
+
+  private extractErrorDetail(errorBody: unknown): string | null {
+    if (!errorBody || typeof errorBody !== 'object') {
+      return null;
+    }
+
+    const typedBody = errorBody as Record<string, unknown>;
+
+    if (typeof typedBody['detail'] === 'string') {
+      return typedBody['detail'];
+    }
+
+    if (Array.isArray(typedBody['user'])) {
+      const firstError = typedBody['user'][0];
+      if (typeof firstError === 'string') {
+        return firstError;
+      }
+    }
+
+    return null;
   }
 }
