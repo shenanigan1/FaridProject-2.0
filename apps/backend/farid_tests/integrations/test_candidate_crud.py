@@ -67,6 +67,26 @@ def test_create_candidate_with_password_can_login(api_client):
     assert "access" in login_res.data
     assert "refresh" in login_res.data
 
+
+
+def test_create_candidate_with_weak_password_rejected(api_client):
+    candidate_url = reverse("candidates-list")
+    payload = {
+        "user": {
+            "first_name": "Weak",
+            "last_name": "Password",
+            "email": "weak.password@example.com",
+            "phone": "0600000000",
+            "password": "123",
+        }
+    }
+
+    response = api_client.post(candidate_url, payload, format="json")
+
+    assert response.status_code == 400
+    assert "user" in response.data
+    assert "password" in response.data["user"]
+
 def test_create_candidate_missing_user(api_client):
     url = reverse("candidates-list")
 

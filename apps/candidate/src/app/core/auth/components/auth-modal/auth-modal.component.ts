@@ -38,13 +38,18 @@ export class AuthModalComponent {
     lastName: [''],
     phone: [''],
     email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(6)]],
+    password: ['', [Validators.required, Validators.minLength(8)]],
   });
+
+  constructor() {
+    this.applyModeValidators();
+  }
 
   switchMode(): void {
     this.mode = this.mode === 'signin' ? 'signup' : 'signin';
     this.errorMessage = null;
     this.authForm.patchValue({ password: '' });
+    this.applyModeValidators();
   }
 
   onSubmit(): void {
@@ -85,5 +90,48 @@ export class AuthModalComponent {
 
   onClose(): void {
     this.closed.emit();
+  }
+
+  getFieldError(controlName: 'firstName' | 'lastName' | 'phone' | 'email' | 'password'): string | null {
+    const control = this.authForm.controls[controlName];
+
+    if (!control.touched || !control.errors) {
+      return null;
+    }
+
+    if (control.errors['required']) {
+      return 'This field is required.';
+    }
+
+    if (control.errors['email']) {
+      return 'Please enter a valid email address.';
+    }
+
+    if (control.errors['minlength']) {
+      const minimumLength = control.errors['minlength'].requiredLength as number;
+      return `Minimum ${minimumLength} characters.`;
+    }
+
+    return null;
+  }
+
+  private applyModeValidators(): void {
+    const firstNameControl = this.authForm.controls.firstName;
+    const lastNameControl = this.authForm.controls.lastName;
+    const phoneControl = this.authForm.controls.phone;
+
+    if (this.mode === 'signup') {
+      firstNameControl.setValidators([Validators.required]);
+      lastNameControl.setValidators([Validators.required]);
+      phoneControl.setValidators([Validators.required]);
+    } else {
+      firstNameControl.clearValidators();
+      lastNameControl.clearValidators();
+      phoneControl.clearValidators();
+    }
+
+    firstNameControl.updateValueAndValidity({ emitEvent: false });
+    lastNameControl.updateValueAndValidity({ emitEvent: false });
+    phoneControl.updateValueAndValidity({ emitEvent: false });
   }
 }

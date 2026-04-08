@@ -1,5 +1,6 @@
-from django.db import IntegrityError
+from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError as DjangoValidationError
+from django.db import IntegrityError
 from rest_framework import serializers
 
 from candidates.models import Candidate
@@ -7,15 +8,19 @@ from users.models import User
 
 
 class CandidateUserSerializer(serializers.ModelSerializer):
-    first_name = serializers.CharField(required=True, allow_blank=False)
-    last_name = serializers.CharField(required=True, allow_blank=False)
+    first_name = serializers.CharField(required=True, allow_blank=False, max_length=150)
+    last_name = serializers.CharField(required=True, allow_blank=False, max_length=150)
     email = serializers.EmailField(required=True)
-    phone = serializers.CharField(required=False, allow_blank=True)
-    password = serializers.CharField(required=False, write_only=True, min_length=6)
+    phone = serializers.CharField(required=False, allow_blank=True, max_length=32)
+    password = serializers.CharField(required=False, write_only=True, min_length=8)
 
     class Meta:
         model = User
         fields = ["first_name", "last_name", "email", "phone", "password"]
+
+    def validate_password(self, value: str) -> str:
+        validate_password(value)
+        return value
 
 
 class CandidateSerializer(serializers.ModelSerializer):
@@ -68,6 +73,7 @@ class CandidateSerializer(serializers.ModelSerializer):
                 setattr(user, attr, value)
 
             if raw_password:
+                validate_password(raw_password, user=user)
                 user.set_password(raw_password)
 
             user.save()

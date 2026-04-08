@@ -14,12 +14,14 @@
             formControlName="firstName"
             label="First name"
             placeholder="John"
+            [error]="getFieldError('firstName')"
           />
 
           <app-ui-text-input
             formControlName="lastName"
             label="Last name"
             placeholder="Doe"
+            [error]="getFieldError('lastName')"
           />
 
           <app-ui-text-input
@@ -27,6 +29,7 @@
             label="Phone"
             placeholder="+33..."
             type="tel"
+            [error]="getFieldError('phone')"
           />
         }
 
@@ -35,6 +38,7 @@
           label="Email"
           placeholder="candidate@example.com"
           type="email"
+          [error]="getFieldError('email')"
         />
 
         <app-ui-text-input
@@ -42,6 +46,7 @@
           label="Password"
           placeholder="••••••••"
           type="password"
+          [error]="getFieldError('password')"
         />
 
         <app-ui-button-primary

@@ -73,6 +73,27 @@ describe('AuthModalComponent', () => {
     expect(component.errorMessage).toBe('Invalid credentials.');
   });
 
+
+
+  it('shows required field errors in signup mode', () => {
+    component.switchMode();
+
+    component.authForm.patchValue({
+      firstName: '',
+      lastName: '',
+      phone: '',
+      email: 'invalid-email',
+      password: '123',
+    });
+
+    component.onSubmit();
+
+    expect(component.getFieldError('firstName')).toBe('This field is required.');
+    expect(component.getFieldError('email')).toBe('Please enter a valid email address.');
+    expect(component.getFieldError('password')).toContain('Minimum 8 characters');
+    expect(authServiceSpy.signUp).not.toHaveBeenCalled();
+  });
+
   it('calls signUp in signup mode', () => {
     component.switchMode();
     component.authForm.patchValue({

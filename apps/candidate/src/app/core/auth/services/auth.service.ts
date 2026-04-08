@@ -202,6 +202,15 @@ export class AuthService {
   }
 
   private extractErrorDetail(errorBody: unknown): string | null {
+    if (typeof errorBody === 'string') {
+      return errorBody;
+    }
+
+    if (Array.isArray(errorBody)) {
+      const first = errorBody[0];
+      return typeof first === 'string' ? first : this.extractErrorDetail(first);
+    }
+
     if (!errorBody || typeof errorBody !== 'object') {
       return null;
     }
@@ -212,10 +221,10 @@ export class AuthService {
       return typedBody['detail'];
     }
 
-    if (Array.isArray(typedBody['user'])) {
-      const firstError = typedBody['user'][0];
-      if (typeof firstError === 'string') {
-        return firstError;
+    for (const value of Object.values(typedBody)) {
+      const extractedMessage = this.extractErrorDetail(value);
+      if (extractedMessage) {
+        return extractedMessage;
       }
     }
 

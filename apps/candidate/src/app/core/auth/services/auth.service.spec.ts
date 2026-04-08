@@ -73,6 +73,39 @@ describe('AuthService (candidate)', () => {
     expect(localStorage.getItem('refresh_token')).toBe('refresh-token');
   });
 
+
+
+  it('maps nested backend validation errors to user-friendly message', () => {
+    let actualError: string | null = null;
+
+    service
+      .signUp({
+        firstName: 'Jane',
+        lastName: 'Smith',
+        email: 'jane@example.com',
+        phone: '+33123456',
+        password: '123',
+      })
+      .subscribe({
+        next: () => fail('Expected error'),
+        error: (errorMessage: string) => {
+          actualError = errorMessage;
+        },
+      });
+
+    const createRequest = httpMock.expectOne(candidatesUrl);
+    createRequest.flush(
+      {
+        user: {
+          password: ['This password is too short. It must contain at least 8 characters.'],
+        },
+      },
+      { status: 400, statusText: 'Bad Request' },
+    );
+
+    expect(actualError).toContain('at least 8 characters');
+  });
+
   it('signUp creates candidate then logs in', () => {
     let candidateId: number | null = null;
 
