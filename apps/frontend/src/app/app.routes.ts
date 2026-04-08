@@ -17,28 +17,31 @@ export const routes: Routes = [
   },
 
   {
-  path: 'positions',
-  loadChildren: () =>
-    import('./features/positions/positions.routes')
-      .then(m => m.POSITIONS_ROUTES),
+    path: 'candidates',
+    loadChildren: () =>
+      import('./features/candidates/candidates.routes').then((m) => m.CANDIDATES_ROUTES),
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['hr', 'admin', 'director', 'manager'] },
+  },
+
+  {
+    path: 'positions',
+    loadChildren: () => import('./features/positions/positions.routes').then((m) => m.POSITIONS_ROUTES),
     canActivate: [AuthGuard, RoleGuard],
     data: { roles: ['hr', 'admin', 'director', 'manager'] },
   },
 
   {
     path: 'pools',
-    loadChildren: () =>
-      import('src/app/features/pools/pool.routes')
-        .then(m => m.POOLS_ROUTES),
+    loadChildren: () => import('src/app/features/pools/pool.routes').then((m) => m.POOLS_ROUTES),
     canActivate: [AuthGuard, RoleGuard],
     data: { roles: ['hr', 'admin', 'director', 'manager'] },
   },
 
   {
     path: 'templates',
-    loadChildren: ()=>
-      import('src/app/features/test-templates/test-templates.routes')
-        .then(m => m.TEMPLATES_ROUTES),
+    loadChildren: () =>
+      import('src/app/features/test-templates/test-templates.routes').then((m) => m.TEMPLATES_ROUTES),
     canActivate: [AuthGuard, RoleGuard],
     data: { roles: ['hr', 'admin', 'director', 'manager'] },
   },

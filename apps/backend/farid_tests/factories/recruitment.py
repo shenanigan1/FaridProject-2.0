@@ -16,9 +16,13 @@ class JobApplicationFactory:
         candidate=None,
         position=None,
         status: str = "applied",
+        assigned_template=None,
     ) -> JobApplication:
         candidate = candidate or CandidateFactory.create()
         position = position or PositionFactory.create()
         return JobApplication.objects.create(
-            candidate=candidate, position=position, status=status
+            candidate=candidate,
+            position=position,
+            status=status,
+            assigned_template=assigned_template,
         )

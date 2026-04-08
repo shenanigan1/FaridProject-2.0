@@ -1,5 +1,9 @@
 from .answer import SkillAnswerSerializer as SkillAnswerSerializer
+from .evaluation import AssignEvaluationSerializer as AssignEvaluationSerializer
 from .evaluation import EvaluationSerializer as EvaluationSerializer
-from .evaluation import StartEvaluationSerializer as StartEvaluationSerializer
 
-__all__ = ["SkillAnswerSerializer", "EvaluationSerializer", "StartEvaluationSerializer"]
+__all__ = [
+    "SkillAnswerSerializer",
+    "EvaluationSerializer",
+    "AssignEvaluationSerializer",
+]

@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input, forwardRef, signal } from '@
 import { CommonModule } from '@angular/common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
-type UiTextInputType = 'text' | 'email' | 'number' | 'search' | 'tel' | 'url';
+type UiTextInputType = 'text' | 'email' | 'number' | 'search' | 'tel' | 'url' | 'password';
 
 @Component({
   selector: 'app-ui-text-input',

@@ -22,7 +22,6 @@ class UserFactory:
         is_staff: bool = False,
         is_active: bool = True,
     ) -> User:
-
         # ✅ Generate unique email if none provided
         if email is None:
             email = f"user-{uuid.uuid4().hex[:10]}@example.com"
