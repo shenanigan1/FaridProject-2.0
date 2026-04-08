@@ -211,3 +211,22 @@ def test_update_candidate_with_weak_password_rejected(api_client):
     assert response.status_code == 400
     assert "user" in response.data
     assert "password" in response.data["user"]
+
+
+def test_update_candidate_is_atomic_when_nested_user_update_fails(api_client):
+    existing = CandidateFactory.create(email="already-used@example.com")
+    candidate = CandidateFactory.create(email="atomic@example.com")
+
+    url = reverse("candidates-detail", args=[candidate.id])
+    response = api_client.patch(
+        url,
+        {
+            "flag": True,
+            "user": {"email": existing.user.email},
+        },
+        format="json",
+    )
+
+    assert response.status_code == 400
+    candidate.refresh_from_db()
+    assert candidate.flag is False
