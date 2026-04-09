@@ -1,6 +1,7 @@
 # farid_tests/integration/test_position_crud.py
 import pytest
 from django.urls import reverse
+from django.db.utils import ProgrammingError
 
 from users.models.roles import UserRoles
 from farid_tests.factories.users import UserFactory
@@ -145,3 +146,56 @@ def test_set_and_get_position_test_templates(api_client):
     assert get_res.status_code == 200
     assert len(get_res.data) == 1
     assert get_res.data[0]["template_name"] == "Driver Skills"
+
+
+def test_get_position_test_templates_returns_503_when_table_missing(
+    api_client, monkeypatch
+):
+    admin = UserFactory.create(is_staff=True, role=UserRoles.ADMIN)
+    position = PositionFactory.create()
+    url = reverse("positions-test-templates", args=[position.id])
+    api_client.force_authenticate(user=admin)
+
+    from positions.views.position import PositionViewSet
+
+    monkeypatch.setattr(
+        PositionViewSet, "_safe_assignments_queryset", lambda _position: None
+    )
+
+    res = api_client.get(url)
+
+    assert res.status_code == 503
+    assert "Run migrations for the positions app" in res.data["detail"]
+
+
+def test_set_position_test_templates_returns_503_when_table_missing(
+    api_client, monkeypatch
+):
+    admin = UserFactory.create(is_staff=True, role=UserRoles.ADMIN)
+    position = PositionFactory.create()
+    template = TemplateFactory.create(name="Driver Skills")
+    url = reverse("positions-test-templates", args=[position.id])
+    api_client.force_authenticate(user=admin)
+
+    from positions.models import PositionTestTemplateAssignment
+
+    class _FailingQuerySet:
+        @staticmethod
+        def delete():
+            raise ProgrammingError("relation does not exist")
+
+    class _FailingManager:
+        @staticmethod
+        def filter(*args, **kwargs):
+            return _FailingQuerySet()
+
+    monkeypatch.setattr(PositionTestTemplateAssignment, "objects", _FailingManager())
+
+    res = api_client.put(
+        url,
+        {"assignments": [{"template_id": template.id, "order": 0}]},
+        format="json",
+    )
+
+    assert res.status_code == 503
+    assert "Run migrations for the positions app" in res.data["detail"]

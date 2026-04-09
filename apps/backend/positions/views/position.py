@@ -1,4 +1,5 @@
 from django.db import transaction
+from django.db.utils import OperationalError, ProgrammingError
 from positions.models import Position
 from positions.models import PositionTestTemplateAssignment
 from positions.serializers import (
@@ -38,14 +39,34 @@ class PositionViewSet(ModelViewSet):
 
         return [IsAuthenticated()]
 
+    @staticmethod
+    def _safe_assignments_queryset(position):
+        try:
+            return (
+                PositionTestTemplateAssignment.objects.select_related(
+                    "template", "manager"
+                )
+                .filter(position=position)
+                .order_by("order", "id")
+            )
+        except (ProgrammingError, OperationalError):
+            return None
+
     @action(detail=True, methods=["get"], url_path="test-templates")
     def test_templates(self, request, pk=None):
         position = self.get_object()
-        queryset = (
-            PositionTestTemplateAssignment.objects.select_related("template", "manager")
-            .filter(position=position)
-            .order_by("order", "id")
-        )
+        queryset = self._safe_assignments_queryset(position)
+        if queryset is None:
+            return Response(
+                {
+                    "detail": (
+                        "Position test-template assignments are unavailable. "
+                        "Run migrations for the positions app."
+                    )
+                },
+                status=status.HTTP_503_SERVICE_UNAVAILABLE,
+            )
+
         serializer = PositionTemplateAssignmentSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -56,7 +77,18 @@ class PositionViewSet(ModelViewSet):
         serializer = PositionTemplateAssignmentBulkSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        PositionTestTemplateAssignment.objects.filter(position=position).delete()
+        try:
+            PositionTestTemplateAssignment.objects.filter(position=position).delete()
+        except (ProgrammingError, OperationalError):
+            return Response(
+                {
+                    "detail": (
+                        "Position test-template assignments are unavailable. "
+                        "Run migrations for the positions app."
+                    )
+                },
+                status=status.HTTP_503_SERVICE_UNAVAILABLE,
+            )
 
         assignments = serializer.validated_data["assignments"]
         for index, item in enumerate(assignments):
@@ -72,11 +104,17 @@ class PositionViewSet(ModelViewSet):
                 order=item.get("order", index),
             )
 
-        queryset = (
-            PositionTestTemplateAssignment.objects.select_related("template", "manager")
-            .filter(position=position)
-            .order_by("order", "id")
-        )
+        queryset = self._safe_assignments_queryset(position)
+        if queryset is None:
+            return Response(
+                {
+                    "detail": (
+                        "Position test-template assignments are unavailable. "
+                        "Run migrations for the positions app."
+                    )
+                },
+                status=status.HTTP_503_SERVICE_UNAVAILABLE,
+            )
         output = PositionTemplateAssignmentSerializer(queryset, many=True)
         return Response(output.data, status=status.HTTP_200_OK)
 
