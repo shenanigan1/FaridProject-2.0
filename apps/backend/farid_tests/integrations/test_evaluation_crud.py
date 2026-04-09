@@ -9,7 +9,12 @@ from farid_tests.factories.templates_grid import TemplateFactory, TemplateVersio
 from farid_tests.factories.recruitment import JobApplicationFactory
 from positions.models import PositionTestTemplateAssignment
 from users.models import UserRoles
-from templates_grid.models import QuestionPool, SkillQuestion, TemplatePoolRule, TemplateSection
+from templates_grid.models import (
+    QuestionPool,
+    SkillQuestion,
+    TemplatePoolRule,
+    TemplateSection,
+)
 
 pytestmark = pytest.mark.django_db
 
@@ -203,7 +208,9 @@ def test_launch_evaluation_from_application_success(api_client):
     assert res.data[0]["status"] == "in_progress"
 
 
-def test_launch_evaluation_rejects_duplicate_in_progress_for_same_application(api_client):
+def test_launch_evaluation_rejects_duplicate_in_progress_for_same_application(
+    api_client,
+):
     _authenticate_as_hr(api_client)
     template = TemplateFactory.create(name="Launch Template Duplicate")
     template_version = TemplateVersionFactory.create(template=template, version=1)
@@ -228,7 +235,9 @@ def test_launch_evaluation_rejects_duplicate_in_progress_for_same_application(ap
     assert "application_id" in res.data
 
 
-def test_launch_evaluation_uses_all_position_templates_with_manager_assignment(api_client):
+def test_launch_evaluation_uses_all_position_templates_with_manager_assignment(
+    api_client,
+):
     _authenticate_as_hr(api_client)
     manager = UserFactory.create(
         email="assigned-manager@example.com",
@@ -238,8 +247,12 @@ def test_launch_evaluation_uses_all_position_templates_with_manager_assignment(a
     application = JobApplicationFactory.create()
     template_one = TemplateFactory.create(name="Template 1")
     template_two = TemplateFactory.create(name="Template 2")
-    template_one_version = TemplateVersionFactory.create(template=template_one, version=1)
-    template_two_version = TemplateVersionFactory.create(template=template_two, version=1)
+    template_one_version = TemplateVersionFactory.create(
+        template=template_one, version=1
+    )
+    template_two_version = TemplateVersionFactory.create(
+        template=template_two, version=1
+    )
 
     PositionTestTemplateAssignment.objects.create(
         position=application.position,

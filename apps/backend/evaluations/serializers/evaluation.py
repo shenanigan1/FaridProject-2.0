@@ -11,7 +11,9 @@ from evaluations.models import EvaluationResponse
 
 
 class EvaluationSerializer(serializers.ModelSerializer):
-    template_name = serializers.CharField(source="template_version.template.name", read_only=True)
+    template_name = serializers.CharField(
+        source="template_version.template.name", read_only=True
+    )
 
     class Meta:
         model = Evaluation
@@ -41,7 +43,9 @@ class EvaluationSerializer(serializers.ModelSerializer):
 
 
 class SubjectEvaluationSerializer(serializers.ModelSerializer):
-    template_name = serializers.CharField(source="template_version.template.name", read_only=True)
+    template_name = serializers.CharField(
+        source="template_version.template.name", read_only=True
+    )
 
     class Meta:
         model = Evaluation
@@ -111,7 +115,9 @@ class LaunchEvaluationSerializer(serializers.Serializer):
                 {"application_id": "Unknown job application."}
             )
 
-        duplicate = Evaluation.objects.filter(application=application, status="in_progress").exists()
+        duplicate = Evaluation.objects.filter(
+            application=application, status="in_progress"
+        ).exists()
         if duplicate:
             raise serializers.ValidationError(
                 {"application_id": "This application already has an in-progress test."}
@@ -153,13 +159,17 @@ class LaunchEvaluationSerializer(serializers.Serializer):
             )
         else:
             assignments = (
-                PositionTestTemplateAssignment.objects.select_related("template", "manager")
+                PositionTestTemplateAssignment.objects.select_related(
+                    "template", "manager"
+                )
                 .filter(position=application.position)
                 .order_by("order", "id")
             )
             if not assignments.exists():
                 raise serializers.ValidationError(
-                    {"application_id": "No test templates are configured for this position."}
+                    {
+                        "application_id": "No test templates are configured for this position."
+                    }
                 )
 
             for assignment in assignments:
@@ -235,12 +245,14 @@ def build_questionnaire_payload(evaluation: Evaluation) -> dict:
     template = evaluation.template_version.template
     rules = template.pool_rules.select_related("pool").all().order_by("order", "id")
     pool_ids = [rule.pool_id for rule in rules]
-    questions = SkillQuestion.objects.filter(pool_id__in=pool_ids).order_by("order", "id")
+    questions = SkillQuestion.objects.filter(pool_id__in=pool_ids).order_by(
+        "order", "id"
+    )
     responses_by_question = {
         response.question_id: response
-        for response in EvaluationResponse.objects.filter(evaluation=evaluation).select_related(
-            "question"
-        )
+        for response in EvaluationResponse.objects.filter(
+            evaluation=evaluation
+        ).select_related("question")
     }
 
     serialized_questions = []

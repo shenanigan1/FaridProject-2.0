@@ -89,7 +89,11 @@ class EvaluationViewSet(ModelViewSet):
             question_id = answer["question_id"]
             if question_id not in allowed_question_ids:
                 return Response(
-                    {"answers": [f"Question {question_id} does not belong to this template."]},
+                    {
+                        "answers": [
+                            f"Question {question_id} does not belong to this template."
+                        ]
+                    },
                     status=status.HTTP_400_BAD_REQUEST,
                 )
             candidate_answer = answer.get("candidate_answer", "")

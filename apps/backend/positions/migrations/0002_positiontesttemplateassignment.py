@@ -3,10 +3,12 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("users", "0001_initial"),
-        ("templates_grid", "0004_template_difficulty_template_duration_minutes_and_more"),
+        (
+            "templates_grid",
+            "0004_template_difficulty_template_duration_minutes_and_more",
+        ),
         ("positions", "0001_initial"),
     ]
 
@@ -53,7 +55,9 @@ class Migration(migrations.Migration):
             ],
             options={
                 "indexes": [
-                    models.Index(fields=["position", "order"], name="positions_po_57c7f0_idx"),
+                    models.Index(
+                        fields=["position", "order"], name="positions_po_57c7f0_idx"
+                    ),
                     models.Index(fields=["manager"], name="positions_ma_38c84f_idx"),
                 ],
                 "constraints": [

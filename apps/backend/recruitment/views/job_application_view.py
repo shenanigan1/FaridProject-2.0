@@ -44,6 +44,8 @@ class JobApplicationViewSet(ModelViewSet):
             raise PermissionDenied("You are not allowed to create job applications.")
 
         if serializer.validated_data["candidate"].id != user.candidate_profile.id:
-            raise PermissionDenied("You can only apply using your own candidate profile.")
+            raise PermissionDenied(
+                "You can only apply using your own candidate profile."
+            )
 
         serializer.save()

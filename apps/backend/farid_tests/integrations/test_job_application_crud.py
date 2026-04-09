@@ -126,10 +126,12 @@ def test_candidate_list_is_scoped_to_own_applications(api_client):
     owned_candidate = CandidateFactory.create(email="owned@app.com")
     other_candidate = CandidateFactory.create(email="foreign@app.com")
     owned_application = JobApplication.objects.create(
-        candidate=owned_candidate, position=PositionFactory.create(title="Owned position")
+        candidate=owned_candidate,
+        position=PositionFactory.create(title="Owned position"),
     )
     JobApplication.objects.create(
-        candidate=other_candidate, position=PositionFactory.create(title="Foreign position")
+        candidate=other_candidate,
+        position=PositionFactory.create(title="Foreign position"),
     )
 
     api_client.force_authenticate(user=owned_candidate.user)

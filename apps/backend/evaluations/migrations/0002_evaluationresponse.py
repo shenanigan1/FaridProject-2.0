@@ -3,9 +3,11 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ("templates_grid", "0004_template_difficulty_template_duration_minutes_and_more"),
+        (
+            "templates_grid",
+            "0004_template_difficulty_template_duration_minutes_and_more",
+        ),
         ("evaluations", "0001_initial"),
     ]
 
@@ -46,7 +48,10 @@ class Migration(migrations.Migration):
             ],
             options={
                 "indexes": [
-                    models.Index(fields=["evaluation", "updated_at"], name="evaluation_evaluat_1746fc_idx"),
+                    models.Index(
+                        fields=["evaluation", "updated_at"],
+                        name="evaluation_evaluat_1746fc_idx",
+                    ),
                 ],
                 "constraints": [
                     models.UniqueConstraint(
