@@ -50,7 +50,6 @@ export class LoginPage {
 
     this.auth
       .login({
-        profile: 'hr',
         email,
         password,
       })

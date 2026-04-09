@@ -27,7 +27,6 @@ describe('AuthService', () => {
 
   it('login should POST /login/ with email/password and return LoginResponse', () => {
     const payload: LoginRequest = {
-      profile: 'driver',
       email: 'test@test.com',
       password: 'password123',
     };

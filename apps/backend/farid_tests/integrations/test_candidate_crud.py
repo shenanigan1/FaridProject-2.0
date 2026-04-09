@@ -264,3 +264,29 @@ def test_list_candidates_denied_for_authenticated_non_hr_user(api_client):
     response = api_client.get(url)
 
     assert response.status_code == 403
+
+
+def test_candidate_me_returns_authenticated_candidate(api_client):
+    candidate = CandidateFactory.create(email="self@example.com")
+    api_client.force_authenticate(user=candidate.user)
+
+    url = reverse("candidates-me")
+    response = api_client.get(url)
+
+    assert response.status_code == 200
+    assert response.data["id"] == candidate.id
+    assert response.data["user"]["email"] == candidate.user.email
+
+
+def test_candidate_me_forbidden_for_non_candidate(api_client):
+    hr_user = UserFactory.create(
+        email="hr.me@example.com",
+        password="Secret123",
+        role=UserRoles.HR,
+    )
+    api_client.force_authenticate(user=hr_user)
+
+    url = reverse("candidates-me")
+    response = api_client.get(url)
+
+    assert response.status_code == 403

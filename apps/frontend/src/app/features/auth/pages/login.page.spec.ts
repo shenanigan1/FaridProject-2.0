@@ -71,7 +71,7 @@ describe('LoginPage', () => {
     expect(authServiceSpy.login).not.toHaveBeenCalled();
   });
 
-  it('submit should call auth.login with fixed hr profile and credentials', () => {
+  it('submit should call auth.login with credentials', () => {
     const mockRes: LoginResponse = { access: 'ACCESS_TOKEN', refresh: 'REFRESH_TOKEN' };
     authServiceSpy.login.and.returnValue(of(mockRes));
 
@@ -84,7 +84,6 @@ describe('LoginPage', () => {
     component.submit();
 
     const expected: LoginRequest = {
-      profile: 'hr',
       email: 'manager@test.com',
       password: 'pwd',
     };
