@@ -9,6 +9,7 @@ from farid_tests.factories.templates_grid import TemplateFactory, TemplateVersio
 from farid_tests.factories.recruitment import JobApplicationFactory
 from positions.models import PositionTestTemplateAssignment
 from users.models import UserRoles
+from templates_grid.models import QuestionPool, SkillQuestion, TemplatePoolRule, TemplateSection
 
 pytestmark = pytest.mark.django_db
 
@@ -267,3 +268,94 @@ def test_launch_evaluation_uses_all_position_templates_with_manager_assignment(a
     }
     assert manager_by_template[template_one_version.id] == manager.id
     assert manager_by_template[template_two_version.id] is None
+
+
+def test_evaluation_questionnaire_get_and_save_answers(api_client):
+    _authenticate_as_hr(api_client)
+    application = JobApplicationFactory.create()
+    template = TemplateFactory.create(name="Questionnaire Template")
+    template_version = TemplateVersionFactory.create(template=template, version=1)
+    section = TemplateSection.objects.create(template=template, name="Core", order=0)
+    pool = QuestionPool.objects.create(name="Pool A", code="POOL_A")
+    TemplatePoolRule.objects.create(
+        template=template, section=section, pool=pool, random_count=0, order=0
+    )
+    question = SkillQuestion.objects.create(
+        pool=pool,
+        title="Road safety",
+        text="Describe road safety checks.",
+        is_mandatory=True,
+        points=10,
+    )
+    evaluation = Evaluation.objects.create(
+        subject=application.candidate.user,
+        application=application,
+        position=application.position,
+        template_version=template_version,
+        status="in_progress",
+    )
+
+    url = reverse(f"{BASENAME}-questionnaire", args=[evaluation.id])
+    get_res = api_client.get(url)
+
+    assert get_res.status_code == 200
+    assert get_res.data["evaluation_id"] == evaluation.id
+    assert len(get_res.data["questions"]) == 1
+    assert get_res.data["questions"][0]["question_id"] == question.id
+
+    post_res = api_client.post(
+        url,
+        {
+            "answers": [
+                {
+                    "question_id": question.id,
+                    "candidate_answer": "Candidate answer",
+                    "manager_comment": "Manager comment",
+                    "score": 8,
+                }
+            ]
+        },
+        format="json",
+    )
+
+    assert post_res.status_code == 200
+    assert post_res.data["questions"][0]["candidate_answer"] == "Candidate answer"
+    assert post_res.data["questions"][0]["manager_comment"] == "Manager comment"
+    assert post_res.data["questions"][0]["score"] == 8
+
+
+def test_evaluation_questionnaire_rejects_foreign_question(api_client):
+    _authenticate_as_hr(api_client)
+    application = JobApplicationFactory.create()
+    template = TemplateFactory.create(name="Questionnaire Foreign Template")
+    template_version = TemplateVersionFactory.create(template=template, version=1)
+    evaluation = Evaluation.objects.create(
+        subject=application.candidate.user,
+        application=application,
+        position=application.position,
+        template_version=template_version,
+        status="in_progress",
+    )
+    foreign_pool = QuestionPool.objects.create(name="Foreign", code="FOREIGN_POOL")
+    foreign_question = SkillQuestion.objects.create(
+        pool=foreign_pool, title="Foreign", text="Foreign question", points=5
+    )
+
+    url = reverse(f"{BASENAME}-questionnaire", args=[evaluation.id])
+    res = api_client.post(
+        url,
+        {
+            "answers": [
+                {
+                    "question_id": foreign_question.id,
+                    "candidate_answer": "X",
+                    "manager_comment": "",
+                    "score": 1,
+                }
+            ]
+        },
+        format="json",
+    )
+
+    assert res.status_code == 400
+    assert "answers" in res.data

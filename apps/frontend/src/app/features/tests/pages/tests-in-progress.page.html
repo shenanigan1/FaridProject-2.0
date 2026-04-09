@@ -39,15 +39,15 @@
       </div>
     }
 
-    @if (filteredTests$ | async; as testsInProgress) {
+    @if (groupedTests$ | async; as applications) {
       <div class="space-y-3">
-        @for (testItem of testsInProgress; track testItem.evaluationId) {
+        @for (application of applications; track application.applicationId) {
           <article class="rounded-2xl border border-slate-800 bg-slate-900/60 p-4">
             <div class="flex items-start justify-between gap-3">
               <div>
-                <h2 class="text-sm font-semibold">{{ testItem.candidateName }}</h2>
-                <p class="mt-1 text-xs text-slate-400">{{ testItem.candidateEmail }}</p>
-                <p class="text-xs text-slate-500">{{ testItem.positionTitle }}</p>
+                <h2 class="text-sm font-semibold">{{ application.candidateName }}</h2>
+                <p class="mt-1 text-xs text-slate-400">{{ application.candidateEmail }}</p>
+                <p class="text-xs text-slate-500">{{ application.positionTitle }}</p>
               </div>
 
               <span class="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2 py-1 text-[10px] font-semibold uppercase text-emerald-300">
@@ -56,10 +56,17 @@
             </div>
 
             <p class="mt-3 text-xs text-slate-500">
-              Evaluation #{{ testItem.evaluationId }} • Updated at: {{ testItem.updatedAt }}
+              Application #{{ application.applicationId }} • {{ application.evaluations.length }} template test(s)
             </p>
 
             <div class="mt-3 flex items-center gap-2">
+              <button
+                type="button"
+                class="rounded-lg border border-blue-500/40 px-3 py-2 text-xs font-semibold text-blue-200 hover:bg-blue-500/10"
+                (click)="openApplication(application.applicationId)"
+              >
+                Open test cards
+              </button>
               <input
                 #managerIdInput
                 type="number"
@@ -69,18 +76,85 @@
               <button
                 type="button"
                 class="rounded-lg bg-blue-600 px-3 py-2 text-xs font-semibold text-white hover:bg-blue-500"
-                (click)="assignManager(testItem, managerIdInput.value)"
+                (click)="assignManager(application.evaluations[0], managerIdInput.value)"
               >
-                Assign manager
+                Assign manager to first card
               </button>
             </div>
+
+            @if (selectedApplicationId === application.applicationId) {
+              <div class="mt-4 grid gap-2 md:grid-cols-2">
+                @for (evaluation of application.evaluations; track evaluation.evaluationId) {
+                  <button
+                    type="button"
+                    class="rounded-xl border border-slate-700 bg-slate-900 px-3 py-3 text-left hover:border-blue-500"
+                    (click)="openEvaluation(evaluation.evaluationId)"
+                  >
+                    <div class="text-xs text-slate-400">Template card</div>
+                    <div class="text-sm font-semibold">{{ evaluation.templateName }}</div>
+                    <div class="text-xs text-slate-500">
+                      Evaluation #{{ evaluation.evaluationId }}
+                    </div>
+                  </button>
+                }
+              </div>
+            }
           </article>
         }
 
-        @if (testsInProgress.length === 0) {
+        @if (applications.length === 0) {
           <p class="text-sm text-slate-400">No tests are currently in progress.</p>
         }
       </div>
+    }
+
+    @if (selectedEvaluationId && questionnaire) {
+      <section class="mt-6 rounded-2xl border border-slate-800 bg-slate-900/60 p-4">
+        <h3 class="text-sm font-semibold text-slate-100">
+          Template: {{ questionnaire.template_name }} (Evaluation #{{ questionnaire.evaluation_id }})
+        </h3>
+
+        @if (questionnaireMessage) {
+          <div class="mt-2 rounded-lg border border-blue-500/25 bg-blue-500/10 p-2 text-xs text-blue-200">
+            {{ questionnaireMessage }}
+          </div>
+        }
+
+        <div class="mt-3 space-y-3">
+          @for (question of questionnaire.questions; track question.question_id; let i = $index) {
+            <article class="rounded-xl border border-slate-700 p-3">
+              <div class="text-xs text-slate-400">Question #{{ question.question_id }}</div>
+              <div class="text-sm font-semibold text-slate-100">{{ question.title }}</div>
+              <p class="mt-1 text-xs text-slate-300">{{ question.text }}</p>
+
+              <label class="mt-2 block text-xs text-slate-400">Candidate answer</label>
+              <textarea
+                class="mt-1 w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-xs text-slate-100"
+                [value]="question.candidate_answer"
+                (input)="onQuestionAnswerInput(i, $event)"
+              ></textarea>
+
+              <label class="mt-2 block text-xs text-slate-400">Manager comment</label>
+              <textarea
+                class="mt-1 w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-xs text-slate-100"
+                [value]="question.manager_comment"
+                (input)="onQuestionCommentInput(i, $event)"
+              ></textarea>
+            </article>
+          }
+        </div>
+
+        <div class="mt-3">
+          <button
+            type="button"
+            class="rounded-lg bg-blue-600 px-3 py-2 text-xs font-semibold text-white hover:bg-blue-500 disabled:opacity-60"
+            [disabled]="questionnaireSaving"
+            (click)="saveQuestionnaire()"
+          >
+            {{ questionnaireSaving ? 'Saving…' : 'Save answers and comments' }}
+          </button>
+        </div>
+      </section>
     }
   }
 </section>

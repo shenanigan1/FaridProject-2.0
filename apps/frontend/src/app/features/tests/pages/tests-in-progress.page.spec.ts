@@ -22,6 +22,7 @@ describe('TestsInProgressPage', () => {
       candidateEmail: 'jane@example.com',
       positionId: 9,
       positionTitle: 'Linehaul Driver',
+      templateName: 'Template A',
       updatedAt: '2026-04-09T10:00:00Z',
     },
   ];
@@ -29,12 +30,48 @@ describe('TestsInProgressPage', () => {
   beforeEach(async () => {
     applicantsServiceSpy = jasmine.createSpyObj<PositionApplicantsService>(
       'PositionApplicantsService',
-      ['listInProgressTests', 'assignManagerToEvaluation'],
+      ['listInProgressTests', 'assignManagerToEvaluation', 'getEvaluationQuestionnaire', 'saveEvaluationQuestionnaire'],
     );
 
     applicantsServiceSpy.listInProgressTests.and.returnValue(of(testsInProgress));
     applicantsServiceSpy.assignManagerToEvaluation.and.returnValue(
       of({ id: 41, assigned_to: 9 }),
+    );
+    applicantsServiceSpy.getEvaluationQuestionnaire.and.returnValue(
+      of({
+        evaluation_id: 41,
+        template_name: 'Template A',
+        questions: [
+          {
+            question_id: 10,
+            title: 'Q1',
+            text: 'Question text',
+            is_mandatory: true,
+            points: 5,
+            candidate_answer: '',
+            manager_comment: '',
+            score: null,
+          },
+        ],
+      }),
+    );
+    applicantsServiceSpy.saveEvaluationQuestionnaire.and.returnValue(
+      of({
+        evaluation_id: 41,
+        template_name: 'Template A',
+        questions: [
+          {
+            question_id: 10,
+            title: 'Q1',
+            text: 'Question text',
+            is_mandatory: true,
+            points: 5,
+            candidate_answer: 'A',
+            manager_comment: 'C',
+            score: 4,
+          },
+        ],
+      }),
     );
 
     await TestBed.configureTestingModule({
@@ -86,5 +123,18 @@ describe('TestsInProgressPage', () => {
 
     expect(applicantsServiceSpy.assignManagerToEvaluation).toHaveBeenCalledWith(41, 9);
     expect(component.assignmentMessage).toContain('assigned');
+  });
+
+  it('opens evaluation questionnaire and saves answers/comments', () => {
+    component.openEvaluation(41);
+    expect(applicantsServiceSpy.getEvaluationQuestionnaire).toHaveBeenCalledWith(41);
+    expect(component.questionnaire?.questions.length).toBe(1);
+
+    component.updateQuestionAnswer(0, 'A');
+    component.updateQuestionComment(0, 'C');
+    component.saveQuestionnaire();
+
+    expect(applicantsServiceSpy.saveEvaluationQuestionnaire).toHaveBeenCalled();
+    expect(component.questionnaireMessage).toContain('saved');
   });
 });

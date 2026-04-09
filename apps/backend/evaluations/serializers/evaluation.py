@@ -6,9 +6,13 @@ from templates_grid.models import TemplateVersion
 from users.models import User
 from recruitment.models import JobApplication
 from positions.models import PositionTestTemplateAssignment
+from templates_grid.models import SkillQuestion
+from evaluations.models import EvaluationResponse
 
 
 class EvaluationSerializer(serializers.ModelSerializer):
+    template_name = serializers.CharField(source="template_version.template.name", read_only=True)
+
     class Meta:
         model = Evaluation
         fields = [
@@ -21,6 +25,7 @@ class EvaluationSerializer(serializers.ModelSerializer):
             "status",
             "subject_comment",
             "internal_comment",
+            "template_name",
             "created_at",
             "updated_at",
             "completed_at",
@@ -36,6 +41,8 @@ class EvaluationSerializer(serializers.ModelSerializer):
 
 
 class SubjectEvaluationSerializer(serializers.ModelSerializer):
+    template_name = serializers.CharField(source="template_version.template.name", read_only=True)
+
     class Meta:
         model = Evaluation
         fields = [
@@ -47,6 +54,7 @@ class SubjectEvaluationSerializer(serializers.ModelSerializer):
             "assigned_to",
             "status",
             "subject_comment",
+            "template_name",
             "created_at",
             "updated_at",
             "completed_at",
@@ -194,3 +202,65 @@ class LaunchEvaluationSerializer(serializers.Serializer):
             )
             evaluations.append(evaluation)
         return evaluations
+
+
+class EvaluationQuestionnaireAnswerInputSerializer(serializers.Serializer):
+    question_id = serializers.IntegerField()
+    candidate_answer = serializers.CharField(required=False, allow_blank=True)
+    manager_comment = serializers.CharField(required=False, allow_blank=True)
+    score = serializers.IntegerField(required=False, allow_null=True)
+
+
+class EvaluationQuestionnaireUpdateSerializer(serializers.Serializer):
+    answers = EvaluationQuestionnaireAnswerInputSerializer(many=True)
+
+    def validate_answers(self, value):
+        if not value:
+            raise serializers.ValidationError("At least one answer is required.")
+        return value
+
+
+class EvaluationQuestionnaireQuestionSerializer(serializers.Serializer):
+    question_id = serializers.IntegerField()
+    title = serializers.CharField()
+    text = serializers.CharField()
+    is_mandatory = serializers.BooleanField()
+    points = serializers.IntegerField()
+    candidate_answer = serializers.CharField(allow_blank=True)
+    manager_comment = serializers.CharField(allow_blank=True)
+    score = serializers.IntegerField(allow_null=True)
+
+
+def build_questionnaire_payload(evaluation: Evaluation) -> dict:
+    template = evaluation.template_version.template
+    rules = template.pool_rules.select_related("pool").all().order_by("order", "id")
+    pool_ids = [rule.pool_id for rule in rules]
+    questions = SkillQuestion.objects.filter(pool_id__in=pool_ids).order_by("order", "id")
+    responses_by_question = {
+        response.question_id: response
+        for response in EvaluationResponse.objects.filter(evaluation=evaluation).select_related(
+            "question"
+        )
+    }
+
+    serialized_questions = []
+    for question in questions:
+        response = responses_by_question.get(question.id)
+        serialized_questions.append(
+            {
+                "question_id": question.id,
+                "title": question.title,
+                "text": question.text,
+                "is_mandatory": question.is_mandatory,
+                "points": question.points,
+                "candidate_answer": response.candidate_answer if response else "",
+                "manager_comment": response.manager_comment if response else "",
+                "score": response.score if response else None,
+            }
+        )
+
+    return {
+        "evaluation_id": evaluation.id,
+        "template_name": template.name,
+        "questions": serialized_questions,
+    }

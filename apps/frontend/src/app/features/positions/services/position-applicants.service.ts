@@ -39,6 +39,7 @@ interface EvaluationDto {
   application: number | null;
   status: string;
   updated_at: string;
+  template_name?: string;
 }
 
 export interface PositionApplicant {
@@ -61,7 +62,25 @@ export interface InProgressTestItem {
   candidateEmail: string;
   positionId: number;
   positionTitle: string;
+  templateName: string;
   updatedAt: string;
+}
+
+export interface QuestionnaireQuestion {
+  question_id: number;
+  title: string;
+  text: string;
+  is_mandatory: boolean;
+  points: number;
+  candidate_answer: string;
+  manager_comment: string;
+  score: number | null;
+}
+
+export interface EvaluationQuestionnaire {
+  evaluation_id: number;
+  template_name: string;
+  questions: QuestionnaireQuestion[];
 }
 
 export interface LaunchableTemplate {
@@ -178,6 +197,7 @@ export class PositionApplicantsService {
               candidateEmail: candidate?.user.email ?? 'Unknown email',
               positionId: application.position,
               positionTitle: position?.title ?? `Position #${application.position}`,
+              templateName: evaluation.template_name ?? 'Template',
               updatedAt: evaluation.updated_at,
             };
           })
@@ -219,6 +239,27 @@ export class PositionApplicantsService {
     return this.http.patch<{ id: number; assigned_to: number | null }>(
       `/api/evaluations/${evaluationId}/`,
       { assigned_to: managerId },
+    );
+  }
+
+  getEvaluationQuestionnaire(evaluationId: number): Observable<EvaluationQuestionnaire> {
+    return this.http.get<EvaluationQuestionnaire>(
+      `/api/evaluations/${evaluationId}/questionnaire/`,
+    );
+  }
+
+  saveEvaluationQuestionnaire(
+    evaluationId: number,
+    answers: Array<{
+      question_id: number;
+      candidate_answer: string;
+      manager_comment: string;
+      score: number | null;
+    }>,
+  ): Observable<EvaluationQuestionnaire> {
+    return this.http.post<EvaluationQuestionnaire>(
+      `/api/evaluations/${evaluationId}/questionnaire/`,
+      { answers },
     );
   }
 

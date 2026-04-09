@@ -210,4 +210,43 @@ describe('PositionApplicantsService', () => {
 
     expect(assignedTo).toBe(12);
   });
+
+  it('loads questionnaire for an evaluation', () => {
+    let questionCount = 0;
+    service.getEvaluationQuestionnaire(44).subscribe((payload) => {
+      questionCount = payload.questions.length;
+    });
+
+    const request = httpMock.expectOne('/api/evaluations/44/questionnaire/');
+    expect(request.request.method).toBe('GET');
+    request.flush({
+      evaluation_id: 44,
+      template_name: 'Template',
+      questions: [{ question_id: 1, title: 'Q', text: 'T', is_mandatory: true, points: 5, candidate_answer: '', manager_comment: '', score: null }],
+    });
+
+    expect(questionCount).toBe(1);
+  });
+
+  it('saves questionnaire answers', () => {
+    let saved = false;
+    service
+      .saveEvaluationQuestionnaire(44, [
+        { question_id: 1, candidate_answer: 'A', manager_comment: 'C', score: 4 },
+      ])
+      .subscribe(() => {
+        saved = true;
+      });
+
+    const request = httpMock.expectOne('/api/evaluations/44/questionnaire/');
+    expect(request.request.method).toBe('POST');
+    expect(request.request.body.answers.length).toBe(1);
+    request.flush({
+      evaluation_id: 44,
+      template_name: 'Template',
+      questions: [{ question_id: 1, title: 'Q', text: 'T', is_mandatory: true, points: 5, candidate_answer: 'A', manager_comment: 'C', score: 4 }],
+    });
+
+    expect(saved).toBeTrue();
+  });
 });
