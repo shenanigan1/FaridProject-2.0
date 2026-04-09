@@ -105,6 +105,17 @@ class LaunchEvaluationSerializer(serializers.Serializer):
     template_id = serializers.IntegerField(required=False)
     assigned_to_id = serializers.IntegerField(required=False)
 
+    @staticmethod
+    def _resolve_template_version(template: Template) -> TemplateVersion:
+        latest = (
+            TemplateVersion.objects.filter(template=template)
+            .order_by("-version")
+            .first()
+        )
+        if latest:
+            return latest
+        return TemplateVersion.objects.create(template=template, version=1)
+
     def validate(self, attrs):
         try:
             application = JobApplication.objects.select_related(
@@ -131,15 +142,7 @@ class LaunchEvaluationSerializer(serializers.Serializer):
             except Template.DoesNotExist:
                 raise serializers.ValidationError({"template_id": "Unknown template."})
 
-            template_version = (
-                TemplateVersion.objects.filter(template=template)
-                .order_by("-version")
-                .first()
-            )
-            if not template_version:
-                raise serializers.ValidationError(
-                    {"template_id": "No template version exists for this template."}
-                )
+            template_version = self._resolve_template_version(template)
 
             assigned_to = None
             assigned_to_id = attrs.get("assigned_to_id")
@@ -172,31 +175,12 @@ class LaunchEvaluationSerializer(serializers.Serializer):
                     }
                 )
 
-            missing_version_templates: list[str] = []
             for assignment in assignments:
-                template_version = (
-                    TemplateVersion.objects.filter(template=assignment.template)
-                    .order_by("-version")
-                    .first()
-                )
-                if not template_version:
-                    missing_version_templates.append(assignment.template.name)
-                    continue
-
+                template_version = self._resolve_template_version(assignment.template)
                 template_pairs.append(
                     {
                         "template_version": template_version,
                         "assigned_to": assignment.manager,
-                    }
-                )
-            if not template_pairs:
-                names = ", ".join(sorted(set(missing_version_templates)))
-                raise serializers.ValidationError(
-                    {
-                        "application_id": (
-                            "No test templates with versions are available for this "
-                            f"position. Missing versions for: {names}."
-                        )
                     }
                 )
 
