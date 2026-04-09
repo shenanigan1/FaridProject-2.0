@@ -327,6 +327,24 @@ def test_launch_evaluation_creates_missing_version_for_explicit_template(api_cli
     assert res.data[0]["template_version"] == created_version.id
 
 
+def test_launch_evaluation_uses_fallback_active_template_without_assignments(
+    api_client,
+):
+    _authenticate_as_hr(api_client)
+    application = JobApplicationFactory.create()
+    fallback_template = TemplateFactory.create(name="Fallback Active Template")
+
+    url = reverse(f"{BASENAME}-launch")
+    res = api_client.post(url, {"application_id": application.id}, format="json")
+
+    assert res.status_code == 201
+    assert len(res.data) == 1
+    created_version = TemplateVersion.objects.get(template=fallback_template)
+    assert created_version.version == 1
+    assert res.data[0]["template_version"] == created_version.id
+    assert res.data[0]["application"] == application.id
+
+
 def test_evaluation_questionnaire_get_and_save_answers(api_client):
     _authenticate_as_hr(api_client)
     application = JobApplicationFactory.create()

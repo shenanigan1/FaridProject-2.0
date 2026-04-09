@@ -169,11 +169,30 @@ class LaunchEvaluationSerializer(serializers.Serializer):
                 .order_by("order", "id")
             )
             if not assignments.exists():
-                raise serializers.ValidationError(
+                fallback_template = (
+                    Template.objects.filter(is_active=True)
+                    .order_by("-updated_at", "-id")
+                    .first()
+                )
+                if not fallback_template:
+                    raise serializers.ValidationError(
+                        {
+                            "application_id": (
+                                "No active templates are available to launch a test."
+                            )
+                        }
+                    )
+                template_pairs.append(
                     {
-                        "application_id": "No test templates are configured for this position."
+                        "template_version": self._resolve_template_version(
+                            fallback_template
+                        ),
+                        "assigned_to": None,
                     }
                 )
+                attrs["application"] = application
+                attrs["template_pairs"] = template_pairs
+                return attrs
 
             for assignment in assignments:
                 template_version = self._resolve_template_version(assignment.template)
