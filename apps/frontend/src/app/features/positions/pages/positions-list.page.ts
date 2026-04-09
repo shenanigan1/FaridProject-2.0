@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  inject,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { BehaviorSubject, combineLatest, forkJoin, map, startWith } from 'rxjs';
@@ -56,6 +62,7 @@ function asArrayOrResults<T>(value: unknown): T[] {
 export class PositionsListPage {
   private readonly api = inject(PositionsApiService);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly destroyRef = inject(DestroyRef);
 
   private readonly positionsSubject = new BehaviorSubject<PositionDto[]>([]);
   readonly positions$ = this.positionsSubject.asObservable();
@@ -149,7 +156,7 @@ export class PositionsListPage {
       positions: this.api.list(),
       applicationCounts: this.api.listApplicationCounts(),
     })
-      .pipe(takeUntilDestroyed())
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: ({ positions, applicationCounts }) => {
           const list = asArrayOrResults<PositionDto>(positions);

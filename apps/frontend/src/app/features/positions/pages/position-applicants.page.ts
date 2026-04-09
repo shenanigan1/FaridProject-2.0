@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  DestroyRef,
   inject,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -26,6 +27,7 @@ export class PositionApplicantsPage {
   private readonly route = inject(ActivatedRoute);
   private readonly applicantsService = inject(PositionApplicantsService);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly positionId = Number(this.route.snapshot.paramMap.get('id'));
   readonly searchControl = new FormControl('', { nonNullable: true });
@@ -71,7 +73,7 @@ export class PositionApplicantsPage {
 
     this.applicantsService
       .listByPosition(this.positionId)
-      .pipe(takeUntilDestroyed())
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (applicants) => {
           this.applicantsSubject.next(applicants);
@@ -91,7 +93,7 @@ export class PositionApplicantsPage {
     this.setLaunching(applicant.applicationId, true);
     this.applicantsService
       .launchTestForApplication(applicant.applicationId)
-      .pipe(takeUntilDestroyed())
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (createdEvaluations) => {
           this.launchMessage = `${createdEvaluations.length} test(s) launched for ${applicant.fullName}.`;

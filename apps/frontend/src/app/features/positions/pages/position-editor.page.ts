@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { toSignal, takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -49,6 +56,7 @@ export class PositionEditorPage {
   private readonly api = inject(PositionsApiService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly form: PositionFormGroup = this.formService.build();
 
@@ -136,7 +144,7 @@ export class PositionEditorPage {
 
     const req$ = id !== null ? this.api.patch(id, payload) : this.api.create(payload);
 
-    req$.pipe(takeUntilDestroyed()).subscribe({
+    req$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
         this.isSubmitting.set(false);
         void this.router.navigateByUrl('/positions');
@@ -204,7 +212,7 @@ export class PositionEditorPage {
 
     this.api
       .setPositionTemplateAssignments(id, payload)
-      .pipe(takeUntilDestroyed())
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
           this.templatesSaving.set(false);
@@ -248,7 +256,7 @@ export class PositionEditorPage {
   private loadTemplateConfiguration(): void {
     this.api
       .listTemplates()
-      .pipe(takeUntilDestroyed())
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (templates) => {
           this.availableTemplates.set(templates);
@@ -258,7 +266,7 @@ export class PositionEditorPage {
 
           this.api
             .getPositionTemplateAssignments(id)
-            .pipe(takeUntilDestroyed())
+            .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
               next: (assignments) => {
                 this.selectedTemplateIds.set(assignments.map((item) => item.template));

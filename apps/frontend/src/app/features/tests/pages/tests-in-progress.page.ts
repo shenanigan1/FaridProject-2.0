@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  inject,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
@@ -21,6 +27,7 @@ import {
 export class TestsInProgressPage {
   private readonly applicantsService = inject(PositionApplicantsService);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly searchControl = new FormControl('', { nonNullable: true });
 
@@ -81,7 +88,7 @@ export class TestsInProgressPage {
   private loadTestsInProgress(): void {
     this.applicantsService
       .listInProgressTests()
-      .pipe(takeUntilDestroyed())
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (testsInProgress) => {
           this.testsSubject.next(testsInProgress);
@@ -107,7 +114,7 @@ export class TestsInProgressPage {
     this.assignmentMessage = null;
     this.applicantsService
       .assignManagerToEvaluation(testItem.evaluationId, managerId)
-      .pipe(takeUntilDestroyed())
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
           this.assignmentMessage = `Manager #${managerId} assigned to evaluation #${testItem.evaluationId}.`;
@@ -134,7 +141,7 @@ export class TestsInProgressPage {
     this.questionnaireMessage = null;
     this.applicantsService
       .getEvaluationQuestionnaire(evaluationId)
-      .pipe(takeUntilDestroyed())
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (questionnaire) => {
           this.questionnaire = questionnaire;
@@ -187,7 +194,7 @@ export class TestsInProgressPage {
 
     this.applicantsService
       .saveEvaluationQuestionnaire(this.selectedEvaluationId, answers)
-      .pipe(takeUntilDestroyed())
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (payload) => {
           this.questionnaire = payload;
