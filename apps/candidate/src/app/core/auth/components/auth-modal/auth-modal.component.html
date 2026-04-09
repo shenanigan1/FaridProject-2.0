@@ -1,34 +1,70 @@
-<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
   <div class="w-full max-w-md">
-
     <app-auth-card
       [title]="mode === 'signin' ? 'Sign in' : 'Create account'"
       subtitle="Access your candidate space"
     >
+      @if (errorMessage) {
+        <app-ui-alert [message]="errorMessage" variant="error" />
+      }
 
-      <!-- FORM PLACEHOLDER -->
-      <div class="space-y-4">
+      <form class="space-y-4" [formGroup]="authForm" (ngSubmit)="onSubmit()">
+        @if (mode === 'signup') {
+          <app-ui-text-input
+            formControlName="firstName"
+            label="First name"
+            placeholder="John"
+            [error]="getFieldError('firstName')"
+          />
 
-        <input class="w-full rounded-xl bg-slate-900 border border-slate-800 p-3"
-               placeholder="Email" />
+          <app-ui-text-input
+            formControlName="lastName"
+            label="Last name"
+            placeholder="Doe"
+            [error]="getFieldError('lastName')"
+          />
 
-        <input class="w-full rounded-xl bg-slate-900 border border-slate-800 p-3"
-               placeholder="Password"
-               type="password" />
+          <app-ui-text-input
+            formControlName="phone"
+            label="Phone"
+            placeholder="+33..."
+            type="tel"
+            [error]="getFieldError('phone')"
+          />
+        }
 
-        <app-ui-button-primary (click)="onAuthSuccess()">
-          {{ mode === 'signin' ? 'Sign in' : 'Create account' }}
-        </app-ui-button-primary>
+        <app-ui-text-input
+          formControlName="email"
+          label="Email"
+          placeholder="candidate@example.com"
+          type="email"
+          [error]="getFieldError('email')"
+        />
 
-        <button class="text-sm text-slate-400" (click)="switchMode()">
-          {{ mode === 'signin'
-            ? 'No account? Sign up'
-            : 'Already have an account? Sign in' }}
+        <app-ui-text-input
+          formControlName="password"
+          label="Password"
+          placeholder="••••••••"
+          type="password"
+          [error]="getFieldError('password')"
+        />
+
+        <app-ui-button-primary
+          type="submit"
+          [loading]="isSubmitting"
+          [label]="mode === 'signin' ? 'Sign in' : 'Create account'"
+        />
+      </form>
+
+      <div class="mt-3 flex items-center justify-between text-sm">
+        <button class="text-slate-400 hover:text-slate-200" type="button" (click)="switchMode()">
+          {{ mode === 'signin' ? 'No account? Sign up' : 'Already have an account? Sign in' }}
         </button>
 
+        <button class="text-slate-500 hover:text-slate-300" type="button" (click)="onClose()">
+          Close
+        </button>
       </div>
-
     </app-auth-card>
-
   </div>
 </div>

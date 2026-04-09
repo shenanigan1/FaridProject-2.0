@@ -1,10 +1,9 @@
-from rest_framework.viewsets import ModelViewSet
 from positions.models import Position
 from positions.serializers import PositionSerializer, PublicPositionSerializer
-from rest_framework.permissions import AllowAny, IsAuthenticated
-from users.permissions import IsHrAdminOrDirector
 from rest_framework.permissions import AllowAny
-from rest_framework.viewsets import ReadOnlyModelViewSet
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
+from users.permissions import IsHrAdminOrDirector
 
 
 class PositionViewSet(ModelViewSet):
@@ -20,18 +19,16 @@ class PositionViewSet(ModelViewSet):
 
         return [IsAuthenticated()]
 
+
 class PublicPositionViewSet(ReadOnlyModelViewSet):
     permission_classes = [AllowAny]
 
     def get_queryset(self):
         return (
-            Position.objects
-            .filter(is_active=True)
+            Position.objects.filter(is_active=True)
             .select_related("company")
             .order_by("-created_at")
         )
 
     def get_serializer_class(self):
-        if self.action == "retrieve":
-            return PublicPositionSerializer
         return PublicPositionSerializer

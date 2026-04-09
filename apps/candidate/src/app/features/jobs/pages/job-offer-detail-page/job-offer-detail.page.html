@@ -31,6 +31,13 @@
   </header>
 
   <main class="mx-auto flex w-full max-w-5xl flex-col gap-6 px-4 pb-36 pt-6">
+    @if (applicationSubmitted) {
+      <app-ui-alert
+        variant="success"
+        message="Your application was sent successfully. The recruiter will contact you soon."
+      />
+    }
+
     @if (state === 'loading') {
       <section class="space-y-6">
         <div class="space-y-3">
@@ -78,10 +85,8 @@
     } @else if (state === 'error') {
       <app-ui-alert
         variant="error"
-        title="Something went wrong"
-        description="We could not load this job offer right now. Please try again later."
-      >
-      </app-ui-alert>
+        message="We could not load this job offer right now. Please try again later."
+      />
 
       <div class="flex justify-start">
         <app-ui-button-secondary
@@ -142,4 +147,62 @@
       (closed)="authModalOpen = false"
     />
   }
+
+  <app-ui-modal
+    [open]="applicationModalOpen"
+    (openChange)="onApplicationModalOpenChanged($event)"
+    title="Finalize your application"
+    size="md"
+  >
+    <form class="space-y-4" [formGroup]="applicationForm" (ngSubmit)="onApplicationSubmitted()">
+      <app-ui-text-input
+        formControlName="firstName"
+        label="First name"
+        placeholder="John"
+      />
+
+      <app-ui-text-input
+        formControlName="lastName"
+        label="Last name"
+        placeholder="Doe"
+      />
+
+      <app-ui-text-input
+        formControlName="email"
+        label="Email"
+        placeholder="candidate@example.com"
+        type="email"
+      />
+
+      <app-ui-text-input
+        formControlName="phone"
+        label="Phone"
+        placeholder="+33..."
+        type="tel"
+      />
+
+      <app-ui-textarea
+        formControlName="motivation"
+        label="Motivation"
+        hint="Describe briefly why you are a good fit for this role."
+        placeholder="Tell us about your profile and availability..."
+        [rows]="5"
+      />
+
+      @if (applicationErrorMessage) {
+        <app-ui-alert
+          variant="error"
+          [message]="applicationErrorMessage"
+        />
+      }
+
+      <div modal-actions>
+        <div class="w-full">
+          <app-ui-button-primary type="submit" [loading]="applicationSubmitting">
+            Confirm application
+          </app-ui-button-primary>
+        </div>
+      </div>
+    </form>
+  </app-ui-modal>
 </section>

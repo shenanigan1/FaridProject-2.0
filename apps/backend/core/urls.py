@@ -18,7 +18,7 @@ from evaluations.views import EvaluationViewSet
 router = DefaultRouter()
 router.register("companies", CompanyViewSet, basename="companies")
 router.register("positions", PositionViewSet, basename="positions")
-router.register(r'public/positions', PublicPositionViewSet, basename='public-positions')
+router.register(r"public/positions", PublicPositionViewSet, basename="public-positions")
 router.register("candidates", CandidateViewSet, basename="candidates")
 router.register("employees", EmployeeViewSet, basename="employees")
 router.register("jobapplications", JobApplicationViewSet, basename="jobapplications")
