@@ -64,6 +64,9 @@
 
   <article class="rounded-2xl border border-slate-800 bg-slate-900/60 p-4">
     <h2 class="mb-3 text-sm font-semibold">Existing users</h2>
+    <p class="mb-2 text-xs text-slate-400">
+      Role changes are saved automatically when you change the dropdown.
+    </p>
     @if (isLoading) {
       <p class="text-sm text-slate-400">Loading users…</p>
     } @else {
@@ -103,4 +106,3 @@
     }
   </article>
 </section>
-

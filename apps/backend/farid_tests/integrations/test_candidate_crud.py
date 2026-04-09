@@ -45,6 +45,7 @@ def test_create_candidate_success(api_client):
     assert candidate.user.first_name == "Jean"
     assert candidate.user.last_name == "Dupont"
     assert candidate.user.phone == "0601020304"
+    assert candidate.user.role == UserRoles.CANDIDATE
     assert candidate.status == "pending"
     assert candidate.flag is False
 
