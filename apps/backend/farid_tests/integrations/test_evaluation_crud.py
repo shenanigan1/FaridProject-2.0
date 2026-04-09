@@ -283,6 +283,57 @@ def test_launch_evaluation_uses_all_position_templates_with_manager_assignment(
     assert manager_by_template[template_two_version.id] is None
 
 
+def test_launch_evaluation_skips_templates_without_versions(api_client):
+    _authenticate_as_hr(api_client)
+    application = JobApplicationFactory.create()
+    template_with_version = TemplateFactory.create(name="Template With Version")
+    template_without_version = TemplateFactory.create(name="Template Without Version")
+    with_version = TemplateVersionFactory.create(
+        template=template_with_version, version=1
+    )
+
+    PositionTestTemplateAssignment.objects.create(
+        position=application.position,
+        template=template_with_version,
+        manager=None,
+        order=0,
+    )
+    PositionTestTemplateAssignment.objects.create(
+        position=application.position,
+        template=template_without_version,
+        manager=None,
+        order=1,
+    )
+
+    url = reverse(f"{BASENAME}-launch")
+    res = api_client.post(url, {"application_id": application.id}, format="json")
+
+    assert res.status_code == 201
+    assert len(res.data) == 1
+    assert res.data[0]["template_version"] == with_version.id
+
+
+def test_launch_evaluation_fails_when_all_templates_have_no_versions(api_client):
+    _authenticate_as_hr(api_client)
+    application = JobApplicationFactory.create()
+    template_without_version = TemplateFactory.create(name="Template Without Version")
+    PositionTestTemplateAssignment.objects.create(
+        position=application.position,
+        template=template_without_version,
+        manager=None,
+        order=0,
+    )
+
+    url = reverse(f"{BASENAME}-launch")
+    res = api_client.post(url, {"application_id": application.id}, format="json")
+
+    assert res.status_code == 400
+    assert "application_id" in res.data
+    assert (
+        "No test templates with versions are available" in res.data["application_id"][0]
+    )
+
+
 def test_evaluation_questionnaire_get_and_save_answers(api_client):
     _authenticate_as_hr(api_client)
     application = JobApplicationFactory.create()

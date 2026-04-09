@@ -172,6 +172,7 @@ class LaunchEvaluationSerializer(serializers.Serializer):
                     }
                 )
 
+            missing_version_templates: list[str] = []
             for assignment in assignments:
                 template_version = (
                     TemplateVersion.objects.filter(template=assignment.template)
@@ -179,18 +180,23 @@ class LaunchEvaluationSerializer(serializers.Serializer):
                     .first()
                 )
                 if not template_version:
-                    raise serializers.ValidationError(
-                        {
-                            "application_id": (
-                                f"Template '{assignment.template.name}' has no version."
-                            )
-                        }
-                    )
+                    missing_version_templates.append(assignment.template.name)
+                    continue
 
                 template_pairs.append(
                     {
                         "template_version": template_version,
                         "assigned_to": assignment.manager,
+                    }
+                )
+            if not template_pairs:
+                names = ", ".join(sorted(set(missing_version_templates)))
+                raise serializers.ValidationError(
+                    {
+                        "application_id": (
+                            "No test templates with versions are available for this "
+                            f"position. Missing versions for: {names}."
+                        )
                     }
                 )
 
