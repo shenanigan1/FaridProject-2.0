@@ -58,6 +58,6 @@ class EvaluationViewSet(ModelViewSet):
     def launch(self, request):
         serializer = LaunchEvaluationSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        evaluation = serializer.save()
-        output = EvaluationSerializer(evaluation)
+        evaluations = serializer.save()
+        output = EvaluationSerializer(evaluations, many=True)
         return Response(output.data, status=status.HTTP_201_CREATED)

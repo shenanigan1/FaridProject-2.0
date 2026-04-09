@@ -156,7 +156,7 @@ describe('PositionApplicantsService', () => {
     let responseId = 0;
 
     service.launchTestForApplication(10, 3).subscribe((response) => {
-      responseId = response.id;
+      responseId = response[0].id;
     });
 
     const request = httpMock.expectOne('/api/evaluations/launch/');
@@ -166,12 +166,48 @@ describe('PositionApplicantsService', () => {
       template_id: 3,
     });
 
-    request.flush({
-      id: 55,
-      application: 10,
-      status: 'in_progress',
-    });
+    request.flush([
+      {
+        id: 55,
+        application: 10,
+        status: 'in_progress',
+      },
+    ]);
 
     expect(responseId).toBe(55);
+  });
+
+  it('launches a test using position default templates when no explicit template id is provided', () => {
+    service.launchTestForApplication(99).subscribe((response) => {
+      expect(response.length).toBe(1);
+      expect(response[0].id).toBe(56);
+    });
+
+    const request = httpMock.expectOne('/api/evaluations/launch/');
+    expect(request.request.body).toEqual({
+      application_id: 99,
+    });
+
+    request.flush([
+      {
+        id: 56,
+        application: 99,
+        status: 'in_progress',
+      },
+    ]);
+  });
+
+  it('assigns a manager to an evaluation', () => {
+    let assignedTo: number | null = null;
+    service.assignManagerToEvaluation(70, 12).subscribe((response) => {
+      assignedTo = response.assigned_to;
+    });
+
+    const request = httpMock.expectOne('/api/evaluations/70/');
+    expect(request.request.method).toBe('PATCH');
+    expect(request.request.body).toEqual({ assigned_to: 12 });
+    request.flush({ id: 70, assigned_to: 12 });
+
+    expect(assignedTo).toBe(12);
   });
 });

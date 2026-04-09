@@ -48,6 +48,7 @@ export class TestsInProgressPage {
 
   isLoading = true;
   errorMessage: string | null = null;
+  assignmentMessage: string | null = null;
 
   constructor() {
     this.loadTestsInProgress();
@@ -66,6 +67,31 @@ export class TestsInProgressPage {
         error: () => {
           this.errorMessage = 'Unable to load ongoing tests.';
           this.isLoading = false;
+          this.cdr.markForCheck();
+        },
+      });
+  }
+
+  assignManager(testItem: InProgressTestItem, managerIdRaw: string): void {
+    const managerId = Number(managerIdRaw);
+    if (!Number.isInteger(managerId) || managerId <= 0) {
+      this.assignmentMessage = 'Please enter a valid manager ID.';
+      this.cdr.markForCheck();
+      return;
+    }
+
+    this.assignmentMessage = null;
+    this.applicantsService
+      .assignManagerToEvaluation(testItem.evaluationId, managerId)
+      .pipe(takeUntilDestroyed())
+      .subscribe({
+        next: () => {
+          this.assignmentMessage = `Manager #${managerId} assigned to evaluation #${testItem.evaluationId}.`;
+          this.loadTestsInProgress();
+          this.cdr.markForCheck();
+        },
+        error: () => {
+          this.assignmentMessage = `Unable to assign manager #${managerId} to evaluation #${testItem.evaluationId}.`;
           this.cdr.markForCheck();
         },
       });

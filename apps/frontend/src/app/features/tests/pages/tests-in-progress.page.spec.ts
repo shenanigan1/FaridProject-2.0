@@ -29,10 +29,13 @@ describe('TestsInProgressPage', () => {
   beforeEach(async () => {
     applicantsServiceSpy = jasmine.createSpyObj<PositionApplicantsService>(
       'PositionApplicantsService',
-      ['listInProgressTests'],
+      ['listInProgressTests', 'assignManagerToEvaluation'],
     );
 
     applicantsServiceSpy.listInProgressTests.and.returnValue(of(testsInProgress));
+    applicantsServiceSpy.assignManagerToEvaluation.and.returnValue(
+      of({ id: 41, assigned_to: 9 }),
+    );
 
     await TestBed.configureTestingModule({
       imports: [TestsInProgressPage],
@@ -76,5 +79,12 @@ describe('TestsInProgressPage', () => {
     expect(errorFixture.componentInstance.errorMessage).toBe(
       'Unable to load ongoing tests.',
     );
+  });
+
+  it('assigns manager to selected evaluation', () => {
+    component.assignManager(testsInProgress[0], '9');
+
+    expect(applicantsServiceSpy.assignManagerToEvaluation).toHaveBeenCalledWith(41, 9);
+    expect(component.assignmentMessage).toContain('assigned');
   });
 });

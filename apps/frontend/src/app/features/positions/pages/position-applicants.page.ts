@@ -7,11 +7,10 @@ import {
 import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { BehaviorSubject, combineLatest, forkJoin, map, startWith } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, startWith } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import {
-  LaunchableTemplate,
   PositionApplicant,
   PositionApplicantsService,
 } from '@features/positions/services/position-applicants.service';
@@ -33,7 +32,6 @@ export class PositionApplicantsPage {
 
   private readonly applicantsSubject = new BehaviorSubject<PositionApplicant[]>([]);
   readonly applicants$ = this.applicantsSubject.asObservable();
-  readonly templates = new BehaviorSubject<LaunchableTemplate[]>([]);
   readonly launchingByApplication = new BehaviorSubject<Record<number, boolean>>({});
 
   readonly filteredApplicants$ = combineLatest([
@@ -71,20 +69,17 @@ export class PositionApplicantsPage {
       return;
     }
 
-    forkJoin({
-      applicants: this.applicantsService.listByPosition(this.positionId),
-      templates: this.applicantsService.listLaunchableTemplates(),
-    })
+    this.applicantsService
+      .listByPosition(this.positionId)
       .pipe(takeUntilDestroyed())
       .subscribe({
-        next: ({ applicants, templates }) => {
+        next: (applicants) => {
           this.applicantsSubject.next(applicants);
-          this.templates.next(templates);
           this.isLoading = false;
           this.cdr.markForCheck();
         },
         error: () => {
-          this.errorMessage = 'Unable to load applicants or templates for this position.';
+          this.errorMessage = 'Unable to load applicants for this position.';
           this.isLoading = false;
           this.cdr.markForCheck();
         },
@@ -92,21 +87,14 @@ export class PositionApplicantsPage {
   }
 
   launchTest(applicant: PositionApplicant): void {
-    const templates = this.templates.value;
-    if (templates.length === 0) {
-      this.launchMessage = 'No template available to launch a test.';
-      this.cdr.markForCheck();
-      return;
-    }
-
     this.launchMessage = null;
     this.setLaunching(applicant.applicationId, true);
     this.applicantsService
-      .launchTestForApplication(applicant.applicationId, templates[0].id)
+      .launchTestForApplication(applicant.applicationId)
       .pipe(takeUntilDestroyed())
       .subscribe({
-        next: () => {
-          this.launchMessage = `Test launched for ${applicant.fullName}.`;
+        next: (createdEvaluations) => {
+          this.launchMessage = `${createdEvaluations.length} test(s) launched for ${applicant.fullName}.`;
           this.loadApplicants();
           this.setLaunching(applicant.applicationId, false);
         },

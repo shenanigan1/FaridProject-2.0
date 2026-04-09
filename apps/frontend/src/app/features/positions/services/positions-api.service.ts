@@ -28,6 +28,27 @@ interface JobApplicationLiteDto {
   position: number;
 }
 
+export interface TemplateOptionDto {
+  id: number;
+  name: string;
+}
+
+export interface PositionTemplateAssignmentDto {
+  id: number;
+  position: number;
+  template: number;
+  template_name: string;
+  manager_id: number | null;
+  manager_name: string | null;
+  order: number;
+}
+
+export interface PositionTemplateAssignmentInput {
+  template_id: number;
+  manager_id?: number | null;
+  order?: number;
+}
+
 function asArray<T>(value: T[] | Paginated<T>): T[] {
   return Array.isArray(value) ? value : value.results;
 }
@@ -38,6 +59,7 @@ export class PositionsApiService {
 
   private readonly baseUrl = '/api/positions/';
   private readonly jobApplicationsUrl = '/api/jobapplications/';
+  private readonly templatesUrl = '/api/templates/';
 
   create(payload: PositionCreatePayload): Observable<PositionDto> {
     return this.http.post<PositionDto>(this.baseUrl, payload);
@@ -68,5 +90,27 @@ export class PositionsApiService {
           return counts;
         }),
       );
+  }
+
+  listTemplates(): Observable<TemplateOptionDto[]> {
+    return this.http
+      .get<TemplateOptionDto[] | Paginated<TemplateOptionDto>>(this.templatesUrl)
+      .pipe(map(asArray));
+  }
+
+  getPositionTemplateAssignments(positionId: number): Observable<PositionTemplateAssignmentDto[]> {
+    return this.http.get<PositionTemplateAssignmentDto[]>(
+      `${this.baseUrl}${positionId}/test-templates/`,
+    );
+  }
+
+  setPositionTemplateAssignments(
+    positionId: number,
+    assignments: PositionTemplateAssignmentInput[],
+  ): Observable<PositionTemplateAssignmentDto[]> {
+    return this.http.put<PositionTemplateAssignmentDto[]>(
+      `${this.baseUrl}${positionId}/test-templates/`,
+      { assignments },
+    );
   }
 }

@@ -7,6 +7,7 @@ from farid_tests.factories.users import UserFactory
 from farid_tests.factories.positions import PositionFactory
 from farid_tests.factories.templates_grid import TemplateFactory, TemplateVersionFactory
 from farid_tests.factories.recruitment import JobApplicationFactory
+from positions.models import PositionTestTemplateAssignment
 from users.models import UserRoles
 
 pytestmark = pytest.mark.django_db
@@ -193,10 +194,12 @@ def test_launch_evaluation_from_application_success(api_client):
     res = api_client.post(url, payload, format="json")
 
     assert res.status_code == 201
-    assert res.data["application"] == application.id
-    assert res.data["template_version"] == template_version.id
-    assert res.data["subject"] == application.candidate.user.id
-    assert res.data["status"] == "in_progress"
+    assert isinstance(res.data, list)
+    assert len(res.data) == 1
+    assert res.data[0]["application"] == application.id
+    assert res.data[0]["template_version"] == template_version.id
+    assert res.data[0]["subject"] == application.candidate.user.id
+    assert res.data[0]["status"] == "in_progress"
 
 
 def test_launch_evaluation_rejects_duplicate_in_progress_for_same_application(api_client):
@@ -222,3 +225,45 @@ def test_launch_evaluation_rejects_duplicate_in_progress_for_same_application(ap
 
     assert res.status_code == 400
     assert "application_id" in res.data
+
+
+def test_launch_evaluation_uses_all_position_templates_with_manager_assignment(api_client):
+    _authenticate_as_hr(api_client)
+    manager = UserFactory.create(
+        email="assigned-manager@example.com",
+        password="Passw0rd!",
+        role=UserRoles.MANAGER,
+    )
+    application = JobApplicationFactory.create()
+    template_one = TemplateFactory.create(name="Template 1")
+    template_two = TemplateFactory.create(name="Template 2")
+    template_one_version = TemplateVersionFactory.create(template=template_one, version=1)
+    template_two_version = TemplateVersionFactory.create(template=template_two, version=1)
+
+    PositionTestTemplateAssignment.objects.create(
+        position=application.position,
+        template=template_one,
+        manager=manager,
+        order=0,
+    )
+    PositionTestTemplateAssignment.objects.create(
+        position=application.position,
+        template=template_two,
+        manager=None,
+        order=1,
+    )
+
+    url = reverse(f"{BASENAME}-launch")
+    res = api_client.post(url, {"application_id": application.id}, format="json")
+
+    assert res.status_code == 201
+    assert len(res.data) == 2
+
+    template_versions = {row["template_version"] for row in res.data}
+    assert template_versions == {template_one_version.id, template_two_version.id}
+
+    manager_by_template = {
+        row["template_version"]: row["assigned_to"] for row in res.data
+    }
+    assert manager_by_template[template_one_version.id] == manager.id
+    assert manager_by_template[template_two_version.id] is None

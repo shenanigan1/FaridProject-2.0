@@ -1,9 +1,21 @@
+from django.db import transaction
 from positions.models import Position
-from positions.serializers import PositionSerializer, PublicPositionSerializer
+from positions.models import PositionTestTemplateAssignment
+from positions.serializers import (
+    PositionSerializer,
+    PositionTemplateAssignmentBulkSerializer,
+    PositionTemplateAssignmentSerializer,
+    PublicPositionSerializer,
+)
+from templates_grid.models import Template
 from rest_framework.permissions import AllowAny
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.decorators import action
+from rest_framework import status
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 from users.permissions import IsHrAdminOrDirector
+from users.models import User
 
 
 class PositionViewSet(ModelViewSet):
@@ -14,10 +26,59 @@ class PositionViewSet(ModelViewSet):
         if self.action in ["list", "retrieve"]:
             return [AllowAny()]
 
-        if self.action in ["create", "update", "partial_update", "destroy"]:
+        if self.action in [
+            "create",
+            "update",
+            "partial_update",
+            "destroy",
+            "test_templates",
+            "set_test_templates",
+        ]:
             return [IsAuthenticated(), IsHrAdminOrDirector()]
 
         return [IsAuthenticated()]
+
+    @action(detail=True, methods=["get"], url_path="test-templates")
+    def test_templates(self, request, pk=None):
+        position = self.get_object()
+        queryset = (
+            PositionTestTemplateAssignment.objects.select_related("template", "manager")
+            .filter(position=position)
+            .order_by("order", "id")
+        )
+        serializer = PositionTemplateAssignmentSerializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @test_templates.mapping.put
+    @transaction.atomic
+    def set_test_templates(self, request, pk=None):
+        position = self.get_object()
+        serializer = PositionTemplateAssignmentBulkSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        PositionTestTemplateAssignment.objects.filter(position=position).delete()
+
+        assignments = serializer.validated_data["assignments"]
+        for index, item in enumerate(assignments):
+            manager = None
+            manager_id = item.get("manager_id")
+            if manager_id is not None:
+                manager = User.objects.get(id=manager_id)
+
+            PositionTestTemplateAssignment.objects.create(
+                position=position,
+                template=Template.objects.get(id=item["template_id"]),
+                manager=manager,
+                order=item.get("order", index),
+            )
+
+        queryset = (
+            PositionTestTemplateAssignment.objects.select_related("template", "manager")
+            .filter(position=position)
+            .order_by("order", "id")
+        )
+        output = PositionTemplateAssignmentSerializer(queryset, many=True)
+        return Response(output.data, status=status.HTTP_200_OK)
 
 
 class PublicPositionViewSet(ReadOnlyModelViewSet):

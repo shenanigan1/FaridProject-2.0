@@ -71,8 +71,14 @@ export interface LaunchableTemplate {
 
 interface LaunchEvaluationPayload {
   application_id: number;
-  template_id: number;
+  template_id?: number;
   assigned_to_id?: number;
+}
+
+interface LaunchEvaluationResponse {
+  id: number;
+  application: number;
+  status: string;
 }
 
 function asList<T>(value: T[] | Paginated<T>): T[] {
@@ -189,16 +195,30 @@ export class PositionApplicantsService {
 
   launchTestForApplication(
     applicationId: number,
-    templateId: number,
-  ): Observable<{ id: number; application: number; status: string }> {
+    templateId?: number,
+  ): Observable<LaunchEvaluationResponse[]> {
     const payload: LaunchEvaluationPayload = {
       application_id: applicationId,
-      template_id: templateId,
     };
+    if (templateId !== undefined) {
+      payload.template_id = templateId;
+    }
 
-    return this.http.post<{ id: number; application: number; status: string }>(
-      '/api/evaluations/launch/',
-      payload,
+    return this.http
+      .post<LaunchEvaluationResponse | LaunchEvaluationResponse[]>(
+        '/api/evaluations/launch/',
+        payload,
+      )
+      .pipe(map((response) => (Array.isArray(response) ? response : [response])));
+  }
+
+  assignManagerToEvaluation(
+    evaluationId: number,
+    managerId: number,
+  ): Observable<{ id: number; assigned_to: number | null }> {
+    return this.http.patch<{ id: number; assigned_to: number | null }>(
+      `/api/evaluations/${evaluationId}/`,
+      { assigned_to: managerId },
     );
   }
 

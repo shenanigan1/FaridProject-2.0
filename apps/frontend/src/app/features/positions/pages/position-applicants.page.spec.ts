@@ -31,15 +31,12 @@ describe('PositionApplicantsPage', () => {
   beforeEach(async () => {
     applicantsServiceSpy = jasmine.createSpyObj<PositionApplicantsService>(
       'PositionApplicantsService',
-      ['listByPosition', 'listLaunchableTemplates', 'launchTestForApplication'],
+      ['listByPosition', 'launchTestForApplication'],
     );
 
     applicantsServiceSpy.listByPosition.and.returnValue(of(applicants));
-    applicantsServiceSpy.listLaunchableTemplates.and.returnValue(
-      of([{ id: 1, name: 'Driver template' }]),
-    );
     applicantsServiceSpy.launchTestForApplication.and.returnValue(
-      of({ id: 91, application: 1, status: 'in_progress' }),
+      of([{ id: 91, application: 1, status: 'in_progress' }]),
     );
 
     await TestBed.configureTestingModule({
@@ -60,7 +57,6 @@ describe('PositionApplicantsPage', () => {
 
   it('loads applicants for current position', () => {
     expect(applicantsServiceSpy.listByPosition).toHaveBeenCalledOnceWith(9);
-    expect(applicantsServiceSpy.listLaunchableTemplates).toHaveBeenCalledTimes(1);
     expect(component.isLoading).toBeFalse();
   });
 
@@ -95,14 +91,14 @@ describe('PositionApplicantsPage', () => {
     errorFixture.detectChanges();
 
     expect(errorFixture.componentInstance.errorMessage).toBe(
-      'Unable to load applicants or templates for this position.',
+      'Unable to load applicants for this position.',
     );
   });
 
   it('launches test for selected applicant', () => {
     component.launchTest(applicants[0]);
 
-    expect(applicantsServiceSpy.launchTestForApplication).toHaveBeenCalledWith(1, 1);
-    expect(component.launchMessage).toContain('Test launched');
+    expect(applicantsServiceSpy.launchTestForApplication).toHaveBeenCalledWith(1);
+    expect(component.launchMessage).toContain('test(s) launched');
   });
 });

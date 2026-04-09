@@ -7,6 +7,7 @@ from farid_tests.factories.users import UserFactory
 from positions.models import Position
 from farid_tests.factories.companies import CompanyFactory
 from farid_tests.factories.positions import PositionFactory
+from farid_tests.factories.templates_grid import TemplateFactory
 
 pytestmark = pytest.mark.django_db
 
@@ -116,3 +117,31 @@ def test_delete_position(api_client):
 
     if response.status_code in (204, 200):
         assert not Position.objects.filter(id=pos.id).exists()
+
+
+def test_set_and_get_position_test_templates(api_client):
+    admin = UserFactory.create(is_staff=True, role=UserRoles.ADMIN)
+    manager = UserFactory.create(role=UserRoles.MANAGER)
+    position = PositionFactory.create()
+    template = TemplateFactory.create(name="Driver Skills")
+    url = reverse("positions-test-templates", args=[position.id])
+    api_client.force_authenticate(user=admin)
+
+    put_res = api_client.put(
+        url,
+        {
+            "assignments": [
+                {"template_id": template.id, "manager_id": manager.id, "order": 0}
+            ]
+        },
+        format="json",
+    )
+    assert put_res.status_code == 200
+    assert len(put_res.data) == 1
+    assert put_res.data[0]["template"] == template.id
+    assert put_res.data[0]["manager_id"] == manager.id
+
+    get_res = api_client.get(url)
+    assert get_res.status_code == 200
+    assert len(get_res.data) == 1
+    assert get_res.data[0]["template_name"] == "Driver Skills"
