@@ -6,6 +6,7 @@ from evaluations.models.evaluation import Evaluation
 from farid_tests.factories.users import UserFactory
 from farid_tests.factories.positions import PositionFactory
 from farid_tests.factories.templates_grid import TemplateFactory, TemplateVersionFactory
+from farid_tests.factories.recruitment import JobApplicationFactory
 from users.models import UserRoles
 
 pytestmark = pytest.mark.django_db
@@ -176,3 +177,48 @@ def test_candidate_can_view_own_evaluation_without_internal_comment(api_client):
     assert res.data["id"] == evaluation.id
     assert "internal_comment" not in res.data
     assert res.data["subject_comment"] == "Public summary"
+
+
+def test_launch_evaluation_from_application_success(api_client):
+    _authenticate_as_hr(api_client)
+    template = TemplateFactory.create(name="Launch Template")
+    template_version = TemplateVersionFactory.create(template=template, version=1)
+    application = JobApplicationFactory.create()
+
+    url = reverse(f"{BASENAME}-launch")
+    payload = {
+        "application_id": application.id,
+        "template_id": template.id,
+    }
+    res = api_client.post(url, payload, format="json")
+
+    assert res.status_code == 201
+    assert res.data["application"] == application.id
+    assert res.data["template_version"] == template_version.id
+    assert res.data["subject"] == application.candidate.user.id
+    assert res.data["status"] == "in_progress"
+
+
+def test_launch_evaluation_rejects_duplicate_in_progress_for_same_application(api_client):
+    _authenticate_as_hr(api_client)
+    template = TemplateFactory.create(name="Launch Template Duplicate")
+    template_version = TemplateVersionFactory.create(template=template, version=1)
+    application = JobApplicationFactory.create()
+
+    Evaluation.objects.create(
+        subject=application.candidate.user,
+        application=application,
+        position=application.position,
+        template_version=template_version,
+        status="in_progress",
+    )
+
+    url = reverse(f"{BASENAME}-launch")
+    payload = {
+        "application_id": application.id,
+        "template_id": template.id,
+    }
+    res = api_client.post(url, payload, format="json")
+
+    assert res.status_code == 400
+    assert "application_id" in res.data

@@ -7,10 +7,11 @@ import {
 import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { BehaviorSubject, combineLatest, map, startWith } from 'rxjs';
+import { BehaviorSubject, combineLatest, forkJoin, map, startWith } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import {
+  LaunchableTemplate,
   PositionApplicant,
   PositionApplicantsService,
 } from '@features/positions/services/position-applicants.service';
@@ -32,6 +33,8 @@ export class PositionApplicantsPage {
 
   private readonly applicantsSubject = new BehaviorSubject<PositionApplicant[]>([]);
   readonly applicants$ = this.applicantsSubject.asObservable();
+  readonly templates = new BehaviorSubject<LaunchableTemplate[]>([]);
+  readonly launchingByApplication = new BehaviorSubject<Record<number, boolean>>({});
 
   readonly filteredApplicants$ = combineLatest([
     this.applicants$,
@@ -55,6 +58,7 @@ export class PositionApplicantsPage {
 
   isLoading = true;
   errorMessage: string | null = null;
+  launchMessage: string | null = null;
 
   constructor() {
     this.loadApplicants();
@@ -67,20 +71,63 @@ export class PositionApplicantsPage {
       return;
     }
 
-    this.applicantsService
-      .listByPosition(this.positionId)
+    forkJoin({
+      applicants: this.applicantsService.listByPosition(this.positionId),
+      templates: this.applicantsService.listLaunchableTemplates(),
+    })
       .pipe(takeUntilDestroyed())
       .subscribe({
-        next: (applicants) => {
+        next: ({ applicants, templates }) => {
           this.applicantsSubject.next(applicants);
+          this.templates.next(templates);
           this.isLoading = false;
           this.cdr.markForCheck();
         },
         error: () => {
-          this.errorMessage = 'Unable to load applicants for this position.';
+          this.errorMessage = 'Unable to load applicants or templates for this position.';
           this.isLoading = false;
           this.cdr.markForCheck();
         },
       });
+  }
+
+  launchTest(applicant: PositionApplicant): void {
+    const templates = this.templates.value;
+    if (templates.length === 0) {
+      this.launchMessage = 'No template available to launch a test.';
+      this.cdr.markForCheck();
+      return;
+    }
+
+    this.launchMessage = null;
+    this.setLaunching(applicant.applicationId, true);
+    this.applicantsService
+      .launchTestForApplication(applicant.applicationId, templates[0].id)
+      .pipe(takeUntilDestroyed())
+      .subscribe({
+        next: () => {
+          this.launchMessage = `Test launched for ${applicant.fullName}.`;
+          this.loadApplicants();
+          this.setLaunching(applicant.applicationId, false);
+        },
+        error: () => {
+          this.launchMessage = `Unable to launch test for ${applicant.fullName}.`;
+          this.setLaunching(applicant.applicationId, false);
+          this.cdr.markForCheck();
+        },
+      });
+  }
+
+  isLaunching(applicationId: number): boolean {
+    return this.launchingByApplication.value[applicationId] ?? false;
+  }
+
+  private setLaunching(applicationId: number, value: boolean): void {
+    const next = {
+      ...this.launchingByApplication.value,
+      [applicationId]: value,
+    };
+    this.launchingByApplication.next(next);
+    this.cdr.markForCheck();
   }
 }

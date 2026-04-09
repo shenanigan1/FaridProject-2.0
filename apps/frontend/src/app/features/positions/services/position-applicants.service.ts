@@ -29,6 +29,11 @@ interface PositionDto {
   title: string;
 }
 
+interface TemplateDto {
+  id: number;
+  name: string;
+}
+
 interface EvaluationDto {
   id: number;
   application: number | null;
@@ -59,6 +64,17 @@ export interface InProgressTestItem {
   updatedAt: string;
 }
 
+export interface LaunchableTemplate {
+  id: number;
+  name: string;
+}
+
+interface LaunchEvaluationPayload {
+  application_id: number;
+  template_id: number;
+  assigned_to_id?: number;
+}
+
 function asList<T>(value: T[] | Paginated<T>): T[] {
   return Array.isArray(value) ? value : value.results;
 }
@@ -71,6 +87,7 @@ export class PositionApplicantsService {
   private readonly candidatesUrl = '/api/candidates/';
   private readonly evaluationsUrl = '/api/evaluations/';
   private readonly positionsUrl = '/api/positions/';
+  private readonly templatesUrl = '/api/templates/';
 
   listByPosition(positionId: number): Observable<PositionApplicant[]> {
     return forkJoin({
@@ -161,6 +178,27 @@ export class PositionApplicantsService {
           .filter((item): item is InProgressTestItem => item !== null)
           .sort((left, right) => right.updatedAt.localeCompare(left.updatedAt));
       }),
+    );
+  }
+
+  listLaunchableTemplates(): Observable<LaunchableTemplate[]> {
+    return this.http
+      .get<TemplateDto[] | Paginated<TemplateDto>>(this.templatesUrl)
+      .pipe(map((payload) => asList(payload).map((template) => ({ id: template.id, name: template.name }))));
+  }
+
+  launchTestForApplication(
+    applicationId: number,
+    templateId: number,
+  ): Observable<{ id: number; application: number; status: string }> {
+    const payload: LaunchEvaluationPayload = {
+      application_id: applicationId,
+      template_id: templateId,
+    };
+
+    return this.http.post<{ id: number; application: number; status: string }>(
+      '/api/evaluations/launch/',
+      payload,
     );
   }
 

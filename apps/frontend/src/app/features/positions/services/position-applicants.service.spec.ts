@@ -135,4 +135,43 @@ describe('PositionApplicantsService', () => {
 
     expect(ids).toEqual([700]);
   });
+
+  it('lists launchable templates', () => {
+    let templateNames: string[] = [];
+
+    service.listLaunchableTemplates().subscribe((templates) => {
+      templateNames = templates.map((template) => template.name);
+    });
+
+    const request = httpMock.expectOne('/api/templates/');
+    request.flush([
+      { id: 1, name: 'Driver template' },
+      { id: 2, name: 'Manager template' },
+    ]);
+
+    expect(templateNames).toEqual(['Driver template', 'Manager template']);
+  });
+
+  it('launches a test for an application', () => {
+    let responseId = 0;
+
+    service.launchTestForApplication(10, 3).subscribe((response) => {
+      responseId = response.id;
+    });
+
+    const request = httpMock.expectOne('/api/evaluations/launch/');
+    expect(request.request.method).toBe('POST');
+    expect(request.request.body).toEqual({
+      application_id: 10,
+      template_id: 3,
+    });
+
+    request.flush({
+      id: 55,
+      application: 10,
+      status: 'in_progress',
+    });
+
+    expect(responseId).toBe(55);
+  });
 });
