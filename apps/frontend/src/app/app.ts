@@ -1,9 +1,10 @@
 import { Component, computed, inject, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { MenuBarComponent } from './layout/menu-bar/menu-bar';
 import { TopBarComponent } from './layout/top-bar/top-bar';
 import { AuthSessionService } from './core/auth/services/auth-session.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -13,8 +14,11 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 })
 export class App {
   private readonly session = inject(AuthSessionService);
+  private readonly router = inject(Router);
   protected readonly title = signal('frontend');
   readonly me = signal<{ role?: string | null } | null>(null);
+  readonly currentUrl = signal(this.router.url);
+  readonly showNavigationChrome = computed(() => !this.currentUrl().startsWith('/login'));
 
   readonly menuItems = computed(() => {
     const base = [
@@ -32,6 +36,13 @@ export class App {
   });
 
   constructor() {
+    this.router.events
+      .pipe(
+        filter((event): event is NavigationEnd => event instanceof NavigationEnd),
+        takeUntilDestroyed(),
+      )
+      .subscribe((event) => this.currentUrl.set(event.urlAfterRedirects));
+
     this.session
       .loadMeOnce()
       .pipe(takeUntilDestroyed())
