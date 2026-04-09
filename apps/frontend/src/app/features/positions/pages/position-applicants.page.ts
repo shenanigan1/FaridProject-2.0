@@ -89,6 +89,11 @@ export class PositionApplicantsPage {
   }
 
   launchTest(applicant: PositionApplicant): void {
+    if (applicant.ongoingTestsCount > 0) {
+      this.launchMessage = `${applicant.fullName} already has an ongoing test.`;
+      this.cdr.markForCheck();
+      return;
+    }
     this.launchMessage = null;
     this.setLaunching(applicant.applicationId, true);
     this.applicantsService

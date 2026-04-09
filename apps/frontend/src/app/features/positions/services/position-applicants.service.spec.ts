@@ -136,6 +136,76 @@ describe('PositionApplicantsService', () => {
     expect(ids).toEqual([700]);
   });
 
+  it('follows paginated responses so newly launched tests are visible', () => {
+    let ids: number[] = [];
+
+    service.listInProgressTests().subscribe((testsInProgress) => {
+      ids = testsInProgress.map((item) => item.evaluationId);
+    });
+
+    httpMock.expectOne('/api/jobapplications/').flush({
+      results: [],
+      next: '/api/jobapplications/?page=2',
+    });
+    httpMock.expectOne('/api/jobapplications/?page=2').flush({
+      results: [
+        {
+          id: 9,
+          candidate: 51,
+          position: 88,
+          status: 'applied',
+          created_at: '2026-04-08T10:00:00Z',
+        },
+      ],
+      next: null,
+    });
+
+    httpMock.expectOne('/api/candidates/').flush({
+      results: [],
+      next: '/api/candidates/?page=2',
+    });
+    httpMock.expectOne('/api/candidates/?page=2').flush({
+      results: [
+        {
+          id: 51,
+          user: {
+            first_name: 'New',
+            last_name: 'Candidate',
+            email: 'new@example.com',
+          },
+        },
+      ],
+      next: null,
+    });
+
+    httpMock.expectOne('/api/evaluations/').flush({
+      results: [],
+      next: '/api/evaluations/?page=2',
+    });
+    httpMock.expectOne('/api/evaluations/?page=2').flush({
+      results: [
+        {
+          id: 999,
+          application: 9,
+          status: 'in_progress',
+          updated_at: '2026-04-09T11:00:00Z',
+        },
+      ],
+      next: null,
+    });
+
+    httpMock.expectOne('/api/positions/').flush({
+      results: [],
+      next: '/api/positions/?page=2',
+    });
+    httpMock.expectOne('/api/positions/?page=2').flush({
+      results: [{ id: 88, title: 'Night Driver' }],
+      next: null,
+    });
+
+    expect(ids).toEqual([999]);
+  });
+
   it('lists launchable templates', () => {
     let templateNames: string[] = [];
 

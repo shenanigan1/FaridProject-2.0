@@ -26,6 +26,17 @@ describe('PositionApplicantsPage', () => {
       ongoingTestsCount: 2,
       ongoingTestIds: [10, 11],
     },
+    {
+      applicationId: 2,
+      candidateId: 8,
+      fullName: 'John Smith',
+      email: 'john@example.com',
+      phone: '+33222222',
+      status: 'applied',
+      appliedAt: '2026-04-08T09:00:00Z',
+      ongoingTestsCount: 0,
+      ongoingTestIds: [],
+    },
   ];
 
   beforeEach(async () => {
@@ -95,10 +106,17 @@ describe('PositionApplicantsPage', () => {
     );
   });
 
-  it('launches test for selected applicant', () => {
+  it('does not relaunch test for applicant with ongoing tests', () => {
     component.launchTest(applicants[0]);
 
-    expect(applicantsServiceSpy.launchTestForApplication).toHaveBeenCalledWith(1);
+    expect(applicantsServiceSpy.launchTestForApplication).not.toHaveBeenCalled();
+    expect(component.launchMessage).toContain('already has an ongoing test');
+  });
+
+  it('launches test for selected applicant without ongoing tests', () => {
+    component.launchTest(applicants[1]);
+
+    expect(applicantsServiceSpy.launchTestForApplication).toHaveBeenCalledWith(2);
     expect(component.launchMessage).toContain('test(s) launched');
   });
 });

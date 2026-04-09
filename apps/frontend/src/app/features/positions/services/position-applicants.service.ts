@@ -1,9 +1,10 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, forkJoin, map } from 'rxjs';
+import { EMPTY, Observable, expand, forkJoin, map, reduce } from 'rxjs';
 
 interface Paginated<T> {
   results: T[];
+  next?: string | null;
 }
 
 interface JobApplicationDto {
@@ -100,8 +101,11 @@ interface LaunchEvaluationResponse {
   status: string;
 }
 
-function asList<T>(value: T[] | Paginated<T>): T[] {
-  return Array.isArray(value) ? value : value.results;
+function isPaginatedPayload<T>(value: unknown): value is Paginated<T> {
+  if (typeof value !== 'object' || value === null || Array.isArray(value)) {
+    return false;
+  }
+  return Array.isArray((value as Paginated<T>).results);
 }
 
 @Injectable({ providedIn: 'root' })
@@ -114,17 +118,24 @@ export class PositionApplicantsService {
   private readonly positionsUrl = '/api/positions/';
   private readonly templatesUrl = '/api/templates/';
 
+  private fetchAllPages<T>(url: string): Observable<T[]> {
+    return this.http.get<T[] | Paginated<T>>(url).pipe(
+      expand((payload) => {
+        if (!isPaginatedPayload<T>(payload) || !payload.next) {
+          return EMPTY;
+        }
+        return this.http.get<T[] | Paginated<T>>(payload.next);
+      }),
+      map((payload) => (isPaginatedPayload<T>(payload) ? payload.results : payload)),
+      reduce((allRows, pageRows) => [...allRows, ...pageRows], [] as T[]),
+    );
+  }
+
   listByPosition(positionId: number): Observable<PositionApplicant[]> {
     return forkJoin({
-      applications: this.http
-        .get<JobApplicationDto[] | Paginated<JobApplicationDto>>(this.applicationsUrl)
-        .pipe(map(asList)),
-      candidates: this.http
-        .get<CandidateDto[] | Paginated<CandidateDto>>(this.candidatesUrl)
-        .pipe(map(asList)),
-      evaluations: this.http
-        .get<EvaluationDto[] | Paginated<EvaluationDto>>(this.evaluationsUrl)
-        .pipe(map(asList)),
+      applications: this.fetchAllPages<JobApplicationDto>(this.applicationsUrl),
+      candidates: this.fetchAllPages<CandidateDto>(this.candidatesUrl),
+      evaluations: this.fetchAllPages<EvaluationDto>(this.evaluationsUrl),
     }).pipe(
       map(({ applications, candidates, evaluations }) => {
         const candidateById = new Map(candidates.map((candidate) => [candidate.id, candidate]));
@@ -157,18 +168,10 @@ export class PositionApplicantsService {
 
   listInProgressTests(): Observable<InProgressTestItem[]> {
     return forkJoin({
-      applications: this.http
-        .get<JobApplicationDto[] | Paginated<JobApplicationDto>>(this.applicationsUrl)
-        .pipe(map(asList)),
-      candidates: this.http
-        .get<CandidateDto[] | Paginated<CandidateDto>>(this.candidatesUrl)
-        .pipe(map(asList)),
-      evaluations: this.http
-        .get<EvaluationDto[] | Paginated<EvaluationDto>>(this.evaluationsUrl)
-        .pipe(map(asList)),
-      positions: this.http
-        .get<PositionDto[] | Paginated<PositionDto>>(this.positionsUrl)
-        .pipe(map(asList)),
+      applications: this.fetchAllPages<JobApplicationDto>(this.applicationsUrl),
+      candidates: this.fetchAllPages<CandidateDto>(this.candidatesUrl),
+      evaluations: this.fetchAllPages<EvaluationDto>(this.evaluationsUrl),
+      positions: this.fetchAllPages<PositionDto>(this.positionsUrl),
     }).pipe(
       map(({ applications, candidates, evaluations, positions }) => {
         const applicationById = new Map(applications.map((application) => [application.id, application]));
@@ -208,9 +211,11 @@ export class PositionApplicantsService {
   }
 
   listLaunchableTemplates(): Observable<LaunchableTemplate[]> {
-    return this.http
-      .get<TemplateDto[] | Paginated<TemplateDto>>(this.templatesUrl)
-      .pipe(map((payload) => asList(payload).map((template) => ({ id: template.id, name: template.name }))));
+    return this.fetchAllPages<TemplateDto>(this.templatesUrl).pipe(
+      map((templates) =>
+        templates.map((template) => ({ id: template.id, name: template.name })),
+      ),
+    );
   }
 
   launchTestForApplication(

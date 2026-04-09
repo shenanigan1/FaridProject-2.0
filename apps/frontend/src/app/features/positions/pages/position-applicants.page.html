@@ -73,10 +73,16 @@
               <button
                 type="button"
                 (click)="launchTest(applicant)"
-                [disabled]="isLaunching(applicant.applicationId)"
+                [disabled]="
+                  isLaunching(applicant.applicationId) || applicant.ongoingTestsCount > 0
+                "
                 class="inline-flex items-center justify-center rounded-xl bg-blue-600 px-3 py-2 text-xs font-semibold text-white transition hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {{ isLaunching(applicant.applicationId) ? 'Launching…' : 'Launch test' }}
+                @if (applicant.ongoingTestsCount > 0) {
+                  Test already launched
+                } @else {
+                  {{ isLaunching(applicant.applicationId) ? 'Launching…' : 'Launch test' }}
+                }
               </button>
             </div>
           </article>
