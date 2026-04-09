@@ -3,6 +3,7 @@ import { of, throwError } from 'rxjs';
 
 import {
   InProgressTestItem,
+  ManagerOption,
   PositionApplicantsService,
 } from '@features/positions/services/position-applicants.service';
 
@@ -26,14 +27,25 @@ describe('TestsInProgressPage', () => {
       updatedAt: '2026-04-09T10:00:00Z',
     },
   ];
+  const managers: ManagerOption[] = [
+    { id: 9, full_name: 'Alice Manager', email: 'alice.manager@example.com' },
+    { id: 12, full_name: 'Bob Manager', email: 'bob.manager@example.com' },
+  ];
 
   beforeEach(async () => {
     applicantsServiceSpy = jasmine.createSpyObj<PositionApplicantsService>(
       'PositionApplicantsService',
-      ['listInProgressTests', 'assignManagerToEvaluation', 'getEvaluationQuestionnaire', 'saveEvaluationQuestionnaire'],
+      [
+        'listInProgressTests',
+        'listManagers',
+        'assignManagerToEvaluation',
+        'getEvaluationQuestionnaire',
+        'saveEvaluationQuestionnaire',
+      ],
     );
 
     applicantsServiceSpy.listInProgressTests.and.returnValue(of(testsInProgress));
+    applicantsServiceSpy.listManagers.and.returnValue(of(managers));
     applicantsServiceSpy.assignManagerToEvaluation.and.returnValue(
       of({ id: 41, assigned_to: 9 }),
     );
@@ -86,6 +98,7 @@ describe('TestsInProgressPage', () => {
 
   it('loads tests in progress', () => {
     expect(applicantsServiceSpy.listInProgressTests).toHaveBeenCalledTimes(1);
+    expect(applicantsServiceSpy.listManagers).toHaveBeenCalledTimes(1);
     expect(component.isLoading).toBeFalse();
   });
 
@@ -118,8 +131,14 @@ describe('TestsInProgressPage', () => {
     );
   });
 
-  it('assigns manager to selected evaluation', () => {
-    component.assignManager(testsInProgress[0], '9');
+  it('assigns manager selected from per-card manager selector', () => {
+    component.setManagerSearch(41, 'alice');
+    const filteredManagers = component.filteredManagers(41);
+    expect(filteredManagers.length).toBe(1);
+    expect(filteredManagers[0].id).toBe(9);
+
+    component.setSelectedManager(41, '9');
+    component.assignSelectedManager(testsInProgress[0]);
 
     expect(applicantsServiceSpy.assignManagerToEvaluation).toHaveBeenCalledWith(41, 9);
     expect(component.assignmentMessage).toContain('assigned');

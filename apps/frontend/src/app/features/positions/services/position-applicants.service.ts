@@ -89,6 +89,12 @@ export interface LaunchableTemplate {
   name: string;
 }
 
+export interface ManagerOption {
+  id: number;
+  full_name: string;
+  email: string;
+}
+
 interface LaunchEvaluationPayload {
   application_id: number;
   template_id?: number;
@@ -245,6 +251,14 @@ export class PositionApplicantsService {
       `/api/evaluations/${evaluationId}/`,
       { assigned_to: managerId },
     );
+  }
+
+  listManagers(query = ''): Observable<ManagerOption[]> {
+    const normalized = query.trim();
+    const url = normalized
+      ? `/api/evaluations/managers/?q=${encodeURIComponent(normalized)}`
+      : '/api/evaluations/managers/';
+    return this.http.get<ManagerOption[]>(url);
   }
 
   getEvaluationQuestionnaire(evaluationId: number): Observable<EvaluationQuestionnaire> {

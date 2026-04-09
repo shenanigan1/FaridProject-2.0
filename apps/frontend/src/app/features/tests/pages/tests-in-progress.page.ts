@@ -14,6 +14,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   EvaluationQuestionnaire,
   InProgressTestItem,
+  ManagerOption,
   PositionApplicantsService,
 } from '@features/positions/services/position-applicants.service';
 
@@ -75,6 +76,10 @@ export class TestsInProgressPage {
   isLoading = true;
   errorMessage: string | null = null;
   assignmentMessage: string | null = null;
+  managerLoadError: string | null = null;
+  managers: ManagerOption[] = [];
+  managerSearchByEvaluation: Record<number, string> = {};
+  selectedManagerByEvaluation: Record<number, string> = {};
   selectedApplicationId: number | null = null;
   selectedEvaluationId: number | null = null;
   questionnaire: EvaluationQuestionnaire | null = null;
@@ -82,7 +87,26 @@ export class TestsInProgressPage {
   questionnaireSaving = false;
 
   constructor() {
+    this.loadManagers();
     this.loadTestsInProgress();
+  }
+
+  private loadManagers(): void {
+    this.applicantsService
+      .listManagers()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (managers) => {
+          this.managers = managers;
+          this.managerLoadError = null;
+          this.cdr.markForCheck();
+        },
+        error: () => {
+          this.managers = [];
+          this.managerLoadError = 'Unable to load managers list.';
+          this.cdr.markForCheck();
+        },
+      });
   }
 
   private loadTestsInProgress(): void {
@@ -126,6 +150,53 @@ export class TestsInProgressPage {
           this.cdr.markForCheck();
         },
       });
+  }
+
+  setManagerSearch(evaluationId: number, value: string): void {
+    this.managerSearchByEvaluation = {
+      ...this.managerSearchByEvaluation,
+      [evaluationId]: value.trim(),
+    };
+  }
+
+  onManagerSearchInput(evaluationId: number, event: Event): void {
+    const target = event.target;
+    if (!(target instanceof HTMLInputElement)) {
+      return;
+    }
+    this.setManagerSearch(evaluationId, target.value);
+  }
+
+  setSelectedManager(evaluationId: number, value: string): void {
+    this.selectedManagerByEvaluation = {
+      ...this.selectedManagerByEvaluation,
+      [evaluationId]: value,
+    };
+  }
+
+  onSelectedManagerChange(evaluationId: number, event: Event): void {
+    const target = event.target;
+    if (!(target instanceof HTMLSelectElement)) {
+      return;
+    }
+    this.setSelectedManager(evaluationId, target.value);
+  }
+
+  filteredManagers(evaluationId: number): ManagerOption[] {
+    const query = (this.managerSearchByEvaluation[evaluationId] ?? '').toLowerCase();
+    if (!query) {
+      return this.managers;
+    }
+
+    return this.managers.filter((manager) => {
+      const blob = `${manager.full_name} ${manager.email}`.toLowerCase();
+      return blob.includes(query);
+    });
+  }
+
+  assignSelectedManager(testItem: InProgressTestItem): void {
+    const selected = this.selectedManagerByEvaluation[testItem.evaluationId];
+    this.assignManager(testItem, selected ?? '');
   }
 
   openApplication(applicationId: number): void {

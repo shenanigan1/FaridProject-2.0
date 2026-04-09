@@ -434,3 +434,55 @@ def test_evaluation_questionnaire_rejects_foreign_question(api_client):
 
     assert res.status_code == 400
     assert "answers" in res.data
+
+
+def test_managers_endpoint_lists_active_managers(api_client):
+    _authenticate_as_hr(api_client)
+    active_manager = UserFactory.create(
+        email="active-manager@example.com",
+        first_name="Alice",
+        last_name="Martin",
+        role=UserRoles.MANAGER,
+        is_active=True,
+    )
+    UserFactory.create(
+        email="inactive-manager@example.com",
+        role=UserRoles.MANAGER,
+        is_active=False,
+    )
+    UserFactory.create(
+        email="employee@example.com", role=UserRoles.EMPLOYEE, is_active=True
+    )
+
+    url = reverse(f"{BASENAME}-managers")
+    res = api_client.get(url)
+
+    assert res.status_code == 200
+    ids = {row["id"] for row in res.data}
+    assert active_manager.id in ids
+    assert len(res.data) == 1
+
+
+def test_managers_endpoint_supports_search(api_client):
+    _authenticate_as_hr(api_client)
+    UserFactory.create(
+        email="anna.manager@example.com",
+        first_name="Anna",
+        last_name="Manager",
+        role=UserRoles.MANAGER,
+        is_active=True,
+    )
+    UserFactory.create(
+        email="bob.manager@example.com",
+        first_name="Bob",
+        last_name="Manager",
+        role=UserRoles.MANAGER,
+        is_active=True,
+    )
+
+    url = reverse(f"{BASENAME}-managers")
+    res = api_client.get(url, {"q": "anna"})
+
+    assert res.status_code == 200
+    assert len(res.data) == 1
+    assert res.data[0]["email"] == "anna.manager@example.com"

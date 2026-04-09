@@ -1,3 +1,4 @@
+from django.db.models import Q
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
@@ -12,7 +13,7 @@ from evaluations.serializers import (
     build_questionnaire_payload,
 )
 from templates_grid.models import SkillQuestion
-from users.models import UserRoles
+from users.models import User, UserRoles
 from users.permissions import IsHrAdminOrDirector
 
 
@@ -64,6 +65,28 @@ class EvaluationViewSet(ModelViewSet):
         evaluations = serializer.save()
         output = EvaluationSerializer(evaluations, many=True)
         return Response(output.data, status=status.HTTP_201_CREATED)
+
+    @action(detail=False, methods=["get"], url_path="managers")
+    def managers(self, request):
+        query = request.query_params.get("q", "").strip()
+        managers = User.objects.filter(role=UserRoles.MANAGER, is_active=True).order_by(
+            "first_name", "last_name", "email"
+        )
+        if query:
+            managers = managers.filter(
+                Q(first_name__icontains=query)
+                | Q(last_name__icontains=query)
+                | Q(email__icontains=query)
+            )
+        payload = [
+            {
+                "id": manager.id,
+                "full_name": manager.full_name or manager.email,
+                "email": manager.email,
+            }
+            for manager in managers
+        ]
+        return Response(payload, status=status.HTTP_200_OK)
 
     @action(detail=True, methods=["get"], url_path="questionnaire")
     def questionnaire(self, request, pk=None):

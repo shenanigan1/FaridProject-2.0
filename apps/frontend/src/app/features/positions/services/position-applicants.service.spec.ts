@@ -281,6 +281,25 @@ describe('PositionApplicantsService', () => {
     expect(assignedTo).toBe(12);
   });
 
+  it('lists managers with optional search query', () => {
+    let managerIds: number[] = [];
+    service.listManagers('alice').subscribe((managers) => {
+      managerIds = managers.map((manager) => manager.id);
+    });
+
+    const request = httpMock.expectOne('/api/evaluations/managers/?q=alice');
+    expect(request.request.method).toBe('GET');
+    request.flush([
+      {
+        id: 9,
+        full_name: 'Alice Manager',
+        email: 'alice.manager@example.com',
+      },
+    ]);
+
+    expect(managerIds).toEqual([9]);
+  });
+
   it('loads questionnaire for an evaluation', () => {
     let questionCount = 0;
     service.getEvaluationQuestionnaire(44).subscribe((payload) => {
