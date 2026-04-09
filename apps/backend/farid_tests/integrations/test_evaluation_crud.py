@@ -6,6 +6,7 @@ from evaluations.models.evaluation import Evaluation
 from farid_tests.factories.users import UserFactory
 from farid_tests.factories.positions import PositionFactory
 from farid_tests.factories.templates_grid import TemplateFactory, TemplateVersionFactory
+from users.models import UserRoles
 
 pytestmark = pytest.mark.django_db
 
@@ -16,7 +17,15 @@ def _unwrap_list_response(data):
     return data["results"] if isinstance(data, dict) and "results" in data else data
 
 
+def _authenticate_as_hr(api_client):
+    user = UserFactory.create(
+        email="hr-evaluations@example.com", password="Passw0rd!", role=UserRoles.HR
+    )
+    api_client.force_authenticate(user=user)
+
+
 def test_create_evaluation_success(api_client):
+    _authenticate_as_hr(api_client)
     subject = UserFactory.create(email="cand@example.com", password=None)
     template = TemplateFactory.create(name="Driver Template")
     template_version = TemplateVersionFactory.create(template=template, version=1)
@@ -45,6 +54,7 @@ def test_create_evaluation_success(api_client):
 
 
 def test_create_evaluation_missing_fields(api_client):
+    _authenticate_as_hr(api_client)
     url = reverse(f"{BASENAME}-list")
     res = api_client.post(url, {}, format="json")
 
@@ -55,6 +65,7 @@ def test_create_evaluation_missing_fields(api_client):
 
 
 def test_list_evaluations(api_client):
+    _authenticate_as_hr(api_client)
     # Create 2 evals via ORM (independent of API create)
     subject = UserFactory.create(email="s1@example.com", password=None)
     template_version = TemplateVersionFactory.create(
@@ -77,6 +88,7 @@ def test_list_evaluations(api_client):
 
 
 def test_retrieve_evaluation(api_client):
+    _authenticate_as_hr(api_client)
     subject = UserFactory.create(email="s2@example.com", password=None)
     template_version = TemplateVersionFactory.create(
         template=TemplateFactory.create(), version=1
@@ -93,6 +105,7 @@ def test_retrieve_evaluation(api_client):
 
 
 def test_update_evaluation_status(api_client):
+    _authenticate_as_hr(api_client)
     subject = UserFactory.create(email="s3@example.com", password=None)
     template_version = TemplateVersionFactory.create(
         template=TemplateFactory.create(), version=1
@@ -108,3 +121,58 @@ def test_update_evaluation_status(api_client):
 
     ev.refresh_from_db()
     assert ev.status == "completed"
+
+
+def test_manager_only_lists_assigned_evaluations(api_client):
+    manager = UserFactory.create(
+        email="manager@example.com", password="Passw0rd!", role=UserRoles.MANAGER
+    )
+    other_manager = UserFactory.create(
+        email="manager2@example.com", password="Passw0rd!", role=UserRoles.MANAGER
+    )
+    subject = UserFactory.create(email="subject-manager@example.com", password=None)
+    template_version = TemplateVersionFactory.create(
+        template=TemplateFactory.create(), version=1
+    )
+
+    owned = Evaluation.objects.create(
+        subject=subject, template_version=template_version, assigned_to=manager
+    )
+    Evaluation.objects.create(
+        subject=subject, template_version=template_version, assigned_to=other_manager
+    )
+
+    api_client.force_authenticate(user=manager)
+    url = reverse(f"{BASENAME}-list")
+    res = api_client.get(url)
+
+    assert res.status_code == 200
+    items = _unwrap_list_response(res.data)
+    assert len(items) == 1
+    assert items[0]["id"] == owned.id
+
+
+def test_candidate_can_view_own_evaluation_without_internal_comment(api_client):
+    candidate_user = UserFactory.create(
+        email="candidate-view@example.com",
+        password="Passw0rd!",
+        role=UserRoles.CANDIDATE,
+    )
+    template_version = TemplateVersionFactory.create(
+        template=TemplateFactory.create(), version=1
+    )
+    evaluation = Evaluation.objects.create(
+        subject=candidate_user,
+        template_version=template_version,
+        subject_comment="Public summary",
+        internal_comment="Internal-only notes",
+    )
+
+    api_client.force_authenticate(user=candidate_user)
+    url = reverse(f"{BASENAME}-detail", args=[evaluation.id])
+    res = api_client.get(url)
+
+    assert res.status_code == 200
+    assert res.data["id"] == evaluation.id
+    assert "internal_comment" not in res.data
+    assert res.data["subject_comment"] == "Public summary"

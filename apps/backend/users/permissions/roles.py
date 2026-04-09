@@ -15,3 +15,11 @@ class HasAnyRole(BasePermission):
 
 class IsHrAdminOrDirector(HasAnyRole):
     allowed_roles = {UserRoles.HR, UserRoles.ADMIN, UserRoles.DIRECTOR}
+
+
+class IsManager(HasAnyRole):
+    allowed_roles = {UserRoles.MANAGER}
+
+
+class IsCandidate(HasAnyRole):
+    allowed_roles = {UserRoles.CANDIDATE}

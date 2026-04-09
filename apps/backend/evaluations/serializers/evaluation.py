@@ -32,6 +32,26 @@ class EvaluationSerializer(serializers.ModelSerializer):
         ]
 
 
+class SubjectEvaluationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Evaluation
+        fields = [
+            "id",
+            "subject",
+            "application",
+            "position",
+            "template_version",
+            "assigned_to",
+            "status",
+            "subject_comment",
+            "created_at",
+            "updated_at",
+            "completed_at",
+            "validated_at",
+        ]
+        read_only_fields = fields
+
+
 class StartEvaluationSerializer(serializers.Serializer):
     candidate_id = serializers.IntegerField(required=True)
     grid_id = serializers.IntegerField(required=True)
