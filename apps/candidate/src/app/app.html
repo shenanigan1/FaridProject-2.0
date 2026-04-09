@@ -1,1 +1,105 @@
-<router-outlet />
+<section class="min-h-screen bg-slate-950 text-slate-100">
+  <header
+    class="sticky top-0 z-40 flex h-[72px] items-center justify-between border-b border-slate-800 bg-gradient-to-r from-slate-900 via-slate-900 to-slate-800 px-6"
+  >
+    <div class="flex items-center gap-3">
+      <div
+        class="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600/90 shadow-md shadow-blue-600/20"
+        aria-hidden="true"
+      >
+        <span class="text-lg text-white">💼</span>
+      </div>
+
+      <div class="leading-tight">
+        <p class="text-sm font-semibold text-white sm:text-base">{{ appTitle }}</p>
+        <p class="text-xs text-slate-400">Candidate portal</p>
+      </div>
+    </div>
+    <nav class="hidden items-center gap-2 sm:flex">
+      <a
+        routerLink="/jobs"
+        routerLinkActive="bg-slate-700 text-white"
+        class="rounded-lg px-3 py-2 text-sm text-slate-300 hover:bg-slate-800"
+      >
+        Jobs
+      </a>
+      <a
+        routerLink="/tests"
+        routerLinkActive="bg-slate-700 text-white"
+        class="rounded-lg px-3 py-2 text-sm text-slate-300 hover:bg-slate-800"
+      >
+        My Tests
+      </a>
+    </nav>
+
+    <button
+      type="button"
+      class="flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-800/70 px-3 py-2 text-sm text-slate-100 transition hover:border-slate-600 hover:bg-slate-800"
+      data-testid="profile-button"
+      (click)="onProfileClicked()"
+    >
+      <span
+        class="flex h-8 w-8 items-center justify-center rounded-full border border-slate-600 bg-slate-700 text-xs font-semibold"
+      >
+        {{ profileInitials }}
+      </span>
+      <span class="hidden sm:inline">{{ profileFullName }}</span>
+    </button>
+  </header>
+
+  <router-outlet />
+
+  @if (authModalOpen) {
+    <app-auth-modal
+      (authenticated)="onAuthSuccess()"
+      (closed)="authModalOpen = false"
+    />
+  }
+
+  <app-ui-modal
+    [open]="profileModalOpen"
+    (openChange)="profileModalOpen = $event"
+    title="My profile"
+    size="md"
+  >
+    <form class="space-y-4" [formGroup]="profileForm" (ngSubmit)="onProfileSave()">
+      <app-ui-text-input
+        formControlName="firstName"
+        label="First name"
+        placeholder="John"
+      />
+
+      <app-ui-text-input
+        formControlName="lastName"
+        label="Last name"
+        placeholder="Doe"
+      />
+
+      <app-ui-text-input
+        formControlName="email"
+        label="Email"
+        placeholder="candidate@example.com"
+        type="email"
+      />
+
+      <app-ui-text-input
+        formControlName="phone"
+        label="Phone"
+        placeholder="+33..."
+        type="tel"
+      />
+
+      <div modal-actions class="flex w-full items-center justify-between gap-2">
+        <button
+          type="button"
+          class="rounded-xl border border-slate-700 px-4 py-2 text-sm text-slate-200 hover:bg-slate-800"
+          (click)="onLogoutClicked()"
+        >
+          Log out
+        </button>
+
+        <app-ui-button-primary type="submit" label="Save profile" />
+      </div>
+    </form>
+  </app-ui-modal>
+</section>

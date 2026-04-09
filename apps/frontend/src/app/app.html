@@ -1,19 +1,29 @@
-<app-top-bar
-  title="Recruitment Overview"
-  subtitle="Fleet Management Hub"
-  [notificationCount]="1"
-  [user]="{ fullName: 'Farid' }"
-/>
+<div class="min-h-screen px-3 py-2 text-slate-100 md:px-6">
+  <div class="app-shell-card relative overflow-hidden">
+    <div class="fixed top-2 z-50 w-full max-w-[420px]">
+      <app-top-bar
+        title="Recruitment Overview"
+        subtitle="Fleet Management Hub"
+        [notificationCount]="1"
+        [user]="{ fullName: 'Farid' }"
+      />
+    </div>
 
-<router-outlet />
+    <main class="px-2 pt-[72px] pb-[72px]">
+      <router-outlet />
+    </main>
 
-<app-menu-bar
-  [items]="[
-    { label: 'Dashboard', icon: '📊', route: '/dashboard' },
-    { label: 'Candidates', icon: '👥', route: '/candidates' },
-    { label: 'Tests', icon: '🧪', route: '/tests' },
-    { label: 'Templates', icon: '📐', route: '/templates' },
-    { label: 'Positions', icon: '📋', route: '/positions' },
-    { label: 'Pools', icon: '🗂️', route: '/pools' },
-  ]"
-/>
+    <div class="fixed bottom-2 z-50 w-full max-w-[420px]">
+      <app-menu-bar
+        [items]="[
+          { label: 'Dashboard', icon: '📊', route: '/dashboard' },
+          { label: 'Candidates', icon: '👥', route: '/candidates' },
+          { label: 'Tests', icon: '🧪', route: '/tests' },
+          { label: 'Templates', icon: '📐', route: '/templates' },
+          { label: 'Positions', icon: '📋', route: '/positions' },
+          { label: 'Pools', icon: '🗂️', route: '/pools' },
+        ]"
+      />
+    </div>
+  </div>
+</div>

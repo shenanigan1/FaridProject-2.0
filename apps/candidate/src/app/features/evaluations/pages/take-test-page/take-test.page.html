@@ -1,0 +1,49 @@
+<main class="mx-auto w-full max-w-4xl space-y-6 px-6 py-8">
+  <div class="flex items-center justify-between gap-3">
+    <h1 class="text-2xl font-semibold text-white">Take test</h1>
+    <a routerLink="/tests" class="text-sm text-blue-300 hover:text-blue-200">Back to my tests</a>
+  </div>
+
+  @if (loading) {
+    <p class="text-sm text-slate-300">Loading questions...</p>
+  } @else if (errorMessage) {
+    <p class="rounded-lg border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+      {{ errorMessage }}
+    </p>
+  } @else {
+    <form class="space-y-4" (ngSubmit)="onSubmit()">
+      @for (question of questions; track question.evaluation_question_id) {
+        <section class="rounded-xl border border-slate-700 bg-slate-900/80 p-4">
+          <p class="text-sm font-semibold text-white">{{ question.question_label }}</p>
+          <p class="mb-3 text-xs text-slate-400">
+            {{ question.section }} · score {{ question.min_score }}-{{ question.max_score }}
+          </p>
+
+          <input
+            class="w-28 rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100"
+            type="number"
+            [min]="question.min_score"
+            [max]="question.max_score"
+            [name]="'question-' + question.evaluation_question_id"
+            [(ngModel)]="answers[question.evaluation_question_id]"
+          />
+        </section>
+      }
+
+      <button
+        type="submit"
+        class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-500 disabled:opacity-50"
+        [disabled]="submitting"
+      >
+        {{ submitting ? 'Submitting...' : 'Submit answers' }}
+      </button>
+    </form>
+
+    @if (submitResult) {
+      <p class="rounded-lg border border-emerald-500/40 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-200">
+        Answers saved ({{ submitResult.answered_questions }}/{{ submitResult.total_questions }}). Current status:
+        {{ submitResult.status }}.
+      </p>
+    }
+  }
+</main>

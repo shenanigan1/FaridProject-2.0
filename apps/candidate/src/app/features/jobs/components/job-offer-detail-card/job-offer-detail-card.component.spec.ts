@@ -56,7 +56,7 @@ describe('JobOfferDetailCardComponent', () => {
     spyOn(component.applyClicked, 'emit');
 
     const button = fixture.debugElement.query(
-      By.css('[data-testid="apply-button"]'),
+      By.css('[data-testid="apply-button"] button'),
     ).nativeElement as HTMLButtonElement;
 
     button.click();
