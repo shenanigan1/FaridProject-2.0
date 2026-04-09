@@ -78,8 +78,8 @@ export class TestsInProgressPage {
   assignmentMessage: string | null = null;
   managerLoadError: string | null = null;
   managers: ManagerOption[] = [];
-  managerSearchByEvaluation: Record<number, string> = {};
-  selectedManagerByEvaluation: Record<number, string> = {};
+  managerSearchByEvaluation: Partial<Record<number, string>> = {};
+  selectedManagerByEvaluation: Partial<Record<number, string>> = {};
   selectedApplicationId: number | null = null;
   selectedEvaluationId: number | null = null;
   questionnaire: EvaluationQuestionnaire | null = null;
