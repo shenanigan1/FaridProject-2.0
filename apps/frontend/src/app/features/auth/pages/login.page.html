@@ -1,60 +1,99 @@
-<div class="min-h-screen flex items-center justify-center bg-slate-950 p-4">
-  <div class="w-full max-w-sm rounded-2xl bg-slate-900/60 border border-slate-700/50 shadow-xl p-6">
+<section class="min-h-screen bg-[#07153a] px-4 py-6 text-slate-100">
+  <div class="mx-auto flex min-h-screen w-full max-w-md flex-col justify-center gap-6">
+    <header class="text-center">
+      <div class="mb-2 flex items-center justify-center gap-3">
+        <div class="rounded-xl bg-blue-500 p-2">
+          <span class="text-2xl">🚚</span>
+        </div>
+        <h1 class="text-4xl font-black uppercase italic tracking-tight">
+          Fleet<span class="text-blue-400">Flow</span>
+        </h1>
+      </div>
+      <p class="text-xs font-bold tracking-[0.22em] text-slate-400 uppercase">
+        Logistics & Recruitment Portal
+      </p>
+    </header>
 
-    <!-- Header -->
-    <div class="text-center mb-6">
-      <h1 class="text-xl font-semibold text-white">FleetConnect HR</h1>
-      <p class="text-xs text-slate-400">Logistics & Recruitment Portal</p>
-    </div>
+    <article class="rounded-3xl border border-slate-800 bg-[#1a2948] p-6 shadow-2xl">
+      <div class="mb-4 grid grid-cols-3 gap-2">
+        @for (p of profiles; track p.key) {
+          <button
+            type="button"
+            class="rounded-xl border px-2 py-2 text-[11px] font-bold tracking-wide uppercase transition"
+            [class.border-blue-500]="selectedProfile() === p.key"
+            [class.bg-blue-500/10]="selectedProfile() === p.key"
+            [class.text-blue-300]="selectedProfile() === p.key"
+            [class.border-slate-700]="selectedProfile() !== p.key"
+            [class.text-slate-300]="selectedProfile() !== p.key"
+            (click)="selectProfile(p.key)"
+          >
+            {{ p.label }}
+          </button>
+        }
+      </div>
 
-    <!-- Profile selector -->
-    <div class="grid grid-cols-3 gap-2 mb-5">
-      @for (p of profiles; track p.key) {
-        <button
-          type="button"
-          class="rounded-lg border px-2 py-3 text-xs font-semibold transition text-white"
-          [class.border-sky-500]="selectedProfile() === p.key"
-          (click)="selectProfile(p.key)"
-        >
-          {{ p.label }}
-        </button>
+      @if (errorMessage()) {
+        <div class="mb-3 rounded-xl border border-red-500/25 bg-red-500/10 p-3 text-sm text-red-200">
+          {{ errorMessage() }}
+        </div>
       }
+
+      <form [formGroup]="form" (ngSubmit)="submit()" class="space-y-4">
+        <div>
+          <label class="mb-2 ml-1 block text-[10px] font-bold tracking-[0.2em] text-slate-400 uppercase">
+            {{ emailLabel() }}
+          </label>
+          <input
+            formControlName="email"
+            type="email"
+            placeholder="name@fleetflow.com"
+            class="w-full rounded-xl border border-slate-700 bg-slate-900/60 px-4 py-4 text-slate-100 placeholder:text-slate-500 focus:border-blue-500 focus:outline-none"
+          />
+        </div>
+
+        <div>
+          <div class="mb-2 flex items-center justify-between px-1">
+            <label class="text-[10px] font-bold tracking-[0.2em] text-slate-400 uppercase">
+              Password
+            </label>
+            <a routerLink="/support" class="text-[10px] font-bold tracking-[0.2em] text-blue-400 uppercase">
+              Forgot password?
+            </a>
+          </div>
+          <input
+            formControlName="password"
+            type="password"
+            placeholder="••••••••"
+            class="w-full rounded-xl border border-slate-700 bg-slate-900/60 px-4 py-4 text-slate-100 placeholder:text-slate-500 focus:border-blue-500 focus:outline-none"
+          />
+        </div>
+
+        <label class="flex items-center gap-2 text-xs text-slate-300">
+          <input type="checkbox" formControlName="rememberMe" />
+          Remember me
+        </label>
+
+        <button
+          type="submit"
+          class="w-full rounded-xl bg-blue-500 py-4 text-base font-bold uppercase tracking-wide text-white shadow-[0_0_15px_rgba(59,130,246,0.35)] transition hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-60"
+          [disabled]="loading()"
+        >
+          {{ loading() ? 'Logging in…' : 'Log in' }}
+        </button>
+      </form>
+    </article>
+
+    <div class="text-center text-sm text-slate-400">
+      Don’t have an account?
+      <a routerLink="/support" class="font-semibold text-slate-100 underline decoration-blue-400 decoration-2 underline-offset-2">
+        Request Access
+      </a>
     </div>
 
-    <app-ui-alert [message]="errorMessage()"></app-ui-alert>
-
-    <form [formGroup]="form" (ngSubmit)="submit()" class="space-y-4">
-
-      <app-ui-text-input
-        formControlName="email"
-        [label]="emailLabel()"
-        placeholder="Enter your credentials">
-      </app-ui-text-input>
-
-      <app-ui-password-input
-        formControlName="password"
-        label="Password"
-        placeholder="••••••••">
-      </app-ui-password-input>
-
-      <label class="flex items-center gap-2 text-xs text-slate-300">
-        <input type="checkbox" formControlName="rememberMe" />
-        Remember me
-      </label>
-
-      <app-ui-button-primary
-        type="submit"
-        variant="primary"
-        [loading]="loading()"
-        block>
-        Sign In
-      </app-ui-button-primary>
-
-    </form>
-
-    <div class="mt-6 text-center text-xs text-slate-400">
-      <a routerLink="/support" class="text-sky-400">Contact Dispatch</a>
+    <div class="border-t border-slate-800 pt-4 text-center">
+      <p class="mx-auto inline-flex rounded-full border border-slate-700 px-4 py-1 font-mono text-[10px] tracking-[0.25em] text-slate-500 uppercase">
+        V 0.0.0 "KINETIC" // SYSTEM_ACTIVE
+      </p>
     </div>
-
   </div>
-</div>
+</section>
