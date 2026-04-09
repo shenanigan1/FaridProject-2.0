@@ -52,6 +52,13 @@ export const routes: Routes = [
     canActivate: [AuthGuard, RoleGuard],
     data: { roles: ['hr', 'admin', 'director', 'manager'] },
   },
+  {
+    path: 'roles',
+    loadComponent: () =>
+      import('./features/roles/pages/roles-admin.page').then((m) => m.RolesAdminPage),
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['admin'] },
+  },
 
   { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
   { path: '**', redirectTo: 'dashboard' },

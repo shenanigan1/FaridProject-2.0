@@ -9,6 +9,7 @@ class UserSerializer(serializers.ModelSerializer):
             "id",
             "email",
             "role",
+            "is_active",
             "password",
             "first_name",
             "last_name",
@@ -18,7 +19,10 @@ class UserSerializer(serializers.ModelSerializer):
         }
 
     def validate_email(self, value):
-        if User.objects.filter(email=value).exists():
+        queryset = User.objects.filter(email=value)
+        if self.instance:
+            queryset = queryset.exclude(id=self.instance.id)
+        if queryset.exists():
             raise serializers.ValidationError("Email already exists.")
         return value
 
@@ -26,3 +30,12 @@ class UserSerializer(serializers.ModelSerializer):
         password = validated_data.pop("password")
         user = User.objects.create_user(password=password, **validated_data)
         return user
+
+    def update(self, instance, validated_data):
+        password = validated_data.pop("password", None)
+        for key, value in validated_data.items():
+            setattr(instance, key, value)
+        if password:
+            instance.set_password(password)
+        instance.save()
+        return instance

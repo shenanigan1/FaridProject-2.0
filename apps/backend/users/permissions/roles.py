@@ -23,3 +23,7 @@ class IsManager(HasAnyRole):
 
 class IsCandidate(HasAnyRole):
     allowed_roles = {UserRoles.CANDIDATE}
+
+
+class IsAdmin(HasAnyRole):
+    allowed_roles = {UserRoles.ADMIN}
