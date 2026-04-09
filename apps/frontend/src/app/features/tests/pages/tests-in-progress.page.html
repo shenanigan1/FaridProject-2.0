@@ -1,0 +1,64 @@
+<section class="min-h-[calc(100vh-144px)] bg-slate-950 p-4 text-slate-100">
+  <header class="mb-4 flex items-center justify-between gap-3">
+    <div>
+      <h1 class="text-xl font-semibold">Tests in progress</h1>
+      <p class="text-sm text-slate-400">People currently being evaluated</p>
+    </div>
+
+    <a
+      routerLink="/positions"
+      class="rounded-xl border border-slate-700 px-3 py-2 text-xs text-slate-200 hover:bg-slate-800"
+    >
+      Back to positions
+    </a>
+  </header>
+
+  <div class="mb-4">
+    <input
+      type="search"
+      [formControl]="searchControl"
+      placeholder="Search candidate or position..."
+      class="w-full rounded-xl border border-slate-700 bg-slate-900 px-4 py-3 text-sm text-slate-100 outline-none focus:border-blue-500"
+    />
+  </div>
+
+  @if (isLoading) {
+    <p class="text-sm text-slate-400">Loading tests in progress...</p>
+  }
+
+  @if (!isLoading && errorMessage) {
+    <div class="rounded-xl border border-red-500/25 bg-red-500/10 p-3 text-sm text-red-200">
+      {{ errorMessage }}
+    </div>
+  }
+
+  @if (!isLoading && !errorMessage) {
+    @if (filteredTests$ | async; as testsInProgress) {
+      <div class="space-y-3">
+        @for (testItem of testsInProgress; track testItem.evaluationId) {
+          <article class="rounded-2xl border border-slate-800 bg-slate-900/60 p-4">
+            <div class="flex items-start justify-between gap-3">
+              <div>
+                <h2 class="text-sm font-semibold">{{ testItem.candidateName }}</h2>
+                <p class="mt-1 text-xs text-slate-400">{{ testItem.candidateEmail }}</p>
+                <p class="text-xs text-slate-500">{{ testItem.positionTitle }}</p>
+              </div>
+
+              <span class="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2 py-1 text-[10px] font-semibold uppercase text-emerald-300">
+                In progress
+              </span>
+            </div>
+
+            <p class="mt-3 text-xs text-slate-500">
+              Evaluation #{{ testItem.evaluationId }} • Updated at: {{ testItem.updatedAt }}
+            </p>
+          </article>
+        }
+
+        @if (testsInProgress.length === 0) {
+          <p class="text-sm text-slate-400">No tests are currently in progress.</p>
+        }
+      </div>
+    }
+  }
+</section>

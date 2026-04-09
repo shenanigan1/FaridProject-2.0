@@ -45,6 +45,13 @@ export const routes: Routes = [
     canActivate: [AuthGuard, RoleGuard],
     data: { roles: ['hr', 'admin', 'director', 'manager'] },
   },
+  {
+    path: 'tests',
+    loadChildren: () =>
+      import('src/app/features/tests/tests.routes').then((m) => m.TESTS_ROUTES),
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['hr', 'admin', 'director', 'manager'] },
+  },
 
   { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
   { path: '**', redirectTo: 'dashboard' },

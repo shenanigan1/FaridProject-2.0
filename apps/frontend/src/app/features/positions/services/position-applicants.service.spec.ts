@@ -24,15 +24,18 @@ describe('PositionApplicantsService', () => {
     httpMock.verify();
   });
 
-  it('maps applicants for a position with candidate details', () => {
+  it('maps applicants for a position with candidate details and ongoing tests count', () => {
     let names: string[] = [];
+    let ongoingTestsCount = 0;
 
     service.listByPosition(9).subscribe((applicants) => {
       names = applicants.map((applicant) => applicant.fullName);
+      ongoingTestsCount = applicants[0]?.ongoingTestsCount ?? 0;
     });
 
     const applicationsRequest = httpMock.expectOne('/api/jobapplications/');
     const candidatesRequest = httpMock.expectOne('/api/candidates/');
+    const evaluationsRequest = httpMock.expectOne('/api/evaluations/');
 
     applicationsRequest.flush([
       {
@@ -62,7 +65,74 @@ describe('PositionApplicantsService', () => {
         },
       },
     ]);
+    evaluationsRequest.flush([
+      {
+        id: 700,
+        application: 1,
+        status: 'in_progress',
+        updated_at: '2026-04-08T11:00:00Z',
+      },
+    ]);
 
     expect(names).toEqual(['Jane Doe']);
+    expect(ongoingTestsCount).toBe(1);
+  });
+
+  it('lists in-progress tests for all positions', () => {
+    let ids: number[] = [];
+
+    service.listInProgressTests().subscribe((testsInProgress) => {
+      ids = testsInProgress.map((item) => item.evaluationId);
+      expect(testsInProgress[0].positionTitle).toBe('Driver Linehaul');
+      expect(testsInProgress[0].candidateName).toBe('Jane Doe');
+    });
+
+    const applicationsRequest = httpMock.expectOne('/api/jobapplications/');
+    const candidatesRequest = httpMock.expectOne('/api/candidates/');
+    const evaluationsRequest = httpMock.expectOne('/api/evaluations/');
+    const positionsRequest = httpMock.expectOne('/api/positions/');
+
+    applicationsRequest.flush([
+      {
+        id: 1,
+        candidate: 11,
+        position: 9,
+        status: 'applied',
+        created_at: '2026-04-08T10:00:00Z',
+      },
+    ]);
+    candidatesRequest.flush([
+      {
+        id: 11,
+        user: {
+          first_name: 'Jane',
+          last_name: 'Doe',
+          email: 'jane@example.com',
+          phone: '+330000000',
+        },
+      },
+    ]);
+    evaluationsRequest.flush([
+      {
+        id: 700,
+        application: 1,
+        status: 'in_progress',
+        updated_at: '2026-04-08T11:00:00Z',
+      },
+      {
+        id: 701,
+        application: 1,
+        status: 'completed',
+        updated_at: '2026-04-08T12:00:00Z',
+      },
+    ]);
+    positionsRequest.flush([
+      {
+        id: 9,
+        title: 'Driver Linehaul',
+      },
+    ]);
+
+    expect(ids).toEqual([700]);
   });
 });

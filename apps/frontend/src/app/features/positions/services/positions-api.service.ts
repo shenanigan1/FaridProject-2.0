@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
 export interface PositionCreatePayload {
   company: number;
@@ -24,11 +24,20 @@ export interface Paginated<T> {
   results: T[];
 }
 
+interface JobApplicationLiteDto {
+  position: number;
+}
+
+function asArray<T>(value: T[] | Paginated<T>): T[] {
+  return Array.isArray(value) ? value : value.results;
+}
+
 @Injectable({ providedIn: 'root' })
 export class PositionsApiService {
   private readonly http = inject(HttpClient);
 
   private readonly baseUrl = '/api/positions/';
+  private readonly jobApplicationsUrl = '/api/jobapplications/';
 
   create(payload: PositionCreatePayload): Observable<PositionDto> {
     return this.http.post<PositionDto>(this.baseUrl, payload);
@@ -45,5 +54,19 @@ export class PositionsApiService {
 
   patch(id: number, payload: Partial<PositionCreatePayload>): Observable<PositionDto> {
     return this.http.patch<PositionDto>(`${this.baseUrl}${id}/`, payload);
+  }
+
+  listApplicationCounts(): Observable<Record<number, number>> {
+    return this.http
+      .get<JobApplicationLiteDto[] | Paginated<JobApplicationLiteDto>>(this.jobApplicationsUrl)
+      .pipe(
+        map((payload) => {
+          const counts: Record<number, number> = {};
+          for (const application of asArray(payload)) {
+            counts[application.position] = (counts[application.position] ?? 0) + 1;
+          }
+          return counts;
+        }),
+      );
   }
 }

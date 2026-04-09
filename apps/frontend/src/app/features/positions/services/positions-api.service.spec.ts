@@ -10,11 +10,13 @@ import {
 
 interface PositionsApiServiceMock {
   list: jasmine.Spy<() => ReturnType<PositionsApiService['list']>>;
+  listApplicationCounts: jasmine.Spy<() => ReturnType<PositionsApiService['listApplicationCounts']>>;
 }
 
 function makeApiMock(initial: PositionDto[] | Paginated<PositionDto> = []): PositionsApiServiceMock {
   return {
     list: jasmine.createSpy('list').and.returnValue(of(initial)),
+    listApplicationCounts: jasmine.createSpy('listApplicationCounts').and.returnValue(of({})),
   };
 }
 
@@ -59,6 +61,7 @@ describe('PositionsListPage', () => {
   it('should call api.list() on init', () => {
     const { apiMock } = setup();
     expect(apiMock.list).toHaveBeenCalledTimes(1);
+    expect(apiMock.listApplicationCounts).toHaveBeenCalledTimes(1);
   });
 
   it('should accept list API payloads (PositionDto[])', async () => {

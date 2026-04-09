@@ -23,6 +23,8 @@ describe('PositionApplicantsPage', () => {
       phone: '+331111111',
       status: 'applied',
       appliedAt: '2026-04-08T10:00:00Z',
+      ongoingTestsCount: 2,
+      ongoingTestIds: [10, 11],
     },
   ];
 
