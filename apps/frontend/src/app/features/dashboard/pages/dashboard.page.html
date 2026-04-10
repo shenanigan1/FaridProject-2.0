@@ -1,70 +1,159 @@
-<section class="min-h-screen bg-[#050c16] px-4 pb-24 pt-6 text-slate-100 sm:px-6">
-  <div class="mx-auto w-full max-w-6xl space-y-5">
-    <header class="rounded-2xl border border-slate-800 bg-slate-900/40 p-5">
-      <h1 class="text-2xl font-semibold">{{ pageTitle() }}</h1>
-      <p class="mt-1 text-sm text-slate-400">{{ subtitle() }}</p>
-    </header>
+<section class="min-h-screen bg-[#030b16] px-4 pb-24 pt-6 text-white sm:px-6">
+  <div class="mx-auto w-full max-w-5xl">
+    <p class="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#3ba9ff]">
+      • Live operations control
+    </p>
+    <h1 class="mt-2 text-4xl font-black uppercase italic leading-[0.9] sm:text-5xl">
+      TABLEAU DE BORD <br />
+      RH
+    </h1>
 
-    <div class="grid gap-3 sm:grid-cols-3">
-      @for (card of statCards(); track card.label) {
+    <div class="mt-5 flex items-end gap-5 text-sm font-semibold uppercase">
+      <p>
+        <span class="text-4xl font-black italic">{{ headlineStats().totalCandidates }}</span>
+        <span class="ml-2 text-[11px] tracking-[0.16em] text-slate-400">TOTAL CANDIDATS</span>
+      </p>
+      <p class="pb-[5px]">
+        <span class="text-3xl font-black italic text-[#1d8fff]">{{
+          headlineStats().activeOffers
+        }}</span>
+        <span class="ml-2 text-[11px] tracking-[0.16em] text-slate-400">OFFRES ACTIVES</span>
+      </p>
+    </div>
+
+    <div class="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
+      <button
+        type="button"
+        class="rounded-2xl border border-[#1d2837] bg-[#080f1b] px-5 py-4 text-left text-sm font-bold uppercase tracking-[0.14em] transition hover:border-[#2d3f57]"
+      >
+        ⬇ Exporter
+      </button>
+      <button
+        type="button"
+        class="rounded-2xl bg-[#1480ec] px-5 py-4 text-left text-sm font-bold uppercase tracking-[0.14em] shadow-[0_0_40px_rgba(20,128,236,0.45)] transition hover:bg-[#1d8fff]"
+        (click)="openRecruitmentCard('/jobs')"
+      >
+        ⊕ Nouvelle offre
+      </button>
+    </div>
+
+    <div class="mt-6 grid gap-4">
+      @for (card of recruitmentCards(); track card.id) {
         <article
-          class="rounded-2xl border border-slate-800 bg-slate-900/70 p-4"
-          [class.border-blue-500/40]="card.accent === 'blue'"
-          [class.border-cyan-500/40]="card.accent === 'cyan'"
-          [class.border-rose-500/40]="card.accent === 'rose'"
-          [class.border-amber-500/40]="card.accent === 'amber'"
-          [class.border-emerald-500/40]="card.accent === 'emerald'"
-          [class.border-violet-500/40]="card.accent === 'violet'"
+          class="rounded-[22px] border border-[#152131] bg-[#060f1d] p-5 shadow-[inset_0_0_0_1px_rgba(18,29,44,0.45)]"
         >
-          <div class="text-[11px] uppercase tracking-[0.12em] text-slate-400">{{ card.label }}</div>
-          <div class="mt-1 text-4xl font-black">{{ card.value }}</div>
+          <div class="flex items-center justify-between">
+            <div
+              class="flex h-12 w-12 items-center justify-center rounded-full border text-base"
+              [class.border-[#1f6ec2]/70]="card.tone === 'blue'"
+              [class.text-[#34a7ff]]="card.tone === 'blue'"
+              [class.border-[#0e5677]/70]="card.tone === 'cyan'"
+              [class.text-[#65e2ff]]="card.tone === 'cyan'"
+              [class.border-[#672536]/70]="card.tone === 'rose'"
+              [class.text-[#ff5f72]]="card.tone === 'rose'"
+            >
+              @if (card.tone === 'blue') {
+                💼
+              } @else if (card.tone === 'cyan') {
+                💡
+              } @else {
+                🔔
+              }
+            </div>
+            <span
+              class="rounded-md border px-2 py-1 text-[10px] font-bold uppercase tracking-[0.11em]"
+              [class.border-emerald-400/40]="card.tone !== 'rose'"
+              [class.text-emerald-300]="card.tone !== 'rose'"
+              [class.border-rose-500/45]="card.tone === 'rose'"
+              [class.text-rose-300]="card.tone === 'rose'"
+            >
+              {{ card.badge }}
+            </span>
+          </div>
+
+          <div class="mt-5 flex items-end gap-2">
+            <span class="text-6xl font-black italic leading-none">{{ card.value }}</span>
+            <span class="pb-2 text-[11px] font-bold uppercase tracking-[0.14em] text-slate-300">{{
+              card.label
+            }}</span>
+          </div>
+
+          @if (card.id === 'openings') {
+            <div class="mt-4">
+              <div class="h-[7px] overflow-hidden rounded-full bg-[#101c2d]">
+                <div class="h-full w-[75%] bg-[#1f86ea]"></div>
+              </div>
+              <p class="mt-2 text-xs text-slate-300 italic">
+                Progression recrutement : 75% complété
+              </p>
+            </div>
+          }
+
+          @if (card.cta) {
+            <button
+              type="button"
+              class="mt-4 w-full rounded-xl border px-4 py-2 text-[11px] font-bold uppercase tracking-[0.15em] transition"
+              [class.border-[#1f4d70]]="card.tone !== 'rose'"
+              [class.bg-[#081b2b]]="card.tone !== 'rose'"
+              [class.text-[#7dd8ff]]="card.tone !== 'rose'"
+              [class.hover:bg-[#0d2740]]="card.tone !== 'rose'"
+              [class.border-[#893441]]="card.tone === 'rose'"
+              [class.bg-[#ff4b55]]="card.tone === 'rose'"
+              [class.text-white]="card.tone === 'rose'"
+              [class.hover:bg-[#ff5964]]="card.tone === 'rose'"
+              (click)="openRecruitmentCard(card.route)"
+            >
+              {{ card.cta }}
+            </button>
+          }
         </article>
       }
     </div>
 
-    <section class="rounded-2xl border border-slate-800 bg-slate-900/70 p-5">
-      <h2 class="text-2xl font-semibold">Role dashboard preview</h2>
-      <p class="mt-1 text-sm text-slate-400">
-        This visual block is role-specific and mirrors your reference style.
+    <section class="mt-6 rounded-[22px] border border-[#152131] bg-[#060f1d] p-5">
+      <h2 class="text-xl font-black uppercase italic tracking-wide">Velocity Index</h2>
+      <p class="text-[11px] font-semibold uppercase tracking-[0.17em] text-slate-400">
+        Flux mensuel des candidatures
       </p>
-      <div class="mt-4 rounded-xl border border-dashed border-slate-700 bg-slate-950/50 p-4 text-sm text-slate-400">
-        TODO: wire real dashboard widgets (charts, candidate/test feeds, operational events) to backend APIs per role.
-      </div>
+      <p class="mt-6 text-center text-sm text-slate-500">{{ '{chart_data_pending}' }}</p>
+      <!-- TODO: connect dashboard chart to analytics endpoint once recruitment metrics API is validated. -->
     </section>
 
-    <section class="rounded-2xl border border-slate-800 bg-slate-900/70 p-5">
-      <h2 class="text-2xl font-semibold">Quick access</h2>
-      <div class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+    <section class="mt-6 rounded-[22px] border border-[#152131] bg-[#060f1d] p-5">
+      <div class="flex items-center justify-between">
+        <h2 class="text-xl font-black uppercase italic tracking-wide">Dernières entrées</h2>
+        <span
+          class="rounded-full border border-[#1f5f97] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-[#4fc2ff]"
+        >
+          Live
+        </span>
+      </div>
+      <p class="mt-4 text-sm text-slate-500">{{ '{latest_contacts_pending}' }}</p>
+      <!-- TODO: bind latest entries list to backend contacts stream when endpoint contract is finalized. -->
+    </section>
+
+    <section class="mt-8">
+      <h2
+        class="border-t border-[#224f83] pt-4 text-[13px] font-black uppercase italic tracking-[0.35em] text-slate-200"
+      >
+        Raccourcis système
+      </h2>
+      <div class="mt-4 grid grid-cols-2 gap-3">
         @for (item of quickAccess(); track item.label) {
           <button
             type="button"
-            class="rounded-xl border p-4 text-left transition"
-            [class.border-slate-700]="item.enabled"
-            [class.bg-slate-800/60]="item.enabled"
-            [class.hover:border-blue-500]="item.enabled"
-            [class.hover:bg-slate-800]="item.enabled"
-            [class.border-slate-800]="!item.enabled"
-            [class.bg-slate-900/60]="!item.enabled"
-            [class.opacity-60]="!item.enabled"
+            [attr.data-testid]="item.testId"
+            class="rounded-3xl border border-[#132335] bg-[#06101e] px-4 py-6 text-center transition"
+            [class.hover:border-[#1e7dd8]]="item.enabled"
+            [class.hover:bg-[#0b1a2e]]="item.enabled"
+            [class.opacity-55]="!item.enabled"
             (click)="openQuickAccess(item)"
           >
-            <div class="text-lg">{{ item.icon }}</div>
-            <div class="mt-1 text-sm font-semibold">{{ item.label }}</div>
-            @if (!item.enabled) {
-              <div class="mt-1 text-[10px] uppercase tracking-[0.12em] text-slate-500">Coming soon</div>
-            }
+            <p class="text-xl">{{ item.icon }}</p>
+            <p class="mt-3 text-[11px] font-bold uppercase tracking-[0.13em]">{{ item.label }}</p>
           </button>
         }
       </div>
     </section>
-
-    <div class="flex justify-end">
-      <button
-        class="rounded-xl border border-slate-700 bg-slate-900/60 px-4 py-2 text-sm hover:bg-slate-800"
-        (click)="logout()"
-      >
-        Logout
-      </button>
-    </div>
   </div>
 </section>

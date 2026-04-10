@@ -12,6 +12,7 @@ interface QuickAccessItem {
   route: string | null;
   icon: string;
   enabled: boolean;
+  testId: string;
 }
 
 @Component({
@@ -25,71 +26,62 @@ export class DashboardPage {
   private readonly router = inject(Router);
   readonly role = signal<DashboardRole>('employee');
 
-  readonly pageTitle = computed(() => {
-    switch (this.role()) {
-      case 'hr':
-      case 'admin':
-      case 'director':
-        return 'RH Dashboard';
-      case 'manager':
-        return 'Manager Dashboard';
-      case 'candidate':
-        return 'Candidate Dashboard';
-      case 'driver':
-      case 'employee':
-      default:
-        return 'Employee Dashboard';
-    }
+  readonly isRecruitmentRole = computed(() => {
+    const currentRole = this.role();
+    return currentRole === 'hr' || currentRole === 'admin' || currentRole === 'director';
   });
 
-  readonly subtitle = computed(() => {
-    switch (this.role()) {
-      case 'hr':
-      case 'admin':
-      case 'director':
-        return 'Talent pipeline and logistics recruitment overview.';
-      case 'manager':
-        return 'Local terminal operations and assigned tests overview.';
-      case 'candidate':
-        return 'Follow your applications and pre-employment tests.';
-      case 'driver':
-      case 'employee':
-      default:
-        return 'Central operations hub and compliance monitoring.';
+  readonly headlineStats = computed(() => {
+    if (!this.isRecruitmentRole()) {
+      return { totalCandidates: '{total_candidates}', activeOffers: '{active_offers}' };
     }
+    return { totalCandidates: '428', activeOffers: '24' };
   });
 
-  readonly statCards = computed(() => {
-    switch (this.role()) {
-      case 'hr':
-      case 'admin':
-      case 'director':
-        return [
-          { label: 'Open offers', value: '24', accent: 'blue' },
-          { label: 'Pending tests', value: '12', accent: 'cyan' },
-          { label: 'Priority calls', value: '08', accent: 'rose' },
-        ];
-      case 'manager':
-        return [
-          { label: "Today's assigned tests", value: '03', accent: 'blue' },
-          { label: 'Certification alerts', value: '02', accent: 'amber' },
-          { label: 'Candidates in process', value: '03', accent: 'emerald' },
-        ];
-      case 'candidate':
-        return [
-          { label: 'In progress', value: '04', accent: 'blue' },
-          { label: 'Tests to pass', value: '02', accent: 'cyan' },
-          { label: 'Interviews', value: '01', accent: 'violet' },
-        ];
-      case 'driver':
-      case 'employee':
-      default:
-        return [
-          { label: 'Global safety score', value: '92', accent: 'blue' },
-          { label: 'Active certifications', value: '04', accent: 'emerald' },
-          { label: 'Alerts', value: '01', accent: 'amber' },
-        ];
+  readonly recruitmentCards = computed(() => {
+    if (!this.isRecruitmentRole()) {
+      return [
+        {
+          id: 'openings',
+          value: '{openings_count}',
+          label: '{openings_label}',
+          badge: '{trend_badge}',
+          cta: '{openings_cta}',
+          route: '/jobs',
+          tone: 'blue',
+        },
+      ];
     }
+
+    return [
+      {
+        id: 'openings',
+        value: '24',
+        label: 'POSTES OUVERTS',
+        badge: '+12%',
+        cta: null,
+        route: '/jobs',
+        tone: 'blue',
+      },
+      {
+        id: 'pending',
+        value: '12',
+        label: 'EN VALIDATION',
+        badge: '+10',
+        cta: 'ASSIGNER NOUVEAUX TESTS',
+        route: '/tests',
+        tone: 'cyan',
+      },
+      {
+        id: 'alerts',
+        value: '08',
+        label: 'ALERTES CONTACT',
+        badge: 'ACTION REQUISE',
+        cta: 'LANCER LA PRIORITÉ',
+        route: '/contact',
+        tone: 'rose',
+      },
+    ];
   });
 
   readonly quickAccess = computed<QuickAccessItem[]>(() => {
@@ -98,33 +90,93 @@ export class DashboardPage {
       case 'admin':
       case 'director':
         return [
-          { label: 'Offers', icon: '📁', route: '/positions', enabled: true },
-          { label: 'Candidates', icon: '👥', route: '/candidates', enabled: true },
-          { label: 'Tests', icon: '🧪', route: '/tests', enabled: true },
-          { label: 'Reports', icon: '📊', route: null, enabled: false }, // TODO: implement reports page
+          { label: 'NOUV. OFFRE', icon: '📋', route: '/jobs', enabled: true, testId: 'quick-jobs' },
+          {
+            label: 'ASSIGNER TEST',
+            icon: '🧪',
+            route: '/tests',
+            enabled: true,
+            testId: 'quick-tests',
+          },
+          { label: 'RAPPORTS', icon: '📑', route: null, enabled: false, testId: 'quick-reports' }, // TODO: connect reports module when API is ready.
+          {
+            label: 'PARAMÈTRES',
+            icon: '⚙️',
+            route: null,
+            enabled: false,
+            testId: 'quick-settings',
+          }, // TODO: connect settings module when access rules are finalized.
         ];
       case 'manager':
         return [
-          { label: 'Assigned tests', icon: '🗂️', route: '/tests', enabled: true },
-          { label: 'Applicants', icon: '🧑‍💼', route: '/positions', enabled: true },
-          { label: 'Alerts', icon: '⚠️', route: null, enabled: false }, // TODO: manager alerts details page
-          { label: 'Local hub', icon: '🏭', route: null, enabled: false }, // TODO: terminal map/details page
+          {
+            label: 'Assigned tests',
+            icon: '🗂️',
+            route: '/tests',
+            enabled: true,
+            testId: 'quick-assigned-tests',
+          },
+          {
+            label: 'Applicants',
+            icon: '🧑‍💼',
+            route: '/positions',
+            enabled: true,
+            testId: 'quick-applicants',
+          },
+          { label: 'Alerts', icon: '⚠️', route: null, enabled: false, testId: 'quick-alerts' }, // TODO: manager alerts details page
+          {
+            label: 'Local hub',
+            icon: '🏭',
+            route: null,
+            enabled: false,
+            testId: 'quick-local-hub',
+          }, // TODO: terminal map/details page
         ];
       case 'candidate':
         return [
-          { label: 'My tests', icon: '🧪', route: null, enabled: false }, // TODO: candidate tests route in internal frontend
-          { label: 'Applications', icon: '📨', route: null, enabled: false }, // TODO: candidate applications route in internal frontend
-          { label: 'Recommended jobs', icon: '💼', route: '/positions', enabled: true },
-          { label: 'Profile', icon: '🙍', route: null, enabled: false }, // TODO: candidate profile/settings route
+          { label: 'My tests', icon: '🧪', route: null, enabled: false, testId: 'quick-my-tests' }, // TODO: candidate tests route in internal frontend
+          {
+            label: 'Applications',
+            icon: '📨',
+            route: null,
+            enabled: false,
+            testId: 'quick-applications',
+          }, // TODO: candidate applications route in internal frontend
+          {
+            label: 'Recommended jobs',
+            icon: '💼',
+            route: '/positions',
+            enabled: true,
+            testId: 'quick-jobs',
+          },
+          { label: 'Profile', icon: '🙍', route: null, enabled: false, testId: 'quick-profile' }, // TODO: candidate profile/settings route
         ];
       case 'driver':
       case 'employee':
       default:
         return [
-          { label: 'Certifications', icon: '✅', route: null, enabled: false }, // TODO: certifications detailed route
-          { label: 'Security tests', icon: '🛡️', route: '/tests', enabled: true },
-          { label: 'Fleet docs', icon: '🚚', route: null, enabled: false }, // TODO: driver document center
-          { label: 'History', icon: '🕘', route: null, enabled: false }, // TODO: historical reports page
+          {
+            label: 'Certifications',
+            icon: '✅',
+            route: null,
+            enabled: false,
+            testId: 'quick-certifications',
+          }, // TODO: certifications detailed route
+          {
+            label: 'Security tests',
+            icon: '🛡️',
+            route: '/tests',
+            enabled: true,
+            testId: 'quick-security-tests',
+          },
+          {
+            label: 'Fleet docs',
+            icon: '🚚',
+            route: null,
+            enabled: false,
+            testId: 'quick-fleet-docs',
+          }, // TODO: driver document center
+          { label: 'History', icon: '🕘', route: null, enabled: false, testId: 'quick-history' }, // TODO: historical reports page
         ];
     }
   });
@@ -144,6 +196,13 @@ export class DashboardPage {
       return;
     }
     this.router.navigateByUrl(item.route);
+  }
+
+  openRecruitmentCard(route: string | null): void {
+    if (!route) {
+      return;
+    }
+    void this.router.navigateByUrl(route);
   }
 
   logout(): void {
