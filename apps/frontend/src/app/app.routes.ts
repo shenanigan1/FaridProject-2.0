@@ -67,6 +67,13 @@ export const routes: Routes = [
       import('./features/contact/pages/contact.page').then((m) => m.ContactPage),
   },
   {
+    path: 'contact/:id',
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['admin'] },
+    loadComponent: () =>
+      import('./features/contact/pages/contact-detail.page').then((m) => m.ContactDetailPage),
+  },
+  {
     path: 'jobs',
     canActivate: [AuthGuard, RoleGuard],
     data: { roles: ['admin'] },
