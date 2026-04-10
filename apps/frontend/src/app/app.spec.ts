@@ -51,10 +51,10 @@ describe('App', () => {
     fixture.detectChanges();
 
     expect(app.menuItems()).toEqual([
-      { label: 'Home', icon: '⌂', route: '/dashboard' },
-      { label: 'Contact', icon: '◉', route: '/contact' },
-      { label: 'Jobs', icon: '▣', route: '/jobs' },
-      { label: 'Tests', icon: '◧', route: '/tests' },
+      { label: 'Home', icon: 'home', route: '/dashboard' },
+      { label: 'Contact', icon: 'users', route: '/contact' },
+      { label: 'Jobs', icon: 'briefcase', route: '/jobs' },
+      { label: 'Tests', icon: 'clipboard-check', route: '/tests' },
     ]);
   });
 });

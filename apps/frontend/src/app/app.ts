@@ -24,33 +24,33 @@ export class App {
 
   readonly menuItems = computed(() => {
     const role = this.me()?.role;
-    const common = [{ label: 'Home', icon: '⌂', route: '/dashboard' }];
+    const common = [{ label: 'Home', icon: 'home', route: '/dashboard' }];
 
     if (role === 'hr' || role === 'director') {
       return [
         ...common,
-        { label: 'Contact', icon: '◉', route: '/candidates' },
-        { label: 'Tests', icon: '🧪', route: '/tests' },
-        { label: 'Jobs', icon: '▣', route: '/positions' },
-        { label: 'Templates', icon: '◧', route: '/templates' },
-        { label: 'Pools', icon: '▤', route: '/pools' },
+        { label: 'Contact', icon: 'users', route: '/candidates' },
+        { label: 'Tests', icon: 'clipboard-check', route: '/tests' },
+        { label: 'Jobs', icon: 'briefcase', route: '/positions' },
+        { label: 'Templates', icon: 'layout-grid', route: '/templates' },
+        { label: 'Pools', icon: 'folder-kanban', route: '/pools' },
       ];
     }
 
     if (role === 'admin') {
       return [
-        { label: 'Home', icon: '⌂', route: '/dashboard' },
-        { label: 'Contact', icon: '◉', route: '/contact' },
-        { label: 'Jobs', icon: '▣', route: '/jobs' },
-        { label: 'Tests', icon: '◧', route: '/tests' },
+        { label: 'Home', icon: 'home', route: '/dashboard' },
+        { label: 'Contact', icon: 'users', route: '/contact' },
+        { label: 'Jobs', icon: 'briefcase', route: '/jobs' },
+        { label: 'Tests', icon: 'clipboard-check', route: '/tests' },
       ];
     }
 
     if (role === 'manager') {
       return [
         ...common,
-        { label: 'Tests', icon: '◧', route: '/tests' },
-        { label: 'Jobs', icon: '▣', route: '/positions' },
+        { label: 'Tests', icon: 'clipboard-check', route: '/tests' },
+        { label: 'Jobs', icon: 'briefcase', route: '/positions' },
       ];
     }
 
