@@ -7,6 +7,7 @@ import uuid
 
 from candidates.models import Candidate
 from farid_tests.factories.users import UserFactory
+from users.models import UserRoles
 
 
 @dataclass(frozen=True)
@@ -31,6 +32,7 @@ class CandidateFactory:
                 last_name=last_name,
                 phone=phone,
                 password=None,
+                role=UserRoles.CANDIDATE,
             )
 
         return Candidate.objects.create(

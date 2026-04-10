@@ -1,10 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   FormBuilder,
@@ -16,12 +10,6 @@ import { take } from 'rxjs/operators';
 
 import { AuthService } from '@auth/services/auth.service';
 import { TokenStorageService } from '@auth/services/token-storage.service';
-import { LoginProfile } from '@auth/models/auth.models';
-
-import { UiTextInputComponent } from '@lib-ui/text-input/text-input.component';
-import { UiPasswordInputComponent } from '@lib-ui/password-input/password-input.component';
-import { UiButtonPrimaryComponent } from '@lib-ui/button-primary/button-primary.component';
-import { UiAlertComponent } from '@lib-ui/alert/alert.component';
 
 @Component({
   standalone: true,
@@ -30,10 +18,6 @@ import { UiAlertComponent } from '@lib-ui/alert/alert.component';
     CommonModule,
     ReactiveFormsModule,
     RouterModule,
-    UiTextInputComponent,
-    UiPasswordInputComponent,
-    UiButtonPrimaryComponent,
-    UiAlertComponent,
   ],
   templateUrl: './login.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -44,30 +28,14 @@ export class LoginPage {
   private readonly tokenStorage = inject(TokenStorageService);
   private readonly router = inject(Router);
 
-  readonly profiles: { key: LoginProfile; label: string }[] = [
-    { key: 'driver', label: 'DRIVER' },
-    { key: 'manager', label: 'MANAGER' },
-    { key: 'hr', label: 'HR/ADMIN' },
-  ];
-
-  readonly selectedProfile = signal<LoginProfile>('driver');
   readonly loading = signal(false);
   readonly errorMessage = signal<string | null>(null);
-
-  readonly emailLabel = computed(() =>
-    this.selectedProfile() === 'driver' ? 'Driver Email' : 'Email'
-  );
 
   readonly form = this.fb.nonNullable.group({
     email: ['', Validators.required],
     password: ['', Validators.required],
     rememberMe: [true],
   });
-
-  selectProfile(profile: LoginProfile): void {
-    this.selectedProfile.set(profile);
-    this.errorMessage.set(null);
-  }
 
   submit(): void {
     if (this.form.invalid || this.loading()) {
@@ -82,7 +50,6 @@ export class LoginPage {
 
     this.auth
       .login({
-        profile: this.selectedProfile(),
         email,
         password,
       })

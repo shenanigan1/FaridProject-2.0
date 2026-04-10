@@ -6,4 +6,6 @@ class UserRoles(models.TextChoices):
     HR = "hr", "Human Resources"
     MANAGER = "manager", "Manager"
     DIRECTOR = "director", "Director"
+    DRIVER = "driver", "Driver"
+    CANDIDATE = "candidate", "Candidate"
     EMPLOYEE = "employee", "Employee"

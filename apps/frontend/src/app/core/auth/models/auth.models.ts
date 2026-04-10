@@ -1,7 +1,4 @@
-export type LoginProfile = 'driver' | 'manager' | 'hr';
-
 export interface LoginRequest {
-  profile: LoginProfile;
   email: string;
   password: string;
 }

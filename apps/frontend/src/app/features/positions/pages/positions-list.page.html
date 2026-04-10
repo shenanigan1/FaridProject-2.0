@@ -50,6 +50,7 @@
   @if (!isLoading && !error) {
 
     @if (filteredPositions$ | async; as positions) {
+      @if (appliedCountByPosition$ | async; as appliedCounts) {
 
       <div class="space-y-3">
 
@@ -86,7 +87,9 @@
 
             <div class="mt-4 flex items-end justify-between">
               <div class="text-[11px] text-slate-400">
-                <a class="text-blue-300 hover:text-blue-200" [routerLink]="['/positions', p.id, 'applicants']">Applicants: view list</a>
+                <a class="text-blue-300 hover:text-blue-200" [routerLink]="['/positions', p.id, 'applicants']">
+                  Applicants: {{ getAppliedCount(p.id, appliedCounts) }}
+                </a>
                 <div class="text-slate-500">Closing: —</div>
               </div>
 
@@ -109,6 +112,7 @@
         }
 
       </div>
+      }
     }
   }
 

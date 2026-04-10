@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { provideRouter } from '@angular/router';
+import { Router, provideRouter } from '@angular/router';
 
 import { App } from './app';
 
@@ -29,5 +29,21 @@ describe('App', () => {
 
     expect(topBarContainer).toBeTruthy();
     expect(bottomBarContainer).toBeTruthy();
+  });
+
+  it('hides top and bottom bars on /login route', async () => {
+    const fixture = TestBed.createComponent(App);
+    const router = TestBed.inject(Router);
+
+    await router.navigateByUrl('/login');
+    fixture.detectChanges();
+
+    const topBarContainer = fixture.debugElement.query(By.css('div.fixed.inset-x-0.top-0'));
+    const bottomBarContainer = fixture.debugElement.query(
+      By.css('div.fixed.inset-x-0.bottom-0'),
+    );
+
+    expect(topBarContainer).toBeFalsy();
+    expect(bottomBarContainer).toBeFalsy();
   });
 });
