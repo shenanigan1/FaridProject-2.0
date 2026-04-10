@@ -1,0 +1,41 @@
+<section class="min-h-[calc(100vh-144px)] bg-slate-950 p-4 text-slate-100">
+  <header class="mx-auto mb-4 flex w-full max-w-6xl flex-col gap-3 md:flex-row md:items-center md:justify-between">
+    <div>
+      <h1 class="text-xl font-semibold">Tests Administration</h1>
+      <p class="text-sm text-slate-400">
+        Select a mode to manage ongoing candidate tests or template cards.
+      </p>
+    </div>
+
+    <div class="inline-flex rounded-xl border border-slate-700 bg-slate-900 p-1">
+      <button
+        type="button"
+        data-testid="tests-view-toggle"
+        class="rounded-lg px-3 py-2 text-xs font-semibold transition"
+        [class.bg-blue-600]="isTestsView()"
+        [class.text-white]="isTestsView()"
+        [class.text-slate-300]="!isTestsView()"
+        (click)="setView('tests')"
+      >
+        Tests
+      </button>
+      <button
+        type="button"
+        data-testid="templates-view-toggle"
+        class="rounded-lg px-3 py-2 text-xs font-semibold transition"
+        [class.bg-blue-600]="!isTestsView()"
+        [class.text-white]="!isTestsView()"
+        [class.text-slate-300]="isTestsView()"
+        (click)="setView('templates')"
+      >
+        Templates
+      </button>
+    </div>
+  </header>
+
+  @if (isTestsView()) {
+    <app-tests-in-progress-page [showHeader]="false" />
+  } @else {
+    <app-test-templates-list-page />
+  }
+</section>

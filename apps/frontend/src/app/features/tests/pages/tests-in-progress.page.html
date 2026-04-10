@@ -1,17 +1,19 @@
-<section class="min-h-[calc(100vh-144px)] bg-slate-950 p-4 text-slate-100">
-  <header class="mb-4 flex items-center justify-between gap-3">
-    <div>
-      <h1 class="text-xl font-semibold">Tests in progress</h1>
-      <p class="text-sm text-slate-400">People currently being evaluated</p>
-    </div>
+<section class="bg-slate-950 text-slate-100" [ngClass]="showHeader() ? 'min-h-[calc(100vh-144px)] p-4' : ''">
+  @if (showHeader()) {
+    <header class="mb-4 flex items-center justify-between gap-3">
+      <div>
+        <h1 class="text-xl font-semibold">Tests in progress</h1>
+        <p class="text-sm text-slate-400">People currently being evaluated</p>
+      </div>
 
-    <a
-      routerLink="/positions"
-      class="rounded-xl border border-slate-700 px-3 py-2 text-xs text-slate-200 hover:bg-slate-800"
-    >
-      Back to positions
-    </a>
-  </header>
+      <a
+        routerLink="/positions"
+        class="rounded-xl border border-slate-700 px-3 py-2 text-xs text-slate-200 hover:bg-slate-800"
+      >
+        Back to positions
+      </a>
+    </header>
+  }
 
   <div class="mb-4">
     <input

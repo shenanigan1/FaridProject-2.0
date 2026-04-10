@@ -4,6 +4,7 @@ import {
   Component,
   DestroyRef,
   inject,
+  input,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
@@ -30,6 +31,7 @@ export class TestsInProgressPage {
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly destroyRef = inject(DestroyRef);
 
+  readonly showHeader = input<boolean>(true);
   readonly searchControl = new FormControl('', { nonNullable: true });
 
   private readonly testsSubject = new BehaviorSubject<InProgressTestItem[]>([]);
