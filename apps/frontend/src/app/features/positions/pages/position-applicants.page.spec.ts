@@ -23,16 +23,32 @@ describe('PositionApplicantsPage', () => {
       phone: '+331111111',
       status: 'applied',
       appliedAt: '2026-04-08T10:00:00Z',
+      ongoingTestsCount: 2,
+      ongoingTestIds: [10, 11],
+    },
+    {
+      applicationId: 2,
+      candidateId: 8,
+      fullName: 'John Smith',
+      email: 'john@example.com',
+      phone: '+33222222',
+      status: 'applied',
+      appliedAt: '2026-04-08T09:00:00Z',
+      ongoingTestsCount: 0,
+      ongoingTestIds: [],
     },
   ];
 
   beforeEach(async () => {
     applicantsServiceSpy = jasmine.createSpyObj<PositionApplicantsService>(
       'PositionApplicantsService',
-      ['listByPosition'],
+      ['listByPosition', 'launchTestForApplication'],
     );
 
     applicantsServiceSpy.listByPosition.and.returnValue(of(applicants));
+    applicantsServiceSpy.launchTestForApplication.and.returnValue(
+      of([{ id: 91, application: 1, status: 'in_progress' }]),
+    );
 
     await TestBed.configureTestingModule({
       imports: [PositionApplicantsPage],
@@ -88,5 +104,19 @@ describe('PositionApplicantsPage', () => {
     expect(errorFixture.componentInstance.errorMessage).toBe(
       'Unable to load applicants for this position.',
     );
+  });
+
+  it('does not relaunch test for applicant with ongoing tests', () => {
+    component.launchTest(applicants[0]);
+
+    expect(applicantsServiceSpy.launchTestForApplication).not.toHaveBeenCalled();
+    expect(component.launchMessage).toContain('already has an ongoing test');
+  });
+
+  it('launches test for selected applicant without ongoing tests', () => {
+    component.launchTest(applicants[1]);
+
+    expect(applicantsServiceSpy.launchTestForApplication).toHaveBeenCalledWith(2);
+    expect(component.launchMessage).toContain('test(s) launched');
   });
 });

@@ -1,14 +1,70 @@
-<div class="min-h-screen bg-slate-950 text-slate-100 flex items-center justify-center px-4">
-  <div class="max-w-xl w-full rounded-2xl bg-slate-900/60 border border-slate-800 p-6">
-    <h1 class="text-2xl font-semibold">Dashboard</h1>
-    <p class="text-slate-300 mt-2">✅ Vous êtes connecté.</p>
+<section class="min-h-screen bg-[#050c16] px-4 pb-24 pt-6 text-slate-100 sm:px-6">
+  <div class="mx-auto w-full max-w-6xl space-y-5">
+    <header class="rounded-2xl border border-slate-800 bg-slate-900/40 p-5">
+      <h1 class="text-2xl font-semibold">{{ pageTitle() }}</h1>
+      <p class="mt-1 text-sm text-slate-400">{{ subtitle() }}</p>
+    </header>
 
-    <button
-      class="mt-6 rounded-xl border border-slate-800 bg-slate-950/60 px-4 py-2"
-      (click)="logout()"
-    >
-      Logout
-    </button>
+    <div class="grid gap-3 sm:grid-cols-3">
+      @for (card of statCards(); track card.label) {
+        <article
+          class="rounded-2xl border border-slate-800 bg-slate-900/70 p-4"
+          [class.border-blue-500/40]="card.accent === 'blue'"
+          [class.border-cyan-500/40]="card.accent === 'cyan'"
+          [class.border-rose-500/40]="card.accent === 'rose'"
+          [class.border-amber-500/40]="card.accent === 'amber'"
+          [class.border-emerald-500/40]="card.accent === 'emerald'"
+          [class.border-violet-500/40]="card.accent === 'violet'"
+        >
+          <div class="text-[11px] uppercase tracking-[0.12em] text-slate-400">{{ card.label }}</div>
+          <div class="mt-1 text-4xl font-black">{{ card.value }}</div>
+        </article>
+      }
+    </div>
+
+    <section class="rounded-2xl border border-slate-800 bg-slate-900/70 p-5">
+      <h2 class="text-2xl font-semibold">Role dashboard preview</h2>
+      <p class="mt-1 text-sm text-slate-400">
+        This visual block is role-specific and mirrors your reference style.
+      </p>
+      <div class="mt-4 rounded-xl border border-dashed border-slate-700 bg-slate-950/50 p-4 text-sm text-slate-400">
+        TODO: wire real dashboard widgets (charts, candidate/test feeds, operational events) to backend APIs per role.
+      </div>
+    </section>
+
+    <section class="rounded-2xl border border-slate-800 bg-slate-900/70 p-5">
+      <h2 class="text-2xl font-semibold">Quick access</h2>
+      <div class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+        @for (item of quickAccess(); track item.label) {
+          <button
+            type="button"
+            class="rounded-xl border p-4 text-left transition"
+            [class.border-slate-700]="item.enabled"
+            [class.bg-slate-800/60]="item.enabled"
+            [class.hover:border-blue-500]="item.enabled"
+            [class.hover:bg-slate-800]="item.enabled"
+            [class.border-slate-800]="!item.enabled"
+            [class.bg-slate-900/60]="!item.enabled"
+            [class.opacity-60]="!item.enabled"
+            (click)="openQuickAccess(item)"
+          >
+            <div class="text-lg">{{ item.icon }}</div>
+            <div class="mt-1 text-sm font-semibold">{{ item.label }}</div>
+            @if (!item.enabled) {
+              <div class="mt-1 text-[10px] uppercase tracking-[0.12em] text-slate-500">Coming soon</div>
+            }
+          </button>
+        }
+      </div>
+    </section>
+
+    <div class="flex justify-end">
+      <button
+        class="rounded-xl border border-slate-700 bg-slate-900/60 px-4 py-2 text-sm hover:bg-slate-800"
+        (click)="logout()"
+      >
+        Logout
+      </button>
+    </div>
   </div>
-</div>
-
+</section>

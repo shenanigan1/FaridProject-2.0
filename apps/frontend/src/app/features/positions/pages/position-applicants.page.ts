@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  DestroyRef,
   inject,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -26,12 +27,14 @@ export class PositionApplicantsPage {
   private readonly route = inject(ActivatedRoute);
   private readonly applicantsService = inject(PositionApplicantsService);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly positionId = Number(this.route.snapshot.paramMap.get('id'));
   readonly searchControl = new FormControl('', { nonNullable: true });
 
   private readonly applicantsSubject = new BehaviorSubject<PositionApplicant[]>([]);
   readonly applicants$ = this.applicantsSubject.asObservable();
+  readonly launchingByApplication = new BehaviorSubject<Record<number, boolean>>({});
 
   readonly filteredApplicants$ = combineLatest([
     this.applicants$,
@@ -55,6 +58,7 @@ export class PositionApplicantsPage {
 
   isLoading = true;
   errorMessage: string | null = null;
+  launchMessage: string | null = null;
 
   constructor() {
     this.loadApplicants();
@@ -69,7 +73,7 @@ export class PositionApplicantsPage {
 
     this.applicantsService
       .listByPosition(this.positionId)
-      .pipe(takeUntilDestroyed())
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (applicants) => {
           this.applicantsSubject.next(applicants);
@@ -82,5 +86,43 @@ export class PositionApplicantsPage {
           this.cdr.markForCheck();
         },
       });
+  }
+
+  launchTest(applicant: PositionApplicant): void {
+    if (applicant.ongoingTestsCount > 0) {
+      this.launchMessage = `${applicant.fullName} already has an ongoing test.`;
+      this.cdr.markForCheck();
+      return;
+    }
+    this.launchMessage = null;
+    this.setLaunching(applicant.applicationId, true);
+    this.applicantsService
+      .launchTestForApplication(applicant.applicationId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (createdEvaluations) => {
+          this.launchMessage = `${createdEvaluations.length} test(s) launched for ${applicant.fullName}.`;
+          this.loadApplicants();
+          this.setLaunching(applicant.applicationId, false);
+        },
+        error: () => {
+          this.launchMessage = `Unable to launch test for ${applicant.fullName}.`;
+          this.setLaunching(applicant.applicationId, false);
+          this.cdr.markForCheck();
+        },
+      });
+  }
+
+  isLaunching(applicationId: number): boolean {
+    return this.launchingByApplication.value[applicationId] ?? false;
+  }
+
+  private setLaunching(applicationId: number, value: boolean): void {
+    const next = {
+      ...this.launchingByApplication.value,
+      [applicationId]: value,
+    };
+    this.launchingByApplication.next(next);
+    this.cdr.markForCheck();
   }
 }

@@ -1,14 +1,78 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, computed, inject, signal } from '@angular/core';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { MenuBarComponent } from './layout/menu-bar/menu-bar';
 import { TopBarComponent } from './layout/top-bar/top-bar';
+import { AuthSessionService } from './core/auth/services/auth-session.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet, TopBarComponent, MenuBarComponent],
   templateUrl: './app.html',
-  styleUrl: './app.scss'
+  styleUrl: './app.scss',
 })
 export class App {
+  private readonly session = inject(AuthSessionService);
+  private readonly router = inject(Router);
   protected readonly title = signal('frontend');
+  readonly me = signal<{ role?: string | null } | null>(null);
+  readonly currentUrl = signal(this.router.url);
+  readonly showNavigationChrome = computed(() => !this.currentUrl().startsWith('/login'));
+
+  readonly menuItems = computed(() => {
+    const role = this.me()?.role;
+    const common = [{ label: 'Dashboard', icon: '📊', route: '/dashboard' }];
+
+    if (role === 'hr' || role === 'director') {
+      return [
+        ...common,
+        { label: 'Candidates', icon: '👥', route: '/candidates' },
+        { label: 'Tests', icon: '🧪', route: '/tests' },
+        { label: 'Templates', icon: '📐', route: '/templates' },
+        { label: 'Positions', icon: '📋', route: '/positions' },
+        { label: 'Pools', icon: '🗂️', route: '/pools' },
+      ];
+    }
+
+    if (role === 'admin') {
+      return [
+        ...common,
+        { label: 'Candidates', icon: '👥', route: '/candidates' },
+        { label: 'Tests', icon: '🧪', route: '/tests' },
+        { label: 'Templates', icon: '📐', route: '/templates' },
+        { label: 'Positions', icon: '📋', route: '/positions' },
+        { label: 'Pools', icon: '🗂️', route: '/pools' },
+        { label: 'Roles', icon: '🛡️', route: '/roles' },
+      ];
+    }
+
+    if (role === 'manager') {
+      return [
+        ...common,
+        { label: 'Tests', icon: '🧪', route: '/tests' },
+        { label: 'Positions', icon: '📋', route: '/positions' },
+      ];
+    }
+
+    if (role === 'candidate' || role === 'employee') {
+      return [...common];
+    }
+
+    return [...common];
+  });
+
+  constructor() {
+    this.router.events
+      .pipe(
+        filter((event): event is NavigationEnd => event instanceof NavigationEnd),
+        takeUntilDestroyed(),
+      )
+      .subscribe((event) => this.currentUrl.set(event.urlAfterRedirects));
+
+    this.session
+      .loadMeOnce()
+      .pipe(takeUntilDestroyed())
+      .subscribe((me) => this.me.set(me));
+  }
 }

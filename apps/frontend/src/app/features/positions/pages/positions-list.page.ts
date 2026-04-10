@@ -1,7 +1,13 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  inject,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { BehaviorSubject, combineLatest, map, startWith } from 'rxjs';
+import { BehaviorSubject, combineLatest, forkJoin, map, startWith } from 'rxjs';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
@@ -9,6 +15,7 @@ import { PositionsApiService, PositionDto } from '@features/positions/services/p
 
 import { UiBadgeComponent, UiBadgeTone } from '@lib-ui/badge/badge.component';
 import { UiSelectComponent, UiSelectOption } from '@lib-ui/select/select.component';
+import { UiTextInputComponent } from '@lib-ui/text-input/text-input.component';
 
 type LocationValue = 'all' | 'chicago' | 'dallas' | 'phoenix' | 'remote';
 type TruckTypeValue = 'all' | 'long-haul' | 'dry-van' | 'tanker' | 'flatbed';
@@ -47,6 +54,7 @@ function asArrayOrResults<T>(value: unknown): T[] {
     ReactiveFormsModule,
     UiSelectComponent,
     UiBadgeComponent,
+    UiTextInputComponent,
   ],
   templateUrl: './positions-list.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -54,9 +62,12 @@ function asArrayOrResults<T>(value: unknown): T[] {
 export class PositionsListPage {
   private readonly api = inject(PositionsApiService);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly destroyRef = inject(DestroyRef);
 
   private readonly positionsSubject = new BehaviorSubject<PositionDto[]>([]);
   readonly positions$ = this.positionsSubject.asObservable();
+  private readonly appliedCountByPositionSubject = new BehaviorSubject<Record<number, number>>({});
+  readonly appliedCountByPosition$ = this.appliedCountByPositionSubject.asObservable();
 
   // Search + dropdown filters
   readonly searchCtrl = new FormControl('', { nonNullable: true });
@@ -141,13 +152,16 @@ export class PositionsListPage {
     this.error = null;
     this.cdr.markForCheck();
 
-    this.api
-      .list()
-      .pipe(takeUntilDestroyed())
+    forkJoin({
+      positions: this.api.list(),
+      applicationCounts: this.api.listApplicationCounts(),
+    })
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (data: unknown) => {
-          const list = asArrayOrResults<PositionDto>(data);
+        next: ({ positions, applicationCounts }) => {
+          const list = asArrayOrResults<PositionDto>(positions);
           this.positionsSubject.next(list);
+          this.appliedCountByPositionSubject.next(applicationCounts);
 
           this.isLoading = false;
           this.cdr.markForCheck();
@@ -168,5 +182,9 @@ export class PositionsListPage {
     if (t.includes('tanker')) return { label: 'MEDIUM', tone: 'warning' };
 
     return { label: 'ACTIVE', tone: 'success' };
+  }
+
+  getAppliedCount(positionId: number, counts: Record<number, number>): number {
+    return counts[positionId] ?? 0;
   }
 }

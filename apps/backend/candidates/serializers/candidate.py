@@ -6,6 +6,7 @@ from rest_framework import serializers
 
 from candidates.models import Candidate
 from users.models import User
+from users.models import UserRoles
 
 
 class CandidateUserSerializer(serializers.ModelSerializer):
@@ -64,6 +65,7 @@ class CandidateSerializer(serializers.ModelSerializer):
                     first_name=user_data.get("first_name", ""),
                     last_name=user_data.get("last_name", ""),
                     phone=user_data.get("phone", ""),
+                    role=UserRoles.CANDIDATE,
                 )
             except IntegrityError:
                 raise self._email_already_used_error()

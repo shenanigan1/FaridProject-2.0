@@ -19,6 +19,7 @@ describe('AuthService (candidate)', () => {
   const loginUrl = `${environment.apiBaseUrl}/api/auth/login/`;
   const refreshUrl = `${environment.apiBaseUrl}/api/auth/refresh/`;
   const candidatesUrl = `${environment.apiBaseUrl}/api/candidates/`;
+  const candidateMeUrl = `${environment.apiBaseUrl}/api/candidates/me/`;
 
   beforeEach(() => {
     localStorage.clear();
@@ -48,7 +49,7 @@ describe('AuthService (candidate)', () => {
     localStorage.clear();
   });
 
-  it('signIn stores tokens and resolves candidate profile from candidates API', () => {
+  it('signIn stores tokens and resolves candidate profile from /candidates/me/', () => {
     let candidateId: number | null = null;
 
     service
@@ -70,22 +71,48 @@ describe('AuthService (candidate)', () => {
       },
     });
 
-    const candidatesRequest = httpMock.expectOne(candidatesUrl);
-    expect(candidatesRequest.request.method).toBe('GET');
-    candidatesRequest.flush([
-      {
-        id: 44,
-        user: {
-          email: 'john@example.com',
-          first_name: 'John',
-          last_name: 'Doe',
-          phone: '+330000000',
-        },
+    const meRequest = httpMock.expectOne(candidateMeUrl);
+    expect(meRequest.request.method).toBe('GET');
+    meRequest.flush({
+      id: 44,
+      user: {
+        email: 'john@example.com',
+        first_name: 'John',
+        last_name: 'Doe',
+        phone: '+330000000',
       },
-    ]);
+    });
 
     expect(candidateId).toBe(44);
     expect(tokenStorageSpy.saveTokens).toHaveBeenCalledWith('access-token', 'refresh-token');
+  });
+
+  it('signIn returns explicit message when user is not a candidate', () => {
+    let actualError: string | null = null;
+
+    service.signIn({ email: 'hr@example.com', password: 'Secret123' }).subscribe({
+      next: () => fail('Expected error'),
+      error: (errorMessage: string) => {
+        actualError = errorMessage;
+      },
+    });
+
+    const loginRequest = httpMock.expectOne(loginUrl);
+    loginRequest.flush({
+      access: 'access-token',
+      refresh: 'refresh-token',
+      user: {
+        id: 8,
+        email: 'hr@example.com',
+        first_name: 'HR',
+        last_name: 'User',
+      },
+    });
+
+    const meRequest = httpMock.expectOne(candidateMeUrl);
+    meRequest.flush({}, { status: 403, statusText: 'Forbidden' });
+
+    expect(actualError).toBe('Your account does not have candidate access for this application.');
   });
 
   it('maps nested backend validation errors to user-friendly message', () => {
