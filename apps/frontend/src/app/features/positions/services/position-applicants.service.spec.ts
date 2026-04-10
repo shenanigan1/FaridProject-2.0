@@ -285,6 +285,20 @@ describe('PositionApplicantsService', () => {
     expect(assignedTo).toBe(12);
   });
 
+  it('rejects an application', () => {
+    let status = '';
+    service.rejectApplication(77).subscribe((response) => {
+      status = response.status;
+    });
+
+    const request = httpMock.expectOne('/api/jobapplications/77/');
+    expect(request.request.method).toBe('PATCH');
+    expect(request.request.body).toEqual({ status: 'rejected' });
+    request.flush({ id: 77, status: 'rejected' });
+
+    expect(status).toBe('rejected');
+  });
+
   it('lists managers with optional search query', () => {
     let managerIds: number[] = [];
     service.listManagers('alice').subscribe((managers) => {
