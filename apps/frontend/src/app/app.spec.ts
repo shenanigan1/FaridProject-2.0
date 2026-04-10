@@ -23,9 +23,7 @@ describe('App', () => {
     fixture.detectChanges();
 
     const topBarContainer = fixture.debugElement.query(By.css('div.fixed.inset-x-0.top-0'));
-    const bottomBarContainer = fixture.debugElement.query(
-      By.css('div.fixed.inset-x-0.bottom-0'),
-    );
+    const bottomBarContainer = fixture.debugElement.query(By.css('div.fixed.inset-x-0.bottom-0'));
 
     expect(topBarContainer).toBeTruthy();
     expect(bottomBarContainer).toBeTruthy();
@@ -39,9 +37,7 @@ describe('App', () => {
     fixture.detectChanges();
 
     const topBarContainer = fixture.debugElement.query(By.css('div.fixed.inset-x-0.top-0'));
-    const bottomBarContainer = fixture.debugElement.query(
-      By.css('div.fixed.inset-x-0.bottom-0'),
-    );
+    const bottomBarContainer = fixture.debugElement.query(By.css('div.fixed.inset-x-0.bottom-0'));
 
     expect(topBarContainer).toBeFalsy();
     expect(bottomBarContainer).toBeFalsy();
@@ -55,10 +51,10 @@ describe('App', () => {
     fixture.detectChanges();
 
     expect(app.menuItems()).toEqual([
-      { label: 'Home', icon: '🏠', route: '/dashboard' },
-      { label: 'Contact', icon: '👥', route: '/contact' },
-      { label: 'Tests', icon: '🧪', route: '/tests' },
-      { label: 'Jobs', icon: '📋', route: '/jobs' },
+      { label: 'Home', icon: '⌂', route: '/dashboard' },
+      { label: 'Contact', icon: '◉', route: '/contact' },
+      { label: 'Jobs', icon: '▣', route: '/jobs' },
+      { label: 'Tests', icon: '◧', route: '/tests' },
     ]);
   });
 });

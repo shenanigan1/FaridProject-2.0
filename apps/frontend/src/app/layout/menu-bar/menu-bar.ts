@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 
 export interface MenuItem {
   label: string;
-  icon: string; // for now emoji, later replace by icon component
+  icon: string;
   route: string;
 }
 
@@ -19,6 +19,6 @@ export class MenuBarComponent {
   @Input({ required: true }) items!: MenuItem[];
 
   trackByRoute(_: number, item: { route: string }): string {
-  return item.route;
-}
+    return item.route;
+  }
 }

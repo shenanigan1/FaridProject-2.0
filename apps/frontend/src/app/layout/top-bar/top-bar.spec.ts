@@ -9,9 +9,8 @@ describe('TopBar', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TopBarComponent]
-    })
-    .compileComponents();
+      imports: [TopBarComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(TopBarComponent);
     component = fixture.componentInstance;
@@ -29,7 +28,9 @@ describe('TopBar', () => {
     spyOn(component.editProfile, 'emit');
     spyOn(component.logout, 'emit');
 
-    const avatarButton = fixture.debugElement.query(By.css('button[aria-label="Open user menu"]'));
+    const avatarButton = fixture.debugElement.query(
+      By.css('button[aria-label="Open navigation menu"]'),
+    );
     avatarButton.nativeElement.click();
     fixture.detectChanges();
 

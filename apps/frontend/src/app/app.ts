@@ -16,39 +16,41 @@ export class App {
   private readonly session = inject(AuthSessionService);
   private readonly router = inject(Router);
   protected readonly title = signal('frontend');
-  readonly me = signal<{ role?: string | null; first_name?: string; last_name?: string } | null>(null);
+  readonly me = signal<{ role?: string | null; first_name?: string; last_name?: string } | null>(
+    null,
+  );
   readonly currentUrl = signal(this.router.url);
   readonly showNavigationChrome = computed(() => !this.currentUrl().startsWith('/login'));
 
   readonly menuItems = computed(() => {
     const role = this.me()?.role;
-    const common = [{ label: 'Dashboard', icon: '📊', route: '/dashboard' }];
+    const common = [{ label: 'Home', icon: '⌂', route: '/dashboard' }];
 
     if (role === 'hr' || role === 'director') {
       return [
         ...common,
-        { label: 'Candidates', icon: '👥', route: '/candidates' },
+        { label: 'Contact', icon: '◉', route: '/candidates' },
         { label: 'Tests', icon: '🧪', route: '/tests' },
-        { label: 'Templates', icon: '📐', route: '/templates' },
-        { label: 'Positions', icon: '📋', route: '/positions' },
-        { label: 'Pools', icon: '🗂️', route: '/pools' },
+        { label: 'Jobs', icon: '▣', route: '/positions' },
+        { label: 'Templates', icon: '◧', route: '/templates' },
+        { label: 'Pools', icon: '▤', route: '/pools' },
       ];
     }
 
     if (role === 'admin') {
       return [
-        { label: 'Home', icon: '🏠', route: '/dashboard' },
-        { label: 'Contact', icon: '👥', route: '/contact' },
-        { label: 'Tests', icon: '🧪', route: '/tests' },
-        { label: 'Jobs', icon: '📋', route: '/jobs' },
+        { label: 'Home', icon: '⌂', route: '/dashboard' },
+        { label: 'Contact', icon: '◉', route: '/contact' },
+        { label: 'Jobs', icon: '▣', route: '/jobs' },
+        { label: 'Tests', icon: '◧', route: '/tests' },
       ];
     }
 
     if (role === 'manager') {
       return [
         ...common,
-        { label: 'Tests', icon: '🧪', route: '/tests' },
-        { label: 'Positions', icon: '📋', route: '/positions' },
+        { label: 'Tests', icon: '◧', route: '/tests' },
+        { label: 'Jobs', icon: '▣', route: '/positions' },
       ];
     }
 

@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  signal,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 export interface TopBarUser {
@@ -35,5 +42,19 @@ export class TopBarComponent {
   requestLogout(): void {
     this.menuOpen.set(false);
     this.logout.emit();
+  }
+
+  get userInitials(): string {
+    if (!this.user?.fullName) {
+      return 'U';
+    }
+
+    const initials = this.user.fullName
+      .split(' ')
+      .map((part) => part[0])
+      .join('')
+      .slice(0, 2)
+      .toUpperCase();
+    return initials || 'U';
   }
 }
