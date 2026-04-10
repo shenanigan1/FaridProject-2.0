@@ -7,6 +7,7 @@ from positions.views import PositionViewSet, PublicPositionViewSet
 from candidates.views import CandidateViewSet
 from employees.views import EmployeeViewSet
 from recruitment.views import JobApplicationViewSet
+from users.views import UserViewSet
 
 from templates_grid.views.pools import QuestionPoolViewSet
 from templates_grid.views.questions import SkillQuestionViewSet
@@ -32,6 +33,7 @@ router.register(
 )
 
 router.register("evaluations", EvaluationViewSet, basename="evaluations")
+router.register("users", UserViewSet, basename="users")
 
 urlpatterns = [
     path("api/", include(router.urls)),

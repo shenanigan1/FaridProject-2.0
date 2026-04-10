@@ -3,7 +3,7 @@ import pytest
 from django.db import IntegrityError
 
 from candidates.models import Candidate
-from users.models import User
+from users.models import User, UserRoles
 
 # Update this import to your actual serializer path:
 from candidates.serializers import CandidateSerializer
@@ -31,6 +31,7 @@ def test_candidate_serializer_creates_user_and_candidate():
 
     assert isinstance(candidate, Candidate)
     assert candidate.user.email == "jean.dupont@example.com"
+    assert candidate.user.role == UserRoles.CANDIDATE
     assert User.objects.filter(email="jean.dupont@example.com").exists()
 
 

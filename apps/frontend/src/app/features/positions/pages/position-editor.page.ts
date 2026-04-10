@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { toSignal, takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -7,7 +14,12 @@ import { catchError, map, of, startWith, switchMap, tap } from 'rxjs';
 import { PageShellComponent } from '@layout/page-shell/page-shell.component';
 import { PositionFormComponent } from '@features/positions/components/position-form/position-form.component';
 import { PositionFormService, PositionFormGroup } from '@features/positions/services/positions-form.service';
-import { PositionsApiService, PositionCreatePayload, PositionDto } from '@features/positions/services/positions-api.service';
+import {
+  PositionCreatePayload,
+  PositionDto,
+  PositionsApiService,
+  TemplateOptionDto,
+} from '@features/positions/services/positions-api.service';
 
 import { UiLinkButtonComponent } from '@lib-ui/link-button/ui-link-button.component';
 import { UiCardComponent } from '@lib-ui/card/card.component';
@@ -44,12 +56,18 @@ export class PositionEditorPage {
   private readonly api = inject(PositionsApiService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly form: PositionFormGroup = this.formService.build();
 
   readonly isSubmitting = signal(false);
   readonly apiError = signal<string | null>(null);
   readonly fieldErrors = signal<Record<string, string[]>>({});
+  readonly availableTemplates = signal<TemplateOptionDto[]>([]);
+  readonly selectedTemplateIds = signal<number[]>([]);
+  readonly managerByTemplate = signal<Record<number, string>>({});
+  readonly templatesMessage = signal<string | null>(null);
+  readonly templatesSaving = signal(false);
 
   // ✅ Observable id
   private readonly positionId$ = this.route.paramMap.pipe(
@@ -106,6 +124,10 @@ export class PositionEditorPage {
   // ✅ Signal state
   readonly state = toSignal(this.state$, { initialValue: { status: 'loading' } as const });
 
+  constructor() {
+    this.loadTemplateConfiguration();
+  }
+
   submit(): void {
     this.apiError.set(null);
     this.fieldErrors.set({});
@@ -122,7 +144,7 @@ export class PositionEditorPage {
 
     const req$ = id !== null ? this.api.patch(id, payload) : this.api.create(payload);
 
-    req$.pipe(takeUntilDestroyed()).subscribe({
+    req$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
         this.isSubmitting.set(false);
         void this.router.navigateByUrl('/positions');
@@ -139,6 +161,70 @@ export class PositionEditorPage {
 
   cancel(): void {
     void this.router.navigateByUrl('/positions');
+  }
+
+  toggleTemplate(templateId: number): void {
+    const current = this.selectedTemplateIds();
+    if (current.includes(templateId)) {
+      this.selectedTemplateIds.set(current.filter((id) => id !== templateId));
+      return;
+    }
+    this.selectedTemplateIds.set([...current, templateId]);
+  }
+
+  updateTemplateManager(templateId: number, rawValue: string): void {
+    this.managerByTemplate.set({
+      ...this.managerByTemplate(),
+      [templateId]: rawValue.trim(),
+    });
+  }
+
+  onTemplateManagerInput(templateId: number, event: Event): void {
+    const target = event.target;
+    if (!(target instanceof HTMLInputElement)) {
+      return;
+    }
+    this.updateTemplateManager(templateId, target.value);
+  }
+
+  saveTemplateAssignments(): void {
+    const id = this.positionId();
+    if (id === null) {
+      this.templatesMessage.set('Save the position first before assigning templates.');
+      return;
+    }
+
+    this.templatesSaving.set(true);
+    this.templatesMessage.set(null);
+    const managerByTemplate = this.managerByTemplate();
+    const payload = this.selectedTemplateIds().map((templateId, index) => {
+      const managerRaw = managerByTemplate[templateId] ?? '';
+      const managerId = Number(managerRaw);
+      return {
+        template_id: templateId,
+        manager_id:
+          managerRaw.length > 0 && Number.isInteger(managerId) && managerId > 0
+            ? managerId
+            : null,
+        order: index,
+      };
+    });
+
+    this.api
+      .setPositionTemplateAssignments(id, payload)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.templatesSaving.set(false);
+          this.templatesMessage.set('Position test templates saved.');
+        },
+        error: () => {
+          this.templatesSaving.set(false);
+          this.templatesMessage.set(
+            'Unable to save template assignments. Check manager IDs and try again.',
+          );
+        },
+      });
   }
 
   private handleApiError(err: unknown, fallback: string): void {
@@ -165,5 +251,34 @@ export class PositionEditorPage {
     }
 
     this.apiError.set(fallback);
+  }
+
+  private loadTemplateConfiguration(): void {
+    this.api
+      .listTemplates()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (templates) => {
+          this.availableTemplates.set(templates);
+
+          const id = this.positionId();
+          if (id === null) return;
+
+          this.api
+            .getPositionTemplateAssignments(id)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+              next: (assignments) => {
+                this.selectedTemplateIds.set(assignments.map((item) => item.template));
+                this.managerByTemplate.set(
+                  assignments.reduce<Record<number, string>>((acc, item) => {
+                    acc[item.template] = item.manager_id ? String(item.manager_id) : '';
+                    return acc;
+                  }, {}),
+                );
+              },
+            });
+        },
+      });
   }
 }

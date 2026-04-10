@@ -1,27 +1,22 @@
 <div class="min-h-screen bg-slate-950 text-slate-100">
-  <div class="fixed inset-x-0 top-0 z-50">
-    <app-top-bar
-      title="Recruitment Overview"
-      subtitle="Fleet Management Hub"
-      [notificationCount]="1"
-      [user]="{ fullName: 'Farid' }"
-    />
-  </div>
+  @if (showNavigationChrome()) {
+    <div class="fixed inset-x-0 top-0 z-50">
+      <app-top-bar
+        title="Recruitment Overview"
+        subtitle="Fleet Management Hub"
+        [notificationCount]="1"
+        [user]="{ fullName: 'Farid' }"
+      />
+    </div>
+  }
 
-  <main class="px-0 pt-[72px] pb-[72px]">
+  <main class="px-0" [class.pt-[72px]]="showNavigationChrome()" [class.pb-[72px]]="showNavigationChrome()">
     <router-outlet />
   </main>
 
-  <div class="fixed inset-x-0 bottom-0 z-50">
-    <app-menu-bar
-      [items]="[
-        { label: 'Dashboard', icon: '📊', route: '/dashboard' },
-        { label: 'Candidates', icon: '👥', route: '/candidates' },
-        { label: 'Tests', icon: '🧪', route: '/tests' },
-        { label: 'Templates', icon: '📐', route: '/templates' },
-        { label: 'Positions', icon: '📋', route: '/positions' },
-        { label: 'Pools', icon: '🗂️', route: '/pools' },
-      ]"
-    />
-  </div>
+  @if (showNavigationChrome()) {
+    <div class="fixed inset-x-0 bottom-0 z-50">
+      <app-menu-bar [items]="menuItems()" />
+    </div>
+  }
 </div>
