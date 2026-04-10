@@ -60,6 +60,20 @@ export const routes: Routes = [
     data: { roles: ['admin'] },
   },
   {
+    path: 'contact',
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['admin'] },
+    loadComponent: () =>
+      import('./features/contact/pages/contact.page').then((m) => m.ContactPage),
+  },
+  {
+    path: 'jobs',
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['admin'] },
+    loadComponent: () =>
+      import('./features/jobs/pages/jobs.page').then((m) => m.JobsPage),
+  },
+  {
     path: 'profile',
     canActivate: [AuthGuard],
     loadComponent: () =>

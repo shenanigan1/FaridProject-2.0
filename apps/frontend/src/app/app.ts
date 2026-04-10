@@ -37,13 +37,10 @@ export class App {
 
     if (role === 'admin') {
       return [
-        ...common,
-        { label: 'Candidates', icon: '👥', route: '/candidates' },
+        { label: 'Home', icon: '🏠', route: '/dashboard' },
+        { label: 'Contact', icon: '👥', route: '/contact' },
         { label: 'Tests', icon: '🧪', route: '/tests' },
-        { label: 'Templates', icon: '📐', route: '/templates' },
-        { label: 'Positions', icon: '📋', route: '/positions' },
-        { label: 'Pools', icon: '🗂️', route: '/pools' },
-        { label: 'Roles', icon: '🛡️', route: '/roles' },
+        { label: 'Jobs', icon: '📋', route: '/jobs' },
       ];
     }
 

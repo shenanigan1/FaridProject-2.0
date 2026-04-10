@@ -46,4 +46,19 @@ describe('App', () => {
     expect(topBarContainer).toBeFalsy();
     expect(bottomBarContainer).toBeFalsy();
   });
+
+  it('shows admin refactor menu items', () => {
+    const fixture = TestBed.createComponent(App);
+    const app = fixture.componentInstance;
+
+    app.me.set({ role: 'admin' });
+    fixture.detectChanges();
+
+    expect(app.menuItems()).toEqual([
+      { label: 'Home', icon: '🏠', route: '/dashboard' },
+      { label: 'Contact', icon: '👥', route: '/contact' },
+      { label: 'Tests', icon: '🧪', route: '/tests' },
+      { label: 'Jobs', icon: '📋', route: '/jobs' },
+    ]);
+  });
 });
