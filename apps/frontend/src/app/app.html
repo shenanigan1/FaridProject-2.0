@@ -5,7 +5,11 @@
         title="Recruitment Overview"
         subtitle="Fleet Management Hub"
         [notificationCount]="1"
-        [user]="{ fullName: 'Farid' }"
+        [user]="{
+          fullName: ((me()?.first_name ?? '') + ' ' + (me()?.last_name ?? '')).trim() || 'User'
+        }"
+        (editProfile)="onEditProfile()"
+        (logout)="onLogout()"
       />
     </div>
   }

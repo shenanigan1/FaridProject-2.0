@@ -4,7 +4,7 @@
          border-b border-slate-800"
 >
   <!-- Left -->
-  <div class="flex items-center gap-3">
+  <div class="relative flex items-center gap-3">
     <div
       class="h-10 w-10 rounded-xl bg-blue-600/90 flex items-center justify-center
              shadow-md shadow-blue-600/20"
@@ -52,12 +52,14 @@
 
     <!-- Avatar -->
     @if (user) {
-      <div
+      <button
+        type="button"
+        (click)="toggleMenu()"
         class="h-10 w-10 rounded-full overflow-hidden
                bg-slate-700 border border-slate-600
                flex items-center justify-center
                shadow-sm"
-        aria-label="User avatar"
+        aria-label="Open user menu"
       >
         @if (user.avatarUrl) {
           <img
@@ -70,7 +72,26 @@
             {{ user.fullName }}
           </span>
         }
-      </div>
+      </button>
+
+      @if (menuOpen()) {
+        <div class="absolute right-0 top-12 z-50 w-56 rounded-xl border border-slate-700 bg-slate-900 p-2 shadow-2xl">
+          <button
+            type="button"
+            class="w-full rounded-lg px-3 py-2 text-left text-sm text-slate-200 transition hover:bg-slate-800"
+            (click)="requestEditProfile()"
+          >
+            Edit profile
+          </button>
+          <button
+            type="button"
+            class="mt-1 w-full rounded-lg px-3 py-2 text-left text-sm text-red-300 transition hover:bg-red-500/10"
+            (click)="requestLogout()"
+          >
+            Logout
+          </button>
+        </div>
+      }
     }
   </div>
 </header>

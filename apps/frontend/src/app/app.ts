@@ -16,7 +16,7 @@ export class App {
   private readonly session = inject(AuthSessionService);
   private readonly router = inject(Router);
   protected readonly title = signal('frontend');
-  readonly me = signal<{ role?: string | null } | null>(null);
+  readonly me = signal<{ role?: string | null; first_name?: string; last_name?: string } | null>(null);
   readonly currentUrl = signal(this.router.url);
   readonly showNavigationChrome = computed(() => !this.currentUrl().startsWith('/login'));
 
@@ -74,5 +74,14 @@ export class App {
       .loadMeOnce()
       .pipe(takeUntilDestroyed())
       .subscribe((me) => this.me.set(me));
+  }
+
+  onEditProfile(): void {
+    void this.router.navigateByUrl('/profile');
+  }
+
+  onLogout(): void {
+    this.session.logout();
+    void this.router.navigateByUrl('/login');
   }
 }
