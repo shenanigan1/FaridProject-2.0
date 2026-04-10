@@ -76,7 +76,7 @@ export const routes: Routes = [
   {
     path: 'jobs',
     canActivate: [AuthGuard, RoleGuard],
-    data: { roles: ['admin'] },
+    data: { roles: ['hr', 'admin', 'director', 'manager'] },
     loadComponent: () =>
       import('./features/jobs/pages/jobs.page').then((m) => m.JobsPage),
   },

@@ -1,22 +1,38 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
+
 import { PositionsListPage } from '@features/positions/pages/positions-list.page';
+
+interface Shortcut {
+  label: string;
+  route: string;
+  description: string;
+}
 
 @Component({
   standalone: true,
   selector: 'app-jobs-page',
-  imports: [CommonModule, PositionsListPage],
-  template: `
-    <section class="bg-slate-950 text-slate-100">
-      <header class="mx-auto max-w-6xl px-4 pt-4">
-        <h1 class="text-xl font-semibold">Jobs</h1>
-        <p class="text-sm text-slate-400">
-          Create, manage job postings, and open applicant lists to launch tests or refuse applications.
-        </p>
-        <!-- TODO: replace this bridge layout with dedicated Jobs design system once refactor phase 2 starts. -->
-      </header>
-      <app-positions-list-page />
-    </section>
-  `,
+  imports: [CommonModule, RouterLink, PositionsListPage],
+  templateUrl: './jobs.page.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class JobsPage {}
+export class JobsPage {
+  readonly shortcuts: Shortcut[] = [
+    {
+      label: 'Openings board',
+      route: '/positions',
+      description: 'Review all active positions and keep postings aligned with hiring needs.',
+    },
+    {
+      label: 'Applicants workflow',
+      route: '/positions',
+      description: 'Open applicant pipelines to launch evaluations or reject applications.',
+    },
+    {
+      label: 'Tests in progress',
+      route: '/tests',
+      description: 'Track launched questionnaires and continue manager scoring tasks.',
+    },
+  ];
+}
