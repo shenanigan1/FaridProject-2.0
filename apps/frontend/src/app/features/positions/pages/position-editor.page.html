@@ -43,11 +43,11 @@
 
                 @if (selectedTemplateIds().includes(template.id)) {
                   <div class="mt-2">
-                    <label class="text-xs text-slate-400">Manager ID (optional)</label>
+                    <label for="number" class="text-xs text-slate-400">Manager ID (optional)</label>
                     <input
                       type="number"
                       class="mt-1 w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-xs text-slate-100"
-                      [value]="managerByTemplate()[template.id] ?? ''"
+                      [value]="managerByTemplate()[template.id]"
                       (input)="onTemplateManagerInput(template.id, $event)"
                     />
                   </div>

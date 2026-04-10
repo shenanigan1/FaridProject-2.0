@@ -2,7 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
-input:-webkit-autofill {
-  box-shadow: 0 0 0px 1000px rgb(2 6 23) inset !important;
-  -webkit-text-fill-color: rgb(226 232 240) !important;
+// input:-webkit-autofill {
+//   box-shadow: 0 0 0px 1000px rgb(2 6 23) inset !important;
+//   -webkit-text-fill-color: rgb(226 232 240) !important;
+// }
+
+/* 🔥 FIX AUTOFILL CHROME */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-text-fill-color: #cbd5f5;
+  /* couleur texte */
+  transition: background-color 9999s ease-in-out 0s;
+  box-shadow: 0 0 0px 1000px #121f3b inset;
+  /* ton background */
+  caret-color: #cbd5f5;
 }
