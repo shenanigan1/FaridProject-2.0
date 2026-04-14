@@ -1,0 +1,27 @@
+<section class="min-h-[calc(100vh-144px)] bg-slate-950 px-4 py-5 text-slate-100">
+  <header class="mx-auto mb-5 flex w-full max-w-6xl flex-col gap-3 md:flex-row md:items-end md:justify-between">
+    <div>
+      <h1 class="text-2xl font-semibold">Jobs</h1>
+      <p data-testid="jobs-page-subtitle" class="text-sm text-slate-400">
+        Manage openings, monitor applications, and launch evaluations.
+      </p>
+    </div>
+  </header>
+
+  <section class="mx-auto mb-5 grid w-full max-w-6xl gap-3 md:grid-cols-3">
+    @for (shortcut of shortcuts; track shortcut.label) {
+      <a
+        [routerLink]="shortcut.route"
+        data-testid="jobs-shortcut"
+        class="rounded-2xl border border-slate-800 bg-slate-900/60 p-4 transition hover:border-blue-500/40 hover:bg-slate-900"
+      >
+        <p class="text-sm font-semibold text-blue-300">{{ shortcut.label }}</p>
+        <p class="mt-1 text-xs text-slate-400">{{ shortcut.description }}</p>
+      </a>
+    }
+  </section>
+
+  <section class="mx-auto w-full max-w-6xl rounded-2xl border border-slate-800 bg-slate-900/50 p-1">
+    <app-positions-list-page />
+  </section>
+</section>

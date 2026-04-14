@@ -45,6 +45,47 @@ export const routes: Routes = [
     canActivate: [AuthGuard, RoleGuard],
     data: { roles: ['hr', 'admin', 'director', 'manager'] },
   },
+  {
+    path: 'tests',
+    loadChildren: () =>
+      import('src/app/features/tests/tests.routes').then((m) => m.TESTS_ROUTES),
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['hr', 'admin', 'director', 'manager'] },
+  },
+  {
+    path: 'roles',
+    loadComponent: () =>
+      import('./features/roles/pages/roles-admin.page').then((m) => m.RolesAdminPage),
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['admin'] },
+  },
+  {
+    path: 'contact',
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['admin'] },
+    loadComponent: () =>
+      import('./features/contact/pages/contact.page').then((m) => m.ContactPage),
+  },
+  {
+    path: 'contact/:id',
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['admin'] },
+    loadComponent: () =>
+      import('./features/contact/pages/contact-detail.page').then((m) => m.ContactDetailPage),
+  },
+  {
+    path: 'jobs',
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['hr', 'admin', 'director', 'manager'] },
+    loadComponent: () =>
+      import('./features/jobs/pages/jobs.page').then((m) => m.JobsPage),
+  },
+  {
+    path: 'profile',
+    canActivate: [AuthGuard],
+    loadComponent: () =>
+      import('./features/profile/pages/profile.page').then((m) => m.ProfilePage),
+  },
 
   { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
   { path: '**', redirectTo: 'dashboard' },

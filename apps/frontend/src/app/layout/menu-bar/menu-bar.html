@@ -1,26 +1,28 @@
 <nav
   role="navigation"
   aria-label="Main navigation"
-  class="h-[72px] bg-slate-900 border-t border-slate-800
-         flex items-center justify-around px-2"
+  class="mx-2 mb-2 flex h-[74px] items-center gap-1 overflow-x-auto rounded-[22px] border border-[#1a2a3f] bg-[#0b111d] px-1"
 >
   @for (item of items; track item.route) {
     <a
       [routerLink]="item.route"
-      routerLinkActive="text-blue-400 bg-slate-800/40"
+      routerLinkActive="text-[#2f9cff]"
       [routerLinkActiveOptions]="{ exact: true }"
       #rla="routerLinkActive"
       [attr.aria-current]="rla.isActive ? 'page' : null"
-      class="group flex flex-col items-center justify-center gap-1
-             px-3 py-2 rounded-xl
-             text-slate-400 hover:text-white hover:bg-slate-800/30
-             transition focus:outline-none focus:ring-2 focus:ring-blue-500/40"
+      class="group flex min-w-[72px] flex-1 flex-col items-center justify-center gap-1 rounded-xl py-2 transition"
+      [class.text-[#8e9bb0]]="!rla.isActive"
+      [class.hover:text-[#dce9ff]]="!rla.isActive"
     >
-      <span class="text-lg leading-none" aria-hidden="true">
-        {{ item.icon }}
+      <span
+        class="flex h-6 w-6 items-center justify-center rounded-md"
+        [class.bg-[#1a273a]]="!rla.isActive"
+        [class.bg-[#122f4f]]="rla.isActive"
+      >
+        <app-lucide-icon [name]="item.icon" sizeClass="h-4 w-4"></app-lucide-icon>
       </span>
 
-      <span class="text-[11px] font-medium">
+      <span class="text-[9px] font-bold uppercase tracking-[0.12em]">
         {{ item.label }}
       </span>
     </a>

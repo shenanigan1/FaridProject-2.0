@@ -5,6 +5,7 @@ from .evaluation_section_assignment import (
 )
 
 from .evaluation_question import EvaluationQuestion as EvaluationQuestion
+from .evaluation_response import EvaluationResponse as EvaluationResponse
 from .evaluation import Evaluation as Evaluation
 
 __all__ = [
@@ -12,5 +13,6 @@ __all__ = [
     "EvaluationComment",
     "EvaluationSectionAssignment",
     "EvaluationQuestion",
+    "EvaluationResponse",
     "Evaluation",
 ]

@@ -11,7 +11,10 @@ export class AuthService {
   private readonly base = `${environment.apiBaseUrl}/api/auth`;
 
   login(payload: LoginRequest): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.base}/login/`, payload);
+    return this.http.post<LoginResponse>(`${this.base}/login/`, {
+      email: payload.email,
+      password: payload.password,
+    });
   }
 
   me(): Observable<MeResponse> {
