@@ -1,10 +1,18 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
-import { MenuBarComponent } from './layout/menu-bar/menu-bar';
+import { MenuBarComponent, type MenuItem } from './layout/menu-bar/menu-bar';
 import { TopBarComponent } from './layout/top-bar/top-bar';
 import { AuthSessionService } from './core/auth/services/auth-session.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter } from 'rxjs';
+
+import {
+  LucideHome,
+  LucideUsers,
+  LucideBriefcaseBusiness,
+  LucideClipboardCheck,
+} from '@lucide/angular';
+
 
 @Component({
   selector: 'app-root',
@@ -13,6 +21,14 @@ import { filter } from 'rxjs';
   styleUrl: './app.scss',
 })
 export class App {
+
+  readonly items: MenuItem[] = [
+    { label: 'Home', route: '/home', icon: LucideHome },
+    { label: 'Contact', route: '/contact', icon: LucideUsers },
+    { label: 'Jobs', route: '/jobs', icon: LucideBriefcaseBusiness },
+    { label: 'Tests', route: '/tests', icon: LucideClipboardCheck },
+  ];
+
   private readonly session = inject(AuthSessionService);
   private readonly router = inject(Router);
   protected readonly title = signal('frontend');

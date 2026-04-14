@@ -4,8 +4,10 @@
     "apps/frontend",
     "apps/candidate"
   ],
-  
   "scripts": {
     "lint:eslint": "ng lint"
+  },
+  "dependencies": {
+    "@lucide/angular": "^1.8.0"
   }
 }
