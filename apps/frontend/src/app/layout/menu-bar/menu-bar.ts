@@ -3,6 +3,20 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { LucideIconComponent } from '../../shared/ui/lucide-icon/lucide-icon.component';
 
+import { LucideDynamicIcon } from '@lucide/angular';
+import {
+  LucideHome,
+  LucideUsers,
+  LucideBriefcaseBusiness,
+  LucideClipboardCheck,
+} from '@lucide/angular';
+
+type MenuBarIcon =
+  | typeof LucideHome
+  | typeof LucideUsers
+  | typeof LucideBriefcaseBusiness
+  | typeof LucideClipboardCheck;
+
 export interface MenuItem {
   label: string;
   icon: string;
