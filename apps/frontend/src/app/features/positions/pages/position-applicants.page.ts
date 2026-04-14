@@ -35,6 +35,7 @@ export class PositionApplicantsPage {
   private readonly applicantsSubject = new BehaviorSubject<PositionApplicant[]>([]);
   readonly applicants$ = this.applicantsSubject.asObservable();
   readonly launchingByApplication = new BehaviorSubject<Record<number, boolean>>({});
+  readonly rejectingByApplication = new BehaviorSubject<Record<number, boolean>>({});
 
   readonly filteredApplicants$ = combineLatest([
     this.applicants$,
@@ -113,8 +114,32 @@ export class PositionApplicantsPage {
       });
   }
 
+  rejectApplicant(applicant: PositionApplicant): void {
+    this.launchMessage = null;
+    this.setRejecting(applicant.applicationId, true);
+    this.applicantsService
+      .rejectApplication(applicant.applicationId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.launchMessage = `${applicant.fullName} has been rejected.`;
+          this.loadApplicants();
+          this.setRejecting(applicant.applicationId, false);
+        },
+        error: () => {
+          this.launchMessage = `Unable to reject ${applicant.fullName}.`;
+          this.setRejecting(applicant.applicationId, false);
+          this.cdr.markForCheck();
+        },
+      });
+  }
+
   isLaunching(applicationId: number): boolean {
     return this.launchingByApplication.value[applicationId] ?? false;
+  }
+
+  isRejecting(applicationId: number): boolean {
+    return this.rejectingByApplication.value[applicationId] ?? false;
   }
 
   private setLaunching(applicationId: number, value: boolean): void {
@@ -123,6 +148,15 @@ export class PositionApplicantsPage {
       [applicationId]: value,
     };
     this.launchingByApplication.next(next);
+    this.cdr.markForCheck();
+  }
+
+  private setRejecting(applicationId: number, value: boolean): void {
+    const next = {
+      ...this.rejectingByApplication.value,
+      [applicationId]: value,
+    };
+    this.rejectingByApplication.next(next);
     this.cdr.markForCheck();
   }
 }

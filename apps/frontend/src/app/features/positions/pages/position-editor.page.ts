@@ -65,7 +65,7 @@ export class PositionEditorPage {
   readonly fieldErrors = signal<Record<string, string[]>>({});
   readonly availableTemplates = signal<TemplateOptionDto[]>([]);
   readonly selectedTemplateIds = signal<number[]>([]);
-  readonly managerByTemplate = signal<Record<number, string>>({});
+  readonly managerByTemplate = signal<Partial<Record<number, string>>>({});
   readonly templatesMessage = signal<string | null>(null);
   readonly templatesSaving = signal(false);
 

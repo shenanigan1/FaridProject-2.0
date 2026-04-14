@@ -243,6 +243,13 @@ export class PositionApplicantsService {
       .pipe(map((response) => (Array.isArray(response) ? response : [response])));
   }
 
+  rejectApplication(applicationId: number): Observable<{ id: number; status: string }> {
+    return this.http.patch<{ id: number; status: string }>(
+      `${this.applicationsUrl}${applicationId}/`,
+      { status: 'rejected' },
+    );
+  }
+
   assignManagerToEvaluation(
     evaluationId: number,
     managerId: number,
@@ -269,12 +276,12 @@ export class PositionApplicantsService {
 
   saveEvaluationQuestionnaire(
     evaluationId: number,
-    answers: Array<{
+    answers: {
       question_id: number;
       candidate_answer: string;
       manager_comment: string;
       score: number | null;
-    }>,
+    }[],
   ): Observable<EvaluationQuestionnaire> {
     return this.http.post<EvaluationQuestionnaire>(
       `/api/evaluations/${evaluationId}/questionnaire/`,

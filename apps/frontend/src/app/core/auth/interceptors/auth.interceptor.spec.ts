@@ -103,7 +103,7 @@ describe('authInterceptor (HttpInterceptorFn)', () => {
     );
 
     let responseBody: { ok: boolean } | undefined;
-    http.get('/api/protected').subscribe((res) => (responseBody = res));
+    http.get<{ ok: boolean }>('/api/protected').subscribe((res) => (responseBody = res));
 
     // First attempt (with OLD token)
     const firstReq = httpMock.expectOne('/api/protected');
