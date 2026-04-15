@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router, provideRouter } from '@angular/router';
+import { By } from '@angular/platform-browser';
 import { of, throwError } from 'rxjs';
 
 import { LoginPage } from './login.page';
@@ -42,21 +43,6 @@ describe('LoginPage', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should default to driver profile and correct email label', () => {
-    expect(component.selectedProfile()).toBe('driver');
-    expect(component.emailLabel()).toBe('Driver Email');
-  });
-
-  it('selectProfile should update profile and clear errorMessage', () => {
-    component.errorMessage.set('Some error');
-
-    component.selectProfile('hr');
-
-    expect(component.selectedProfile()).toBe('hr');
-    expect(component.errorMessage()).toBeNull();
-    expect(component.emailLabel()).toBe('Email');
-  });
-
   it('submit should mark form touched and do nothing if form invalid', () => {
     const markSpy = spyOn(component.form, 'markAllAsTouched');
 
@@ -86,11 +72,10 @@ describe('LoginPage', () => {
     expect(authServiceSpy.login).not.toHaveBeenCalled();
   });
 
-  it('submit should call auth.login with selected profile and credentials', () => {
+  it('submit should call auth.login with credentials', () => {
     const mockRes: LoginResponse = { access: 'ACCESS_TOKEN', refresh: 'REFRESH_TOKEN' };
     authServiceSpy.login.and.returnValue(of(mockRes));
 
-    component.selectProfile('manager');
     component.form.setValue({
       email: 'manager@test.com',
       password: 'pwd',
@@ -100,7 +85,6 @@ describe('LoginPage', () => {
     component.submit();
 
     const expected: LoginRequest = {
-      profile: 'manager',
       email: 'manager@test.com',
       password: 'pwd',
     };
@@ -175,5 +159,15 @@ describe('LoginPage', () => {
 
     expect(component.errorMessage()).toBe('Invalid credentials.');
     expect(component.loading()).toBeFalse();
+  });
+
+  it('renders forgot-password and request-access links to valid routes', () => {
+    fixture.detectChanges();
+
+    const forgot = fixture.debugElement.query(By.css('a[routerLink="/forgot-password"]'));
+    const request = fixture.debugElement.query(By.css('a[routerLink="/request-access"]'));
+
+    expect(forgot).toBeTruthy();
+    expect(request).toBeTruthy();
   });
 });

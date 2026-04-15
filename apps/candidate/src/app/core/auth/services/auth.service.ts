@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable, catchError, map, of, switchMap, throwError } from 'rxjs';
+import { Observable, catchError, map, switchMap, throwError } from 'rxjs';
 
 import { environment } from '@env/environment';
 
@@ -48,6 +48,16 @@ interface CandidateDto {
   };
 }
 
+interface CandidateProfileDto {
+  id: number;
+  user: {
+    email: string;
+    first_name: string;
+    last_name: string;
+    phone?: string;
+  };
+}
+
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly http = inject(HttpClient);
@@ -57,6 +67,7 @@ export class AuthService {
 
   private readonly authBaseUrl = `${environment.apiBaseUrl}/api/auth`;
   private readonly candidatesUrl = `${environment.apiBaseUrl}/api/candidates/`;
+  private readonly candidateMeUrl = `${environment.apiBaseUrl}/api/candidates/me/`;
 
   isAuthenticated(): boolean {
     return this.tokenStorage.isAuthenticated();
@@ -72,11 +83,7 @@ export class AuthService {
         switchMap((response) => {
           this.persistTokens(response.access, response.refresh);
 
-          return this.resolveCandidateProfile(payload.email, {
-            firstName: response.user?.first_name ?? '',
-            lastName: response.user?.last_name ?? '',
-            phone: '',
-          });
+          return this.resolveCandidateProfile();
         }),
         map((candidate) => {
           this.saveAuthenticatedCandidate(candidate);
@@ -149,43 +156,26 @@ export class AuthService {
     });
   }
 
-  private resolveCandidateProfile(
-    email: string,
-    fallback: { firstName: string; lastName: string; phone: string },
-  ): Observable<AuthenticatedCandidate> {
-    return this.http.get<CandidateDto[]>(this.candidatesUrl).pipe(
-      map((candidates) => {
-        const candidate = candidates.find(
-          (item) => item.user.email.toLowerCase() === email.toLowerCase(),
-        );
-
-        if (!candidate) {
-          return {
-            candidateId: Date.now(),
-            email,
-            firstName: fallback.firstName,
-            lastName: fallback.lastName,
-            phone: fallback.phone,
-          };
+  private resolveCandidateProfile(): Observable<AuthenticatedCandidate> {
+    return this.http.get<CandidateProfileDto>(this.candidateMeUrl).pipe(
+      map((candidate) => ({
+        candidateId: candidate.id,
+        email: candidate.user.email,
+        firstName: candidate.user.first_name,
+        lastName: candidate.user.last_name,
+        phone: candidate.user.phone ?? '',
+      })),
+      catchError((error: unknown) => {
+        if (error instanceof HttpErrorResponse && error.status === 403) {
+          return throwError(
+            () => 'Your account does not have candidate access for this application.',
+          );
         }
-
-        return {
-          candidateId: candidate.id,
-          email: candidate.user.email,
-          firstName: candidate.user.first_name,
-          lastName: candidate.user.last_name,
-          phone: candidate.user.phone ?? '',
-        };
+        if (error instanceof HttpErrorResponse && error.status === 404) {
+          return throwError(() => 'Candidate profile not found. Please contact support.');
+        }
+        return throwError(() => 'Unable to load candidate profile.');
       }),
-      catchError(() =>
-        of({
-          candidateId: Date.now(),
-          email,
-          firstName: fallback.firstName,
-          lastName: fallback.lastName,
-          phone: fallback.phone,
-        }),
-      ),
     );
   }
 
@@ -194,6 +184,10 @@ export class AuthService {
   }
 
   private mapAuthError(error: unknown): Observable<never> {
+    if (typeof error === 'string') {
+      return throwError(() => error);
+    }
+
     if (!(error instanceof HttpErrorResponse)) {
       return throwError(() => 'Unexpected authentication error.');
     }

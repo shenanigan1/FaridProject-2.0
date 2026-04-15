@@ -5,8 +5,29 @@ import { RoleGuard } from './core/guards/role.guard';
 export const routes: Routes = [
   {
     path: 'login',
+    loadComponent: () => import('./features/auth/pages/login.page').then((m) => m.LoginPage),
+  },
+  {
+    path: 'forgot-password',
     loadComponent: () =>
-      import('./features/auth/pages/login.page').then((m) => m.LoginPage),
+      import('./features/shared/pages/work-in-progress.page').then((m) => m.WorkInProgressPage),
+    data: {
+      title: 'Forgot Password',
+      description: 'Password recovery flow is planned for a future increment.',
+      errorCode: 'AUTH-404',
+      errorMessage: 'Forgot password page is not implemented yet.',
+    },
+  },
+  {
+    path: 'request-access',
+    loadComponent: () =>
+      import('./features/shared/pages/work-in-progress.page').then((m) => m.WorkInProgressPage),
+    data: {
+      title: 'Request Access',
+      description: 'Access request onboarding is planned for a future increment.',
+      errorCode: 'AUTH-405',
+      errorMessage: 'Request access page is not implemented yet.',
+    },
   },
 
   {
@@ -26,7 +47,8 @@ export const routes: Routes = [
 
   {
     path: 'positions',
-    loadChildren: () => import('./features/positions/positions.routes').then((m) => m.POSITIONS_ROUTES),
+    loadChildren: () =>
+      import('./features/positions/positions.routes').then((m) => m.POSITIONS_ROUTES),
     canActivate: [AuthGuard, RoleGuard],
     data: { roles: ['hr', 'admin', 'director', 'manager'] },
   },
@@ -41,9 +63,48 @@ export const routes: Routes = [
   {
     path: 'templates',
     loadChildren: () =>
-      import('src/app/features/test-templates/test-templates.routes').then((m) => m.TEMPLATES_ROUTES),
+      import('src/app/features/test-templates/test-templates.routes').then(
+        (m) => m.TEMPLATES_ROUTES,
+      ),
     canActivate: [AuthGuard, RoleGuard],
     data: { roles: ['hr', 'admin', 'director', 'manager'] },
+  },
+  {
+    path: 'tests',
+    loadChildren: () => import('src/app/features/tests/tests.routes').then((m) => m.TESTS_ROUTES),
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['hr', 'admin', 'director', 'manager'] },
+  },
+  {
+    path: 'roles',
+    loadComponent: () =>
+      import('./features/roles/pages/roles-admin.page').then((m) => m.RolesAdminPage),
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['admin'] },
+  },
+  {
+    path: 'contact',
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['admin'] },
+    loadComponent: () => import('./features/contact/pages/contact.page').then((m) => m.ContactPage),
+  },
+  {
+    path: 'contact/:id',
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['admin'] },
+    loadComponent: () =>
+      import('./features/contact/pages/contact-detail.page').then((m) => m.ContactDetailPage),
+  },
+  {
+    path: 'jobs',
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['hr', 'admin', 'director', 'manager'] },
+    loadComponent: () => import('./features/jobs/pages/jobs.page').then((m) => m.JobsPage),
+  },
+  {
+    path: 'profile',
+    canActivate: [AuthGuard],
+    loadComponent: () => import('./features/profile/pages/profile.page').then((m) => m.ProfilePage),
   },
 
   { path: '', pathMatch: 'full', redirectTo: 'dashboard' },

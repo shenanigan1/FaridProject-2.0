@@ -12,6 +12,7 @@ import { UiIconButtonComponent } from '@lib-ui/icon-button/icon-button.component
 import { UiButtonPrimaryComponent } from '@lib-ui/button-primary/button-primary.component';
 import { UiButtonSecondaryComponent } from '@lib-ui/button-secondary/button-secondary.component';
 import { UiProgressBarComponent } from '@lib-ui/progress-bar/progress-bar.component';
+import { LucideIconComponent } from '../../../shared/ui/lucide-icon/lucide-icon.component';
 
 type Difficulty = 'easy' | 'medium' | 'hard';
 
@@ -45,7 +46,7 @@ interface TemplateFormValue {
   min_pass_score: number;
   difficulty: Difficulty;
   is_active: boolean;
-};
+}
 
 type TemplatePayload = TemplateFormValue & { sections: SectionVm[] };
 
@@ -96,6 +97,7 @@ function pick(v: UnknownRecord, ...keys: string[]): unknown {
     UiButtonPrimaryComponent,
     UiButtonSecondaryComponent,
     UiProgressBarComponent,
+    LucideIconComponent,
   ],
   templateUrl: './test-templates-editor.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -166,9 +168,7 @@ export class TestTemplateEditorPage {
     if (!q) return items;
 
     return items.filter(
-      (p) =>
-        (p.name ?? '').toLowerCase().includes(q) ||
-        (p.code ?? '').toLowerCase().includes(q),
+      (p) => (p.name ?? '').toLowerCase().includes(q) || (p.code ?? '').toLowerCase().includes(q),
     );
   });
 
@@ -283,7 +283,10 @@ export class TestTemplateEditorPage {
     const pools = asArray(pick(s, 'pools')).map((prUnknown): SectionPoolRuleVm => {
       const pr = isRecord(prUnknown) ? prUnknown : {};
       const poolId = asString(pick(pr, 'poolId', 'pool_id', 'pool'), '');
-      const randomCount = Math.max(0, Math.floor(asNumber(pick(pr, 'randomCount', 'random_count'), 0)));
+      const randomCount = Math.max(
+        0,
+        Math.floor(asNumber(pick(pr, 'randomCount', 'random_count'), 0)),
+      );
 
       const mandatoryRaw = pick(pr, 'mandatoryCount', 'mandatory_count');
       const mandatoryCount =
@@ -364,7 +367,14 @@ export class TestTemplateEditorPage {
     const nextIndex = this.sections().length + 1;
     this.sections.update((list) => [
       ...list,
-      { id: uid(), title: `Section ${nextIndex}`, description: '', weight: 0, questions: [], pools: [] },
+      {
+        id: uid(),
+        title: `Section ${nextIndex}`,
+        description: '',
+        weight: 0,
+        questions: [],
+        pools: [],
+      },
     ]);
   }
 
@@ -384,9 +394,7 @@ export class TestTemplateEditorPage {
     if (!this.isEditMode()) return;
     const w = Number.isFinite(weight) ? Math.max(0, Math.min(100, Math.floor(weight))) : 0;
 
-    this.sections.update((list) =>
-      list.map((s) => (s.id === sectionId ? { ...s, weight: w } : s)),
-    );
+    this.sections.update((list) => list.map((s) => (s.id === sectionId ? { ...s, weight: w } : s)));
   }
 
   assignSection(sectionId: string): void {
@@ -426,7 +434,10 @@ export class TestTemplateEditorPage {
     this.sections.update((list) =>
       list.map((s) => {
         if (s.id !== sectionId) return s;
-        return { ...s, pools: s.pools.map((p) => (p.poolId === poolId ? { ...p, randomCount: c } : p)) };
+        return {
+          ...s,
+          pools: s.pools.map((p) => (p.poolId === poolId ? { ...p, randomCount: c } : p)),
+        };
       }),
     );
   }
@@ -464,9 +475,8 @@ export class TestTemplateEditorPage {
     const id = this.templateId();
 
     // Si tes méthodes API sont typées, enlève les casts.
-    const req$: Observable<unknown> = id === null
-      ? this.api.create(payload)
-      : this.api.update(id, payload);
+    const req$: Observable<unknown> =
+      id === null ? this.api.create(payload) : this.api.update(id, payload);
 
     req$.pipe(finalize(() => this.isSaving.set(false))).subscribe({
       next: (savedUnknown: unknown) => {
