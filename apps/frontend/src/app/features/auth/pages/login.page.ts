@@ -8,11 +8,12 @@ import { LucideDynamicIcon } from '@lucide/angular';
 import { AuthService } from '@auth/services/auth.service';
 import { TokenStorageService } from '@auth/services/token-storage.service';
 import { APP_ICONS } from '@shared/icons/app-icons';
+import { UiAlertComponent } from '@lib-ui/alert/alert.component';
 
 @Component({
   standalone: true,
   selector: 'app-login-page',
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, LucideDynamicIcon],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, LucideDynamicIcon, UiAlertComponent],
   templateUrl: './login.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

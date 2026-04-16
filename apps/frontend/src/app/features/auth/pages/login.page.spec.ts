@@ -161,6 +161,17 @@ describe('LoginPage', () => {
     expect(component.loading()).toBeFalse();
   });
 
+
+  it('renders shared ui alert when login error exists', () => {
+    component.errorMessage.set('Invalid credentials.');
+
+    fixture.detectChanges();
+
+    const alert = fixture.debugElement.query(By.css('app-ui-alert'));
+
+    expect(alert).toBeTruthy();
+  });
+
   it('renders forgot-password and request-access links to valid routes', () => {
     fixture.detectChanges();
 

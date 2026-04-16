@@ -37,11 +37,8 @@
 
       <article class="ff-card-elevated px-4 py-4 sm:px-4 sm:py-5 md:px-5 md:py-6">
         @if (errorMessage()) {
-          <div
-            class="mb-4 rounded-lg border border-error/40 bg-error/10 px-3 py-2 text-xs text-red-200 sm:text-sm"
-          >
-            {{ errorMessage() }}
-          </div>
+          <app-ui-alert class="mb-4 block text-xs sm:text-sm" variant="error" [message]="errorMessage()">
+          </app-ui-alert>
         }
 
         <form [formGroup]="form" (ngSubmit)="submit()" class="space-y-4 sm:space-y-5">
