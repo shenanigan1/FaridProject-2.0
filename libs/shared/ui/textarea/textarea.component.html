@@ -1,12 +1,10 @@
-<label class="block">
+<label class="ff-field">
   @if (label) {
-    <span class="text-sm font-medium text-slate-300">{{ label }}</span>
+    <span class="ff-field-label">{{ label }}</span>
   }
 
   <textarea
-    class="mt-1 w-full rounded-xl border border-slate-800 bg-slate-900 px-4 py-3 text-slate-100
-           outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-slate-700"
-    [class.border-red-500/40]="!!error"
+    [class]="textareaClasses"
     [attr.placeholder]="placeholder"
     [attr.rows]="rows"
     [disabled]="disabled()"
@@ -16,8 +14,8 @@
   ></textarea>
 
   @if (error) {
-    <p class="mt-1 text-xs text-red-300">{{ error }}</p>
+    <p class="ff-field-error">{{ error }}</p>
   } @else if (hint) {
-    <p class="mt-1 text-xs text-slate-500">{{ hint }}</p>
+    <p class="ff-field-hint">{{ hint }}</p>
   }
 </label>

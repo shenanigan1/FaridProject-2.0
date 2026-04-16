@@ -9,17 +9,60 @@
     @apply rounded-2xl border border-border bg-surface-2 shadow-lg;
   }
 
+
+  .ff-field {
+    @apply block;
+  }
+
+  .ff-field-label {
+    @apply text-sm font-medium text-text-secondary;
+  }
+
+  .ff-field-message {
+    @apply mt-1 text-xs;
+  }
+
+  .ff-field-error {
+    @apply ff-field-message text-error;
+  }
+
+  .ff-field-hint {
+    @apply ff-field-message text-text-muted;
+  }
+
   .ff-input {
-    @apply h-11 w-full rounded-lg border border-border bg-surface-2 px-3 text-sm text-text-primary placeholder:text-text-muted outline-none transition;
+    @apply h-11 w-full rounded-xl border border-border bg-surface-2 px-4 py-3 text-sm text-text-primary placeholder:text-text-muted outline-none transition;
   }
 
   .ff-input:hover {
     @apply border-secondary-500;
   }
 
-  .ff-input:focus {
-    @apply border-primary-500 ring-1 ring-primary-500;
+  .ff-input:focus,
+  .ff-input:focus-visible {
+    @apply border-primary-500 ring-2 ring-primary-500/40;
   }
+
+  .ff-input-error {
+    @apply border-error;
+  }
+
+  .ff-checkbox {
+    @apply mt-0.5 h-4 w-4 accent-primary-500;
+  }
+
+  .ff-toggle-track {
+    @apply relative h-6 w-11 rounded-full transition disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  .ff-toggle-thumb {
+    @apply absolute top-0.5 h-5 w-5 rounded-full bg-white transition;
+  }
+
+  .ff-radio-option {
+    @apply inline-flex items-center gap-2 rounded-xl border border-border bg-surface-2 px-3 py-2 text-sm text-text-primary transition hover:bg-surface-1;
+  }
+
 
   .ff-btn-primary {
     @apply inline-flex items-center justify-center gap-2 rounded-lg bg-primary-500 px-4 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-primary-400 disabled:cursor-not-allowed disabled:opacity-60;

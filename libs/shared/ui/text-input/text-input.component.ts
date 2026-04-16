@@ -56,4 +56,9 @@ export class UiTextInputComponent implements ControlValueAccessor {
   blur(): void {
     this.onTouched();
   }
+
+
+  get inputClasses(): string {
+    return ['ff-input', 'mt-1', this.error ? 'ff-input-error' : ''].filter(Boolean).join(' ');
+  }
 }

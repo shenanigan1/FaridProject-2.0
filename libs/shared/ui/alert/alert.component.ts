@@ -30,13 +30,13 @@ export class UiAlertComponent {
   }
 
   get classes(): string {
-    const base = 'mb-4 rounded-lg border px-3 py-2 text-sm';
+    const base = 'ff-alert';
 
     const variants: Record<UiAlertVariant, string> = {
-      success: 'border-success/30 bg-success/10 text-success',
-      warning: 'border-warning/30 bg-warning/10 text-warning',
-      info: 'border-info/30 bg-info/10 text-info',
-      error: 'border-error/30 bg-error/10 text-error',
+      success: 'ff-alert-success',
+      warning: 'ff-alert-warning',
+      info: 'ff-alert-info',
+      error: 'ff-alert-error',
     };
 
     return `${base} ${variants[this.variant]}`;

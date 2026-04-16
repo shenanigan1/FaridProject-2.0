@@ -1,13 +1,13 @@
-<div class="w-full max-w-md">
-  <div class="mb-6">
-    <h1 class="text-3xl font-semibold text-text-primary">{{ title }}</h1>
+<div class="ff-auth-shell">
+  <div class="ff-auth-header">
+    <h1 class="ff-auth-title">{{ title }}</h1>
 
     @if (subtitle) {
-      <p class="mt-2 text-text-secondary">{{ subtitle }}</p>
+      <p class="ff-auth-subtitle">{{ subtitle }}</p>
     }
   </div>
 
-  <div class="ff-card p-6">
+  <div class="ff-auth-card">
     <ng-content></ng-content>
   </div>
 </div>

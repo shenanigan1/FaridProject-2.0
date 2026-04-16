@@ -25,7 +25,6 @@ export class UiPasswordInputComponent implements ControlValueAccessor {
   readonly disabled = signal(false);
   readonly show = signal(false);
 
-
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private onChange: (v: string) => void = (_v: string) => void 0;
   private onTouched: () => void = () => void 0;
@@ -58,5 +57,10 @@ export class UiPasswordInputComponent implements ControlValueAccessor {
 
   toggle(): void {
     this.show.set(!this.show());
+  }
+
+
+  get wrapperClasses(): string {
+    return ['ff-input', 'mt-1', 'flex', 'items-center', 'gap-2', this.error ? 'ff-input-error' : ''].filter(Boolean).join(' ');
   }
 }

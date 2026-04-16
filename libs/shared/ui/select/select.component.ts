@@ -37,7 +37,7 @@ export class UiSelectComponent<T extends string = string> implements ControlValu
   readonly value = signal<T | null>(null);
   readonly disabled = signal(false);
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private onChange: (v: T | null) => void = (_v: T | null) => void 0;
   private onTouched: () => void = () => void 0;
 
@@ -63,5 +63,10 @@ export class UiSelectComponent<T extends string = string> implements ControlValu
 
   blur(): void {
     this.onTouched();
+  }
+
+
+  get selectClasses(): string {
+    return ['ff-input', 'mt-1', this.error ? 'ff-input-error' : ''].filter(Boolean).join(' ');
   }
 }
