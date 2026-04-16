@@ -9,7 +9,8 @@ import {
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { LucideIconComponent } from '../../../shared/ui/lucide-icon/lucide-icon.component';
+import { APP_ICONS } from '@shared/icons/app-icons';
+import { LucideDynamicIcon } from '@lucide/angular';
 
 import {
   AdminUser,
@@ -30,7 +31,7 @@ const ROLE_OPTIONS: UserRole[] = [
 @Component({
   standalone: true,
   selector: 'app-contact-detail-page',
-  imports: [CommonModule, RouterLink, LucideIconComponent],
+  imports: [CommonModule, RouterLink, LucideDynamicIcon],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section class="min-h-[calc(100vh-144px)] bg-slate-950 px-4 py-4 text-slate-100">
@@ -40,15 +41,16 @@ const ROLE_OPTIONS: UserRole[] = [
             routerLink="/contact"
             class="inline-flex items-center gap-2 rounded-full border border-slate-700 px-3 py-1.5 text-sm"
           >
-            <app-lucide-icon name="arrow-left" sizeClass="h-4 w-4"></app-lucide-icon>
+            <svg [lucideIcon]="icons.back" class="h-4 w-4"></svg>
             Back
           </button>
+
           <button
             type="button"
             class="inline-flex items-center rounded-full border border-slate-700 px-3 py-1.5 text-sm"
             (click)="menuOpen.set(true)"
           >
-            <app-lucide-icon name="ellipsis-vertical" sizeClass="h-4 w-4"></app-lucide-icon>
+            <svg [lucideIcon]="icons.home" class="h-4 w-4"></svg>
           </button>
         </header>
 
@@ -60,21 +62,24 @@ const ROLE_OPTIONS: UserRole[] = [
           </div>
         }
 
-        @if (contact()) {
+        @if (contact(); as currentContact) {
           <article class="rounded-2xl border border-slate-800 bg-slate-900/70 p-5">
             <div class="flex items-center justify-between gap-3">
               <div>
                 <h1 class="text-3xl font-bold">{{ fullName() }}</h1>
-                <p class="mt-1 text-slate-400">{{ contact()!.role }} • {{ contact()!.email }}</p>
+                <p class="mt-1 text-slate-400">
+                  {{ currentContact.role }} • {{ currentContact.email }}
+                </p>
               </div>
+
               <span
                 class="rounded-md border px-2 py-1 text-xs font-semibold uppercase"
-                [class.border-emerald-500/40]="contact()!.is_active"
-                [class.text-emerald-300]="contact()!.is_active"
-                [class.border-slate-600]="!contact()!.is_active"
-                [class.text-slate-400]="!contact()!.is_active"
+                [class.border-emerald-500/40]="currentContact.is_active"
+                [class.text-emerald-300]="currentContact.is_active"
+                [class.border-slate-600]="!currentContact.is_active"
+                [class.text-slate-400]="!currentContact.is_active"
               >
-                {{ contact()!.is_active ? 'Active' : 'Inactive' }}
+                {{ currentContact.is_active ? 'Active' : 'Inactive' }}
               </span>
             </div>
 
@@ -102,11 +107,11 @@ const ROLE_OPTIONS: UserRole[] = [
         }
       </div>
 
-      @if (menuOpen() && contact()) {
+      @if (menuOpen() && contact(); as currentContact) {
         <div class="fixed inset-0 z-50 flex items-end bg-black/60 p-4">
           <div class="mx-auto w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-4">
             <h2 class="text-lg font-semibold">Action Menu</h2>
-            <p class="text-xs text-slate-400">ID: {{ contact()!.id }} • {{ contact()!.role }}</p>
+            <p class="text-xs text-slate-400">ID: {{ currentContact.id }} • {{ currentContact.role }}</p>
 
             <div class="mt-4 space-y-3">
               <button
@@ -119,13 +124,14 @@ const ROLE_OPTIONS: UserRole[] = [
 
               @if (roleMenuOpen()) {
                 <div class="rounded-xl border border-slate-700 bg-slate-950 p-3">
-                  <label class="mb-1 block text-xs text-slate-400" for="role-select"
-                    >New role</label
-                  >
+                  <label class="mb-1 block text-xs text-slate-400" for="role-select">
+                    New role
+                  </label>
+
                   <select
                     id="role-select"
                     class="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm"
-                    [value]="contact()!.role"
+                    [value]="currentContact.role"
                     (change)="onRoleChange($event)"
                   >
                     @for (role of roleOptions; track role) {
@@ -138,13 +144,13 @@ const ROLE_OPTIONS: UserRole[] = [
               <button
                 type="button"
                 class="w-full rounded-lg px-3 py-2 text-left"
-                [class.bg-red-500/15]="contact()!.is_active"
-                [class.text-red-300]="contact()!.is_active"
-                [class.bg-emerald-500/15]="!contact()!.is_active"
-                [class.text-emerald-300]="!contact()!.is_active"
+                [class.bg-red-500/15]="currentContact.is_active"
+                [class.text-red-300]="currentContact.is_active"
+                [class.bg-emerald-500/15]="!currentContact.is_active"
+                [class.text-emerald-300]="!currentContact.is_active"
                 (click)="toggleActive()"
               >
-                {{ contact()!.is_active ? 'Deactivate' : 'Activate' }}
+                {{ currentContact.is_active ? 'Deactivate' : 'Activate' }}
               </button>
 
               <button
@@ -167,11 +173,14 @@ export class ContactDetailPage {
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
 
+  readonly icons = APP_ICONS;
+
   readonly roleOptions = ROLE_OPTIONS;
   readonly contact = signal<AdminUser | null>(null);
   readonly pageMessage = signal<string | null>(null);
   readonly menuOpen = signal(false);
   readonly roleMenuOpen = signal(false);
+
   readonly fullName = computed(() => {
     const user = this.contact();
     return user ? `${user.first_name} ${user.last_name}`.trim() : '';
@@ -188,11 +197,17 @@ export class ContactDetailPage {
 
   onRoleChange(event: Event): void {
     const target = event.target;
-    if (!(target instanceof HTMLSelectElement)) return;
+    if (!(target instanceof HTMLSelectElement)) {
+      return;
+    }
+
     const user = this.contact();
-    if (!user) return;
+    if (!user) {
+      return;
+    }
 
     const role = target.value as UserRole;
+
     this.api
       .updateUserRole(user.id, role)
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -202,28 +217,37 @@ export class ContactDetailPage {
           this.pageMessage.set(`Role updated to ${updated.role}.`);
           this.roleMenuOpen.set(false);
         },
-        error: () => this.pageMessage.set('Unable to update role.'),
+        error: () => {
+          this.pageMessage.set('Unable to update role.');
+        },
       });
   }
 
   toggleActive(): void {
     const user = this.contact();
-    if (!user) return;
+    if (!user) {
+      return;
+    }
 
-    const req$ = user.is_active ? this.api.deactivateUser(user.id) : this.api.activateUser(user.id);
+    const request$ = user.is_active
+      ? this.api.deactivateUser(user.id)
+      : this.api.activateUser(user.id);
 
-    req$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+    request$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
         this.contact.set({ ...user, is_active: !user.is_active });
         this.pageMessage.set(user.is_active ? 'Contact deactivated.' : 'Contact activated.');
         this.dismissMenu();
       },
-      error: () => this.pageMessage.set('Unable to update active status.'),
+      error: () => {
+        this.pageMessage.set('Unable to update active status.');
+      },
     });
   }
 
   private loadContact(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
+
     if (!Number.isInteger(id) || id <= 0) {
       this.pageMessage.set('Invalid contact id.');
       void this.router.navigateByUrl('/contact');
@@ -236,10 +260,12 @@ export class ContactDetailPage {
       .subscribe({
         next: (users) => {
           const contact = users.find((user) => user.id === id) ?? null;
+
           if (!contact) {
             this.pageMessage.set('Contact not found.');
             return;
           }
+
           this.contact.set(contact);
         },
         error: () => {

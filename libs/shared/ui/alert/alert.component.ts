@@ -10,11 +10,8 @@ export type UiAlertVariant = 'error' | 'success' | 'warning' | 'info';
   template: `
     @if (hasContent) {
       <div [class]="classes">
-        @if (hasMessage) {
-          <span>{{ message }}</span>
-        } @else {
-          <ng-content></ng-content>
-        }
+        <ng-content *ngIf="!hasMessage"></ng-content>
+        <span *ngIf="hasMessage">{{ message }}</span>
       </div>
     }
   `,
@@ -29,21 +26,19 @@ export class UiAlertComponent {
   }
 
   get hasContent(): boolean {
-    return this.hasMessage; // or extend later if ng-content is used
+    return this.hasMessage;
   }
 
   get classes(): string {
-    const base = 'mb-4 rounded-xl border p-3 text-sm';
+    const base = 'mb-4 rounded-lg border px-3 py-2 text-sm';
 
-    switch (this.variant) {
-      case 'success':
-        return `${base} border-green-500/25 bg-green-500/10 text-green-200`;
-      case 'warning':
-        return `${base} border-yellow-500/25 bg-yellow-500/10 text-yellow-200`;
-      case 'info':
-        return `${base} border-blue-500/25 bg-blue-500/10 text-blue-200`;
-      default:
-        return `${base} border-red-500/25 bg-red-500/10 text-red-200`;
-    }
+    const variants: Record<UiAlertVariant, string> = {
+      success: 'border-success/30 bg-success/10 text-success',
+      warning: 'border-warning/30 bg-warning/10 text-warning',
+      info: 'border-info/30 bg-info/10 text-info',
+      error: 'border-error/30 bg-error/10 text-error',
+    };
+
+    return `${base} ${variants[this.variant]}`;
   }
 }

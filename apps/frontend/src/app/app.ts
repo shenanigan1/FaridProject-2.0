@@ -1,10 +1,11 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
-import { MenuBarComponent } from './layout/menu-bar/menu-bar';
+import { MenuBarComponent, type MenuItem } from './layout/menu-bar/menu-bar';
 import { TopBarComponent } from './layout/top-bar/top-bar';
 import { AuthSessionService } from './core/auth/services/auth-session.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter } from 'rxjs';
+import { APP_ICONS } from '@shared/icons/app-icons';
 
 @Component({
   selector: 'app-root',
@@ -15,42 +16,48 @@ import { filter } from 'rxjs';
 export class App {
   private readonly session = inject(AuthSessionService);
   private readonly router = inject(Router);
+
   protected readonly title = signal('frontend');
+  readonly icons = APP_ICONS;
+
   readonly me = signal<{ role?: string | null; first_name?: string; last_name?: string } | null>(
     null,
   );
+
   readonly currentUrl = signal(this.router.url);
   readonly showNavigationChrome = computed(() => !this.currentUrl().startsWith('/login'));
 
-  readonly menuItems = computed(() => {
+  readonly menuItems = computed<MenuItem[]>(() => {
     const role = this.me()?.role;
-    const common = [{ label: 'Home', icon: 'home', route: '/dashboard' }];
+
+    const common: MenuItem[] = [
+      { label: 'Home', icon: this.icons.home, route: '/dashboard' },
+    ];
 
     if (role === 'hr' || role === 'director') {
       return [
         ...common,
-        { label: 'Contact', icon: 'users', route: '/candidates' },
-        { label: 'Tests', icon: 'clipboard-check', route: '/tests' },
-        { label: 'Jobs', icon: 'briefcase', route: '/positions' },
-        { label: 'Templates', icon: 'layout-grid', route: '/templates' },
-        { label: 'Pools', icon: 'folder-kanban', route: '/pools' },
+        { label: 'Contact', icon: this.icons.users, route: '/candidates' },
+        { label: 'Tests', icon: this.icons.clipboard_check, route: '/tests' },
+        { label: 'Jobs', icon: this.icons.positions, route: '/positions' },
+        { label: 'Dashboard', icon: this.icons.dashboard, route: '/' },
       ];
     }
 
     if (role === 'admin') {
       return [
-        { label: 'Home', icon: 'home', route: '/dashboard' },
-        { label: 'Contact', icon: 'users', route: '/contact' },
-        { label: 'Jobs', icon: 'briefcase', route: '/jobs' },
-        { label: 'Tests', icon: 'clipboard-check', route: '/tests' },
+        { label: 'Dashboard', icon: this.icons.dashboard, route: '/' },
+        { label: 'Contact', icon: this.icons.users, route: '/candidates' },
+        { label: 'Tests', icon: this.icons.clipboard_check, route: '/tests' },
+        { label: 'Jobs', icon: this.icons.positions, route: '/positions' },
       ];
     }
 
     if (role === 'manager') {
       return [
         ...common,
-        { label: 'Tests', icon: 'clipboard-check', route: '/tests' },
-        { label: 'Jobs', icon: 'briefcase', route: '/positions' },
+        { label: 'Tests', icon: this.icons.clipboard_check, route: '/tests' },
+        { label: 'Jobs', icon: this.icons.positions, route: '/positions' },
       ];
     }
 

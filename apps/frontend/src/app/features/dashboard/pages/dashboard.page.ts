@@ -4,7 +4,8 @@ import { Router } from '@angular/router';
 import { AuthSessionService } from '@auth/services/auth-session.service';
 import { take } from 'rxjs';
 import { AllowedRole } from '@auth/models/auth.models';
-import { LucideIconComponent } from '../../../shared/ui/lucide-icon/lucide-icon.component';
+import { APP_ICONS } from '@shared/icons/app-icons';
+import { LucideDynamicIcon } from '@lucide/angular';
 
 type DashboardRole = AllowedRole | 'driver';
 
@@ -19,13 +20,15 @@ interface QuickAccessItem {
 @Component({
   standalone: true,
   selector: 'app-dashboard-page',
-  imports: [CommonModule, LucideIconComponent],
+  imports: [CommonModule, LucideDynamicIcon],
   templateUrl: './dashboard.page.html',
 })
 export class DashboardPage {
   private readonly auth = inject(AuthSessionService);
   private readonly router = inject(Router);
   readonly role = signal<DashboardRole>('employee');
+
+  readonly icons = APP_ICONS;
 
   readonly isRecruitmentRole = computed(() => {
     const currentRole = this.role();

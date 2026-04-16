@@ -1,131 +1,149 @@
-<section class="h-screen overflow-hidden bg-[#05143a] px-4 py-6 text-slate-100 sm:px-6 sm:py-8">
-  <div class="mx-auto flex h-full w-full max-w-xl flex-col justify-center">
-    <header class="mb-6 text-center sm:mb-7">
-      <div class="inline-flex items-center gap-3 sm:gap-5">
-        <div
-          class="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-[#3b82f6] shadow-[0_10px_30px_rgba(59,130,246,0.35)] sm:h-20 sm:w-20"
-        >
-          <app-lucide-icon
-            name="truck"
-            sizeClass="h-8 w-8 text-white sm:h-10 sm:w-10"
-            [strokeWidth]="2"
-          ></app-lucide-icon>
-        </div>
-        <h1
-          class="text-4xl font-black uppercase italic leading-none tracking-tight sm:text-5xl md:text-6xl"
-        >
-          <span class="text-slate-100">Fleet</span><span class="text-[#3b82f6]">Flow</span>
-        </h1>
-      </div>
-      <p
-        class="mt-3 text-[11px] font-semibold uppercase tracking-[0.28em] text-slate-400 sm:text-[13px] sm:tracking-[0.32em]"
-      >
-        Logistics & Recruitment Portal
-      </p>
-    </header>
-
-    <article
-      class="rounded-[28px] border border-slate-700/40 bg-[#1a2948] px-5 py-6 shadow-[0_24px_45px_rgba(0,0,0,0.42)] sm:px-8 sm:py-8"
+<section
+  class="min-h-screen overflow-x-hidden bg-background px-3 py-4 text-text-primary sm:px-4 sm:py-6 lg:px-6 lg:py-8"
+>
+  <div
+    class="mx-auto flex min-h-screen w-full max-w-sm items-center justify-center md:max-w-md"
+  >
+    <div
+      class="w-full rounded-2xl bg-primary-900 px-4 py-5 sm:px-5 sm:py-6 md:px-6 md:py-7"
     >
-      @if (errorMessage()) {
-        <div
-          class="mb-4 rounded-xl border border-red-500/40 bg-red-500/10 px-4 py-2 text-sm text-red-200"
-        >
-          {{ errorMessage() }}
-        </div>
-      }
-
-      <form [formGroup]="form" (ngSubmit)="submit()" class="space-y-6 sm:space-y-7">
-        <div class="space-y-3">
-          <label
-            class="block text-[14px] font-bold uppercase tracking-[0.12em] text-slate-400"
-            for="login-email"
-          >
-            Email address
-          </label>
+      <header class="mb-4 text-center sm:mb-5 md:mb-6">
+        <div class="inline-flex items-center gap-3">
           <div
-            class="flex h-16 items-center gap-3 rounded-2xl border border-slate-700/60 bg-[#121f3b] px-4 sm:h-[70px] sm:gap-4 sm:px-5"
+            class="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-primary-500 shadow-md sm:h-12 sm:w-12 md:h-14 md:w-14"
           >
-            <app-lucide-icon
-              name="file-text"
-              sizeClass="h-6 w-6 text-slate-400 sm:h-7 sm:w-7"
-            ></app-lucide-icon>
-            <input
-              id="login-email"
-              formControlName="email"
-              type="email"
-              placeholder="name@fleetflow.com"
-              class="w-full bg-transparent text-base text-slate-300 placeholder:text-slate-400/80 focus:outline-none sm:text-lg"
-            />
+            <svg
+              [lucideIcon]="icons.brand"
+              class="h-5 w-5 text-white sm:h-6 sm:w-6 md:h-7 md:w-7"
+              [attr.stroke-width]="2"
+            ></svg>
+          </div>
+
+          <div class="text-left leading-none">
+            <h1
+              class="text-3xl font-black uppercase italic tracking-tight text-text-primary sm:text-4xl"
+            >
+              <span class="text-white">Fleet</span><span class="text-primary-500">Flow</span>
+            </h1>
+
+            <p
+              class="mt-1 text-[10px] font-semibold uppercase tracking-[0.28em] text-text-secondary sm:text-[11px]"
+            >
+              Logistics & Recruitment Portal
+            </p>
           </div>
         </div>
+      </header>
 
-        <div class="space-y-3">
-          <div class="flex items-center justify-between">
+      <article class="ff-card-elevated px-4 py-4 sm:px-4 sm:py-5 md:px-5 md:py-6">
+        @if (errorMessage()) {
+          <div
+            class="mb-4 rounded-lg border border-error/40 bg-error/10 px-3 py-2 text-xs text-red-200 sm:text-sm"
+          >
+            {{ errorMessage() }}
+          </div>
+        }
+
+        <form [formGroup]="form" (ngSubmit)="submit()" class="space-y-4 sm:space-y-5">
+          <div class="space-y-2">
             <label
-              class="text-[13px] font-bold uppercase tracking-[0.12em] text-slate-400 sm:text-[14px]"
-              for="login-password"
-              >Password</label
+              class="block text-[10px] font-semibold uppercase tracking-[0.12em] text-text-secondary"
+              for="login-email"
             >
-            <a
-              routerLink="/forgot-password"
-              class="text-[12px] font-bold uppercase tracking-[0.12em] text-[#3b82f6] hover:text-blue-300 sm:text-[13px]"
-            >
-              Forgot password?
-            </a>
+              Email address
+            </label>
+
+            <div class="relative">
+              <svg
+                [lucideIcon]="icons.loginEmail"
+                class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-secondary"
+                [attr.stroke-width]="1.9"
+              ></svg>
+
+              <input
+                id="login-email"
+                formControlName="email"
+                type="email"
+                placeholder="name@fleetflow.com"
+                class="ff-input pl-10 text-sm md:text-[15px]"
+              />
+            </div>
           </div>
-          <div
-            class="flex h-16 items-center gap-3 rounded-2xl border border-slate-700/60 bg-[#121f3b] px-4 sm:h-[70px] sm:gap-4 sm:px-5"
+
+          <div class="space-y-2">
+            <div class="flex items-center justify-between gap-3">
+              <label
+                class="text-[10px] font-semibold uppercase tracking-[0.12em] text-text-secondary"
+                for="login-password"
+              >
+                Password
+              </label>
+
+              <a
+                routerLink="/forgot-password"
+                class="text-[10px] font-semibold uppercase tracking-[0.08em] text-primary-400 hover:text-primary-300"
+              >
+                Forgot password?
+              </a>
+            </div>
+
+            <div class="relative">
+              <svg
+                [lucideIcon]="icons.loginPassword"
+                class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-secondary"
+                [attr.stroke-width]="1.9"
+              ></svg>
+
+              <input
+                id="login-password"
+                formControlName="password"
+                type="password"
+                placeholder="••••••••"
+                class="ff-input pl-10 text-sm tracking-[0.18em] md:text-[15px]"
+              />
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            class="ff-btn-primary h-11 w-full text-sm font-bold uppercase tracking-[0.06em] sm:h-12 md:h-12 md:text-base"
+            [disabled]="loading()"
           >
-            <app-lucide-icon
-              name="shield"
-              sizeClass="h-6 w-6 text-slate-400 sm:h-7 sm:w-7"
-            ></app-lucide-icon>
-            <input
-              id="login-password"
-              formControlName="password"
-              type="password"
-              placeholder="••••••••"
-              class="w-full bg-transparent text-base tracking-[0.18em] text-slate-300 placeholder:text-slate-400/90 focus:outline-none sm:text-lg"
-            />
-          </div>
-        </div>
+            @if (loading()) {
+              Logging in…
+            } @else {
+              Log in
+              <svg
+                [lucideIcon]="icons.loginSubmit"
+                class="h-4 w-4"
+                [attr.stroke-width]="2"
+              ></svg>
+            }
+          </button>
 
-        <button
-          type="submit"
-          class="inline-flex h-16 w-full items-center justify-center gap-2 rounded-2xl bg-[#3b82f6] text-xl font-bold uppercase tracking-[0.08em] text-slate-100 shadow-[0_0_24px_rgba(59,130,246,0.45)] transition hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-60 sm:h-[72px] sm:text-2xl"
-          [disabled]="loading()"
+          <label class="sr-only">
+            <input type="checkbox" formControlName="rememberMe" />
+          </label>
+        </form>
+      </article>
+
+      <div class="mt-4 text-center text-xs text-text-secondary sm:mt-5 sm:text-sm">
+        Don’t have an account?
+        <a
+          routerLink="/request-access"
+          class="font-semibold text-text-primary underline decoration-primary-500 decoration-2 underline-offset-2"
         >
-          @if (loading()) {
-            Logging in…
-          } @else {
-            Log in
-            <app-lucide-icon name="arrow-up-right" sizeClass="h-5 w-5"></app-lucide-icon>
-          }
-        </button>
+          Request Access
+        </a>
+      </div>
 
-        <label class="sr-only">
-          <input type="checkbox" formControlName="rememberMe" />
-        </label>
-      </form>
-    </article>
-
-    <div class="mt-8 text-center text-base text-slate-400 sm:mt-10 sm:text-[18px]">
-      Don’t have an account?
-      <a
-        routerLink="/request-access"
-        class="font-semibold text-slate-100 underline decoration-[#3b82f6] decoration-2 underline-offset-4"
-      >
-        Request Access
-      </a>
-    </div>
-
-    <div class="mt-6 border-t border-slate-700/40 pt-5 text-center sm:mt-8 sm:pt-7">
-      <p
-        class="mx-auto inline-flex rounded-full border border-slate-700/50 px-6 py-1.5 font-mono text-[11px] tracking-[0.16em] text-slate-500 uppercase sm:px-8 sm:py-2 sm:text-[13px]"
-      >
-        V 0.0.0 "KINETIC" // SYSTEM_ACTIVE
-      </p>
+      <div class="mt-4 border-t border-border pt-3 text-center sm:mt-5 sm:pt-4">
+        <p
+          class="mx-auto inline-flex rounded-full border border-border bg-surface-1 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.14em] text-text-muted sm:px-4"
+        >
+          V 0.0.0 "KINETIC" // SYSTEM_ACTIVE
+        </p>
+      </div>
     </div>
   </div>
 </section>

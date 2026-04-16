@@ -7,7 +7,8 @@ import {
   signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LucideIconComponent } from '../../shared/ui/lucide-icon/lucide-icon.component';
+import { APP_ICONS } from '@shared/icons/app-icons';
+import { LucideDynamicIcon } from '@lucide/angular';
 
 export interface TopBarUser {
   fullName: string;
@@ -17,7 +18,7 @@ export interface TopBarUser {
 @Component({
   selector: 'app-top-bar',
   standalone: true,
-  imports: [CommonModule, LucideIconComponent],
+  imports: [CommonModule, LucideDynamicIcon],
   templateUrl: './top-bar.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -29,6 +30,7 @@ export class TopBarComponent {
   @Output() editProfile = new EventEmitter<void>();
   @Output() logout = new EventEmitter<void>();
 
+  readonly icons = APP_ICONS;
   readonly menuOpen = signal(false);
 
   toggleMenu(): void {

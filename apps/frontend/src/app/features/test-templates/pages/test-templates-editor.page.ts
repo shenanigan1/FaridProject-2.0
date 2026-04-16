@@ -12,7 +12,8 @@ import { UiIconButtonComponent } from '@lib-ui/icon-button/icon-button.component
 import { UiButtonPrimaryComponent } from '@lib-ui/button-primary/button-primary.component';
 import { UiButtonSecondaryComponent } from '@lib-ui/button-secondary/button-secondary.component';
 import { UiProgressBarComponent } from '@lib-ui/progress-bar/progress-bar.component';
-import { LucideIconComponent } from '../../../shared/ui/lucide-icon/lucide-icon.component';
+import { APP_ICONS } from '@shared/icons/app-icons';
+import { LucideDynamicIcon } from '@lucide/angular';
 
 type Difficulty = 'easy' | 'medium' | 'hard';
 
@@ -97,7 +98,7 @@ function pick(v: UnknownRecord, ...keys: string[]): unknown {
     UiButtonPrimaryComponent,
     UiButtonSecondaryComponent,
     UiProgressBarComponent,
-    LucideIconComponent,
+    LucideDynamicIcon
   ],
   templateUrl: './test-templates-editor.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -108,6 +109,8 @@ export class TestTemplateEditorPage {
   private readonly router = inject(Router);
   private readonly api = inject(TemplatesApi);
   private readonly poolsStore = inject(PoolsStore);
+
+  readonly icons = APP_ICONS;
 
   // --- routing ---
   readonly templateId = computed<number | null>(() => {

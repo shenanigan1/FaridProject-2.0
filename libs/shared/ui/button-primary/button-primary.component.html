@@ -1,28 +1,12 @@
 <button
   [attr.type]="type"
   [disabled]="isDisabled"
-  class="relative inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500/70 focus:ring-offset-2 focus:ring-offset-slate-950"
-  [class.w-full]="true"
-  [class.bg-blue-600]="!isDisabled"
-  [class.text-white]="!isDisabled"
-  [class.shadow-lg]="!isDisabled"
-  [class.shadow-blue-500/20]="!isDisabled"
-  [class.hover:bg-blue-500]="!isDisabled"
-  [class.active:scale-[0.99]]="!isDisabled"
-  [class.bg-slate-800]="isDisabled"
-  [class.text-slate-400]="isDisabled"
-  [class.border]="isDisabled"
-  [class.border-slate-700]="isDisabled"
-  [class.cursor-not-allowed]="isDisabled"
+  [class]="classes"
   [attr.aria-busy]="loading"
   (click)="onButtonClicked()"
 >
   @if (loading) {
-    <span
-      class="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white/90 border-t-transparent"
-      aria-hidden="true"
-    ></span>
-
+    <span class="ff-btn-spinner" aria-hidden="true"></span>
     <span>Loading...</span>
   } @else {
     @if (icon) {

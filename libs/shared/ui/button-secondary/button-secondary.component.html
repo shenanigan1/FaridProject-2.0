@@ -1,7 +1,8 @@
 <button
   [attr.type]="type"
   [disabled]="isDisabled"
-  class="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-800 bg-slate-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
+  [class]="classes"
+  [attr.aria-busy]="loading"
   (click)="onButtonClicked()"
 >
   @if (!loading) {
@@ -15,7 +16,7 @@
       <ng-content></ng-content>
     }
   } @else {
-    <span class="animate-pulse">
+    <span class="ff-btn-loading">
       <ng-content select="[loading]"></ng-content>
     </span>
   }

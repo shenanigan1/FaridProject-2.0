@@ -1,0 +1,147 @@
+@tailwind components;
+
+@layer components {
+  .ff-card {
+    @apply rounded-xl border border-border bg-surface-1 shadow-md;
+  }
+
+  .ff-card-elevated {
+    @apply rounded-2xl border border-border bg-surface-2 shadow-lg;
+  }
+
+  .ff-input {
+    @apply h-11 w-full rounded-lg border border-border bg-surface-2 px-3 text-sm text-text-primary placeholder:text-text-muted outline-none transition;
+  }
+
+  .ff-input:hover {
+    @apply border-secondary-500;
+  }
+
+  .ff-input:focus {
+    @apply border-primary-500 ring-1 ring-primary-500;
+  }
+
+  .ff-btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-primary-500 px-4 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-primary-400 disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  .ff-alert {
+    @apply mb-4 rounded-lg border px-3 py-2 text-sm;
+  }
+
+  .ff-alert-success {
+    @apply border-success/30 bg-success/10 text-success;
+  }
+
+  .ff-alert-warning {
+    @apply border-warning/30 bg-warning/10 text-warning;
+  }
+
+  .ff-alert-info {
+    @apply border-info/30 bg-info/10 text-info;
+  }
+
+  .ff-alert-error {
+    @apply border-error/30 bg-error/10 text-error;
+  }
+
+  .ff-auth-shell {
+    @apply w-full max-w-md;
+  }
+
+  .ff-auth-header {
+    @apply mb-6;
+  }
+
+  .ff-auth-title {
+    @apply text-3xl font-semibold text-text-primary;
+  }
+
+  .ff-auth-subtitle {
+    @apply mt-2 text-text-secondary;
+  }
+
+  .ff-auth-card {
+    @apply ff-card p-6;
+  }
+
+  .ff-badge {
+    @apply inline-flex items-center rounded-full border font-medium;
+  }
+
+  .ff-badge-sm {
+    @apply px-2 py-0.5 text-[11px];
+  }
+
+  .ff-badge-md {
+    @apply px-2.5 py-1 text-xs;
+  }
+
+  .ff-badge-neutral {
+    @apply border-border bg-surface-2 text-text-secondary;
+  }
+
+  .ff-badge-success {
+    @apply border-success/30 bg-success/10 text-success;
+  }
+
+  .ff-badge-warning {
+    @apply border-warning/30 bg-warning/10 text-warning;
+  }
+
+  .ff-badge-danger {
+    @apply border-error/30 bg-error/10 text-error;
+  }
+
+  .ff-badge-info {
+    @apply border-info/30 bg-info/10 text-info;
+  }
+
+  .ff-btn {
+    @apply relative inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold transition-all duration-200 focus:outline-none;
+  }
+
+  .ff-btn-primary {
+    @apply bg-primary-500 text-white shadow-md hover:bg-primary-400;
+  }
+
+  .ff-btn-disabled {
+    @apply cursor-not-allowed border border-border bg-surface-2 text-text-disabled shadow-none hover:bg-surface-2;
+  }
+
+  .ff-btn-spinner {
+    @apply inline-block h-4 w-4 animate-spin rounded-full border-2 border-white/90 border-t-transparent;
+  }
+
+  .ff-btn:focus-visible {
+    @apply ring-2 ring-primary-500/70 ring-offset-2 ring-offset-background;
+  }
+
+  .ff-btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition-all duration-200 focus:outline-none;
+  }
+
+  .ff-btn-primary {
+    @apply bg-primary-500 text-white shadow-md hover:bg-primary-400;
+  }
+
+  .ff-btn-secondary {
+    @apply border border-border bg-surface-1 text-text-primary hover:bg-surface-2;
+  }
+
+  .ff-btn-disabled {
+    @apply cursor-not-allowed border border-border bg-surface-2 text-text-disabled shadow-none hover:bg-surface-2;
+  }
+
+  .ff-btn-loading {
+    @apply animate-pulse;
+  }
+
+  .ff-btn-spinner {
+    @apply inline-block h-4 w-4 animate-spin rounded-full border-2 border-white/90 border-t-transparent;
+  }
+
+  .ff-btn:focus-visible {
+    @apply ring-2 ring-primary-500/70 ring-offset-2 ring-offset-background;
+  }
+}

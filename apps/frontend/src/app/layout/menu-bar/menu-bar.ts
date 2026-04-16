@@ -1,25 +1,26 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { LucideIconComponent } from '../../shared/ui/lucide-icon/lucide-icon.component';
+import { LucideDynamicIcon} from '@lucide/angular';
+import { AppIcon } from '@shared/icons/app-icons';
 
 export interface MenuItem {
   label: string;
-  icon: string;
+  icon: AppIcon;
   route: string;
 }
 
 @Component({
   selector: 'app-menu-bar',
   standalone: true,
-  imports: [CommonModule, RouterModule, LucideIconComponent],
+  imports: [CommonModule, RouterModule, LucideDynamicIcon],
   templateUrl: './menu-bar.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MenuBarComponent {
   @Input({ required: true }) items!: MenuItem[];
 
-  trackByRoute(_: number, item: { route: string }): string {
+  trackByRoute(_: number, item: MenuItem): string {
     return item.route;
   }
 }
