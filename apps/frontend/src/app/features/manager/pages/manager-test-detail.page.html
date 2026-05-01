@@ -1,0 +1,165 @@
+<section class="manager-tests-screen">
+  <div class="manager-tests-shell">
+    <header class="manager-tests-header">
+      <a
+        routerLink="/manager/tests"
+        class="manager-icon-button manager-icon-button--back"
+        aria-label="Retour aux tests"
+      ></a>
+      <h1>Passage du test</h1>
+      <span class="manager-icon-button manager-icon-button--check" aria-hidden="true"></span>
+    </header>
+
+    @if (isLoading()) {
+      <p class="manager-empty">Chargement du test...</p>
+    } @else if (error()) {
+      <p class="manager-alert">{{ error() }}</p>
+    } @else if (test(); as selectedTest) {
+      <section class="manager-panel">
+        <div class="manager-panel__header">
+          <div>
+            <p>{{ selectedTest.candidateName }}</p>
+            <h2>{{ selectedTest.templateName }}</h2>
+          </div>
+          <span>{{ selectedTest.updatedAt | date: 'short' }}</span>
+        </div>
+
+        <div class="manager-test-card manager-test-card--selected">
+          <span class="manager-avatar">{{ initials(selectedTest) }}</span>
+          <span class="manager-test-card__body">
+            <strong>{{ selectedTest.candidateName }}</strong>
+            <small>{{ selectedTest.candidateEmail }}</small>
+            @if (selectedTest.positionTitle) {
+              <small>{{ selectedTest.positionTitle }}</small>
+            }
+          </span>
+          <span class="manager-test-card__status">{{ selectedTest.status }}</span>
+        </div>
+
+        @if (questionnaire()) {
+          <div class="manager-progress">
+            <div>
+              <strong>{{ answeredCount() }}/{{ questionCount() }} questions</strong>
+              <span>{{ totalScore() }}/{{ maxScore() }} pts</span>
+            </div>
+            <span>{{ progressPercent() }}%</span>
+            <div class="manager-progress__track" aria-hidden="true">
+              <i [style.width.%]="progressPercent()"></i>
+            </div>
+          </div>
+        }
+
+        @if (selectedTest.status !== 'in_progress') {
+          <p class="manager-empty manager-empty--compact">
+            Ce test est dans l historique. Il reste consultable sans modification.
+          </p>
+        }
+
+        @if (message()) {
+          <p class="manager-message">{{ message() }}</p>
+        }
+
+        @if (questionnaire(); as form) {
+          <div class="manager-question-list">
+            @for (question of form.questions; track question.question_id; let i = $index) {
+              <article
+                class="manager-question"
+                [class.manager-question--complete]="questionState(question) === 'complete'"
+                [class.manager-question--missing]="questionState(question) === 'missing'"
+              >
+                <div class="manager-question__top">
+                  <div>
+                    <strong>{{ question.title || 'Question' }}</strong>
+                    <small>
+                      {{ formatLabel(question.format) }} - {{ difficultyLabel(question.difficulty) }}
+                      @if (question.is_mandatory) {
+                        <b>Obligatoire</b>
+                      }
+                    </small>
+                  </div>
+                  <span>{{ question.points }} pts</span>
+                </div>
+                <p>{{ question.text }}</p>
+                @if (question.explanation) {
+                  <p class="manager-question__hint">{{ question.explanation }}</p>
+                }
+
+                <label [attr.for]="'answer-' + question.question_id">Reponse candidat</label>
+                @if (choiceOptions(question); as options) {
+                  @if (options.length > 0) {
+                    <div class="manager-choice-grid">
+                      @for (option of options; track option) {
+                        <button
+                          type="button"
+                          class="manager-choice"
+                          [class.manager-choice--active]="question.candidate_answer === option"
+                          [disabled]="selectedTest.status !== 'in_progress'"
+                          (click)="setChoice(i, option)"
+                        >
+                          {{ option }}
+                        </button>
+                      }
+                    </div>
+                  } @else {
+                    <textarea
+                      [id]="'answer-' + question.question_id"
+                      [disabled]="selectedTest.status !== 'in_progress'"
+                      [value]="question.candidate_answer"
+                      (input)="updateAnswer(i, 'candidate_answer', $any($event.target).value)"
+                    ></textarea>
+                  }
+                }
+
+                @if (rubricEntries(question); as entries) {
+                  @if (entries.length > 0) {
+                    <dl class="manager-rubric">
+                      @for (entry of entries; track entry.label) {
+                        <div>
+                          <dt>{{ entry.label }}</dt>
+                          <dd>{{ entry.value }}</dd>
+                        </div>
+                      }
+                    </dl>
+                  }
+                }
+
+                <label [attr.for]="'comment-' + question.question_id">Commentaire manager</label>
+                <textarea
+                  [id]="'comment-' + question.question_id"
+                  [disabled]="selectedTest.status !== 'in_progress'"
+                  [value]="question.manager_comment"
+                  (input)="updateAnswer(i, 'manager_comment', $any($event.target).value)"
+                ></textarea>
+
+                <div class="manager-score-row">
+                  <label [attr.for]="'score-' + question.question_id">Score</label>
+                  <span>{{ question.score ?? 0 }}/{{ question.points }}</span>
+                  <input
+                    [id]="'score-' + question.question_id"
+                    type="number"
+                    min="0"
+                    [max]="question.points"
+                    [disabled]="selectedTest.status !== 'in_progress'"
+                    [value]="question.score ?? ''"
+                    (input)="updateScore(i, $any($event.target).value)"
+                  />
+                </div>
+              </article>
+            }
+          </div>
+
+          @if (selectedTest.status === 'in_progress') {
+            <button
+              type="button"
+              class="manager-save"
+              [disabled]="saving()"
+              (click)="saveQuestionnaire()"
+            >
+              {{ saving() ? 'Enregistrement...' : 'Enregistrer le test' }}
+            </button>
+          }
+        }
+      </section>
+    }
+  </div>
+</section>

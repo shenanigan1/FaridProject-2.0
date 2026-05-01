@@ -1,3 +1,4 @@
+// auth.interceptor.ts
 import { inject } from '@angular/core';
 import {
   HttpErrorResponse,
@@ -17,49 +18,62 @@ export const authInterceptor: HttpInterceptorFn = (
   const tokenStorage = inject(TokenStorageService);
   const authService = inject(AuthService);
 
-  const isAuthEndpoint =
-    req.url.includes('/api/auth/login') || req.url.includes('/api/auth/refresh');
+  const isLoginEndpoint = req.url.includes('/api/auth/login');
+  const isRefreshEndpoint = req.url.includes('/api/auth/refresh');
+  const isAuthEndpoint = isLoginEndpoint || isRefreshEndpoint;
 
-  const access = tokenStorage.getAccessToken();
+  const accessToken = tokenStorage.getAccessToken();
 
   const authReq =
-    !isAuthEndpoint && access
-      ? req.clone({ setHeaders: { Authorization: `Bearer ${access}` } })
+    !isAuthEndpoint && accessToken
+      ? req.clone({
+          setHeaders: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        })
       : req;
 
   return next(authReq).pipe(
     catchError((err: unknown) => {
-      if (!(err instanceof HttpErrorResponse)) return throwError(() => err);
-
-      if (err.status === 401 && !isAuthEndpoint) {
-        const refresh = tokenStorage.getRefreshToken();
-        if (!refresh) {
-          tokenStorage.clear();
-          return throwError(() => err);
-        }
-
-        return authService.refresh(refresh).pipe(
-          switchMap((res) => {
-            tokenStorage.saveTokens(
-              res.access,
-              res.refresh ?? refresh,
-              tokenStorage.getRememberMe()
-            );
-
-            const retryReq = req.clone({
-              setHeaders: { Authorization: `Bearer ${res.access}` },
-            });
-
-            return next(retryReq);
-          }),
-          catchError((refreshErr: unknown) => {
-            tokenStorage.clear();
-            return throwError(() => refreshErr);
-          })
-        );
+      if (!(err instanceof HttpErrorResponse)) {
+        return throwError(() => err);
       }
 
-      return throwError(() => err);
+      if (isLoginEndpoint) {
+        return throwError(() => err);
+      }
+
+      if (err.status !== 401 || isRefreshEndpoint) {
+        return throwError(() => err);
+      }
+
+      const refreshToken = tokenStorage.getRefreshToken();
+
+      if (!refreshToken) {
+        tokenStorage.clear();
+        return throwError(() => err);
+      }
+
+      return authService.refresh(refreshToken).pipe(
+        switchMap((response) => {
+          const rememberMe = tokenStorage.getRememberMe();
+          const nextRefreshToken = response.refresh ?? refreshToken;
+
+          tokenStorage.saveTokens(response.access, nextRefreshToken, rememberMe);
+
+          const retryReq = req.clone({
+            setHeaders: {
+              Authorization: `Bearer ${response.access}`,
+            },
+          });
+
+          return next(retryReq);
+        }),
+        catchError((refreshErr: unknown) => {
+          tokenStorage.clear();
+          return throwError(() => refreshErr);
+        })
+      );
     })
   );
 };

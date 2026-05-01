@@ -6,17 +6,21 @@
   (click)="onButtonClicked()"
 >
   @if (loading) {
-    <span class="ff-btn-spinner" aria-hidden="true"></span>
-    <span>Loading...</span>
+    <span class="ff-btn-label">
+      <span class="ff-btn-spinner" aria-hidden="true"></span>
+      <span>Loading...</span>
+    </span>
   } @else {
     @if (icon) {
-      <span class="material-symbols-outlined text-base" aria-hidden="true">{{ icon }}</span>
+      <span class="ff-btn-icon material-symbols-outlined" aria-hidden="true">{{ icon }}</span>
     }
 
     @if (label) {
-      <span>{{ label }}</span>
+      <span class="ff-btn-label">{{ label }}</span>
     } @else {
-      <ng-content></ng-content>
+      <span class="ff-btn-label">
+        <ng-content></ng-content>
+      </span>
     }
   }
 </button>

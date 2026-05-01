@@ -1,3 +1,4 @@
+// auth-session.service.ts
 import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject, Observable, of, switchMap, take, tap } from 'rxjs';
 import { AuthService } from './auth.service';
@@ -16,21 +17,15 @@ export class AuthSessionService {
     return this.tokens.isAuthenticated();
   }
 
-  /**
-   * Login and persist tokens according to rememberMe.
-   * Call this from your login page.
-   */
   login(payload: LoginRequest, rememberMe: boolean): Observable<LoginResponse> {
     return this.api.login(payload).pipe(
       tap((res) => {
         this.tokens.saveTokens(res.access, res.refresh, rememberMe);
+        this.meSubject.next(res.user ?? null);
       })
     );
   }
 
-  /**
-   * Cache /me once per session. If already loaded, return cached.
-   */
   loadMeOnce(): Observable<MeResponse | null> {
     return this.me$.pipe(
       take(1),

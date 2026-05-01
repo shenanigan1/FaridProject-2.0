@@ -6,7 +6,6 @@
     <app-ui-text-input
       formControlName="name"
       label="Pool name"
-      placeholder="e.g. Driving Core"
       [disabled]="isView"
     ></app-ui-text-input>
 
@@ -14,7 +13,6 @@
       formControlName="description"
       label="Description (optional)"
       [rows]="4"
-      placeholder="Short description of this pool…"
       [disabled]="isView"
     ></app-ui-textarea>
 
@@ -35,7 +33,6 @@
     <app-ui-text-input
       formControlName="code"
       label=""
-      placeholder="DRIVING_CORE"
       [disabled]="isView"
       (blur)="!isView && normalize.emit()"
     ></app-ui-text-input>

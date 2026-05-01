@@ -269,7 +269,7 @@ export class TestTemplateEditorPage {
     const s = isRecord(sUnknown) ? sUnknown : {};
 
     const id = asString(pick(s, 'id'), uid());
-    const title = asString(pick(s, 'title', 'name'), 'Untitled Section');
+    const title = asString(pick(s, 'title', 'name'), '');
     const description = asString(pick(s, 'description'), '');
     const weight = Math.max(0, Math.min(100, Math.floor(asNumber(pick(s, 'weight'), 0))));
 
@@ -277,7 +277,7 @@ export class TestTemplateEditorPage {
       const q = isRecord(qUnknown) ? qUnknown : {};
       return {
         id: asNumber(pick(q, 'id'), 0),
-        text: asString(pick(q, 'text', 'label'), 'Question'),
+        text: asString(pick(q, 'text', 'label'), ''),
         points: asNumber(pick(q, 'points'), 0),
         mandatory: asBoolean(pick(q, 'mandatory'), false),
       };
@@ -360,7 +360,7 @@ export class TestTemplateEditorPage {
   }
 
   poolName(poolId: string): string {
-    return this.pools().find((p) => p.id === poolId)?.name ?? `Pool #${poolId}`;
+    return this.pools().find((p) => p.id === poolId)?.name ?? poolId;
   }
 
   // ---- sections actions ----
@@ -402,9 +402,18 @@ export class TestTemplateEditorPage {
 
   assignSection(sectionId: string): void {
     if (!this.isEditMode()) return;
-    // Placeholder utile (et plus propre que "void sectionId")
     this.assigningSectionId.set(sectionId);
-    this.apiError.set('Assign UI not implemented yet.');
+
+    const target = this.sections().find((s) => s.id === sectionId);
+    const pool = this.filteredPools().find((p) => !target?.pools.some((rule) => rule.poolId === p.id));
+
+    if (!pool) {
+      this.apiError.set('No available pool returned by the backend for this section.');
+      return;
+    }
+
+    this.attachPoolToSection(sectionId, pool.id);
+    this.apiError.set(null);
   }
 
   attachPoolToSection(sectionId: string, poolId: string): void {
@@ -453,7 +462,7 @@ export class TestTemplateEditorPage {
     return items.map((s) => {
       const raw = Number(s.weight) || 0;
       const pct = sum > 0 ? (raw / sum) * 100 : 0;
-      return { label: s.title || 'Untitled', weight: pct };
+      return { label: s.title, weight: pct };
     });
   }
 

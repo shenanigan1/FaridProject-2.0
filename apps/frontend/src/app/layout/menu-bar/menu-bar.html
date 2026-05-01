@@ -1,30 +1,25 @@
 <nav
-  role="navigation"
+  class="ff-menu"
+  [class.ff-menu--mobile]="variant === 'mobile'"
+  [class.ff-menu--desktop]="variant === 'desktop'"
   aria-label="Main navigation"
-  class="mx-2 mb-2 flex h-[74px] items-center gap-1 overflow-x-auto rounded-[22px] border border-[#1a2a3f] bg-[#0b111d] px-1"
 >
-  @for (item of items; track item.route) {
-    <a
-      [routerLink]="item.route"
-      routerLinkActive="text-[#2f9cff]"
-      [routerLinkActiveOptions]="{ exact: true }"
-      #rla="routerLinkActive"
-      [attr.aria-current]="rla.isActive ? 'page' : null"
-      class="group flex min-w-[72px] flex-1 flex-col items-center justify-center gap-1 rounded-xl py-2 transition"
-      [class.text-[#8e9bb0]]="!rla.isActive"
-      [class.hover:text-[#dce9ff]]="!rla.isActive"
-    >
-      <span
-        class="flex h-6 w-6 items-center justify-center rounded-md"
-        [class.bg-[#1a273a]]="!rla.isActive"
-        [class.bg-[#122f4f]]="rla.isActive"
+  <div class="ff-menu__items">
+    @for (item of items; track item.route) {
+      <a
+        class="ff-menu__link"
+        [routerLink]="item.route"
+        routerLinkActive="ff-menu__link--active"
+        [routerLinkActiveOptions]="{ exact: item.route === '/dashboard' }"
+        #rla="routerLinkActive"
+        [attr.aria-current]="rla.isActive ? 'page' : null"
       >
-        <svg [lucideIcon]="item.icon" class="h-4 w-4"></svg>
-      </span>
+        <span class="ff-menu__icon" aria-hidden="true">
+          <svg [lucideIcon]="item.icon" class="ff-menu__icon-svg"></svg>
+        </span>
 
-      <span class="text-[9px] font-bold uppercase tracking-[0.12em]">
-        {{ item.label }}
-      </span>
-    </a>
-  }
+        <span class="ff-menu__label">{{ item.label }}</span>
+      </a>
+    }
+  </div>
 </nav>

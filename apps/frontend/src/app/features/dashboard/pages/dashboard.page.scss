@@ -1,0 +1,438 @@
+:host {
+  display: block;
+}
+
+.ff-dashboard-page {
+  min-height: 100%;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at -5% 4%, rgba(9, 120, 247, 0.12), transparent 18rem),
+    radial-gradient(ellipse at 105% 86%, rgba(9, 120, 247, 0.09), transparent 18rem),
+    #050608;
+  color: #e0e2ec;
+}
+
+.ff-dashboard-content {
+  width: min(100%, 92rem);
+  margin: 0 auto;
+  padding: 2rem 1.5rem 3rem;
+}
+
+.ff-dashboard-hero {
+  margin-bottom: 2rem;
+}
+
+.ff-dashboard-hero__title {
+  margin: 0;
+  color: #e0e2ec;
+  font-size: 3rem;
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.05em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.ff-dashboard-kpis,
+.ff-dashboard-grid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.ff-dashboard-kpi-card,
+.ff-dashboard-panel,
+.ff-dashboard-inflow__item,
+.ff-dashboard-metrics__item {
+  border: 1px solid #1c2027;
+  background-color: #0b0e15;
+}
+
+.ff-dashboard-kpi-card,
+.ff-dashboard-inflow__item,
+.ff-dashboard-metrics__item,
+.ff-dashboard-live__item,
+.ff-dashboard-panel__action {
+  transition:
+    border-color 0.18s ease,
+    background-color 0.18s ease,
+    color 0.18s ease;
+}
+
+.ff-dashboard-kpi-card {
+  position: relative;
+  min-height: 9.35rem;
+  overflow: hidden;
+  width: 100%;
+  padding: 2rem;
+  text-align: left;
+  box-shadow: 0 0 20px rgba(9, 120, 247, 0.1);
+}
+
+.ff-dashboard-kpi-card:hover:not(.ff-dashboard-kpi-card--disabled) {
+  border-color: rgba(9, 120, 247, 0.5);
+}
+
+.ff-dashboard-kpi-card--cyan {
+  border-left: 4px solid #0978f7;
+}
+
+.ff-dashboard-kpi-card--disabled {
+  cursor: default;
+}
+
+.ff-dashboard-kpi-card__content {
+  position: relative;
+  z-index: 1;
+}
+
+.ff-dashboard-kpi-card__label,
+.ff-dashboard-inflow__role,
+.ff-dashboard-inflow__time,
+.ff-dashboard-metrics__name,
+.ff-dashboard-metrics__badge,
+.ff-dashboard-live__status,
+.ff-dashboard-live__label {
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.ff-dashboard-kpi-card__label {
+  margin: 0;
+  color: #c1c6d7;
+  font-size: 0.625rem;
+  letter-spacing: 0.3em;
+}
+
+.ff-dashboard-kpi-card__metric {
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.ff-dashboard-kpi-card__value {
+  color: #e0e2ec;
+  font-size: 3.75rem;
+  font-style: italic;
+  font-weight: 700;
+  letter-spacing: -0.05em;
+  line-height: 1;
+}
+
+.ff-dashboard-kpi-card__meta {
+  max-width: 7rem;
+  color: #0978f7;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  line-height: 1.35;
+  text-transform: uppercase;
+}
+
+.ff-dashboard-kpi-card__hint {
+  margin: 0.75rem 0 0;
+  color: #8e9bb0;
+  font-size: 0.78rem;
+}
+
+.ff-dashboard-kpi-card__icon {
+  position: absolute;
+  right: -1rem;
+  bottom: -1rem;
+  color: #0978f7;
+  opacity: 0.11;
+}
+
+.ff-dashboard-kpi-card__icon-svg {
+  width: 6.6rem;
+  height: 6.3rem;
+}
+
+.ff-dashboard-grid {
+  margin-top: 3rem;
+}
+
+.ff-dashboard-panel {
+  padding: 1.5rem;
+}
+
+.ff-dashboard-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.ff-dashboard-panel__title {
+  margin: 0;
+  color: #e0e2ec;
+  font-size: 1.125rem;
+  font-style: italic;
+  font-weight: 600;
+  letter-spacing: -0.05em;
+  line-height: 1.55;
+  text-transform: uppercase;
+}
+
+.ff-dashboard-panel__title--primary {
+  color: #0978f7;
+}
+
+.ff-dashboard-panel__hint {
+  margin: 0.25rem 0 0;
+  color: #8e9bb0;
+  font-size: 0.75rem;
+}
+
+.ff-dashboard-panel__action,
+.ff-dashboard-panel__mini-icon {
+  display: inline-flex;
+  width: 1.75rem;
+  height: 1.75rem;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: transparent;
+  color: #0978f7;
+}
+
+.ff-dashboard-panel__icon,
+.ff-dashboard-inflow__avatar-icon {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
+.ff-dashboard-inflow,
+.ff-dashboard-metrics,
+.ff-dashboard-live {
+  display: grid;
+  gap: 1rem;
+}
+
+.ff-dashboard-inflow__item {
+  display: grid;
+  grid-template-columns: 2.5rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  padding: 0.75rem;
+  color: inherit;
+  text-align: left;
+}
+
+.ff-dashboard-inflow__item:hover:not(:disabled),
+.ff-dashboard-metrics__item:hover:not(:disabled) {
+  border-color: rgba(9, 120, 247, 0.45);
+}
+
+.ff-dashboard-inflow__item:disabled,
+.ff-dashboard-metrics__item:disabled,
+.ff-dashboard-live__item:disabled {
+  cursor: default;
+  opacity: 0.75;
+}
+
+.ff-dashboard-inflow__avatar {
+  display: flex;
+  width: 2.5rem;
+  height: 2.5rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #414754;
+  background-color: #1c2027;
+  color: #8e9bb0;
+}
+
+.ff-dashboard-inflow__content {
+  min-width: 0;
+}
+
+.ff-dashboard-inflow__name,
+.ff-dashboard-metrics__name,
+.ff-dashboard-live__name {
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ff-dashboard-inflow__name {
+  color: #e0e2ec;
+  font-size: 0.875rem;
+}
+
+.ff-dashboard-inflow__role {
+  margin: 0.1rem 0 0;
+  color: #0978f7;
+  font-size: 0.625rem;
+}
+
+.ff-dashboard-inflow__time {
+  color: #c1c6d7;
+  font-size: 0.5rem;
+}
+
+.ff-dashboard-metrics__item {
+  display: grid;
+  grid-template-columns: 2px minmax(0, 1fr);
+  width: 100%;
+  color: inherit;
+  text-align: left;
+}
+
+.ff-dashboard-metrics__bar {
+  background-color: #0978f7;
+}
+
+.ff-dashboard-metrics__item--fail .ff-dashboard-metrics__bar {
+  background-color: #ffb4ab;
+}
+
+.ff-dashboard-metrics__content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-width: 0;
+  padding: 1rem 1rem 1rem 1.125rem;
+}
+
+.ff-dashboard-metrics__name {
+  color: #c1c6d7;
+  font-size: 0.75rem;
+}
+
+.ff-dashboard-metrics__label {
+  margin: 0.1rem 0 0;
+  color: #0978f7;
+  font-size: 0.625rem;
+}
+
+.ff-dashboard-metrics__score-wrap {
+  flex: 0 0 auto;
+  text-align: right;
+}
+
+.ff-dashboard-metrics__score {
+  margin: 0;
+  color: #0978f7;
+  font-size: 1.5rem;
+  font-style: italic;
+  font-weight: 700;
+  letter-spacing: -0.05em;
+}
+
+.ff-dashboard-metrics__score--fail {
+  color: #ffb4ab;
+}
+
+.ff-dashboard-metrics__badge {
+  display: inline-flex;
+  background-color: #0978f7;
+  color: #fff;
+  padding: 0.06rem 0.5rem;
+  font-size: 0.5rem;
+  line-height: 1.5;
+}
+
+.ff-dashboard-metrics__badge--fail {
+  background-color: #ffb4ab;
+  color: #050608;
+}
+
+.ff-dashboard-live__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #0978f7;
+  font-size: 0.56rem;
+  letter-spacing: 0.2em;
+}
+
+.ff-dashboard-live__dot {
+  width: 0.375rem;
+  height: 0.375rem;
+  border-radius: 9999px;
+  background-color: #0978f7;
+}
+
+.ff-dashboard-live__item {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  text-align: left;
+}
+
+.ff-dashboard-live__row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-bottom: 0.25rem;
+}
+
+.ff-dashboard-live__name {
+  color: #e0e2ec;
+  font-size: 0.75rem;
+  font-style: italic;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.ff-dashboard-live__value {
+  color: #0978f7;
+  font-size: 0.625rem;
+}
+
+.ff-dashboard-live__progress {
+  height: 0.375rem;
+  overflow: hidden;
+  background-color: #1c2027;
+}
+
+.ff-dashboard-live__progress-bar {
+  height: 100%;
+  background-color: #0978f7;
+  box-shadow: 0 0 8px rgba(9, 120, 247, 0.4);
+}
+
+.ff-dashboard-live__label {
+  margin: 0.35rem 0 0;
+  color: #c1c6d7;
+  font-size: 0.56rem;
+}
+
+@media (max-width: 639px) {
+  .ff-dashboard-kpi-card__metric {
+    flex-wrap: wrap;
+  }
+
+  .ff-dashboard-metrics__content {
+    align-items: flex-start;
+  }
+}
+
+@media (min-width: 640px) {
+  .ff-dashboard-kpis {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .ff-dashboard-content {
+    padding: 2rem 2.5rem 3rem;
+  }
+
+  .ff-dashboard-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: start;
+  }
+
+  .ff-dashboard-panel {
+    min-height: 20.5rem;
+  }
+}

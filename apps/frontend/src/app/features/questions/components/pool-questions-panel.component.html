@@ -9,8 +9,8 @@
 
       <input
         type="search"
-        class="w-full bg-transparent text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none"
-        placeholder="Search questions..."
+        class="w-full bg-transparent text-sm text-slate-100 focus:outline-none"
+        aria-label="Search questions"
         [value]="query()"
         (input)="onSearch(($any($event.target)).value)"
       />

@@ -9,7 +9,6 @@ import { QuestionPool } from '@features/pools/models/question-pool.model';
 // shared/ui
 import { UiEmptyStateComponent } from '@lib-ui/empty-state/empty-state.component';
 import { UiButtonPrimaryComponent } from '@lib-ui/button-primary/button-primary.component';
-import { UiIconButtonComponent } from '@lib-ui/icon-button/icon-button.component';
 import { UiAlertComponent } from '@lib-ui/alert/alert.component';
 import { UiTextInputComponent } from '@lib-ui/text-input/text-input.component';
 
@@ -23,7 +22,6 @@ import { UiTextInputComponent } from '@lib-ui/text-input/text-input.component';
     ReactiveFormsModule,
     UiEmptyStateComponent,
     UiButtonPrimaryComponent,
-    UiIconButtonComponent,
     UiAlertComponent,
     UiTextInputComponent
   ],

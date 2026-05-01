@@ -1,0 +1,81 @@
+:host {
+  display: block;
+}
+
+.ff-app-shell {
+  min-height: 100dvh;
+  background: #050608;
+  color: var(--ff-color-text-primary);
+}
+
+.ff-app-shell--auth {
+  background: var(--ff-color-background);
+}
+
+.ff-app-shell__topbar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+
+.ff-app-shell__body {
+  display: grid;
+  min-height: calc(100dvh - 4rem);
+}
+
+.ff-app-shell--auth .ff-app-shell__body {
+  display: block;
+  min-height: 100dvh;
+}
+
+.ff-app-shell__sidebar {
+  display: none;
+}
+
+.ff-app-shell__main {
+  min-width: 0;
+  padding-bottom: 4.75rem;
+}
+
+.ff-app-shell--auth .ff-app-shell__main {
+  padding-bottom: 0;
+}
+
+.ff-app-shell__mobile-nav {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 45;
+}
+
+@media (min-width: 1024px) {
+  .ff-app-shell__body {
+    grid-template-columns: 14rem minmax(0, 1fr);
+    min-height: calc(100dvh - 4rem);
+  }
+
+  .ff-app-shell--auth .ff-app-shell__body {
+    display: block;
+    min-height: 100dvh;
+  }
+
+  .ff-app-shell__sidebar {
+    position: sticky;
+    top: 4rem;
+    display: block;
+    align-self: start;
+    height: calc(100dvh - 4rem);
+    border-right: 1px solid rgba(64, 71, 82, 0.15);
+    background-color: #131313;
+    padding: 1rem;
+  }
+
+  .ff-app-shell__main {
+    padding-bottom: 0;
+  }
+
+  .ff-app-shell__mobile-nav {
+    display: none;
+  }
+}

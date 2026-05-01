@@ -1,1 +1,6 @@
-@use '../../../shared-ui/styles/index';
+@use '../../../libs/shared/styles/index' as *;
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+

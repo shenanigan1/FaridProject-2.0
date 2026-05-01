@@ -100,17 +100,20 @@ class EvaluationViewSet(ModelViewSet):
         serializer = EvaluationQuestionnaireUpdateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        allowed_question_ids = set(
-            SkillQuestion.objects.filter(
+        allowed_questions = {
+            question.id: question
+            for question in SkillQuestion.objects.filter(
                 pool_id__in=evaluation.template_version.template.pool_rules.values_list(
                     "pool_id", flat=True
                 )
-            ).values_list("id", flat=True)
-        )
+            )
+            .only("id", "points", "is_mandatory")
+        }
 
         for answer in serializer.validated_data["answers"]:
             question_id = answer["question_id"]
-            if question_id not in allowed_question_ids:
+            question = allowed_questions.get(question_id)
+            if question is None:
                 return Response(
                     {
                         "answers": [
@@ -122,6 +125,20 @@ class EvaluationViewSet(ModelViewSet):
             candidate_answer = answer.get("candidate_answer", "")
             manager_comment = answer.get("manager_comment", "")
             score = answer.get("score")
+            if question.is_mandatory and not candidate_answer.strip():
+                return Response(
+                    {"answers": [f"Question {question_id} requires an answer."]},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+            if score is not None and (score < 0 or score > question.points):
+                return Response(
+                    {
+                        "answers": [
+                            f"Question {question_id} score must be between 0 and {question.points}."
+                        ]
+                    },
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
 
             response, _ = evaluation.responses.get_or_create(question_id=question_id)
             response.candidate_answer = candidate_answer

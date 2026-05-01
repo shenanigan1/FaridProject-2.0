@@ -14,6 +14,10 @@ class EvaluationSerializer(serializers.ModelSerializer):
     template_name = serializers.CharField(
         source="template_version.template.name", read_only=True
     )
+    subject_full_name = serializers.SerializerMethodField()
+    subject_email = serializers.EmailField(source="subject.email", read_only=True)
+    position_title = serializers.SerializerMethodField()
+    assigned_to_full_name = serializers.SerializerMethodField()
 
     class Meta:
         model = Evaluation
@@ -28,6 +32,10 @@ class EvaluationSerializer(serializers.ModelSerializer):
             "subject_comment",
             "internal_comment",
             "template_name",
+            "subject_full_name",
+            "subject_email",
+            "position_title",
+            "assigned_to_full_name",
             "created_at",
             "updated_at",
             "completed_at",
@@ -40,6 +48,17 @@ class EvaluationSerializer(serializers.ModelSerializer):
             "completed_at",
             "validated_at",
         ]
+
+    def get_subject_full_name(self, obj: Evaluation) -> str:
+        return obj.subject.full_name or obj.subject.email
+
+    def get_position_title(self, obj: Evaluation) -> str:
+        return obj.position.title if obj.position else ""
+
+    def get_assigned_to_full_name(self, obj: Evaluation) -> str:
+        if not obj.assigned_to:
+            return ""
+        return obj.assigned_to.full_name or obj.assigned_to.email
 
 
 class SubjectEvaluationSerializer(serializers.ModelSerializer):
@@ -241,10 +260,14 @@ class EvaluationQuestionnaireUpdateSerializer(serializers.Serializer):
 
 class EvaluationQuestionnaireQuestionSerializer(serializers.Serializer):
     question_id = serializers.IntegerField()
+    format = serializers.CharField()
     title = serializers.CharField()
     text = serializers.CharField()
+    explanation = serializers.CharField(allow_blank=True)
     is_mandatory = serializers.BooleanField()
     points = serializers.IntegerField()
+    difficulty = serializers.CharField()
+    rubric = serializers.JSONField()
     candidate_answer = serializers.CharField(allow_blank=True)
     manager_comment = serializers.CharField(allow_blank=True)
     score = serializers.IntegerField(allow_null=True)
@@ -270,10 +293,14 @@ def build_questionnaire_payload(evaluation: Evaluation) -> dict:
         serialized_questions.append(
             {
                 "question_id": question.id,
+                "format": question.format,
                 "title": question.title,
                 "text": question.text,
+                "explanation": question.explanation,
                 "is_mandatory": question.is_mandatory,
                 "points": question.points,
+                "difficulty": question.difficulty,
+                "rubric": question.rubric,
                 "candidate_answer": response.candidate_answer if response else "",
                 "manager_comment": response.manager_comment if response else "",
                 "score": response.score if response else None,

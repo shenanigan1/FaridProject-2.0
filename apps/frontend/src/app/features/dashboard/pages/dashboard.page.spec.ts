@@ -1,13 +1,69 @@
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { of } from 'rxjs';
 import { Router } from '@angular/router';
+import { of } from 'rxjs';
 import { AuthSessionService } from '@auth/services/auth-session.service';
 import { AllowedRole } from '@auth/models/auth.models';
+import { DashboardDataService, DashboardSnapshot } from '@features/dashboard/services/dashboard-data.service';
 
 import { DashboardPage } from './dashboard.page';
 
 describe('DashboardPage', () => {
+  const snapshot: DashboardSnapshot = {
+    positions: [
+      {
+        id: 1,
+        company: 1,
+        title: 'Driver',
+        description: '',
+        department: 'Ops',
+        contract_type: 'Full-time',
+        location: 'Paris',
+        salary: null,
+        is_active: true,
+        created_at: '2026-01-01T00:00:00Z',
+        updated_at: '2026-01-01T00:00:00Z',
+      },
+    ],
+    candidates: [
+      {
+        id: 4,
+        user: {
+          first_name: 'Nadia',
+          last_name: 'Benali',
+          email: 'nadia@example.com',
+        },
+        status: 'pending',
+        flag: false,
+        created_at: '2026-01-01T00:00:00Z',
+        updated_at: '2026-01-01T00:00:00Z',
+      },
+    ],
+    applications: [
+      {
+        id: 9,
+        candidate: 4,
+        position: 1,
+        status: 'applied',
+        created_at: '2026-01-02T00:00:00Z',
+        updated_at: '2026-01-02T00:00:00Z',
+      },
+    ],
+    inProgressTests: [
+      {
+        evaluationId: 7,
+        applicationId: 9,
+        candidateId: 4,
+        candidateName: 'Nadia Benali',
+        candidateEmail: 'nadia@example.com',
+        positionId: 1,
+        positionTitle: 'Driver',
+        templateName: 'Safety',
+        updatedAt: '2026-01-03T00:00:00Z',
+      },
+    ],
+  };
+
   const createComponent = (role: AllowedRole | null) => {
     const authMock = jasmine.createSpyObj<AuthSessionService>('AuthSessionService', [
       'loadMeOnce',
@@ -28,11 +84,16 @@ describe('DashboardPage', () => {
     );
 
     const routerMock = jasmine.createSpyObj<Router>('Router', ['navigateByUrl']);
+    const dashboardDataMock = jasmine.createSpyObj<DashboardDataService>('DashboardDataService', [
+      'loadRecruitmentSnapshot',
+    ]);
+    dashboardDataMock.loadRecruitmentSnapshot.and.returnValue(of(snapshot));
 
     TestBed.configureTestingModule({
       imports: [DashboardPage],
       providers: [
         { provide: AuthSessionService, useValue: authMock },
+        { provide: DashboardDataService, useValue: dashboardDataMock },
         { provide: Router, useValue: routerMock },
       ],
     });
@@ -44,32 +105,31 @@ describe('DashboardPage', () => {
 
   it('renders recruitment dashboard metrics for admin role', () => {
     const { fixture } = createComponent('admin');
-    const title = fixture.debugElement.query(By.css('h1'))?.nativeElement as HTMLElement;
-    const counters = fixture.debugElement.queryAll(By.css('span'));
-    const allText = counters.map((counter) =>
-      (counter.nativeElement as HTMLElement).textContent?.trim(),
-    );
+    const content = (fixture.nativeElement as HTMLElement).textContent ?? '';
 
-    expect(title.textContent).toContain('TABLEAU DE BORD');
-    expect(allText).toContain('428');
-    expect(allText).toContain('24');
+    expect(content).toContain('TABLEAU DE BORD');
+    expect(content).toContain('1');
+    expect(content).toContain('ACTIVE REQUISITIONS');
+    expect(content).toContain('RECENT INFLOW');
+    expect(content).toContain('Nadia Benali');
   });
 
-  it('shows missing-info placeholders for non-recruitment roles', () => {
+  it('renders database-backed data for non-recruitment roles too', () => {
     const { fixture } = createComponent('candidate');
     const content = (fixture.nativeElement as HTMLElement).textContent ?? '';
 
-    expect(content).toContain('{total_candidates}');
-    expect(content).toContain('{active_offers}');
+    expect(content).toContain('FLEET OPERATIONS');
+    expect(content).toContain('Nadia Benali');
+    expect(content).toContain('LIVE FEEDS');
   });
 
-  it('navigates to tests when quick action is enabled', () => {
+  it('navigates to jobs when the active requisitions KPI is clicked', () => {
     const { fixture, routerMock } = createComponent('admin');
-    const testsShortcut = fixture.debugElement.query(By.css('[data-testid="quick-tests"]'))
-      ?.nativeElement as HTMLButtonElement;
+    const activeRequisitions = fixture.debugElement.query(By.css('.ff-dashboard-kpi-card'))
+      .nativeElement as HTMLButtonElement;
 
-    testsShortcut.click();
+    activeRequisitions.click();
 
-    expect(routerMock.navigateByUrl).toHaveBeenCalledWith('/tests');
+    expect(routerMock.navigateByUrl).toHaveBeenCalledWith('/jobs');
   });
 });

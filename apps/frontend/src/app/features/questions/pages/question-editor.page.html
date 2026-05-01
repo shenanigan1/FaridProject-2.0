@@ -1,5 +1,5 @@
-<div class="min-h-screen bg-slate-950 text-slate-100">
-  <div class="mx-auto w-full max-w-sm px-4 pt-4 pb-24">
+<div class="ff-app-screen">
+  <div class="ff-app-container ff-app-stack max-w-sm">
 
     <!-- Top bar -->
     <div class="flex items-center justify-between">
@@ -119,8 +119,7 @@
               id="question-text"
               rows="6"
               formControlName="text"
-              class="w-full rounded-2xl bg-slate-900/40 px-4 py-3 text-sm text-slate-100 ring-1 ring-white/10 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-sky-500/40"
-              placeholder="e.g. What is the maximum allowed driving time before a mandatory break?"
+              class="w-full rounded-2xl bg-slate-900/40 px-4 py-3 text-sm text-slate-100 ring-1 ring-white/10 focus:outline-none focus:ring-2 focus:ring-sky-500/40"
             ></textarea>
 
             @if (form.controls.text.touched && form.controls.text.invalid) {
@@ -148,7 +147,6 @@
               <app-ui-select
                 [formControl]="form.controls.difficulty"
                 [options]="difficultyOptions"
-                placeholder="Select difficulty..."
               />
             </div>
           </div>
@@ -158,12 +156,18 @@
         @else if (tab() === 'preview') {
           <div class="rounded-2xl bg-slate-900/40 p-4 ring-1 ring-white/10">
             <p class="text-xs font-semibold tracking-wide text-slate-400">PREVIEW</p>
-            <p class="mt-3 text-sm font-semibold text-slate-100">
-              {{ form.controls.title.value || 'Untitled question' }}
-            </p>
-            <p class="mt-2 whitespace-pre-wrap text-sm text-slate-200">
-              {{ form.controls.text.value || 'No text yet.' }}
-            </p>
+            @if (form.controls.title.value) {
+              <p class="mt-3 text-sm font-semibold text-slate-100">
+                {{ form.controls.title.value }}
+              </p>
+            }
+            @if (form.controls.text.value) {
+              <p class="mt-2 whitespace-pre-wrap text-sm text-slate-200">
+                {{ form.controls.text.value }}
+              </p>
+            } @else {
+              <p class="mt-2 text-sm text-slate-400">Question text is empty.</p>
+            }
           </div>
         }
 
@@ -173,7 +177,6 @@
 
             <app-ui-text-input
               label="Title (optional)"
-              placeholder="Short label (optional)"
               [formControl]="form.controls.title"
             />
 
@@ -186,7 +189,6 @@
                 rows="4"
                 formControlName="explanation"
                 class="mt-2 w-full resize-none rounded-2xl bg-slate-950/30 px-4 py-3 text-sm ring-1 ring-white/10 focus:outline-none focus:ring-2 focus:ring-sky-500/40"
-                placeholder="Shown in results / feedback (optional)"
               ></textarea>
             </div>
 
@@ -217,7 +219,6 @@
                 type="number"
                 formControlName="order"
                 class="mt-2 w-full rounded-2xl bg-slate-950/30 px-4 py-3 text-sm ring-1 ring-white/10 focus:outline-none focus:ring-2 focus:ring-sky-500/40"
-                placeholder="0"
               />
             </div>
           </div>
@@ -227,7 +228,7 @@
         @else if (tab() === 'history') {
           <div class="rounded-2xl bg-slate-900/40 p-4 ring-1 ring-white/10">
             <p class="text-xs font-semibold tracking-wide text-slate-400">HISTORY</p>
-            <p class="mt-2 text-sm text-slate-300">Coming next (versioning + audit).</p>
+            <p class="mt-2 text-sm text-slate-300">No question history returned by the backend.</p>
           </div>
         }
 

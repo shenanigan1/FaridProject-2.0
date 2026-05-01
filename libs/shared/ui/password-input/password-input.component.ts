@@ -1,12 +1,22 @@
-import { ChangeDetectionStrategy, Component, Input, forwardRef, signal } from '@angular/core';
+import { LucideDynamicIcon } from '@lucide/angular';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Input,
+  forwardRef,
+  inject,
+  signal,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
   selector: 'app-ui-password-input',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, LucideDynamicIcon],
   templateUrl: './password-input.component.html',
+  styleUrl: './password-input.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
@@ -18,19 +28,28 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 })
 export class UiPasswordInputComponent implements ControlValueAccessor {
   @Input() label: string | null = null;
+  @Input() inputId = '';
   @Input() placeholder = '';
   @Input() error: string | null = null;
+  @Input() icon: any = null;
+
+  private readonly cdr = inject(ChangeDetectorRef);
 
   readonly value = signal('');
   readonly disabled = signal(false);
   readonly show = signal(false);
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private onChange: (v: string) => void = (_v: string) => void 0;
   private onTouched: () => void = () => void 0;
 
   writeValue(value: string | null): void {
     this.value.set(value ?? '');
+    this.cdr.markForCheck();
+  }
+
+  setDisabledState(isDisabled: boolean): void {
+    this.disabled.set(isDisabled);
+    this.cdr.markForCheck();
   }
 
   registerOnChange(fn: (v: string) => void): void {
@@ -39,10 +58,6 @@ export class UiPasswordInputComponent implements ControlValueAccessor {
 
   registerOnTouched(fn: () => void): void {
     this.onTouched = fn;
-  }
-
-  setDisabledState(isDisabled: boolean): void {
-    this.disabled.set(isDisabled);
   }
 
   handleInput(event: Event): void {
@@ -57,10 +72,16 @@ export class UiPasswordInputComponent implements ControlValueAccessor {
 
   toggle(): void {
     this.show.set(!this.show());
+    this.cdr.markForCheck();
   }
 
-
-  get wrapperClasses(): string {
-    return ['ff-input', 'mt-1', 'flex', 'items-center', 'gap-2', this.error ? 'ff-input-error' : ''].filter(Boolean).join(' ');
+  get inputClasses(): string {
+    return [
+      'ff-password-input',
+      this.icon ? 'ff-password-input--with-icon' : '',
+      this.error ? 'ff-password-input--error' : '',
+    ]
+      .filter(Boolean)
+      .join(' ');
   }
 }

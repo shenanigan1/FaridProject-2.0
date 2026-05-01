@@ -159,6 +159,8 @@ def test_manager_only_lists_assigned_evaluations(api_client):
     items = _unwrap_list_response(res.data)
     assert len(items) == 1
     assert items[0]["id"] == owned.id
+    assert items[0]["subject_full_name"] == subject.email
+    assert items[0]["subject_email"] == subject.email
 
 
 def test_candidate_can_view_own_evaluation_without_internal_comment(api_client):

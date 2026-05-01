@@ -38,11 +38,35 @@ export const routes: Routes = [
   },
 
   {
+    path: 'manager',
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['manager'] },
+    loadComponent: () =>
+      import('./features/manager/pages/manager-home.page').then((m) => m.ManagerHomePage),
+  },
+  {
+    path: 'manager/tests',
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['manager'] },
+    loadComponent: () =>
+      import('./features/manager/pages/manager-tests.page').then((m) => m.ManagerTestsPage),
+  },
+  {
+    path: 'manager/tests/:id',
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['manager'] },
+    loadComponent: () =>
+      import('./features/manager/pages/manager-test-detail.page').then(
+        (m) => m.ManagerTestDetailPage,
+      ),
+  },
+
+  {
     path: 'candidates',
     loadChildren: () =>
       import('./features/candidates/candidates.routes').then((m) => m.CANDIDATES_ROUTES),
     canActivate: [AuthGuard, RoleGuard],
-    data: { roles: ['hr', 'admin', 'director', 'manager'] },
+    data: { roles: ['hr', 'admin', 'director'] },
   },
 
   {
@@ -50,14 +74,14 @@ export const routes: Routes = [
     loadChildren: () =>
       import('./features/positions/positions.routes').then((m) => m.POSITIONS_ROUTES),
     canActivate: [AuthGuard, RoleGuard],
-    data: { roles: ['hr', 'admin', 'director', 'manager'] },
+    data: { roles: ['hr', 'admin', 'director'] },
   },
 
   {
     path: 'pools',
     loadChildren: () => import('src/app/features/pools/pool.routes').then((m) => m.POOLS_ROUTES),
     canActivate: [AuthGuard, RoleGuard],
-    data: { roles: ['hr', 'admin', 'director', 'manager'] },
+    data: { roles: ['hr', 'admin', 'director'] },
   },
 
   {
@@ -65,15 +89,15 @@ export const routes: Routes = [
     loadChildren: () =>
       import('src/app/features/test-templates/test-templates.routes').then(
         (m) => m.TEMPLATES_ROUTES,
-      ),
+    ),
     canActivate: [AuthGuard, RoleGuard],
-    data: { roles: ['hr', 'admin', 'director', 'manager'] },
+    data: { roles: ['hr', 'admin', 'director'] },
   },
   {
     path: 'tests',
     loadChildren: () => import('src/app/features/tests/tests.routes').then((m) => m.TESTS_ROUTES),
     canActivate: [AuthGuard, RoleGuard],
-    data: { roles: ['hr', 'admin', 'director', 'manager'] },
+    data: { roles: ['hr', 'admin', 'director'] },
   },
   {
     path: 'roles',
@@ -85,13 +109,13 @@ export const routes: Routes = [
   {
     path: 'contact',
     canActivate: [AuthGuard, RoleGuard],
-    data: { roles: ['admin'] },
+    data: { roles: ['hr', 'admin', 'director'] },
     loadComponent: () => import('./features/contact/pages/contact.page').then((m) => m.ContactPage),
   },
   {
     path: 'contact/:id',
     canActivate: [AuthGuard, RoleGuard],
-    data: { roles: ['admin'] },
+    data: { roles: ['hr', 'admin', 'director'] },
     loadComponent: () =>
       import('./features/contact/pages/contact-detail.page').then((m) => m.ContactDetailPage),
   },
