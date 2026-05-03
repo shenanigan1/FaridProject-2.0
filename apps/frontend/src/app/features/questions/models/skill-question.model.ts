@@ -1,7 +1,7 @@
 /**
  * LEGACY (temporary)
  * Keep only while migrating old UI components that still use prompt/minScore/maxScore/type.
- * TODO: remove after migration to v2 is complete.
+ * Keep until the v2 migration no longer references the old shape.
  */
 
 /** eslint-disable @typescript-eslint/no-unused-vars */
@@ -23,7 +23,7 @@ export interface SkillQuestionLegacy {
  * V2 (current)
  * Matches the new backend question authoring model.
  */
-export type QuestionFormat = 'mcq' | 'true_false' | 'practical';
+export type QuestionFormat = 'mcq' | 'true_false' | 'yes_no' | 'free_text' | 'rating' | 'practical';
 export type Difficulty = 'easy' | 'intermediate' | 'hard';
 
 /**

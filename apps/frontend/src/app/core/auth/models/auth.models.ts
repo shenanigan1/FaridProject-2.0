@@ -1,7 +1,12 @@
-export type LoginProfile = 'driver' | 'manager' | 'hr';
+export type AllowedRole =
+  | 'admin'
+  | 'hr'
+  | 'director'
+  | 'manager'
+  | 'employee'
+  | 'candidate';
 
 export interface LoginRequest {
-  profile: LoginProfile;
   email: string;
   password: string;
 }
@@ -11,13 +16,27 @@ export interface MeResponse {
   email: string;
   first_name: string;
   last_name: string;
-  role?: AllowedRole  | null;
+  role: AllowedRole | null;
 }
 
 export interface LoginResponse {
   access: string;
   refresh: string;
-  user?: MeResponse | null;
+  user: MeResponse | null;
 }
 
-export type AllowedRole = 'admin' | 'hr' | 'director' | 'manager' | 'employee' | 'candidate';
+export interface RefreshRequest {
+  refresh: string;
+}
+
+export interface RefreshResponse {
+  access: string;
+  refresh?: string;
+}
+
+export interface ApiErrorResponse {
+  detail?: string;
+  non_field_errors?: string[];
+  email?: string[];
+  password?: string[];
+}

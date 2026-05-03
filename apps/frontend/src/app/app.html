@@ -1,19 +1,31 @@
-<app-top-bar
-  title="Recruitment Overview"
-  subtitle="Fleet Management Hub"
-  [notificationCount]="1"
-  [user]="{ fullName: 'Farid' }"
-/>
+<div class="ff-app-shell" [class.ff-app-shell--auth]="!showNavigationChrome()">
+  @if (showNavigationChrome()) {
+    <app-top-bar
+      class="ff-app-shell__topbar"
+      [title]="chromeTitle()"
+      subtitle="Fleet Management Hub"
+      [notificationCount]="1"
+      [user]="{ fullName: userFullName() }"
+      (editProfile)="onEditProfile()"
+      (logout)="onLogout()"
+    />
+  }
 
-<router-outlet />
+  <div class="ff-app-shell__body">
+    @if (showNavigationChrome()) {
+      <aside class="ff-app-shell__sidebar" aria-label="Desktop navigation">
+        <app-menu-bar [items]="menuItems()" variant="desktop" />
+      </aside>
+    }
 
-<app-menu-bar
-  [items]="[
-    { label: 'Dashboard', icon: '📊', route: '/dashboard' },
-    { label: 'Candidates', icon: '👥', route: '/candidates' },
-    { label: 'Tests', icon: '🧪', route: '/tests' },
-    { label: 'Templates', icon: '📐', route: '/templates' },
-    { label: 'Positions', icon: '📋', route: '/positions' },
-    { label: 'Pools', icon: '🗂️', route: '/pools' },
-  ]"
-/>
+    <main class="ff-app-shell__main">
+      <router-outlet />
+    </main>
+  </div>
+
+  @if (showNavigationChrome()) {
+    <div class="ff-app-shell__mobile-nav">
+      <app-menu-bar [items]="menuItems()" variant="mobile" />
+    </div>
+  }
+</div>

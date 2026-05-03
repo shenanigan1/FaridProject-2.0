@@ -40,10 +40,11 @@ class QuestionPoolViewSet(ModelViewSet):
 
             # IMPORTANT: never mutate request.data directly
             data = request.data.copy()
+            data["pool"] = pool.id
             data["order"] = max_order + 1
 
             serializer = SkillQuestionSerializer(data=data)
             serializer.is_valid(raise_exception=True)
-            serializer.save(pool=pool)
+            serializer.save()
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)

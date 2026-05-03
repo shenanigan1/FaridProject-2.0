@@ -7,9 +7,6 @@ import { SkillQuestionsStore } from '@features/questions/services/skill-question
 import { SkillQuestion, QuestionFormat, Difficulty } from '@features/questions/models/skill-question.model';
 
 import { UiTabsComponent, UiTabItem } from '@lib-ui/tabs/tabs.component';
-import { UiButtonPrimaryComponent } from '@lib-ui/button-primary/button-primary.component';
-import { UiButtonSecondaryComponent } from '@lib-ui/button-secondary/button-secondary.component';
-import { UiIconButtonComponent } from '@lib-ui/icon-button/icon-button.component';
 import { UiSelectComponent, UiSelectOption } from '@lib-ui/select/select.component';
 
 type TabKey = 'editor' | 'preview' | 'settings' | 'history';
@@ -29,11 +26,58 @@ interface SkillQuestionUpsertDto {
 
 const createDefaultRubric = (): Rubric => ({});
 
+const createDefaultFormValue = () => ({
+  format: 'mcq' as QuestionFormat,
+  title: '',
+  text: '',
+  explanation: '',
+  rubric: createDefaultRubric(),
+  choice_options_text: '',
+  rating_min: 0,
+  rating_max: 10,
+  is_mandatory: false,
+  points: 10,
+  difficulty: 'intermediate' as Difficulty,
+  order: 0,
+});
+
 const isQuestionFormat = (v: unknown): v is QuestionFormat =>
-  v === 'mcq' || v === 'true_false' || v === 'practical';
+  v === 'mcq' ||
+  v === 'true_false' ||
+  v === 'yes_no' ||
+  v === 'free_text' ||
+  v === 'rating' ||
+  v === 'practical';
 
 const isDifficulty = (v: unknown): v is Difficulty =>
   v === 'easy' || v === 'intermediate' || v === 'hard';
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function rubricOptions(rubric: unknown): string[] {
+  if (!isRecord(rubric)) return [];
+  const options = rubric['options'];
+  if (!Array.isArray(options)) return [];
+  return options
+    .map((option) => (typeof option === 'string' ? option : ''))
+    .map((option) => option.trim())
+    .filter(Boolean);
+}
+
+function rubricNumber(rubric: unknown, key: string, fallback: number): number {
+  if (!isRecord(rubric)) return fallback;
+  const value = rubric[key];
+  return typeof value === 'number' && Number.isFinite(value) ? value : fallback;
+}
+
+function parseChoiceOptions(raw: string): string[] {
+  return raw
+    .split(/\r?\n/)
+    .map((option) => option.trim())
+    .filter(Boolean);
+}
 
 @Component({
   selector: 'app-question-editor-page',
@@ -43,9 +87,6 @@ const isDifficulty = (v: unknown): v is Difficulty =>
     RouterModule,
     ReactiveFormsModule,
 
-    UiIconButtonComponent,
-    UiButtonPrimaryComponent,
-    UiButtonSecondaryComponent,
     UiTabsComponent,
     UiSelectComponent,
   ],
@@ -82,6 +123,14 @@ export class QuestionEditorPageComponent implements OnInit {
     { value: 'hard', label: 'Hard' },
   ];
 
+  readonly formatOptions: { value: QuestionFormat; label: string; hint: string }[] = [
+    { value: 'free_text', label: 'Libre', hint: 'Reponse texte avec note manuelle' },
+    { value: 'yes_no', label: 'Oui/Non', hint: 'Choix binaire rapide' },
+    { value: 'rating', label: 'Note', hint: 'Notation directe par points' },
+    { value: 'mcq', label: 'QCM', hint: 'Choix depuis une liste' },
+    { value: 'practical', label: 'Pratique', hint: 'Observation avec grille' },
+  ];
+
   readonly form = this.fb.nonNullable.group({
     format: this.fb.nonNullable.control<QuestionFormat>('mcq', [Validators.required]),
     title: this.fb.nonNullable.control('', [Validators.maxLength(255)]),
@@ -92,6 +141,9 @@ export class QuestionEditorPageComponent implements OnInit {
     ]),
     explanation: this.fb.nonNullable.control(''),
     rubric: this.fb.nonNullable.control<Rubric>(createDefaultRubric()),
+    choice_options_text: this.fb.nonNullable.control(''),
+    rating_min: this.fb.nonNullable.control(0, [Validators.min(0)]),
+    rating_max: this.fb.nonNullable.control(10, [Validators.min(1)]),
 
     is_mandatory: this.fb.nonNullable.control(false),
 
@@ -153,6 +205,23 @@ export class QuestionEditorPageComponent implements OnInit {
     this.store.update(qid, dto, () => this.back());
   }
 
+  saveAndAddAnother(): void {
+    if (this.isEditMode()) {
+      this.save();
+      return;
+    }
+
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
+    this.store.createInPool(this.poolId(), this.toDto(), () => {
+      this.form.reset(createDefaultFormValue());
+      this.tab.set('editor');
+    });
+  }
+
   private toFormValue(row: SkillQuestion) {
     return {
       format: isQuestionFormat(row.format) ? row.format : 'mcq',
@@ -160,6 +229,9 @@ export class QuestionEditorPageComponent implements OnInit {
       text: row.text ?? '',
       explanation: row.explanation ?? '',
       rubric: (row.rubric && typeof row.rubric === 'object' ? row.rubric : createDefaultRubric()) as Rubric,
+      choice_options_text: rubricOptions(row.rubric).join('\n'),
+      rating_min: rubricNumber(row.rubric, 'min', 0),
+      rating_max: rubricNumber(row.rubric, 'max', row.points ?? 10),
 
       is_mandatory: !!row.is_mandatory,
 
@@ -170,18 +242,46 @@ export class QuestionEditorPageComponent implements OnInit {
   }
 
   private toDto(): SkillQuestionUpsertDto {
+    const format = this.form.controls.format.value;
     return {
-      format: this.form.controls.format.value,
+      format,
       title: this.form.controls.title.value.trim(),
       text: this.form.controls.text.value.trim(),
       explanation: this.form.controls.explanation.value.trim(),
-      rubric: this.form.controls.rubric.value ?? createDefaultRubric(),
+      rubric: this.rubricForFormat(format),
 
       is_mandatory: this.form.controls.is_mandatory.value,
 
-      points: this.form.controls.points.value,
+      points: format === 'rating' ? this.form.controls.rating_max.value : this.form.controls.points.value,
       difficulty: this.form.controls.difficulty.value,
       order: this.form.controls.order.value,
     };
+  }
+
+  private rubricForFormat(format: QuestionFormat): Rubric {
+    const current = this.form.controls.rubric.value ?? createDefaultRubric();
+
+    if (format === 'mcq') {
+      const options = parseChoiceOptions(this.form.controls.choice_options_text.value);
+      return options.length > 0 ? { options } : current;
+    }
+
+    if (format === 'free_text') {
+      return { scoring: 'manual' };
+    }
+
+    if (format === 'yes_no' || format === 'true_false') {
+      return { options: ['Oui', 'Non'] };
+    }
+
+    if (format === 'rating') {
+      return {
+        scoring: 'rating',
+        min: this.form.controls.rating_min.value,
+        max: this.form.controls.rating_max.value,
+      };
+    }
+
+    return current;
   }
 }

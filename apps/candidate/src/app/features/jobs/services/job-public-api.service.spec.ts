@@ -1,11 +1,10 @@
 import { TestBed } from '@angular/core/testing';
-import {
-  HttpTestingController,
-  provideHttpClientTesting,
-} from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting} from '@angular/common/http/testing';
 import { provideHttpClient } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 
 import { JobPublicApiService } from './job-public-api.service';
+// import { JobOffer } from '../models/job-offer.model';
 
 describe('JobPublicApiService', () => {
   let service: JobPublicApiService;
@@ -15,11 +14,7 @@ describe('JobPublicApiService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
-        JobPublicApiService,
-        provideHttpClient(),
-        provideHttpClientTesting(),
-      ],
+      providers: [JobPublicApiService, provideHttpClient(), provideHttpClientTesting()],
     });
 
     service = TestBed.inject(JobPublicApiService);
@@ -109,6 +104,59 @@ describe('JobPublicApiService', () => {
       ],
     });
   });
+
+  it('should fetch a job offer by id', () => {
+    const mockDto = {
+      id: 1,
+      title: 'Frontend Developer',
+      location: 'Lyon',
+      contract_type: 'CDI',
+      description: 'Detailed job description',
+      created_at: '2026-03-19T10:00:00Z',
+      salary: 150000,
+      department: 'Informatique',
+    };
+
+    const expectedModel = {
+      id: 1,
+      title: 'Frontend Developer',
+      location: 'Lyon',
+      contractType: 'CDI',
+      description: 'Detailed job description',
+      createdAt: '2026-03-19T10:00:00Z',
+      salary: 150000,
+      department: 'Informatique',
+    };
+
+    service.getOfferById(1).subscribe((offer) => {
+      expect(offer).toEqual(expectedModel);
+    });
+
+    const request = httpMock.expectOne(`${expectedUrl}/1/`);
+    expect(request.request.method).toBe('GET');
+    request.flush(mockDto);
+  });
+
+  it('should propagate a 404 error', () => {
+  let actualError: HttpErrorResponse | null = null;
+
+  service.getOfferById(999).subscribe({
+    next: () => fail('Expected error'),
+    error: (error: HttpErrorResponse) => {
+      actualError = error;
+    },
+  });
+
+  const request = httpMock.expectOne(`${expectedUrl}/999/`);
+
+  request.flush(
+    { detail: 'Not found' },
+    { status: 404, statusText: 'Not Found' }
+  );
+
+  expect(actualError).not.toBeNull();
+  expect(actualError!.status).toBe(404);
+});
 
   it('should return an empty paginated response when backend returns an empty array', () => {
     let actualResponse:

@@ -5,11 +5,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { PositionCreatePayload } from '@features/positions/services/positions-api.service';
 import { PositionFormGroup } from '@features/positions/services/positions-form.service';
 
-import { UiCardComponent } from '@lib-ui/card/card.component';
 import { UiFormFieldComponent } from '@lib-ui/form-field/form-field.component';
 import { UiAlertComponent } from '@lib-ui/alert/alert.component'
-import { UiButtonPrimaryComponent } from '@lib-ui/button-primary/button-primary.component';
-import { UiButtonSecondaryComponent } from '@lib-ui/button-secondary/button-secondary.component';
 
 @Component({
   standalone: true,
@@ -17,11 +14,8 @@ import { UiButtonSecondaryComponent } from '@lib-ui/button-secondary/button-seco
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    UiCardComponent,
     UiFormFieldComponent,
     UiAlertComponent,
-    UiButtonPrimaryComponent,
-    UiButtonSecondaryComponent,
   ],
   templateUrl: './position-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -5,6 +5,9 @@ from django.db.models import Q
 class QuestionFormat(models.TextChoices):
     MCQ = "mcq", "Multiple Choice"
     TRUE_FALSE = "true_false", "True/False"
+    YES_NO = "yes_no", "Yes/No"
+    FREE_TEXT = "free_text", "Free text"
+    RATING = "rating", "Rating"
     PRACTICAL = "practical", "Practical"
 
 

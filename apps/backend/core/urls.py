@@ -3,10 +3,11 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
 from companies.views import CompanyViewSet
-from positions.views import PositionViewSet, PublicPositionListView
+from positions.views import PositionViewSet, PublicPositionViewSet
 from candidates.views import CandidateViewSet
 from employees.views import EmployeeViewSet
 from recruitment.views import JobApplicationViewSet
+from users.views import UserViewSet
 
 from templates_grid.views.pools import QuestionPoolViewSet
 from templates_grid.views.questions import SkillQuestionViewSet
@@ -18,6 +19,7 @@ from evaluations.views import EvaluationViewSet
 router = DefaultRouter()
 router.register("companies", CompanyViewSet, basename="companies")
 router.register("positions", PositionViewSet, basename="positions")
+router.register(r"public/positions", PublicPositionViewSet, basename="public-positions")
 router.register("candidates", CandidateViewSet, basename="candidates")
 router.register("employees", EmployeeViewSet, basename="employees")
 router.register("jobapplications", JobApplicationViewSet, basename="jobapplications")
@@ -31,11 +33,11 @@ router.register(
 )
 
 router.register("evaluations", EvaluationViewSet, basename="evaluations")
+router.register("users", UserViewSet, basename="users")
 
 urlpatterns = [
     path("api/", include(router.urls)),
     path("api/auth/", include("users.routes.auth")),
-    path("api/public/positions/", PublicPositionListView.as_view()),
     # Keep auth include only if it exists and does not break imports:
     # path("auth/", include("users.routes.login")),
 ]

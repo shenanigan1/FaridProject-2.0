@@ -10,7 +10,6 @@ export type UpdatePoolDto = Partial<Pick<QuestionPool, 'code' | 'name' | 'descri
 export class PoolsApiService {
   private readonly http = inject(HttpClient);
 
-  // TODO: move to environment.ts
   private readonly baseUrl = '/api/questionpools/';
 
   list(): Observable<QuestionPool[]> {

@@ -1,60 +1,81 @@
-<div class="min-h-screen flex items-center justify-center bg-slate-950 p-4">
-  <div class="w-full max-w-sm rounded-2xl bg-slate-900/60 border border-slate-700/50 shadow-xl p-6">
+<section class="ff-login-screen">
+  <div class="ff-login-shell">
+    <header class="ff-login-header">
+      <div class="ff-login-brand">
+        <span class="ff-login-brand__icon" aria-hidden="true">
+          <svg [lucideIcon]="icons.brand"></svg>
+        </span>
 
-    <!-- Header -->
-    <div class="text-center mb-6">
-      <h1 class="text-xl font-semibold text-white">FleetConnect HR</h1>
-      <p class="text-xs text-slate-400">Logistics & Recruitment Portal</p>
-    </div>
+        <div class="ff-login-brand__wordmark" aria-label="FleetFlow">
+          <span>Fleet</span><strong>Flow</strong>
+        </div>
+      </div>
 
-    <!-- Profile selector -->
-    <div class="grid grid-cols-3 gap-2 mb-5">
-      @for (p of profiles; track p.key) {
-        <button
-          type="button"
-          class="rounded-lg border px-2 py-3 text-xs font-semibold transition text-white"
-          [class.border-sky-500]="selectedProfile() === p.key"
-          (click)="selectProfile(p.key)"
-        >
-          {{ p.label }}
-        </button>
+      <p>Logistics &amp; Recruitment Portal</p>
+    </header>
+
+    <article class="ff-login-card">
+      @if (errorMessage()) {
+        <p class="ff-login-alert" role="alert">{{ errorMessage() }}</p>
       }
-    </div>
 
-    <app-ui-alert [message]="errorMessage()"></app-ui-alert>
+      <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+        <label class="ff-login-field" for="login-email">
+          <span>Email address</span>
+          <span class="ff-login-control">
+            <svg [lucideIcon]="icons.loginEmail" aria-hidden="true"></svg>
+            <input
+              id="login-email"
+              formControlName="email"
+              type="email"
+              autocomplete="email"
+              placeholder="name@fleetflow.com"
+            />
+          </span>
+          @if (emailError()) {
+            <small>{{ emailError() }}</small>
+          }
+        </label>
 
-    <form [formGroup]="form" (ngSubmit)="submit()" class="space-y-4">
+        <label class="ff-login-field" for="login-password">
+          <span class="ff-login-field__row">
+            <span>Password</span>
+            <a routerLink="/forgot-password">Forgot password?</a>
+          </span>
+          <span class="ff-login-control">
+            <svg [lucideIcon]="icons.loginPassword" aria-hidden="true"></svg>
+            <input
+              id="login-password"
+              formControlName="password"
+              type="password"
+              autocomplete="current-password"
+              placeholder="Password"
+            />
+          </span>
+          @if (passwordError()) {
+            <small>{{ passwordError() }}</small>
+          }
+        </label>
 
-      <app-ui-text-input
-        formControlName="email"
-        [label]="emailLabel()"
-        placeholder="Enter your credentials">
-      </app-ui-text-input>
+        <label class="ff-login-remember" for="login-remember-me">
+          <input id="login-remember-me" type="checkbox" formControlName="rememberMe" />
+          <span>Remember me</span>
+        </label>
 
-      <app-ui-password-input
-        formControlName="password"
-        label="Password"
-        placeholder="••••••••">
-      </app-ui-password-input>
+        <button type="submit" class="ff-login-submit" [disabled]="loading()">
+          <span>{{ loading() ? 'Logging in...' : 'Log in' }}</span>
+          <svg [lucideIcon]="icons.loginSubmit" aria-hidden="true"></svg>
+        </button>
+      </form>
+    </article>
 
-      <label class="flex items-center gap-2 text-xs text-slate-300">
-        <input type="checkbox" formControlName="rememberMe" />
-        Remember me
-      </label>
+    <p class="ff-login-access">
+      Don't have an account?
+      <a routerLink="/request-access">Request Access</a>
+    </p>
 
-      <app-ui-button-primary
-        type="submit"
-        variant="primary"
-        [loading]="loading()"
-        block>
-        Sign In
-      </app-ui-button-primary>
+    <div class="ff-login-divider" aria-hidden="true"></div>
 
-    </form>
-
-    <div class="mt-6 text-center text-xs text-slate-400">
-      <a routerLink="/support" class="text-sky-400">Contact Dispatch</a>
-    </div>
-
+    <p class="ff-login-status">V 0.0.0 "KINETIC" // SYSTEM_ACTIVE</p>
   </div>
-</div>
+</section>

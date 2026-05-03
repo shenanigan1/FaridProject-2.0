@@ -1,0 +1,57 @@
+<section class="ff-app-screen">
+  <div class="ff-app-container ff-app-stack">
+    <header class="ff-app-header">
+      <div>
+        <p class="ff-app-kicker">CANDIDATES</p>
+        <h1 class="ff-app-title">Profiles</h1>
+      </div>
+    </header>
+
+    <input
+      type="search"
+      [formControl]="searchControl"
+      aria-label="Search candidates"
+      class="ff-control"
+    />
+
+    @if (isLoading) {
+      <p class="ff-empty">Loading candidates...</p>
+    }
+
+    @if (!isLoading && errorMessage) {
+      <div class="ff-alert-inline">
+        {{ errorMessage }}
+      </div>
+    }
+
+    @if (!isLoading && !errorMessage) {
+      @if (filteredCandidates$ | async; as candidates) {
+        <div class="ff-app-stack">
+          @for (candidate of candidates; track candidate.id) {
+            <article class="ff-data-card">
+              <div class="ff-inline-actions" style="align-items: flex-start; justify-content: space-between">
+                <div>
+                  <h2 class="ff-row-title">
+                    {{ candidate.user.first_name }} {{ candidate.user.last_name }}
+                  </h2>
+                  <p class="ff-row-meta">{{ candidate.user.email }}</p>
+                  @if (candidate.user.phone) {
+                    <p class="ff-row-meta">{{ candidate.user.phone }}</p>
+                  }
+                </div>
+
+                <span class="ff-status-pill">
+                  {{ candidate.status }}
+                </span>
+              </div>
+            </article>
+          }
+
+          @if (candidates.length === 0) {
+            <p class="ff-empty">Aucun candidat en base pour cette recherche.</p>
+          }
+        </div>
+      }
+    }
+  </div>
+</section>

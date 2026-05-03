@@ -1,3 +1,4 @@
 from .position import PositionViewSet as PositionViewSet
-from .position import PublicPositionListView as PublicPositionListView
-__all__ = ["PositionViewSet"]
+from .position import PublicPositionViewSet as PublicPositionViewSet
+
+__all__ = ["PositionViewSet", "PublicPositionViewSet"]

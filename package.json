@@ -1,7 +1,8 @@
 {
   "private": true,
   "workspaces": [
-    "apps/frontend"
+    "apps/frontend",
+    "apps/candidate"
   ],
   
   "scripts": {

@@ -1,0 +1,69 @@
+@layer base {
+  :root {
+    --ff-color-background: #10141b;
+    --ff-color-background-deep: #050608;
+    --ff-color-header: #020617;
+    --ff-color-border: #3b4352;
+    --ff-color-border-soft: rgba(139, 144, 160, 0.24);
+
+    --ff-color-primary-100: #cfe0ff;
+    --ff-color-primary-400: #4a8eff;
+    --ff-color-primary-500: #1683f7;
+    --ff-color-primary-600: #0d64c8;
+    --ff-color-primary-soft: rgba(74, 142, 255, 0.18);
+
+    --ff-color-secondary-500: #8ea7d6;
+
+    --ff-color-surface-1: #1c2027;
+    --ff-color-surface-2: #151922;
+    --ff-color-surface-3: #10131a;
+    --ff-color-surface-raised: #20242d;
+
+    --ff-color-text-primary: #f2f4fb;
+    --ff-color-text-secondary: #c1c6d7;
+    --ff-color-text-muted: #9aa3b5;
+    --ff-color-text-disabled: #667180;
+
+    --ff-color-success: #22C55E;
+    --ff-color-warning: #F59E0B;
+    --ff-color-error: #EF4444;
+    --ff-color-info: #38BDF8;
+    --ff-color-danger-100: #ffb4ab;
+    --ff-color-orange: #ff8a1f;
+
+    --ff-radius-control: 0.85rem;
+    --ff-radius-card: 1rem;
+    --ff-radius-panel: 1.25rem;
+    --ff-radius-pill: 999px;
+
+    --ff-text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
+    --ff-text-shadow-strong: 0 2px 0 rgba(0, 0, 0, 0.55);
+    --ff-shadow-card: 0 18px 40px rgba(0, 0, 0, 0.24);
+    --ff-shadow-primary: 0 20px 45px rgba(22, 131, 247, 0.3);
+  }
+
+  html {
+    font-family: Inter, "SF Pro Display", system-ui, sans-serif;
+  }
+
+  body {
+    @apply antialiased;
+    background-color: var(--ff-color-background);
+    color: var(--ff-color-text-primary);
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+    letter-spacing: 0;
+  }
+
+  :focus-visible {
+    @apply outline-none ring-2;
+    --tw-ring-color: var(--ff-color-primary-500);
+    --tw-ring-offset-width: 2px;
+    --tw-ring-offset-color: var(--ff-color-background);
+  }
+}

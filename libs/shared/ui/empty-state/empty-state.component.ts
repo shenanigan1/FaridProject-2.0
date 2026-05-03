@@ -1,19 +1,3 @@
-/**
- * ----------------------------------------------------------------------------
- * UiEmptyStateComponent
- * ----------------------------------------------------------------------------
- * Standard empty state block: title + subtitle + icon slot + actions slot.
- * Layer: shared/ui
- * ----------------------------------------------------------------------------
- * Usage :
- * <app-ui-empty-state title="No positions yet" subtitle="Create your first job offer.">
- *  <span icon>📄</span>
- *  <div actions>
- *   <app-ui-button-primary (click)="create()">Create position</app-ui-button-primary>
- *  </div>
- * </app-ui-empty-state>
- */
-
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -27,12 +11,15 @@ import { CommonModule } from '@angular/common';
         <ng-content select="[icon]"></ng-content>
       </div>
 
-      <h3 class="text-base font-semibold text-slate-100">{{ title }}</h3>
+      <h3 class="text-base font-semibold text-slate-100">
+        {{ title }}
+      </h3>
 
-      @if(subtitle)
-        {
-          <p class="mt-1 text-sm text-slate-400">{{ subtitle }}</p>
-        }
+      @if (subtitle) {
+        <p class="mt-1 text-sm text-slate-400">
+          {{ subtitle }}
+        </p>
+      }
 
       <div class="mt-4 flex justify-center gap-2">
         <ng-content select="[actions]"></ng-content>

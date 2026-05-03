@@ -10,11 +10,13 @@ import {
 
 interface PositionsApiServiceMock {
   list: jasmine.Spy<() => ReturnType<PositionsApiService['list']>>;
+  listApplicationCounts: jasmine.Spy<() => ReturnType<PositionsApiService['listApplicationCounts']>>;
 }
 
 function makeApiMock(initial: PositionDto[] | Paginated<PositionDto> = []): PositionsApiServiceMock {
   return {
     list: jasmine.createSpy('list').and.returnValue(of(initial)),
+    listApplicationCounts: jasmine.createSpy('listApplicationCounts').and.returnValue(of({})),
   };
 }
 
@@ -59,6 +61,7 @@ describe('PositionsListPage', () => {
   it('should call api.list() on init', () => {
     const { apiMock } = setup();
     expect(apiMock.list).toHaveBeenCalledTimes(1);
+    expect(apiMock.listApplicationCounts).toHaveBeenCalledTimes(1);
   });
 
   it('should accept list API payloads (PositionDto[])', async () => {
@@ -92,18 +95,11 @@ describe('PositionsListPage', () => {
     expect(component.getBadge(p)).toEqual({ label: 'INACTIVE', tone: 'neutral' });
   });
 
-  it('getBadge() should return URGENT when title includes "senior"', () => {
+  it('getBadge() should return ACTIVE from backend status, without title-derived priority', () => {
     const { component } = setup();
     const p = makePosition({ title: 'Senior Driver', is_active: true });
 
-    expect(component.getBadge(p)).toEqual({ label: 'URGENT', tone: 'danger' });
-  });
-
-  it('getBadge() should return MEDIUM when title includes "tanker"', () => {
-    const { component } = setup();
-    const p = makePosition({ title: 'Tanker Driver', is_active: true });
-
-    expect(component.getBadge(p)).toEqual({ label: 'MEDIUM', tone: 'warning' });
+    expect(component.getBadge(p)).toEqual({ label: 'ACTIVE', tone: 'success' });
   });
 
   it('getBadge() should return ACTIVE by default', () => {

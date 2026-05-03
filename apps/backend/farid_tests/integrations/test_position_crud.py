@@ -1,12 +1,14 @@
 # farid_tests/integration/test_position_crud.py
 import pytest
 from django.urls import reverse
+from django.db.utils import ProgrammingError
 
 from users.models.roles import UserRoles
 from farid_tests.factories.users import UserFactory
 from positions.models import Position
 from farid_tests.factories.companies import CompanyFactory
 from farid_tests.factories.positions import PositionFactory
+from farid_tests.factories.templates_grid import TemplateFactory
 
 pytestmark = pytest.mark.django_db
 
@@ -73,6 +75,15 @@ def test_list_positions(api_client):
     assert len(items) >= 2
 
 
+def test_list_positions_requires_authentication(api_client):
+    PositionFactory.create(title="Private Driver")
+
+    url = reverse("positions-list")
+    response = api_client.get(url)
+
+    assert response.status_code == 401
+
+
 def test_retrieve_position(api_client):
     user = UserFactory.create(is_staff=True, role=UserRoles.ADMIN)
     api_client.force_authenticate(user=user)
@@ -116,3 +127,84 @@ def test_delete_position(api_client):
 
     if response.status_code in (204, 200):
         assert not Position.objects.filter(id=pos.id).exists()
+
+
+def test_set_and_get_position_test_templates(api_client):
+    admin = UserFactory.create(is_staff=True, role=UserRoles.ADMIN)
+    manager = UserFactory.create(role=UserRoles.MANAGER)
+    position = PositionFactory.create()
+    template = TemplateFactory.create(name="Driver Skills")
+    url = reverse("positions-test-templates", args=[position.id])
+    api_client.force_authenticate(user=admin)
+
+    put_res = api_client.put(
+        url,
+        {
+            "assignments": [
+                {"template_id": template.id, "manager_id": manager.id, "order": 0}
+            ]
+        },
+        format="json",
+    )
+    assert put_res.status_code == 200
+    assert len(put_res.data) == 1
+    assert put_res.data[0]["template"] == template.id
+    assert put_res.data[0]["manager_id"] == manager.id
+
+    get_res = api_client.get(url)
+    assert get_res.status_code == 200
+    assert len(get_res.data) == 1
+    assert get_res.data[0]["template_name"] == "Driver Skills"
+
+
+def test_get_position_test_templates_returns_503_when_table_missing(
+    api_client, monkeypatch
+):
+    admin = UserFactory.create(is_staff=True, role=UserRoles.ADMIN)
+    position = PositionFactory.create()
+    url = reverse("positions-test-templates", args=[position.id])
+    api_client.force_authenticate(user=admin)
+
+    from positions.views.position import PositionViewSet
+
+    monkeypatch.setattr(
+        PositionViewSet, "_safe_assignments_queryset", lambda _position: None
+    )
+
+    res = api_client.get(url)
+
+    assert res.status_code == 503
+    assert "Run migrations for the positions app" in res.data["detail"]
+
+
+def test_set_position_test_templates_returns_503_when_table_missing(
+    api_client, monkeypatch
+):
+    admin = UserFactory.create(is_staff=True, role=UserRoles.ADMIN)
+    position = PositionFactory.create()
+    template = TemplateFactory.create(name="Driver Skills")
+    url = reverse("positions-test-templates", args=[position.id])
+    api_client.force_authenticate(user=admin)
+
+    from positions.models import PositionTestTemplateAssignment
+
+    class _FailingQuerySet:
+        @staticmethod
+        def delete():
+            raise ProgrammingError("relation does not exist")
+
+    class _FailingManager:
+        @staticmethod
+        def filter(*args, **kwargs):
+            return _FailingQuerySet()
+
+    monkeypatch.setattr(PositionTestTemplateAssignment, "objects", _FailingManager())
+
+    res = api_client.put(
+        url,
+        {"assignments": [{"template_id": template.id, "order": 0}]},
+        format="json",
+    )
+
+    assert res.status_code == 503
+    assert "Run migrations for the positions app" in res.data["detail"]

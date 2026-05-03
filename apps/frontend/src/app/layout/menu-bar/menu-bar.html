@@ -1,28 +1,25 @@
 <nav
-  role="navigation"
+  class="ff-menu"
+  [class.ff-menu--mobile]="variant === 'mobile'"
+  [class.ff-menu--desktop]="variant === 'desktop'"
   aria-label="Main navigation"
-  class="h-[72px] bg-slate-900 border-t border-slate-800
-         flex items-center justify-around px-2"
 >
-  @for (item of items; track item.route) {
-    <a
-      [routerLink]="item.route"
-      routerLinkActive="text-blue-400 bg-slate-800/40"
-      [routerLinkActiveOptions]="{ exact: true }"
-      #rla="routerLinkActive"
-      [attr.aria-current]="rla.isActive ? 'page' : null"
-      class="group flex flex-col items-center justify-center gap-1
-             px-3 py-2 rounded-xl
-             text-slate-400 hover:text-white hover:bg-slate-800/30
-             transition focus:outline-none focus:ring-2 focus:ring-blue-500/40"
-    >
-      <span class="text-lg leading-none" aria-hidden="true">
-        {{ item.icon }}
-      </span>
+  <div class="ff-menu__items">
+    @for (item of items; track item.route) {
+      <a
+        class="ff-menu__link"
+        [routerLink]="item.route"
+        routerLinkActive="ff-menu__link--active"
+        [routerLinkActiveOptions]="{ exact: item.route === '/dashboard' }"
+        #rla="routerLinkActive"
+        [attr.aria-current]="rla.isActive ? 'page' : null"
+      >
+        <span class="ff-menu__icon" aria-hidden="true">
+          <svg [lucideIcon]="item.icon" class="ff-menu__icon-svg"></svg>
+        </span>
 
-      <span class="text-[11px] font-medium">
-        {{ item.label }}
-      </span>
-    </a>
-  }
+        <span class="ff-menu__label">{{ item.label }}</span>
+      </a>
+    }
+  </div>
 </nav>

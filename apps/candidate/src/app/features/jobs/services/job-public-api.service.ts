@@ -52,4 +52,12 @@ export class JobPublicApiService {
       createdAt: dto.created_at,
     };
   }
+
+  getOfferById(id: number): Observable<JobOffer> {
+    return this.http
+      .get<PublicJobOfferDto>(`${this.baseUrl}/${id}/`)
+      .pipe(
+        map((response) => this.mapDtoToModel(response))
+      );
+  }
 }

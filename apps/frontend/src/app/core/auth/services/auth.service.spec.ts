@@ -25,9 +25,8 @@ describe('AuthService', () => {
     httpMock.verify();
   });
 
-  it('login should POST /login/ with LoginRequest payload and return LoginResponse', () => {
+  it('login should POST /login/ with email/password and return LoginResponse', () => {
     const payload: LoginRequest = {
-      profile: 'driver',
       email: 'test@test.com',
       password: 'password123',
     };
@@ -35,6 +34,7 @@ describe('AuthService', () => {
     const mockResponse: LoginResponse = {
       access: 'ACCESS_TOKEN',
       refresh: 'REFRESH_TOKEN',
+      user: null,
     };
 
     service.login(payload).subscribe((res) => {
@@ -43,7 +43,10 @@ describe('AuthService', () => {
 
     const req = httpMock.expectOne(`${base}/login/`);
     expect(req.request.method).toBe('POST');
-    expect(req.request.body).toEqual(payload);
+    expect(req.request.body).toEqual({
+      email: payload.email,
+      password: payload.password,
+    });
 
     req.flush(mockResponse);
   });

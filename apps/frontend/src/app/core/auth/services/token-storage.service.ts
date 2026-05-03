@@ -6,69 +6,45 @@ export class TokenStorageService {
   private readonly REFRESH_KEY = 'auth_refresh';
   private readonly REMEMBER_KEY = 'auth_remember';
 
-  /* ==============================
-     SAVE TOKENS
-  ============================== */
-
   saveTokens(access: string, refresh: string, rememberMe: boolean): void {
-    const storage = rememberMe ? localStorage : sessionStorage;
+    const targetStorage = rememberMe ? localStorage : sessionStorage;
     const otherStorage = rememberMe ? sessionStorage : localStorage;
 
-    storage.setItem(this.ACCESS_KEY, access);
-    storage.setItem(this.REFRESH_KEY, refresh);
-    storage.setItem(this.REMEMBER_KEY, JSON.stringify(rememberMe));
+    this.clearStorage(otherStorage);
 
-    // Nettoie l’autre storage pour éviter conflits
-    otherStorage.removeItem(this.ACCESS_KEY);
-    otherStorage.removeItem(this.REFRESH_KEY);
-    otherStorage.removeItem(this.REMEMBER_KEY);
+    targetStorage.setItem(this.ACCESS_KEY, access);
+    targetStorage.setItem(this.REFRESH_KEY, refresh);
+    targetStorage.setItem(this.REMEMBER_KEY, String(rememberMe));
   }
 
-  /* ==============================
-     GETTERS
-  ============================== */
-
   getAccessToken(): string | null {
-    return (
-      localStorage.getItem(this.ACCESS_KEY) ??
-      sessionStorage.getItem(this.ACCESS_KEY)
-    );
+    return this.read(this.ACCESS_KEY);
   }
 
   getRefreshToken(): string | null {
-    return (
-      localStorage.getItem(this.REFRESH_KEY) ??
-      sessionStorage.getItem(this.REFRESH_KEY)
-    );
+    return this.read(this.REFRESH_KEY);
   }
 
   getRememberMe(): boolean {
-    const val =
-      localStorage.getItem(this.REMEMBER_KEY) ??
-      sessionStorage.getItem(this.REMEMBER_KEY);
-
-    return val ? JSON.parse(val) : false;
+    return this.read(this.REMEMBER_KEY) === 'true';
   }
-
-  /* ==============================
-     AUTH STATE
-  ============================== */
 
   isAuthenticated(): boolean {
     return !!this.getAccessToken();
   }
 
-  /* ==============================
-     CLEAR TOKENS
-  ============================== */
-
   clear(): void {
-    localStorage.removeItem(this.ACCESS_KEY);
-    localStorage.removeItem(this.REFRESH_KEY);
-    localStorage.removeItem(this.REMEMBER_KEY);
+    this.clearStorage(localStorage);
+    this.clearStorage(sessionStorage);
+  }
 
-    sessionStorage.removeItem(this.ACCESS_KEY);
-    sessionStorage.removeItem(this.REFRESH_KEY);
-    sessionStorage.removeItem(this.REMEMBER_KEY);
+  private read(key: string): string | null {
+    return localStorage.getItem(key) ?? sessionStorage.getItem(key);
+  }
+
+  private clearStorage(storage: Storage): void {
+    storage.removeItem(this.ACCESS_KEY);
+    storage.removeItem(this.REFRESH_KEY);
+    storage.removeItem(this.REMEMBER_KEY);
   }
 }

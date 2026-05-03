@@ -3,10 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import { UiAlertComponent } from '@lib-ui/alert/alert.component';
-import { UiCardComponent } from '@lib-ui/card/card.component';
-import { UiTextInputComponent } from '@lib-ui/text-input/text-input.component';
-import { UiTextareaComponent } from '@lib-ui/textarea/textarea.component';
-import { UiButtonPrimaryComponent } from '@lib-ui/button-primary/button-primary.component';
 
 export type PoolFormMode = 'create' | 'edit' | 'view';
 
@@ -23,10 +19,6 @@ export type PoolFormGroup = FormGroup<{
     CommonModule,
     ReactiveFormsModule,
     UiAlertComponent,
-    UiCardComponent,
-    UiTextInputComponent,
-    UiTextareaComponent,
-    UiButtonPrimaryComponent,
   ],
   templateUrl: './pool-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

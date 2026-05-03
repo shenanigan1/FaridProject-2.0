@@ -1,0 +1,218 @@
+<section class="ff-jobs-page">
+  <main class="ff-jobs-main">
+      <label class="ff-jobs-search" aria-label="Search job offers">
+        <svg [lucideIcon]="icons.search" class="ff-jobs-search__icon" aria-hidden="true"></svg>
+      <input [formControl]="searchCtrl" type="search" aria-label="Search job offers" />
+    </label>
+
+    <section class="ff-jobs-filters" aria-label="Job filters">
+      <label class="ff-jobs-filter">
+        <svg [lucideIcon]="icons.mapPin" class="ff-jobs-filter__icon" aria-hidden="true"></svg>
+        <select [formControl]="locationCtrl">
+          @if (locationOptions$ | async; as locationOptions) {
+            @for (option of locationOptions; track option.value) {
+              <option [value]="option.value">{{ option.label }}</option>
+            }
+          }
+        </select>
+        <svg [lucideIcon]="icons.dashboard" class="ff-jobs-filter__chevron" aria-hidden="true"></svg>
+      </label>
+
+      <label class="ff-jobs-filter">
+        <svg [lucideIcon]="icons.documents" class="ff-jobs-filter__icon" aria-hidden="true"></svg>
+        <select [formControl]="contractTypeCtrl">
+          @if (contractTypeOptions$ | async; as contractTypeOptions) {
+            @for (option of contractTypeOptions; track option.value) {
+              <option [value]="option.value">{{ option.label }}</option>
+            }
+          }
+        </select>
+        <svg [lucideIcon]="icons.dashboard" class="ff-jobs-filter__chevron" aria-hidden="true"></svg>
+      </label>
+
+      <label class="ff-jobs-filter">
+        <svg [lucideIcon]="icons.badge_check" class="ff-jobs-filter__icon" aria-hidden="true"></svg>
+        <select [formControl]="statusCtrl">
+          @if (statusOptions$ | async; as statusOptions) {
+            @for (option of statusOptions; track option.value) {
+              <option [value]="option.value">{{ option.label }}</option>
+            }
+          }
+        </select>
+        <svg [lucideIcon]="icons.dashboard" class="ff-jobs-filter__chevron" aria-hidden="true"></svg>
+      </label>
+    </section>
+
+    @if (isLoading) {
+      <p class="ff-jobs-state">Loading job offers...</p>
+    }
+
+    @if (!isLoading && error) {
+      <section class="ff-jobs-alert" role="alert">
+        {{ error }}
+        <button type="button" (click)="load()">Retry</button>
+      </section>
+    }
+
+    @if (!isLoading && !error) {
+      @if (jobOffers$ | async; as jobOffers) {
+        <section class="ff-jobs-list" aria-label="Job cards">
+          @for (offer of jobOffers; track trackJob($index, offer)) {
+            <article class="ff-job-card" [class.ff-job-card--active]="offer.status === 'active'">
+              <header class="ff-job-card__header">
+                <div>
+                  <h1 class="ff-job-card__title">{{ offer.title }}</h1>
+                  @if (offer.companyName) {
+                    <p class="ff-job-card__company">{{ offer.companyName }}</p>
+                  }
+                  <p class="ff-job-card__location">
+                    @if (offer.location) {
+                      <svg [lucideIcon]="icons.mapPin" class="ff-job-card__mini-icon" aria-hidden="true"></svg>
+                      <span>{{ offer.location }}</span>
+                    }
+                    <span>{{ offer.contractType }}</span>
+                  </p>
+                </div>
+
+                <span
+                  class="ff-job-card__status"
+                  [class.ff-job-card__status--active]="offer.status === 'active'"
+                  [class.ff-job-card__status--draft]="offer.status === 'draft'"
+                >
+                  {{ offer.status }}
+                </span>
+              </header>
+
+              <div class="ff-job-card__meta">
+                <span class="ff-job-card__truck">
+                  <svg [lucideIcon]="icons.company" class="ff-job-card__mini-icon" aria-hidden="true"></svg>
+                  {{ offer.department }}
+                </span>
+
+                <span class="ff-job-card__divider"></span>
+
+                <span class="ff-job-card__applicants">{{ offer.applicants }}</span>
+              </div>
+
+              <footer class="ff-job-card__actions">
+                <button type="button" class="ff-job-card__manage" (click)="openEdit(offer)">
+                  Manage
+                </button>
+                <button
+                  type="button"
+                  class="ff-job-card__more"
+                  aria-label="Open job applicants"
+                  (click)="openApplicants(offer)"
+                >
+                  <svg [lucideIcon]="icons.moreVertical" class="ff-job-card__more-icon"></svg>
+                </button>
+              </footer>
+            </article>
+          }
+
+          @if (jobOffers.length === 0) {
+            <p class="ff-jobs-state">No job offers found.</p>
+          }
+        </section>
+      }
+    }
+  </main>
+
+  <button type="button" class="ff-jobs-fab" aria-label="Create job offer" (click)="openCreate()">
+    <svg [lucideIcon]="icons.plus" class="ff-jobs-fab__icon"></svg>
+  </button>
+
+  @if (editorMode) {
+    <section class="ff-jobs-editor" role="dialog" aria-modal="true" aria-label="Manage job offer">
+      <div class="ff-jobs-editor__panel">
+        <header class="ff-jobs-editor__header">
+          <div>
+            <p>{{ editorMode === 'create' ? 'NEW OFFER' : 'JOB CONTROL' }}</p>
+            <h2>{{ editorMode === 'create' ? 'Create job offer' : 'Manage job offer' }}</h2>
+          </div>
+          <button type="button" class="ff-jobs-editor__close" aria-label="Close editor" (click)="closeEditor()">
+            x
+          </button>
+        </header>
+
+        @if (apiError) {
+          <p class="ff-jobs-editor__error" role="alert">{{ apiError }}</p>
+        }
+
+        <form [formGroup]="editorForm" class="ff-jobs-editor__form" (ngSubmit)="saveJob()">
+          <div class="ff-jobs-editor__field">
+            <label for="job-company">Company</label>
+            @if (companies$ | async; as companies) {
+              @if (companies.length > 0) {
+                <select id="job-company" formControlName="company">
+                  @for (company of companies; track company.id) {
+                    <option [ngValue]="company.id">{{ company.name }}</option>
+                  }
+                </select>
+              } @else {
+                <input id="job-company" formControlName="company" type="number" min="1" />
+              }
+            }
+          </div>
+
+          <label>
+            <span>Title</span>
+            <input formControlName="title" type="text" />
+          </label>
+
+          <div class="ff-jobs-editor__grid">
+            <label>
+              <span>Location</span>
+              <input formControlName="location" type="text" />
+            </label>
+            <label>
+              <span>Contract</span>
+              <input formControlName="contract_type" type="text" />
+            </label>
+          </div>
+
+          <div class="ff-jobs-editor__grid">
+            <label>
+              <span>Department</span>
+              <input formControlName="department" type="text" />
+            </label>
+            <label>
+              <span>Salary</span>
+              <input formControlName="salary" type="number" min="0" />
+            </label>
+          </div>
+
+          <label>
+            <span>Description</span>
+            <textarea formControlName="description" rows="4"></textarea>
+          </label>
+
+          <label class="ff-jobs-editor__toggle">
+            <input formControlName="is_active" type="checkbox" />
+            <span>Active offer</span>
+          </label>
+
+          <footer class="ff-jobs-editor__actions">
+            @if (editorMode === 'edit' && selectedOffer) {
+              <button
+                type="button"
+                class="ff-jobs-editor__archive"
+                [disabled]="isSubmitting || selectedOffer.status === 'draft'"
+                (click)="archiveJob(selectedOffer)"
+              >
+                Archive
+              </button>
+            }
+
+            <button type="button" class="ff-jobs-editor__cancel" [disabled]="isSubmitting" (click)="closeEditor()">
+              Cancel
+            </button>
+            <button type="submit" class="ff-jobs-editor__save" [disabled]="isSubmitting">
+              {{ isSubmitting ? 'Saving...' : 'Save' }}
+            </button>
+          </footer>
+        </form>
+      </div>
+    </section>
+  }
+</section>

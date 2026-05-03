@@ -27,7 +27,7 @@ interface PoolsStoreMock {
   selectedPool: WritableSignal<PoolLike | null>;
 
   loadOne: jasmine.Spy<(id: string) => void>;
-  create: jasmine.Spy<(dto: CreatePoolDto, onSuccess: () => void) => void>;
+  create: jasmine.Spy<(dto: CreatePoolDto, onSuccess: (created: PoolLike) => void) => void>;
   update: jasmine.Spy<(id: string, dto: UpdatePoolDto, onSuccess: () => void) => void>;
 }
 
@@ -40,7 +40,7 @@ describe('PoolEditorPageComponent', () => {
     selectedPool: signal<PoolLike | null>(null),
 
     loadOne: jasmine.createSpy<(id: string) => void>('loadOne'),
-    create: jasmine.createSpy<(dto: CreatePoolDto, onSuccess: () => void) => void>('create'),
+    create: jasmine.createSpy<(dto: CreatePoolDto, onSuccess: (created: PoolLike) => void) => void>('create'),
     update: jasmine.createSpy<(id: string, dto: UpdatePoolDto, onSuccess: () => void) => void>('update'),
   });
 
@@ -50,7 +50,8 @@ describe('PoolEditorPageComponent', () => {
     } as ActivatedRoute);
 
   const makeRouterMock = (): jasmine.SpyObj<Router> => {
-    const router = jasmine.createSpyObj<Router>('Router', ['navigateByUrl', 'createUrlTree']);
+    const router = jasmine.createSpyObj<Router>('Router', ['navigate', 'navigateByUrl', 'createUrlTree']);
+    router.navigate.and.returnValue(Promise.resolve(true));
     router.navigateByUrl.and.returnValue(Promise.resolve(true));
     router.createUrlTree.and.returnValue({} as UrlTree);
     return router;
@@ -195,6 +196,20 @@ describe('PoolEditorPageComponent', () => {
       description: 'hello',
     });
     expect(cb).toEqual(jasmine.any(Function));
+  });
+
+  it('submit() should navigate to the created pool questions page so questions can be added', () => {
+    const { component, storeMock, routerMock } = setup({ id: null });
+
+    component.form.controls.name.setValue('  Pool Name  ');
+    component.form.controls.code.setValue(validCode('Pool Code'));
+    component.form.controls.description.setValue('');
+    component.submit();
+
+    const [, cb] = storeMock.create.calls.mostRecent().args;
+    cb({ id: 'p-new', name: 'Pool Name', code: 'POOL_CODE', description: '' });
+
+    expect(routerMock.navigate).toHaveBeenCalledWith(['/pools', 'p-new']);
   });
 
   it('submit() should call store.update in detail mode with trimmed dto', () => {

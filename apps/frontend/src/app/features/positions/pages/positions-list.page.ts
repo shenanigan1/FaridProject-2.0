@@ -1,18 +1,19 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  inject,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { BehaviorSubject, combineLatest, map, startWith } from 'rxjs';
+import { BehaviorSubject, combineLatest, forkJoin, map, startWith } from 'rxjs';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { PositionsApiService, PositionDto } from '@features/positions/services/positions-api.service';
 
 import { UiBadgeComponent, UiBadgeTone } from '@lib-ui/badge/badge.component';
-import { UiSelectComponent, UiSelectOption } from '@lib-ui/select/select.component';
-
-type LocationValue = 'all' | 'chicago' | 'dallas' | 'phoenix' | 'remote';
-type TruckTypeValue = 'all' | 'long-haul' | 'dry-van' | 'tanker' | 'flatbed';
-type PriorityValue = 'all' | 'urgent' | 'medium' | 'low';
 
 interface BadgeVm {
   label: string;
@@ -45,7 +46,6 @@ function asArrayOrResults<T>(value: unknown): T[] {
     CommonModule,
     RouterModule,
     ReactiveFormsModule,
-    UiSelectComponent,
     UiBadgeComponent,
   ],
   templateUrl: './positions-list.page.html',
@@ -54,77 +54,32 @@ function asArrayOrResults<T>(value: unknown): T[] {
 export class PositionsListPage {
   private readonly api = inject(PositionsApiService);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly destroyRef = inject(DestroyRef);
 
   private readonly positionsSubject = new BehaviorSubject<PositionDto[]>([]);
   readonly positions$ = this.positionsSubject.asObservable();
+  private readonly appliedCountByPositionSubject = new BehaviorSubject<Record<number, number>>({});
+  readonly appliedCountByPosition$ = this.appliedCountByPositionSubject.asObservable();
 
-  // Search + dropdown filters
   readonly searchCtrl = new FormControl('', { nonNullable: true });
-  readonly locationCtrl = new FormControl<LocationValue>('all', { nonNullable: true });
-  readonly truckTypeCtrl = new FormControl<TruckTypeValue>('all', { nonNullable: true });
-  readonly priorityCtrl = new FormControl<PriorityValue>('all', { nonNullable: true });
-
-  // Dropdown options (CVA select)
-  readonly locationOptions: UiSelectOption<LocationValue>[] = [
-    { label: 'Location', value: 'all' },
-    { label: 'Chicago, IL', value: 'chicago' },
-    { label: 'Dallas, TX', value: 'dallas' },
-    { label: 'Phoenix, AZ', value: 'phoenix' },
-    { label: 'Remote', value: 'remote' },
-  ];
-
-  readonly truckTypeOptions: UiSelectOption<TruckTypeValue>[] = [
-    { label: 'Truck Type', value: 'all' },
-    { label: 'Long Haul', value: 'long-haul' },
-    { label: 'Dry Van', value: 'dry-van' },
-    { label: 'Tanker', value: 'tanker' },
-    { label: 'Flatbed', value: 'flatbed' },
-  ];
-
-  readonly priorityOptions: UiSelectOption<PriorityValue>[] = [
-    { label: 'Priority', value: 'all' },
-    { label: 'Urgent', value: 'urgent' },
-    { label: 'Medium', value: 'medium' },
-    { label: 'Low', value: 'low' },
-  ];
 
   readonly filteredPositions$ = combineLatest([
     this.positions$,
     this.searchCtrl.valueChanges.pipe(startWith(this.searchCtrl.value)),
-    this.locationCtrl.valueChanges.pipe(startWith(this.locationCtrl.value)),
-    this.truckTypeCtrl.valueChanges.pipe(startWith(this.truckTypeCtrl.value)),
-    this.priorityCtrl.valueChanges.pipe(startWith(this.priorityCtrl.value)),
   ]).pipe(
-    map(([positions, search, location, truckType, priority]) => {
+    map(([positions, search]) => {
       const s = search.trim().toLowerCase();
 
       return positions.filter((p) => {
-        const matchesSearch = !s || p.title.toLowerCase().includes(s);
+        const searchable = [
+          p.title,
+          p.location,
+          p.contract_type,
+          p.department,
+          p.description,
+        ].filter(Boolean).join(' ').toLowerCase();
 
-        const loc = (p.location ?? '').toLowerCase();
-        const matchesLocation =
-          location === 'all' ||
-          (location === 'remote' && loc.includes('remote')) ||
-          (location === 'chicago' && loc.includes('chicago')) ||
-          (location === 'dallas' && loc.includes('dallas')) ||
-          (location === 'phoenix' && loc.includes('phoenix'));
-
-        const blob = `${p.title} ${p.department ?? ''} ${p.description ?? ''}`.toLowerCase();
-        const matchesTruckType =
-          truckType === 'all' ||
-          (truckType === 'long-haul' && blob.includes('long')) ||
-          (truckType === 'dry-van' && blob.includes('dry')) ||
-          (truckType === 'tanker' && blob.includes('tanker')) ||
-          (truckType === 'flatbed' && blob.includes('flatbed'));
-
-        const title = p.title.toLowerCase();
-        const matchesPriority =
-          priority === 'all' ||
-          (priority === 'urgent' && title.includes('senior')) ||
-          (priority === 'medium' && title.includes('tanker')) ||
-          (priority === 'low' && p.is_active === false);
-
-        return matchesSearch && matchesLocation && matchesTruckType && matchesPriority;
+        return !s || searchable.includes(s);
       });
     }),
   );
@@ -141,13 +96,16 @@ export class PositionsListPage {
     this.error = null;
     this.cdr.markForCheck();
 
-    this.api
-      .list()
-      .pipe(takeUntilDestroyed())
+    forkJoin({
+      positions: this.api.list(),
+      applicationCounts: this.api.listApplicationCounts(),
+    })
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (data: unknown) => {
-          const list = asArrayOrResults<PositionDto>(data);
+        next: ({ positions, applicationCounts }) => {
+          const list = asArrayOrResults<PositionDto>(positions);
           this.positionsSubject.next(list);
+          this.appliedCountByPositionSubject.next(applicationCounts);
 
           this.isLoading = false;
           this.cdr.markForCheck();
@@ -162,11 +120,10 @@ export class PositionsListPage {
 
   getBadge(p: PositionDto): BadgeVm {
     if (p.is_active === false) return { label: 'INACTIVE', tone: 'neutral' };
-
-    const t = p.title.toLowerCase();
-    if (t.includes('senior')) return { label: 'URGENT', tone: 'danger' };
-    if (t.includes('tanker')) return { label: 'MEDIUM', tone: 'warning' };
-
     return { label: 'ACTIVE', tone: 'success' };
+  }
+
+  getAppliedCount(positionId: number, counts: Record<number, number>): number {
+    return counts[positionId] ?? 0;
   }
 }

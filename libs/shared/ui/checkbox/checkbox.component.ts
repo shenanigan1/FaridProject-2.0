@@ -15,10 +15,10 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   selector: 'app-ui-checkbox',
   imports: [CommonModule],
   template: `
-    <label class="inline-flex items-start gap-3 select-none">
+    <label class="inline-flex select-none items-start gap-3">
       <input
         type="checkbox"
-        class="mt-0.5 h-4 w-4 accent-blue-500"
+        class="ff-checkbox"
         [disabled]="disabled()"
         [checked]="value()"
         [attr.aria-invalid]="error ? 'true' : null"
@@ -28,15 +28,15 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
       <div>
         @if (label) {
-          <div class="text-sm text-slate-200">{{ label }}</div>
+          <div class="ff-field-label">{{ label }}</div>
         }
 
         @if (hint) {
-          <div class="text-xs text-slate-500">{{ hint }}</div>
+          <div class="ff-field-hint">{{ hint }}</div>
         }
 
         @if (error) {
-          <div class="mt-1 text-xs text-red-300">{{ error }}</div>
+          <div class="ff-field-error">{{ error }}</div>
         }
       </div>
     </label>

@@ -73,7 +73,7 @@ export class PoolsStore {
 
   create(
     dto: { code: string; name: string; description?: string },
-    onSuccess?: () => void
+    onSuccess?: (created: QuestionPool) => void
   ): void {
     this._isLoading.set(true);
     this._error.set(null);
@@ -82,9 +82,11 @@ export class PoolsStore {
       .create(dto)
       .pipe(finalize(() => this._isLoading.set(false)))
       .subscribe({
-        next: () => {
+        next: (item) => {
+          const created = this.mapApiToUi(item as unknown as PoolsApiItem);
+          this._selectedPool.set(created);
           this.loadAll();
-          onSuccess?.();
+          onSuccess?.(created);
         },
         error: (err: unknown) => this._error.set(this.toMessage(err)),
       });

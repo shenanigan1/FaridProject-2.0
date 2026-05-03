@@ -1,0 +1,70 @@
+<section class="ff-app-screen">
+  <div class="ff-app-container ff-app-stack">
+    <header class="ff-app-header">
+      <div>
+        <p class="ff-app-kicker">ADMIN</p>
+        <h1 class="ff-app-title">Role Management</h1>
+      </div>
+      <a [routerLink]="['/dashboard']" class="ff-btn ff-btn-secondary">
+        Back
+      </a>
+    </header>
+
+    @if (pageMessage) {
+      <div class="ff-alert-inline">
+        {{ pageMessage }}
+      </div>
+    }
+
+    <article class="ff-app-panel">
+      <h2 class="ff-row-title" style="margin-bottom: 0.75rem">Create user</h2>
+      <form [formGroup]="createForm" (ngSubmit)="createUser()" class="ff-form-grid ff-form-grid--two">
+        <input formControlName="email" type="email" aria-label="Email" class="ff-control" />
+        <input formControlName="password" type="password" aria-label="Temporary password" class="ff-control" />
+        <input formControlName="first_name" type="text" aria-label="First name" class="ff-control" />
+        <input formControlName="last_name" type="text" aria-label="Last name" class="ff-control" />
+        <select formControlName="role" class="ff-control" aria-label="Role">
+          @for (role of roleOptions; track role) {
+            <option [value]="role">{{ role }}</option>
+          }
+        </select>
+        <button type="submit" class="ff-btn ff-btn-primary">
+          Create user
+        </button>
+      </form>
+    </article>
+
+    <article class="ff-app-panel">
+      <h2 class="ff-row-title" style="margin-bottom: 0.75rem">Existing users</h2>
+      @if (isLoading) {
+        <p class="ff-empty">Loading users...</p>
+      } @else {
+        <div class="ff-app-stack">
+          @for (user of users; track user.id) {
+            <div class="ff-data-card">
+              <div class="ff-inline-actions" style="justify-content: space-between; margin-bottom: 0.75rem">
+                <div>
+                  <p class="ff-row-title">{{ user.first_name }} {{ user.last_name }}</p>
+                  <p class="ff-row-meta">{{ user.email }}</p>
+                </div>
+                <span class="ff-status-pill" [class.ff-status-pill--muted]="!user.is_active">
+                  {{ user.is_active ? 'Active' : 'Inactive' }}
+                </span>
+              </div>
+              <div class="ff-inline-actions">
+                <select class="ff-control" style="max-width: 12rem" [value]="user.role" (change)="onRoleChange(user, $event)">
+                  @for (role of roleOptions; track role) {
+                    <option [value]="role">{{ role }}</option>
+                  }
+                </select>
+                <button type="button" class="ff-btn ff-btn-secondary" (click)="toggleUser(user)">
+                  {{ user.is_active ? 'Deactivate' : 'Activate' }}
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </article>
+  </div>
+</section>

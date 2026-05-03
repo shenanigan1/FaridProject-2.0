@@ -1,76 +1,50 @@
-<header
-  class="flex h-[72px] items-center justify-between px-6
-         bg-gradient-to-r from-slate-900 via-slate-900 to-slate-800
-         border-b border-slate-800"
->
-  <!-- Left -->
-  <div class="flex items-center gap-3">
-    <div
-      class="h-10 w-10 rounded-xl bg-blue-600/90 flex items-center justify-center
-             shadow-md shadow-blue-600/20"
-      aria-hidden="true"
-    >
-      <span class="text-white text-lg">💼</span>
-    </div>
-
-    <div class="leading-tight">
-      <div class="text-white font-semibold text-sm sm:text-base">
-        {{ title }}
-      </div>
-
-      @if (subtitle) {
-        <div class="text-slate-400 text-xs">
-          {{ subtitle }}
-        </div>
-      }
-    </div>
+<header class="ff-topbar">
+  <div class="ff-topbar__brand" aria-label="Application section">
+    <svg [lucideIcon]="icons.menu" class="ff-topbar__menu-mark" aria-hidden="true"></svg>
+    <span class="ff-topbar__brand-name">{{ title }}</span>
   </div>
 
-  <!-- Right -->
-  <div class="flex items-center gap-3">
-    <!-- Notifications -->
-    <button
-      type="button"
-      class="relative h-10 w-10 rounded-xl flex items-center justify-center
-             bg-slate-800/70 border border-slate-700
-             hover:bg-slate-800 hover:border-slate-600
-             transition"
-      aria-label="Notifications"
-    >
-      <span class="text-slate-200 text-lg">🔔</span>
-
+  <div class="ff-topbar__actions">
+    <button type="button" class="ff-topbar__icon-button" aria-label="Notifications">
+      <svg [lucideIcon]="icons.bell" class="ff-topbar__action-icon"></svg>
       @if (notificationCount > 0) {
-        <span
-          class="absolute -top-1 -right-1 min-w-5 h-5 px-1
-                 rounded-full bg-red-500 text-white text-[11px]
-                 flex items-center justify-center border border-slate-900"
-        >
-          {{ notificationCount }}
-        </span>
+        <span class="ff-topbar__notification-count">{{ notificationCount }}</span>
       }
     </button>
 
-    <!-- Avatar -->
-    @if (user) {
-      <div
-        class="h-10 w-10 rounded-full overflow-hidden
-               bg-slate-700 border border-slate-600
-               flex items-center justify-center
-               shadow-sm"
-        aria-label="User avatar"
-      >
-        @if (user.avatarUrl) {
-          <img
-            [src]="user.avatarUrl"
-            alt="avatar"
-            class="h-full w-full object-cover"
-          />
-        } @else {
-          <span class="text-white font-semibold">
-            {{ user.fullName }}
-          </span>
-        }
-      </div>
-    }
+    <button
+      type="button"
+      class="ff-topbar__user"
+      aria-label="Open user menu"
+      [attr.aria-expanded]="menuOpen()"
+      (click)="toggleMenu()"
+    >
+      <span class="ff-topbar__avatar">{{ userInitials }}</span>
+    </button>
   </div>
+
+  @if (menuOpen()) {
+    <div class="ff-topbar__menu">
+      @if (user) {
+        <div class="ff-topbar__menu-user">
+          <span class="ff-topbar__avatar ff-topbar__avatar--menu">{{ userInitials }}</span>
+          <span class="ff-topbar__menu-name">{{ user.fullName }}</span>
+        </div>
+      }
+
+      <button type="button" class="ff-topbar__menu-action" (click)="requestEditProfile()">
+        <svg [lucideIcon]="icons.user" class="ff-topbar__menu-icon"></svg>
+        Edit profile
+      </button>
+
+      <button
+        type="button"
+        class="ff-topbar__menu-action ff-topbar__menu-action--danger"
+        (click)="requestLogout()"
+      >
+        <svg [lucideIcon]="icons.logout" class="ff-topbar__menu-icon"></svg>
+        Logout
+      </button>
+    </div>
+  }
 </header>

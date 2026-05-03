@@ -1,0 +1,14 @@
+.ff-auth-card {
+  width: 100%;
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+  background-color: var(--ff-color-surface-1);
+  border: 1px solid var(--ff-color-border);
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.35);
+}
+
+@media (min-width: 640px) {
+  .ff-auth-card {
+    padding: 1.75rem;
+  }
+}

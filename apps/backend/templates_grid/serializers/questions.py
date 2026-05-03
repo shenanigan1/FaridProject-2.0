@@ -41,6 +41,7 @@ class SkillQuestionSerializer(serializers.ModelSerializer):
         """
         Cross-field validation.
         - Practical questions should have rubric (recommended).
+        - Free-text questions are manually scored by the manager through points.
         - Non-practical can keep rubric empty.
         """
         # When partial update, instance may exist
@@ -54,6 +55,15 @@ class SkillQuestionSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError(
                     {"rubric": "Rubric is required for practical questions."}
                 )
+
+        if fmt == QuestionFormat.FREE_TEXT and rubric in (None, "", {}, []):
+            attrs["rubric"] = {"scoring": "manual"}
+
+        if fmt == QuestionFormat.YES_NO and rubric in (None, "", {}, []):
+            attrs["rubric"] = {"options": ["Oui", "Non"]}
+
+        if fmt == QuestionFormat.RATING and rubric in (None, "", {}, []):
+            attrs["rubric"] = {"scoring": "rating"}
 
         points = attrs.get("points", getattr(self.instance, "points", None))
         if points is not None and points < 1:

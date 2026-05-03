@@ -130,7 +130,9 @@ export class PoolQuestionsPanelComponent implements OnInit {
 
   badgeLabel(format: QuestionFormat): string {
     if (format === 'mcq') return 'MULTIPLE CHOICE';
-    if (format === 'true_false') return 'TRUE/FALSE';
+    if (format === 'true_false' || format === 'yes_no') return 'OUI/NON';
+    if (format === 'free_text') return 'LIBRE NOTE';
+    if (format === 'rating') return 'NOTE';
     return 'PRACTICAL';
   }
 }

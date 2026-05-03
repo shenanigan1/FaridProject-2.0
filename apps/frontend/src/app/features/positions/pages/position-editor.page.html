@@ -1,16 +1,9 @@
 <app-form-page-shell [title]="shellTitle()" [subtitle]="shellSubtitle()">
   <div shell-actions>
-    <app-ui-link-button
-      [routerLink]="['/positions']"
-      label="Back"
-      variant="secondary"
-      size="sm"
-    />
+    <app-ui-link-button [routerLink]="['/positions']" label="Back" variant="secondary" size="sm" />
   </div>
 
   @if (state(); as state) {
-
-    <!-- READY -->
     @if (state.status === 'ready-create' || state.status === 'ready-edit') {
       <app-position-form
         [mode]="mode()"
@@ -21,23 +14,70 @@
         (submitForm)="submit()"
         (cancel)="cancel()"
       />
+
+      @if (state.status === 'ready-edit') {
+        <section class="ff-app-panel ff-app-stack">
+          <header>
+            <p class="ff-app-kicker">TEST WORKFLOW</p>
+            <h3 class="ff-section-title">Templates assignes</h3>
+            <p class="ff-app-subtitle">
+              Selectionne les templates disponibles pour les candidatures de ce poste.
+            </p>
+          </header>
+
+          <div class="ff-app-stack">
+            @for (template of availableTemplates(); track template.id) {
+              <article class="ff-data-card ff-app-stack">
+                <label class="ff-inline-actions">
+                  <input
+                    type="checkbox"
+                    class="ff-checkbox"
+                    [checked]="selectedTemplateIds().includes(template.id)"
+                    (change)="toggleTemplate(template.id)"
+                  />
+                  <span class="ff-row-title">{{ template.name }}</span>
+                </label>
+
+                @if (selectedTemplateIds().includes(template.id)) {
+                  <div class="ff-field-block">
+                    <label [attr.for]="'template-manager-' + template.id">Manager ID optionnel</label>
+                    <input
+                      [id]="'template-manager-' + template.id"
+                      type="number"
+                      class="ff-control"
+                      [value]="managerByTemplate()[template.id] ?? ''"
+                      (input)="onTemplateManagerInput(template.id, $event)"
+                    />
+                  </div>
+                }
+              </article>
+            }
+          </div>
+
+          @if (templatesMessage()) {
+            <div class="ff-alert-inline">{{ templatesMessage() }}</div>
+          }
+
+          <button
+            type="button"
+            class="ff-btn ff-btn-primary"
+            (click)="saveTemplateAssignments()"
+            [disabled]="templatesSaving()"
+          >
+            {{ templatesSaving() ? 'Saving...' : 'Save test templates' }}
+          </button>
+        </section>
+      }
     }
 
-    <!-- LOADING (edit only) -->
     @if (state.status === 'loading') {
-      <app-ui-card>
-        <div class="text-sm text-slate-400">Loading...</div>
-      </app-ui-card>
+      <section class="ff-app-panel">
+        <div class="ff-muted">Loading...</div>
+      </section>
     }
 
-    <!-- ERROR -->
     @if (state.status === 'error') {
-      <div
-        class="rounded-xl border border-red-500/25 bg-red-500/10 p-3 text-sm text-red-200"
-      >
-        {{ state.message }}
-      </div>
+      <div class="ff-alert-inline">{{ state.message }}</div>
     }
-
   }
 </app-form-page-shell>
