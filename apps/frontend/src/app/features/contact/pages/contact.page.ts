@@ -49,7 +49,7 @@ import { AdminUser, RolesAdminService, UserRole } from '@features/roles/services
           <div class="ff-app-stack">
             @for (user of filteredUsers(); track user.id) {
               <article class="ff-data-card" [routerLink]="['/contact', user.id]">
-                <div class="flex items-start justify-between gap-3">
+                <div class="ff-inline-actions" style="align-items: flex-start; justify-content: space-between">
                   <div>
                     <h2 class="ff-row-title">{{ user.first_name }} {{ user.last_name }}</h2>
                     <p class="ff-row-meta">{{ user.email }}</p>

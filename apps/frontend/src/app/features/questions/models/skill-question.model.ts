@@ -23,7 +23,7 @@ export interface SkillQuestionLegacy {
  * V2 (current)
  * Matches the new backend question authoring model.
  */
-export type QuestionFormat = 'mcq' | 'true_false' | 'practical';
+export type QuestionFormat = 'mcq' | 'true_false' | 'yes_no' | 'free_text' | 'rating' | 'practical';
 export type Difficulty = 'easy' | 'intermediate' | 'hard';
 
 /**

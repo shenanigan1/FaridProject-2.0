@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, convertToParamMap } from '@angular/router';
-import { of, throwError } from 'rxjs';
+import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
+import { of, skip, take, throwError } from 'rxjs';
 
 import {
   PositionApplicant,
@@ -13,6 +13,7 @@ describe('PositionApplicantsPage', () => {
   let fixture: ComponentFixture<PositionApplicantsPage>;
   let component: PositionApplicantsPage;
   let applicantsServiceSpy: jasmine.SpyObj<PositionApplicantsService>;
+  let routerSpy: jasmine.SpyObj<Router>;
 
   const applicants: PositionApplicant[] = [
     {
@@ -42,18 +43,22 @@ describe('PositionApplicantsPage', () => {
   beforeEach(async () => {
     applicantsServiceSpy = jasmine.createSpyObj<PositionApplicantsService>(
       'PositionApplicantsService',
-      ['listByPosition', 'launchTestForApplication'],
+      [
+        'listByPosition',
+        'rejectApplication',
+      ],
     );
+    routerSpy = jasmine.createSpyObj<Router>('Router', ['navigate']);
 
     applicantsServiceSpy.listByPosition.and.returnValue(of(applicants));
-    applicantsServiceSpy.launchTestForApplication.and.returnValue(
-      of([{ id: 91, application: 1, status: 'in_progress' }]),
-    );
+    applicantsServiceSpy.rejectApplication.and.returnValue(of({ id: 2, status: 'rejected' }));
+    routerSpy.navigate.and.resolveTo(true);
 
     await TestBed.configureTestingModule({
       imports: [PositionApplicantsPage],
       providers: [
         { provide: PositionApplicantsService, useValue: applicantsServiceSpy },
+        { provide: Router, useValue: routerSpy },
         {
           provide: ActivatedRoute,
           useValue: { snapshot: { paramMap: convertToParamMap({ id: '9' }) } },
@@ -72,13 +77,13 @@ describe('PositionApplicantsPage', () => {
   });
 
   it('filters applicants by search query', (done) => {
-    component.searchControl.setValue('jane');
-
-    component.filteredApplicants$.subscribe((filteredApplicants) => {
+    component.filteredApplicants$.pipe(skip(1), take(1)).subscribe((filteredApplicants) => {
       expect(filteredApplicants.length).toBe(1);
       expect(filteredApplicants[0].email).toBe('jane@example.com');
       done();
     });
+
+    component.searchControl.setValue('jane');
   });
 
   it('sets error message when API fails', async () => {
@@ -91,6 +96,7 @@ describe('PositionApplicantsPage', () => {
       imports: [PositionApplicantsPage],
       providers: [
         { provide: PositionApplicantsService, useValue: applicantsServiceSpy },
+        { provide: Router, useValue: routerSpy },
         {
           provide: ActivatedRoute,
           useValue: { snapshot: { paramMap: convertToParamMap({ id: '9' }) } },
@@ -109,14 +115,15 @@ describe('PositionApplicantsPage', () => {
   it('does not relaunch test for applicant with ongoing tests', () => {
     component.launchTest(applicants[0]);
 
-    expect(applicantsServiceSpy.launchTestForApplication).not.toHaveBeenCalled();
+    expect(routerSpy.navigate).not.toHaveBeenCalled();
     expect(component.launchMessage).toContain('already has an ongoing test');
   });
 
-  it('launches test for selected applicant without ongoing tests', () => {
+  it('opens the dedicated test relaunch workflow for an applicant without ongoing tests', () => {
     component.launchTest(applicants[1]);
 
-    expect(applicantsServiceSpy.launchTestForApplication).toHaveBeenCalledWith(2);
-    expect(component.launchMessage).toContain('test(s) launched');
+    expect(routerSpy.navigate).toHaveBeenCalledOnceWith(['/tests/relaunch', 8], {
+      queryParams: { applicationId: 2 },
+    });
   });
 });

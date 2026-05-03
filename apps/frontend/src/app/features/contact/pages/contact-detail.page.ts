@@ -38,13 +38,13 @@ const ROLE_OPTIONS: UserRole[] = [
       <div class="ff-app-container ff-app-stack">
         <header class="ff-app-header">
           <button routerLink="/contact" class="ff-btn ff-btn-secondary">
-            <svg [lucideIcon]="icons.back" class="h-4 w-4"></svg>
+            <svg [lucideIcon]="icons.back" style="width: 1rem; height: 1rem"></svg>
             Back
           </button>
 
           @if (contact()) {
             <button type="button" class="ff-btn ff-btn-secondary" (click)="menuOpen.set(true)">
-              <svg [lucideIcon]="icons.moreVertical" class="h-4 w-4"></svg>
+              <svg [lucideIcon]="icons.moreVertical" style="width: 1rem; height: 1rem"></svg>
             </button>
           }
         </header>
@@ -55,7 +55,7 @@ const ROLE_OPTIONS: UserRole[] = [
 
         @if (contact(); as currentContact) {
           <article class="ff-data-card">
-            <div class="flex items-start justify-between gap-3">
+            <div class="ff-inline-actions" style="align-items: flex-start; justify-content: space-between">
               <div>
                 <p class="ff-app-kicker">{{ currentContact.role }}</p>
                 <h1 class="ff-app-title">{{ fullName() }}</h1>
@@ -73,9 +73,9 @@ const ROLE_OPTIONS: UserRole[] = [
       </div>
 
       @if (menuOpen() && contact(); as currentContact) {
-        <div class="fixed inset-0 z-50 flex items-end bg-black/60 p-4">
-          <div class="ff-app-panel mx-auto w-full max-w-md">
-            <header class="ff-app-header mb-4">
+        <div class="ff-modal-scrim">
+          <div class="ff-app-panel" style="width: min(100%, 28rem)">
+            <header class="ff-app-header" style="margin-bottom: 1rem">
               <div>
                 <p class="ff-app-kicker">ACTIONS</p>
                 <h2 class="ff-app-title">Contact</h2>
@@ -83,7 +83,7 @@ const ROLE_OPTIONS: UserRole[] = [
             </header>
 
             <div class="ff-app-stack">
-              <button type="button" class="ff-btn ff-btn-secondary w-full" (click)="roleMenuOpen.set(!roleMenuOpen())">
+              <button type="button" class="ff-btn ff-btn-secondary" (click)="roleMenuOpen.set(!roleMenuOpen())">
                 Change role
               </button>
 
@@ -95,11 +95,11 @@ const ROLE_OPTIONS: UserRole[] = [
                 </select>
               }
 
-              <button type="button" class="ff-btn ff-btn-secondary w-full" (click)="toggleActive()">
+              <button type="button" class="ff-btn ff-btn-secondary" (click)="toggleActive()">
                 {{ currentContact.is_active ? 'Deactivate' : 'Activate' }}
               </button>
 
-              <button type="button" class="ff-btn ff-btn-primary w-full" (click)="dismissMenu()">
+              <button type="button" class="ff-btn ff-btn-primary" (click)="dismissMenu()">
                 Close
               </button>
             </div>

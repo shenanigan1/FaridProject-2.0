@@ -4,7 +4,7 @@
 
 .ff-app-shell {
   min-height: 100dvh;
-  background: #050608;
+  background: var(--ff-color-background);
   color: var(--ff-color-text-primary);
 }
 
@@ -51,7 +51,7 @@
 
 @media (min-width: 1024px) {
   .ff-app-shell__body {
-    grid-template-columns: 14rem minmax(0, 1fr);
+    grid-template-columns: 15.5rem minmax(0, 1fr);
     min-height: calc(100dvh - 4rem);
   }
 
@@ -66,9 +66,9 @@
     display: block;
     align-self: start;
     height: calc(100dvh - 4rem);
-    border-right: 1px solid rgba(64, 71, 82, 0.15);
-    background-color: #131313;
-    padding: 1rem;
+    border-right: 1px solid var(--ff-color-border-soft);
+    background-color: #050812;
+    padding: 1.25rem 1rem;
   }
 
   .ff-app-shell__main {

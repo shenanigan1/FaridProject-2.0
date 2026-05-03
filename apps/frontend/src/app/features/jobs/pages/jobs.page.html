@@ -101,9 +101,8 @@
                 <button
                   type="button"
                   class="ff-job-card__more"
-                  aria-label="Archive job offer"
-                  [disabled]="isSubmitting || offer.status === 'draft'"
-                  (click)="archiveJob(offer)"
+                  aria-label="Open job applicants"
+                  (click)="openApplicants(offer)"
                 >
                   <svg [lucideIcon]="icons.moreVertical" class="ff-job-card__more-icon"></svg>
                 </button>

@@ -6,10 +6,6 @@ import { take } from 'rxjs/operators';
 import { LucideDynamicIcon } from '@lucide/angular';
 
 import { APP_ICONS } from '@shared/icons/app-icons';
-import { UiAlertComponent } from '@lib-ui/alert/alert.component';
-import { UiTextInputComponent } from '@lib-ui/text-input/text-input.component';
-import { UiPasswordInputComponent } from '@lib-ui/password-input/password-input.component';
-import { UiButtonPrimaryComponent } from '@lib-ui/button-primary/button-primary.component';
 import { AuthSessionService } from '@core/auth/services/auth-session.service';
 import { ApiErrorResponse } from '@core/auth/models/auth.models';
 
@@ -21,10 +17,6 @@ import { ApiErrorResponse } from '@core/auth/models/auth.models';
     ReactiveFormsModule,
     RouterModule,
     LucideDynamicIcon,
-    UiAlertComponent,
-    UiTextInputComponent,
-    UiPasswordInputComponent,
-    UiButtonPrimaryComponent,
   ],
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],

@@ -1,114 +1,81 @@
 <section class="ff-login-screen">
   <div class="ff-login-shell">
-    <div class="w-full">
-      <header class="ff-login-header">
-        <div class="ff-login-brand">
-          <div class="ff-login-brand__icon">
-            <svg
-              [lucideIcon]="icons.brand"
-              class="h-6 w-6 text-white"
-              [attr.stroke-width]="2"
-            ></svg>
-          </div>
+    <header class="ff-login-header">
+      <div class="ff-login-brand">
+        <span class="ff-login-brand__icon" aria-hidden="true">
+          <svg [lucideIcon]="icons.brand"></svg>
+        </span>
 
-          <div class="ff-login-brand__content">
-            <h1 class="ff-login-brand__title">
-              <span class="text-white">Fleet</span><span class="text-primary-500">Flow</span>
-            </h1>
-
-            <p class="ff-login-brand__subtitle">
-              Logistics & Recruitment Portal
-            </p>
-          </div>
+        <div class="ff-login-brand__wordmark" aria-label="FleetFlow">
+          <span>Fleet</span><strong>Flow</strong>
         </div>
-      </header>
+      </div>
 
-      <article class="ff-auth-login-card">
-        @if (errorMessage()) {
-          <app-ui-alert
-            class="mb-4 block"
-            variant="error"
-            [message]="errorMessage()"
-          ></app-ui-alert>
-        }
+      <p>Logistics &amp; Recruitment Portal</p>
+    </header>
 
-        <form [formGroup]="form" (ngSubmit)="submit()" class="space-y-6" novalidate>
-          <app-ui-text-input
-            label="Email address"
-            inputId="login-email"
-            formControlName="email"
-            type="email"
-            placeholder="name@fleetflow.com"
-            [icon]="icons.loginEmail"
-            [error]="emailError()"
-          ></app-ui-text-input>
+    <article class="ff-login-card">
+      @if (errorMessage()) {
+        <p class="ff-login-alert" role="alert">{{ errorMessage() }}</p>
+      }
 
-          <div class="space-y-2">
-            <div class="flex items-center justify-between gap-3">
-              <label
-                for="login-password"
-                class="text-[10px] font-semibold uppercase tracking-[0.12em] text-text-secondary"
-              >
-                Password
-              </label>
-
-              <a
-                routerLink="/forgot-password"
-                class="text-[10px] font-semibold uppercase tracking-[0.08em] text-primary-400 transition-colors hover:text-primary-300"
-              >
-                Forgot password?
-              </a>
-            </div>
-
-            <app-ui-password-input
-              inputId="login-password"
-              formControlName="password"
-              placeholder="Password"
-              [icon]="icons.loginPassword"
-              [error]="passwordError()"
-            ></app-ui-password-input>
-          </div>
-
-          <label class="ff-login-remember" for="login-remember-me">
+      <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+        <label class="ff-login-field" for="login-email">
+          <span>Email address</span>
+          <span class="ff-login-control">
+            <svg [lucideIcon]="icons.loginEmail" aria-hidden="true"></svg>
             <input
-              id="login-remember-me"
-              type="checkbox"
-              formControlName="rememberMe"
+              id="login-email"
+              formControlName="email"
+              type="email"
+              autocomplete="email"
+              placeholder="name@fleetflow.com"
             />
-            <span>Remember me</span>
-          </label>
+          </span>
+          @if (emailError()) {
+            <small>{{ emailError() }}</small>
+          }
+        </label>
 
-          <app-ui-button-primary
-            type="submit"
-            [disabled]="loading()"
-            [loading]="loading()"
-            [fullWidth]="true"
-          >
-            <span class="inline-flex items-center justify-center gap-2">
-              <span>Log in</span>
-              <svg
-                [lucideIcon]="icons.loginSubmit"
-                class="h-4 w-4"
-                [attr.stroke-width]="2"
-              ></svg>
-            </span>
-          </app-ui-button-primary>
-        </form>
-      </article>
+        <label class="ff-login-field" for="login-password">
+          <span class="ff-login-field__row">
+            <span>Password</span>
+            <a routerLink="/forgot-password">Forgot password?</a>
+          </span>
+          <span class="ff-login-control">
+            <svg [lucideIcon]="icons.loginPassword" aria-hidden="true"></svg>
+            <input
+              id="login-password"
+              formControlName="password"
+              type="password"
+              autocomplete="current-password"
+              placeholder="Password"
+            />
+          </span>
+          @if (passwordError()) {
+            <small>{{ passwordError() }}</small>
+          }
+        </label>
 
-      <div class="ff-login-footer">
-        Don't have an account?
-        <a
-          routerLink="/request-access"
-          class="font-semibold text-text-primary underline decoration-primary-500 decoration-2 underline-offset-2"
-        >
-          Request Access
-        </a>
-      </div>
+        <label class="ff-login-remember" for="login-remember-me">
+          <input id="login-remember-me" type="checkbox" formControlName="rememberMe" />
+          <span>Remember me</span>
+        </label>
 
-      <div class="ff-login-status" aria-hidden="true">
-        Secure access
-      </div>
-    </div>
+        <button type="submit" class="ff-login-submit" [disabled]="loading()">
+          <span>{{ loading() ? 'Logging in...' : 'Log in' }}</span>
+          <svg [lucideIcon]="icons.loginSubmit" aria-hidden="true"></svg>
+        </button>
+      </form>
+    </article>
+
+    <p class="ff-login-access">
+      Don't have an account?
+      <a routerLink="/request-access">Request Access</a>
+    </p>
+
+    <div class="ff-login-divider" aria-hidden="true"></div>
+
+    <p class="ff-login-status">V 0.0.0 "KINETIC" // SYSTEM_ACTIVE</p>
   </div>
 </section>

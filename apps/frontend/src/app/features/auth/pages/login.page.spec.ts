@@ -181,12 +181,12 @@ describe('LoginPage', () => {
   });
 
 
-  it('renders shared ui alert when login error exists', () => {
+  it('renders the kinetic login alert when login error exists', () => {
     component.errorMessage.set('Invalid credentials.');
 
     fixture.detectChanges();
 
-    const alert = fixture.debugElement.query(By.css('app-ui-alert'));
+    const alert = fixture.debugElement.query(By.css('.ff-login-alert'));
 
     expect(alert).toBeTruthy();
   });

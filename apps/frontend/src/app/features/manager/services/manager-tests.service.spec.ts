@@ -57,14 +57,19 @@ describe('ManagerTestsService', () => {
 
   it('saves questionnaire answers on the selected evaluation only', () => {
     service
-      .saveQuestionnaire(42, [
-        {
-          question_id: 7,
-          candidate_answer: 'Answer',
-          manager_comment: 'Comment',
-          score: 4,
-        },
-      ])
+      .saveQuestionnaire(42, {
+        answers: [
+          {
+            question_id: 7,
+            candidate_answer: 'Answer',
+            manager_comment: 'Comment',
+            score: 4,
+          },
+        ],
+        section_comments: [{ section_id: 3, manager_comment: 'Section', completed: true }],
+        test_manager_comment: 'Global',
+        complete_sections: true,
+      })
       .subscribe();
 
     const request = httpMock.expectOne('/api/evaluations/42/questionnaire/');
@@ -78,8 +83,17 @@ describe('ManagerTestsService', () => {
           score: 4,
         },
       ],
+      section_comments: [{ section_id: 3, manager_comment: 'Section', completed: true }],
+      test_manager_comment: 'Global',
+      complete_sections: true,
     });
-    request.flush({ evaluation_id: 42, template_name: 'Conduite', questions: [] });
+    request.flush({
+      evaluation_id: 42,
+      template_name: 'Conduite',
+      test_manager_comment: 'Global',
+      sections: [],
+      questions: [],
+    });
   });
 
   it('loads one assigned evaluation detail by id', (done) => {

@@ -1,70 +1,51 @@
-<app-ui-alert class="mt-5" variant="error" [message]="apiError"></app-ui-alert>
+<app-ui-alert variant="error" [message]="apiError"></app-ui-alert>
 
-<app-ui-card class="mt-5">
-  <form [formGroup]="form" (ngSubmit)="submitForm.emit()" class="space-y-4">
+<form [formGroup]="form" (ngSubmit)="submitForm.emit()" class="ff-app-stack">
+  <div class="ff-field-block">
+    <label for="pool-name">Pool name</label>
+    <input id="pool-name" formControlName="name" class="ff-control" [readOnly]="isView" />
+  </div>
 
-    <app-ui-text-input
-      formControlName="name"
-      label="Pool name"
-      [disabled]="isView"
-    ></app-ui-text-input>
-
-    <app-ui-textarea
+  <div class="ff-field-block">
+    <label for="pool-description">Description optional</label>
+    <textarea
+      id="pool-description"
       formControlName="description"
-      label="Description (optional)"
-      [rows]="4"
-      [disabled]="isView"
-    ></app-ui-textarea>
+      rows="4"
+      class="ff-control"
+      [readOnly]="isView"
+    ></textarea>
+  </div>
 
-    <div class="flex items-center justify-between">
-      <span class="text-xs font-medium text-slate-300">Code</span>
-
+  <div class="ff-field-block">
+    <div class="ff-inline-actions" style="justify-content: space-between">
+      <label for="pool-code">Code</label>
       @if (!isView) {
-        <button
-          type="button"
-          class="text-xs font-semibold text-sky-300 hover:text-sky-200"
-          (click)="normalize.emit()"
-        >
-          Normalize
-        </button>
+        <button type="button" class="ff-status-pill" (click)="normalize.emit()">Normalize</button>
       }
     </div>
-
-    <app-ui-text-input
+    <input
+      id="pool-code"
       formControlName="code"
-      label=""
-      [disabled]="isView"
+      class="ff-control"
+      [readOnly]="isView"
       (blur)="!isView && normalize.emit()"
-    ></app-ui-text-input>
+    />
+  </div>
 
-    @if (showNormalizeHint) {
-      <p class="text-xs text-slate-400">
-        Use uppercase letters, numbers, underscore. Example:
-        <span class="font-mono text-slate-200">SAFETY_RULES</span>
-      </p>
-    }
+  @if (showNormalizeHint) {
+    <p class="ff-row-meta">Use uppercase letters, numbers and underscore.</p>
+  }
 
-    <!-- Actions -->
-    @if (mode === 'create') {
-      <app-ui-button-primary type="submit" variant="primary" [loading]="isLoading" block>
-        Create pool
-      </app-ui-button-primary>
+  @if (mode === 'create' || mode === 'edit') {
+    <footer class="ff-app-stack">
+      <button type="submit" class="ff-btn ff-btn-primary" [disabled]="isLoading">
+        {{ mode === 'create' ? 'Create pool' : 'Save' }}
+      </button>
 
-      <app-ui-button-primary type="button" variant="secondary" (click)="cancelForm.emit()" block>
+      <button type="button" class="ff-btn ff-btn-secondary" (click)="cancelForm.emit()">
         Cancel
-      </app-ui-button-primary>
-    }
-
-    @if (mode === 'edit') {
-      <app-ui-button-primary type="submit" variant="primary" [loading]="isLoading" block>
-        Save
-      </app-ui-button-primary>
-
-      <app-ui-button-primary type="button" variant="secondary" (click)="cancelForm.emit()" block>
-        Cancel
-      </app-ui-button-primary>
-    }
-
-    <!-- view: pas d’actions dans le form -->
-  </form>
-</app-ui-card>
+      </button>
+    </footer>
+  }
+</form>

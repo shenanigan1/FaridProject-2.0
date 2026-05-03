@@ -1,81 +1,76 @@
 <section class="manager-screen">
   <div class="manager-shell">
-    <header class="manager-topbar">
-      <div class="manager-brand">
-        <span class="manager-brand__mark">DR</span>
-        <span>DriverRecruit</span>
-      </div>
-      <a routerLink="/profile" class="manager-profile-link">Profile</a>
-    </header>
-
     <section class="manager-hero">
-      <p class="manager-kicker">Manager portal</p>
+      <p class="manager-kicker">DriveRecruit</p>
       <h1>Bonjour {{ greetingName() }}</h1>
-      <p>Votre activité de tests assignés par le portail RH.</p>
+      <p>Voici l'activite de vos tests assignes par le portail RH.</p>
     </section>
 
     @if (isLoading()) {
-      <div class="manager-empty">Chargement des tests assignés...</div>
+      <p class="manager-empty">Chargement des tests assignes...</p>
     } @else if (error()) {
-      <div class="manager-alert">{{ error() }}</div>
+      <p class="manager-alert" role="alert">{{ error() }}</p>
     } @else {
-      <section class="manager-card">
-        <div class="manager-card__header">
-          <h2>Tests à faire passer</h2>
-          <span>{{ pendingTests().length }} assignés</span>
-        </div>
+      <section class="manager-card" aria-labelledby="manager-pending-title">
+        <header class="manager-card__header">
+          <h2 id="manager-pending-title">Tests a faire passer</h2>
+          <span>{{ pendingTests().length }} assignes</span>
+        </header>
 
         <div class="manager-list">
           @for (test of latestPendingTests(); track test.id) {
             <a class="manager-test-row" [routerLink]="['/manager/tests', test.id]">
-              <span class="manager-avatar">{{ initials(test) }}</span>
+              <span class="manager-avatar" aria-hidden="true">{{ initials(test) }}</span>
               <span class="manager-test-row__body">
                 <strong>{{ test.candidateName }}</strong>
+                <small>{{ test.templateName }}</small>
                 @if (test.positionTitle) {
                   <small>{{ test.positionTitle }}</small>
                 }
               </span>
-              <span class="manager-test-row__meta">{{ test.templateName }}</span>
+              <span class="manager-test-row__meta">A remplir</span>
             </a>
           }
 
           @if (latestPendingTests().length === 0) {
-            <p class="manager-empty manager-empty--compact">Aucun test assigné à faire passer.</p>
+            <p class="manager-empty manager-empty--compact">Aucun test assigne a faire passer.</p>
           }
         </div>
       </section>
 
-      <section class="manager-grid">
+      <section class="manager-grid" aria-label="Indicateurs manager">
         <article class="manager-stat">
-          <span>Tests à faire</span>
-          <strong>{{ pendingTests().length }}</strong>
+          <span>Tests assignes</span>
+          <strong>{{ tests().length }}</strong>
         </article>
         <article class="manager-stat">
-          <span>Historique</span>
-          <strong>{{ completedTests().length }}</strong>
+          <span>En cours</span>
+          <strong>{{ pendingTests().length }}</strong>
         </article>
       </section>
 
-      <section class="manager-card">
-        <div class="manager-card__header">
-          <h2>Historique récent</h2>
-          <a routerLink="/manager/tests" [queryParams]="{ tab: 'history' }">Voir tout</a>
-        </div>
+      <section class="manager-card" aria-labelledby="manager-history-title">
+        <header class="manager-card__header">
+          <h2 id="manager-history-title">Historique recent</h2>
+          <a routerLink="/manager/tests">Voir tout</a>
+        </header>
 
         <div class="manager-list">
           @for (test of latestCompletedTests(); track test.id) {
             <a class="manager-test-row" [routerLink]="['/manager/tests', test.id]">
-              <span class="manager-avatar manager-avatar--muted">{{ initials(test) }}</span>
+              <span class="manager-avatar manager-avatar--muted" aria-hidden="true">
+                {{ initials(test) }}
+              </span>
               <span class="manager-test-row__body">
                 <strong>{{ test.candidateName }}</strong>
-                <small>{{ test.status }}</small>
+                <small>{{ test.templateName }}</small>
               </span>
-              <span class="manager-test-row__meta">{{ test.updatedAt | date: 'short' }}</span>
+              <span class="manager-test-row__meta">{{ test.status }}</span>
             </a>
           }
 
           @if (latestCompletedTests().length === 0) {
-            <p class="manager-empty manager-empty--compact">Aucun test terminé dans votre historique.</p>
+            <p class="manager-empty manager-empty--compact">Aucun test termine pour le moment.</p>
           }
         </div>
       </section>

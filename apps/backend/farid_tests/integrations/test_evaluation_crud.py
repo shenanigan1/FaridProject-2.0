@@ -3,6 +3,7 @@ import pytest
 from django.urls import reverse
 
 from evaluations.models.evaluation import Evaluation
+from evaluations.models import EvaluationSectionAssignment
 from farid_tests.factories.users import UserFactory
 from farid_tests.factories.positions import PositionFactory
 from farid_tests.factories.templates_grid import TemplateFactory, TemplateVersionFactory
@@ -436,6 +437,149 @@ def test_evaluation_questionnaire_rejects_foreign_question(api_client):
 
     assert res.status_code == 400
     assert "answers" in res.data
+
+
+def test_launch_evaluation_assigns_managers_by_section_and_scopes_questionnaire(api_client):
+    hr = UserFactory.create(
+        email="hr-sections@example.com", password="Passw0rd!", role=UserRoles.HR
+    )
+    api_client.force_authenticate(user=hr)
+    manager_a = UserFactory.create(
+        email="manager-a@example.com", role=UserRoles.MANAGER
+    )
+    manager_b = UserFactory.create(
+        email="manager-b@example.com", role=UserRoles.MANAGER
+    )
+    application = JobApplicationFactory.create()
+    template = TemplateFactory.create(name="Sectioned Template")
+    section_a = TemplateSection.objects.create(
+        template=template, name="Driving", order=0, weight=50
+    )
+    section_b = TemplateSection.objects.create(
+        template=template, name="Safety", order=1, weight=50
+    )
+    pool_a = QuestionPool.objects.create(name="Driving Pool", code="DRIVING_POOL")
+    pool_b = QuestionPool.objects.create(name="Safety Pool", code="SAFETY_POOL")
+    TemplatePoolRule.objects.create(
+        template=template, section=section_a, pool=pool_a, random_count=0, order=0
+    )
+    TemplatePoolRule.objects.create(
+        template=template, section=section_b, pool=pool_b, random_count=0, order=0
+    )
+    question_a = SkillQuestion.objects.create(
+        pool=pool_a,
+        title="Reverse parking",
+        text="Evaluate reverse parking.",
+        is_mandatory=True,
+        points=5,
+    )
+    question_b = SkillQuestion.objects.create(
+        pool=pool_b,
+        title="ADR safety",
+        text="Evaluate ADR safety.",
+        is_mandatory=True,
+        points=5,
+    )
+
+    launch_url = reverse(f"{BASENAME}-launch")
+    launch_res = api_client.post(
+        launch_url,
+        {
+            "application_id": application.id,
+            "template_id": template.id,
+            "section_assignments": [
+                {"section_id": section_a.id, "manager_id": manager_a.id},
+                {"section_id": section_b.id, "manager_id": manager_b.id},
+            ],
+        },
+        format="json",
+    )
+
+    assert launch_res.status_code == 201
+    evaluation = Evaluation.objects.get(id=launch_res.data[0]["id"])
+    assert EvaluationSectionAssignment.objects.filter(evaluation=evaluation).count() == 2
+
+    questionnaire_url = reverse(f"{BASENAME}-questionnaire", args=[evaluation.id])
+    api_client.force_authenticate(user=manager_a)
+    manager_get = api_client.get(questionnaire_url)
+
+    assert manager_get.status_code == 200
+    assert [section["section_id"] for section in manager_get.data["sections"]] == [
+        section_a.id
+    ]
+    assert [question["question_id"] for question in manager_get.data["questions"]] == [
+        question_a.id
+    ]
+
+    foreign_save = api_client.post(
+        questionnaire_url,
+        {
+            "answers": [
+                {
+                    "question_id": question_b.id,
+                    "candidate_answer": "OK",
+                    "manager_comment": "",
+                    "score": 4,
+                }
+            ]
+        },
+        format="json",
+    )
+    assert foreign_save.status_code == 400
+
+    own_save = api_client.post(
+        questionnaire_url,
+        {
+            "test_manager_comment": "Global note",
+            "section_comments": [
+                {
+                    "section_id": section_a.id,
+                    "manager_comment": "Driving validated",
+                    "completed": True,
+                }
+            ],
+            "answers": [
+                {
+                    "question_id": question_a.id,
+                    "candidate_answer": "OK",
+                    "manager_comment": "Good",
+                    "score": 5,
+                }
+            ],
+            "complete_sections": True,
+        },
+        format="json",
+    )
+    assert own_save.status_code == 200
+    evaluation.refresh_from_db()
+    assert evaluation.status == "in_progress"
+
+    api_client.force_authenticate(user=manager_b)
+    other_save = api_client.post(
+        questionnaire_url,
+        {
+            "section_comments": [
+                {
+                    "section_id": section_b.id,
+                    "manager_comment": "Safety validated",
+                    "completed": True,
+                }
+            ],
+            "answers": [
+                {
+                    "question_id": question_b.id,
+                    "candidate_answer": "OK",
+                    "manager_comment": "Good",
+                    "score": 5,
+                }
+            ],
+            "complete_sections": True,
+        },
+        format="json",
+    )
+    assert other_save.status_code == 200
+    evaluation.refresh_from_db()
+    assert evaluation.status == "completed"
 
 
 def test_managers_endpoint_lists_active_managers(api_client):

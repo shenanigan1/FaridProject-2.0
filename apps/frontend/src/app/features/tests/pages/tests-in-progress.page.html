@@ -37,7 +37,7 @@
         <div class="ff-app-stack">
           @for (application of applications; track application.applicationId) {
             <article class="ff-data-card">
-              <div class="flex items-start justify-between gap-3">
+              <div class="ff-inline-actions" style="align-items: flex-start; justify-content: space-between">
                 <div>
                   <h2 class="ff-row-title">{{ application.candidateName }}</h2>
                   <p class="ff-row-meta">{{ application.candidateEmail }}</p>
@@ -47,18 +47,18 @@
                 <span class="ff-status-pill">In progress</span>
               </div>
 
-              <p class="ff-row-meta mt-3">
+              <p class="ff-row-meta" style="margin-top: 0.75rem">
                 Application #{{ application.applicationId }} - {{ application.evaluations.length }} template test(s)
               </p>
 
-              <div class="mt-3">
+              <div style="margin-top: 0.75rem">
                 <button type="button" class="ff-btn ff-btn-secondary" (click)="openApplication(application.applicationId)">
                   Open test cards
                 </button>
               </div>
 
               @if (selectedApplicationId === application.applicationId) {
-                <div class="mt-4 grid gap-2 md:grid-cols-2">
+                <div class="ff-form-grid ff-form-grid--two" style="margin-top: 1rem">
                   @for (evaluation of application.evaluations; track evaluation.evaluationId) {
                     <article class="ff-app-panel">
                       <button type="button" class="w-full text-left" (click)="openEvaluation(evaluation.evaluationId)">
@@ -67,7 +67,7 @@
                         <div class="ff-row-meta">Evaluation #{{ evaluation.evaluationId }}</div>
                       </button>
 
-                      <div class="mt-3 ff-app-stack">
+                      <div class="ff-app-stack" style="margin-top: 0.75rem">
                         <input
                           type="search"
                           [value]="managerSearchByEvaluation[evaluation.evaluationId] ?? ''"
@@ -113,32 +113,32 @@
           </h3>
 
           @if (questionnaireMessage) {
-            <div class="mt-2 ff-alert-inline">{{ questionnaireMessage }}</div>
+            <div class="ff-alert-inline" style="margin-top: 0.5rem">{{ questionnaireMessage }}</div>
           }
 
-          <div class="mt-3 ff-app-stack">
+          <div class="ff-app-stack" style="margin-top: 0.75rem">
             @for (question of questionnaire.questions; track question.question_id; let i = $index) {
               <article class="ff-data-card">
-                <div class="ff-app-kicker mb-1">Question #{{ question.question_id }}</div>
+                <div class="ff-app-kicker">Question #{{ question.question_id }}</div>
                 <div class="ff-row-title">{{ question.title }}</div>
                 <p class="ff-row-meta">{{ question.text }}</p>
 
-                <label class="mt-3 block ff-row-meta" [attr.for]="'candidate-answer-' + i">
+                <label class="ff-row-meta" style="display: block; margin-top: 0.75rem" [attr.for]="'candidate-answer-' + i">
                   Candidate answer
                 </label>
                 <textarea
                   [id]="'candidate-answer-' + i"
-                  class="ff-control mt-1"
+                  class="ff-control"
                   [value]="question.candidate_answer"
                   (input)="onQuestionAnswerInput(i, $event)"
                 ></textarea>
 
-                <label class="mt-3 block ff-row-meta" [attr.for]="'manager-comment-' + i">
+                <label class="ff-row-meta" style="display: block; margin-top: 0.75rem" [attr.for]="'manager-comment-' + i">
                   Manager comment
                 </label>
                 <textarea
                   [id]="'manager-comment-' + i"
-                  class="ff-control mt-1"
+                  class="ff-control"
                   [value]="question.manager_comment"
                   (input)="onQuestionCommentInput(i, $event)"
                 ></textarea>
@@ -148,7 +148,7 @@
 
           <button
             type="button"
-            class="ff-btn ff-btn-primary mt-3"
+            class="ff-btn ff-btn-primary"
             [disabled]="questionnaireSaving"
             (click)="saveQuestionnaire()"
           >

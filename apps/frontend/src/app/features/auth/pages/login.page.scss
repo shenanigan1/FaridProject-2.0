@@ -3,148 +3,276 @@
 }
 
 .ff-login-screen {
-  min-height: 100vh;
-  overflow-x: hidden;
-  background: #050608;
+  min-height: 100dvh;
+  background: #101923;
   color: var(--ff-color-text-primary);
-  padding: 1.5rem 1rem;
+  padding: 3.6rem 1.6rem 2rem;
 }
 
 .ff-login-shell {
   display: flex;
-  min-height: calc(100vh - 3rem);
-  width: 100%;
-  max-width: 30rem;
-  margin: 0 auto;
-  align-items: center;
+  width: min(100%, 40.5rem);
+  min-height: calc(100dvh - 5.6rem);
+  flex-direction: column;
   justify-content: center;
+  margin: 0 auto;
 }
 
 .ff-login-header {
-  margin-bottom: 2rem;
+  margin-bottom: 3.9rem;
   text-align: center;
 }
 
 .ff-login-brand {
   display: inline-flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 1.65rem;
 }
 
 .ff-login-brand__icon {
-  display: inline-flex;
-  height: 3rem;
-  width: 3rem;
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
-  border-radius: 0.875rem;
-  background-color: var(--ff-color-primary-500);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  display: inline-grid;
+  width: 5.6rem;
+  height: 5.6rem;
+  place-items: center;
+  border-radius: 0.9rem;
+  background: var(--ff-color-primary-500);
+  box-shadow: var(--ff-shadow-primary);
 }
 
-.ff-login-brand__content {
-  text-align: left;
-  line-height: 1;
+.ff-login-brand__icon svg {
+  width: 2.65rem;
+  height: 2.65rem;
+  color: white;
 }
 
-.ff-login-brand__title {
-  margin: 0;
-  font-size: 2.5rem;
-  font-weight: 900;
+.ff-login-brand__wordmark {
+  color: white;
+  font-size: clamp(3.35rem, 9vw, 4.6rem);
   font-style: italic;
-  line-height: 0.95;
+  font-weight: 950;
   letter-spacing: 0;
+  line-height: 0.9;
   text-transform: uppercase;
-  color: var(--ff-color-text-primary);
+  text-shadow: var(--ff-text-shadow-strong);
 }
 
-.ff-login-brand__subtitle {
-  margin: 0.375rem 0 0;
-  font-size: 0.6875rem;
-  font-weight: 600;
-  line-height: 1;
+.ff-login-brand__wordmark strong {
+  color: var(--ff-color-primary-500);
+  font-weight: inherit;
+}
+
+.ff-login-header p {
+  margin: 1.25rem 0 0;
+  color: var(--ff-color-text-muted);
+  font-size: 1.05rem;
+  font-weight: 850;
   letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: var(--ff-color-text-secondary);
 }
 
-.ff-auth-login-card {
-  padding: 1.5rem;
-  border-radius: 1.25rem;
-  background-color: #1c2027;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.4);
+.ff-login-card {
+  border: 1px solid var(--ff-color-border-soft);
+  border-radius: 1.45rem;
+  background: #202a3b;
+  padding: 4.6rem 3.3rem 3.7rem;
+  box-shadow: 0 24px 54px rgba(0, 0, 0, 0.34);
+}
+
+.ff-login-card form,
+.ff-login-field {
+  display: grid;
+}
+
+.ff-login-card form {
+  gap: 2rem;
+}
+
+.ff-login-field {
+  gap: 0.9rem;
+}
+
+.ff-login-field > span:first-child,
+.ff-login-field__row {
+  color: var(--ff-color-text-muted);
+  font-size: 0.9rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.ff-login-field__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.ff-login-field__row a {
+  color: var(--ff-color-primary-500);
+  text-decoration: none;
+}
+
+.ff-login-control {
+  display: flex;
+  min-height: 6.45rem;
+  align-items: center;
+  gap: 1.55rem;
+  border: 1px solid var(--ff-color-border);
+  border-radius: 1.1rem;
+  background: #182233;
+  color: var(--ff-color-text-muted);
+  padding: 0 1.7rem;
+}
+
+.ff-login-control svg {
+  width: 1.6rem;
+  height: 1.6rem;
+  flex: 0 0 auto;
+}
+
+.ff-login-control input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  color: var(--ff-color-text-primary);
+  font-size: 1.55rem;
+  font-weight: 500;
+  outline: 0;
+}
+
+.ff-login-control input::placeholder {
+  color: var(--ff-color-text-muted);
+}
+
+.ff-login-field small,
+.ff-login-alert {
+  color: var(--ff-color-danger-100);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.ff-login-alert {
+  margin: 0 0 1.2rem;
+  border: 1px solid rgba(255, 180, 171, 0.32);
+  border-radius: 0.8rem;
+  background: rgba(255, 180, 171, 0.09);
+  padding: 0.9rem;
 }
 
 .ff-login-remember {
   display: inline-flex;
   align-items: center;
-  gap: 0.625rem;
+  gap: 0.7rem;
   color: var(--ff-color-text-secondary);
-  font-size: 0.8125rem;
-  font-weight: 600;
-  line-height: 1;
+  font-size: 0.95rem;
+  font-weight: 650;
 }
 
 .ff-login-remember input {
-  width: 1rem;
-  height: 1rem;
-  margin: 0;
+  width: 1.05rem;
+  height: 1.05rem;
   accent-color: var(--ff-color-primary-500);
 }
 
-.ff-login-footer {
-  margin-top: 1.5rem;
-  text-align: center;
-  font-size: 0.875rem;
-  line-height: 1.4;
+.ff-login-submit {
+  display: inline-flex;
+  min-height: 6.8rem;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2rem;
+  border: 0;
+  border-radius: 1.05rem;
+  background: var(--ff-color-primary-500);
+  color: white;
+  font-size: 1.6rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  box-shadow: var(--ff-shadow-primary);
+}
+
+.ff-login-submit:disabled {
+  cursor: wait;
+  opacity: 0.72;
+}
+
+.ff-login-submit svg {
+  width: 1.6rem;
+  height: 1.6rem;
+}
+
+.ff-login-access {
+  margin: 3.9rem 0 2.9rem;
   color: var(--ff-color-text-secondary);
+  font-size: 1.35rem;
+  text-align: center;
+}
+
+.ff-login-access a {
+  color: white;
+  font-weight: 900;
+  text-decoration-color: var(--ff-color-primary-500);
+  text-decoration-thickness: 0.18rem;
+  text-underline-offset: 0.28rem;
+}
+
+.ff-login-divider {
+  height: 1px;
+  background: var(--ff-color-border-soft);
 }
 
 .ff-login-status {
   width: fit-content;
-  margin-top: 1.5rem;
-  margin-inline: auto;
-  padding: 0.375rem 0.875rem;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 999px;
-  background-color: rgba(28, 32, 39, 0.72);
-  color: var(--ff-color-text-muted);
-  font-size: 0.625rem;
+  margin: 3.2rem auto 0;
+  border: 1px solid rgba(74, 142, 255, 0.24);
+  border-radius: 0.35rem;
+  background: rgba(20, 27, 42, 0.72);
+  color: #74809a;
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 0.95rem;
   font-weight: 700;
-  letter-spacing: 0.14em;
-  line-height: 1;
-  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  padding: 0.65rem 1.6rem;
 }
 
-@media (max-width: 639px) {
+@media (max-width: 620px) {
   .ff-login-screen {
-    padding: 1rem;
+    padding: 2rem 1rem;
   }
 
   .ff-login-shell {
-    min-height: calc(100vh - 2rem);
+    min-height: calc(100dvh - 4rem);
   }
 
   .ff-login-brand {
-    width: 100%;
-    justify-content: center;
+    gap: 1rem;
   }
 
-  .ff-login-brand__title {
-    font-size: 2rem;
+  .ff-login-brand__icon {
+    width: 4.4rem;
+    height: 4.4rem;
   }
 
-  .ff-login-brand__subtitle {
-    font-size: 0.625rem;
-    letter-spacing: 0.18em;
+  .ff-login-header p {
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
   }
 
-}
+  .ff-login-card {
+    padding: 2rem 1rem;
+  }
 
-@media (min-width: 640px) {
-  .ff-auth-login-card {
-    padding: 1.75rem;
+  .ff-login-control,
+  .ff-login-submit {
+    min-height: 4.6rem;
+  }
+
+  .ff-login-control input,
+  .ff-login-submit {
+    font-size: 1.05rem;
+  }
+
+  .ff-login-access {
+    font-size: 1rem;
   }
 }

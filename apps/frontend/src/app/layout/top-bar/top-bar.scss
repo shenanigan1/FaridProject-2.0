@@ -8,8 +8,8 @@
   height: 4rem;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid #1e293b;
-  background-color: #020617;
+  border-bottom: 1px solid var(--ff-color-border-soft);
+  background-color: var(--ff-color-header);
   padding: 0 1rem;
 }
 
@@ -32,17 +32,16 @@
   width: 1.375rem;
   height: 1rem;
   flex: 0 0 auto;
-  color: #3b82f6;
+  color: var(--ff-color-primary-400);
 }
 
 .ff-topbar__brand-name {
   min-width: 0;
   overflow: hidden;
-  color: #3b82f6;
+  color: var(--ff-color-primary-400);
   font-size: 1.125rem;
-  font-style: italic;
-  font-weight: 800;
-  letter-spacing: -0.04em;
+  font-weight: 850;
+  letter-spacing: 0;
   line-height: 1.55;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -59,16 +58,16 @@
   width: 2rem;
   height: 2rem;
   justify-content: center;
-  border: 1px solid #334155;
-  border-radius: 0.75rem;
-  background-color: #0f172a;
-  color: #94a3b8;
+  border: 1px solid var(--ff-color-border-soft);
+  border-radius: 0.9rem;
+  background-color: var(--ff-color-surface-3);
+  color: var(--ff-color-text-muted);
 }
 
 .ff-topbar__icon-button:hover,
 .ff-topbar__user:hover {
-  border-color: #3b82f6;
-  color: #e0e2ec;
+  border-color: var(--ff-color-primary-400);
+  color: var(--ff-color-text-primary);
 }
 
 .ff-topbar__action-icon,
@@ -98,8 +97,8 @@
   align-items: center;
   justify-content: center;
   border-radius: inherit;
-  background-color: #1c2027;
-  color: #e0e2ec;
+  background-color: var(--ff-color-surface-1);
+  color: var(--ff-color-text-primary);
   font-size: 0.68rem;
   font-weight: 900;
 }
@@ -110,8 +109,8 @@
   right: 1rem;
   z-index: 50;
   width: min(18rem, calc(100vw - 2rem));
-  border: 1px solid #1c2027;
-  border-radius: 0.75rem;
+  border: 1px solid var(--ff-color-border-soft);
+  border-radius: 0.9rem;
   background-color: #0b0e15;
   box-shadow: 0 24px 50px rgba(0, 0, 0, 0.42);
   padding: 0.5rem;
@@ -120,9 +119,9 @@
 .ff-topbar__menu-user {
   gap: 0.65rem;
   margin-bottom: 0.35rem;
-  border: 1px solid #1c2027;
-  border-radius: 0.5rem;
-  background-color: #131313;
+  border: 1px solid var(--ff-color-border-soft);
+  border-radius: 0.75rem;
+  background-color: var(--ff-color-surface-2);
   padding: 0.5rem;
 }
 
@@ -134,7 +133,7 @@
 .ff-topbar__menu-name {
   min-width: 0;
   overflow: hidden;
-  color: #e0e2ec;
+  color: var(--ff-color-text-primary);
   font-size: 0.82rem;
   font-weight: 800;
   text-overflow: ellipsis;
@@ -145,16 +144,16 @@
   width: 100%;
   gap: 0.6rem;
   border: 0;
-  border-radius: 0.5rem;
+  border-radius: 0.75rem;
   background: transparent;
-  color: #c1c6d7;
+  color: var(--ff-color-text-secondary);
   padding: 0.65rem 0.75rem;
   text-align: left;
 }
 
 .ff-topbar__menu-action:hover {
   background-color: rgba(9, 120, 247, 0.12);
-  color: #e0e2ec;
+  color: var(--ff-color-text-primary);
 }
 
 .ff-topbar__menu-action--danger {

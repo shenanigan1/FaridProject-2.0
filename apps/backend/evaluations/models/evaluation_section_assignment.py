@@ -18,6 +18,7 @@ class EvaluationSectionAssignment(models.Model):
         "users.User", on_delete=models.PROTECT, related_name="section_assignments"
     )
 
+    manager_comment = models.TextField(blank=True, default="")
     started_at = models.DateTimeField(null=True, blank=True)
     completed_at = models.DateTimeField(null=True, blank=True)
 

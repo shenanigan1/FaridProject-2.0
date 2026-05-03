@@ -36,7 +36,7 @@
           <span class="manager-test-card__status">{{ selectedTest.status }}</span>
         </div>
 
-        @if (questionnaire()) {
+        @if (questionnaire(); as form) {
           <div class="manager-progress">
             <div>
               <strong>{{ answeredCount() }}/{{ questionCount() }} questions</strong>
@@ -47,6 +47,15 @@
               <i [style.width.%]="progressPercent()"></i>
             </div>
           </div>
+
+          <label class="manager-field-label" for="test-manager-comment">Commentaire test</label>
+          <textarea
+            id="test-manager-comment"
+            class="manager-wide-textarea"
+            [disabled]="selectedTest.status !== 'in_progress'"
+            [value]="form.test_manager_comment"
+            (input)="updateTestComment($any($event.target).value)"
+          ></textarea>
         }
 
         @if (selectedTest.status !== 'in_progress') {
@@ -60,103 +69,148 @@
         }
 
         @if (questionnaire(); as form) {
-          <div class="manager-question-list">
-            @for (question of form.questions; track question.question_id; let i = $index) {
-              <article
-                class="manager-question"
-                [class.manager-question--complete]="questionState(question) === 'complete'"
-                [class.manager-question--missing]="questionState(question) === 'missing'"
-              >
-                <div class="manager-question__top">
+          <div class="manager-section-list">
+            @for (section of form.sections; track section.section_id) {
+              <section class="manager-section">
+                <div class="manager-section__header">
                   <div>
-                    <strong>{{ question.title || 'Question' }}</strong>
-                    <small>
-                      {{ formatLabel(question.format) }} - {{ difficultyLabel(question.difficulty) }}
-                      @if (question.is_mandatory) {
-                        <b>Obligatoire</b>
-                      }
-                    </small>
+                    <p>Section assignee</p>
+                    <h2>{{ section.title }}</h2>
+                    @if (section.description) {
+                      <small>{{ section.description }}</small>
+                    }
                   </div>
-                  <span>{{ question.points }} pts</span>
+                  <span>
+                    @if (section.completed_at) {
+                      Validee
+                    } @else {
+                      {{ sectionAnsweredCount(section) }}/{{ sectionQuestionCount(section) }}
+                    }
+                  </span>
                 </div>
-                <p>{{ question.text }}</p>
-                @if (question.explanation) {
-                  <p class="manager-question__hint">{{ question.explanation }}</p>
-                }
 
-                <label [attr.for]="'answer-' + question.question_id">Reponse candidat</label>
-                @if (choiceOptions(question); as options) {
-                  @if (options.length > 0) {
-                    <div class="manager-choice-grid">
-                      @for (option of options; track option) {
-                        <button
-                          type="button"
-                          class="manager-choice"
-                          [class.manager-choice--active]="question.candidate_answer === option"
-                          [disabled]="selectedTest.status !== 'in_progress'"
-                          (click)="setChoice(i, option)"
-                        >
-                          {{ option }}
-                        </button>
-                      }
-                    </div>
-                  } @else {
-                    <textarea
-                      [id]="'answer-' + question.question_id"
-                      [disabled]="selectedTest.status !== 'in_progress'"
-                      [value]="question.candidate_answer"
-                      (input)="updateAnswer(i, 'candidate_answer', $any($event.target).value)"
-                    ></textarea>
-                  }
-                }
-
-                @if (rubricEntries(question); as entries) {
-                  @if (entries.length > 0) {
-                    <dl class="manager-rubric">
-                      @for (entry of entries; track entry.label) {
-                        <div>
-                          <dt>{{ entry.label }}</dt>
-                          <dd>{{ entry.value }}</dd>
-                        </div>
-                      }
-                    </dl>
-                  }
-                }
-
-                <label [attr.for]="'comment-' + question.question_id">Commentaire manager</label>
+                <label class="manager-field-label" [attr.for]="'section-comment-' + section.section_id">
+                  Commentaire section
+                </label>
                 <textarea
-                  [id]="'comment-' + question.question_id"
-                  [disabled]="selectedTest.status !== 'in_progress'"
-                  [value]="question.manager_comment"
-                  (input)="updateAnswer(i, 'manager_comment', $any($event.target).value)"
+                  class="manager-wide-textarea"
+                  [id]="'section-comment-' + section.section_id"
+                  [disabled]="!canEditSection(selectedTest, section)"
+                  [value]="section.manager_comment"
+                  (input)="updateSectionComment(section.section_id, $any($event.target).value)"
                 ></textarea>
 
-                <div class="manager-score-row">
-                  <label [attr.for]="'score-' + question.question_id">Score</label>
-                  <span>{{ question.score ?? 0 }}/{{ question.points }}</span>
-                  <input
-                    [id]="'score-' + question.question_id"
-                    type="number"
-                    min="0"
-                    [max]="question.points"
-                    [disabled]="selectedTest.status !== 'in_progress'"
-                    [value]="question.score ?? ''"
-                    (input)="updateScore(i, $any($event.target).value)"
-                  />
+                <div class="manager-question-list">
+                  @for (question of section.questions; track question.question_id) {
+                    <article
+                      class="manager-question"
+                      [class.manager-question--complete]="questionState(question) === 'complete'"
+                      [class.manager-question--missing]="questionState(question) === 'missing'"
+                    >
+                      <div class="manager-question__top">
+                        <div>
+                          <strong>{{ question.title || 'Question' }}</strong>
+                          <small>
+                            {{ formatLabel(question.format) }} -
+                            {{ difficultyLabel(question.difficulty) }}
+                            @if (question.is_mandatory) {
+                              <b>Obligatoire</b>
+                            }
+                          </small>
+                        </div>
+                        <span>{{ question.points }} pts</span>
+                      </div>
+                      <p>{{ question.text }}</p>
+                      @if (question.explanation) {
+                        <p class="manager-question__hint">{{ question.explanation }}</p>
+                      }
+
+                      <label [attr.for]="'answer-' + question.question_id">Reponse candidat</label>
+                      @if (choiceOptions(question); as options) {
+                        @if (options.length > 0) {
+                          <div class="manager-choice-grid">
+                            @for (option of options; track option) {
+                              <button
+                                type="button"
+                                class="manager-choice"
+                                [class.manager-choice--active]="question.candidate_answer === option"
+                                [disabled]="!canEditSection(selectedTest, section)"
+                                (click)="setChoice(question.question_id, option); question.format === 'rating' ? updateScore(question.question_id, option) : null"
+                              >
+                                {{ option }}
+                              </button>
+                            }
+                          </div>
+                        } @else {
+                          <textarea
+                            [id]="'answer-' + question.question_id"
+                            [disabled]="!canEditSection(selectedTest, section)"
+                            [value]="question.candidate_answer"
+                            (input)="updateAnswer(question.question_id, 'candidate_answer', $any($event.target).value)"
+                          ></textarea>
+                        }
+                      }
+
+                      @if (rubricEntries(question); as entries) {
+                        @if (entries.length > 0) {
+                          <dl class="manager-rubric">
+                            @for (entry of entries; track entry.label) {
+                              <div>
+                                <dt>{{ entry.label }}</dt>
+                                <dd>{{ entry.value }}</dd>
+                              </div>
+                            }
+                          </dl>
+                        }
+                      }
+
+                      <label [attr.for]="'comment-' + question.question_id">Commentaire question</label>
+                      <textarea
+                        [id]="'comment-' + question.question_id"
+                        [disabled]="!canEditSection(selectedTest, section)"
+                        [value]="question.manager_comment"
+                        (input)="updateAnswer(question.question_id, 'manager_comment', $any($event.target).value)"
+                      ></textarea>
+
+                      <div class="manager-score-row">
+                        <label [attr.for]="'score-' + question.question_id">Note</label>
+                        <span>{{ question.score ?? 0 }}/{{ question.points }}</span>
+                        <input
+                          [id]="'score-' + question.question_id"
+                          type="number"
+                          min="0"
+                          [max]="question.points"
+                          [disabled]="!canEditSection(selectedTest, section)"
+                          [value]="question.score ?? ''"
+                          (input)="updateScore(question.question_id, $any($event.target).value)"
+                        />
+                      </div>
+                    </article>
+                  }
                 </div>
-              </article>
+              </section>
             }
           </div>
 
           @if (selectedTest.status === 'in_progress') {
-            <button
-              type="button"
-              class="manager-save"
-              [disabled]="saving()"
-              (click)="saveQuestionnaire()"
-            >
-              {{ saving() ? 'Enregistrement...' : 'Enregistrer le test' }}
-            </button>
+            <div class="manager-save-row">
+              <button
+                type="button"
+                class="manager-save manager-save--secondary"
+                [disabled]="saving() || !hasOpenSection()"
+                (click)="saveQuestionnaire(false)"
+              >
+                {{ saving() ? 'Enregistrement...' : 'Enregistrer brouillon' }}
+              </button>
+              <button
+                type="button"
+                class="manager-save"
+                [disabled]="saving() || !hasOpenSection()"
+                (click)="saveQuestionnaire(true)"
+              >
+                {{ saving() ? 'Validation...' : 'Valider mes sections' }}
+              </button>
+            </div>
           }
         }
       </section>

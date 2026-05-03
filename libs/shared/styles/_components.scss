@@ -1,12 +1,14 @@
 @layer components {
   .ff-card {
-    @apply rounded-xl border shadow-md;
+    @apply border shadow-md;
+    border-radius: 0.9rem;
     border-color: var(--ff-color-border);
     background-color: var(--ff-color-surface-1);
   }
 
   .ff-card-elevated {
-    @apply rounded-2xl border shadow-lg;
+    @apply border shadow-lg;
+    border-radius: 1rem;
     border-color: var(--ff-color-border);
     background-color: var(--ff-color-surface-2);
   }
@@ -35,13 +37,13 @@
   }
 
   .ff-input {
-    height: 56px;
-    border: 1px solid #243047;
-    border-radius: 16px;
-    background-color: #131c2d;
-    color: #f3f6fb;
-    font-size: 16px;
-    padding: 0 18px 0 52px;
+    height: 3.4rem;
+    border: 1px solid var(--ff-color-border-soft);
+    border-radius: 0.9rem;
+    background-color: var(--ff-color-surface-3);
+    color: var(--ff-color-text-primary);
+    font-size: 0.94rem;
+    padding: 0 1rem 0 3rem;
   }
 
   .ff-input::placeholder {
@@ -119,8 +121,8 @@
     width: 100%;
     max-width: 490px;
     padding: 24px;
-    border-radius: 24px;
-    background: #1a2232;
+    border-radius: 1rem;
+    background: var(--ff-color-surface-1);
     border: 1px solid rgba(255, 255, 255, 0.08);
     box-shadow: 0 24px 50px rgba(0, 0, 0, 0.35);
   }
@@ -188,17 +190,20 @@
   }
 
   .ff-btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition-all duration-200 focus:outline-none;
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium transition-all duration-200 focus:outline-none;
+    min-height: 2.8rem;
+    border-radius: 0.9rem;
   }
 
   .ff-btn-primary {
-    height: 58px;
-    border-radius: 0;
-    background: linear-gradient(90deg, #4b97e8 0%, #5ca1ec 100%);
+    border: 1px solid rgb(255 255 255 / 0.08);
+    background: var(--ff-color-primary-500);
     box-shadow: none;
-    font-size: 20px;
+    color: #06101f;
+    font-size: 0.9rem;
     font-weight: 700;
     letter-spacing: 0.06em;
+    text-transform: uppercase;
   }
 
   .ff-btn-primary:hover {
@@ -245,9 +250,9 @@
   }
 
   .ff-app-screen {
-    min-height: calc(100vh - 144px);
-    background-color: #0f1117;
-    color: #e0e2ec;
+    min-height: calc(100vh - 4rem);
+    background: var(--ff-color-background);
+    color: var(--ff-color-text-primary);
     padding: 1.25rem 1rem 6rem;
   }
 
@@ -271,7 +276,7 @@
 
   .ff-app-kicker {
     margin: 0 0 0.35rem;
-    color: #4a8eff;
+    color: var(--ff-color-primary-400);
     font-size: 0.68rem;
     font-weight: 800;
     letter-spacing: 0.16em;
@@ -280,7 +285,7 @@
 
   .ff-app-title {
     margin: 0;
-    color: #e0e2ec;
+    color: var(--ff-color-text-primary);
     font-size: 1.55rem;
     font-weight: 800;
     letter-spacing: 0;
@@ -289,17 +294,18 @@
 
   .ff-app-subtitle {
     margin: 0.35rem 0 0;
-    color: #8b90a0;
+    color: var(--ff-color-text-muted);
     font-size: 0.88rem;
     line-height: 1.45;
   }
 
   .ff-app-panel,
   .ff-data-card {
-    border: 1px solid rgba(76, 82, 96, 0.26);
-    border-radius: 0.5rem;
-    background-color: #1c2027;
-    color: #e0e2ec;
+    border: 1px solid var(--ff-color-border-soft);
+    border-radius: var(--ff-radius-card);
+    background-color: var(--ff-color-surface-1);
+    color: var(--ff-color-text-primary);
+    box-shadow: var(--ff-shadow-card);
   }
 
   .ff-app-panel {
@@ -320,10 +326,10 @@
   .ff-control {
     width: 100%;
     min-height: 2.9rem;
-    border: 1px solid rgba(76, 82, 96, 0.34);
-    border-radius: 0.5rem;
-    background-color: #242832;
-    color: #e0e2ec;
+    border: 1px solid var(--ff-color-border-soft);
+    border-radius: var(--ff-radius-control);
+    background-color: var(--ff-color-surface-3);
+    color: var(--ff-color-text-primary);
     font-size: 0.9rem;
     font-weight: 650;
     outline: 0;
@@ -337,16 +343,16 @@
   }
 
   .ff-control option {
-    background-color: #1c2027;
-    color: #e0e2ec;
+    background-color: var(--ff-color-surface-1);
+    color: var(--ff-color-text-primary);
   }
 
   .ff-status-pill {
     display: inline-flex;
     align-items: center;
-    border-radius: 0.25rem;
-    background-color: rgba(74, 142, 255, 0.16);
-    color: #acc7ff;
+    border-radius: 999px;
+    background-color: var(--ff-color-primary-soft);
+    color: var(--ff-color-primary-100);
     font-size: 0.64rem;
     font-weight: 800;
     letter-spacing: 0.08em;
@@ -367,7 +373,7 @@
 
   .ff-row-title {
     margin: 0;
-    color: #e0e2ec;
+    color: var(--ff-color-text-primary);
     font-size: 0.98rem;
     font-weight: 800;
     line-height: 1.3;
@@ -375,14 +381,14 @@
 
   .ff-row-meta {
     margin: 0.35rem 0 0;
-    color: #8b90a0;
+    color: var(--ff-color-text-muted);
     font-size: 0.78rem;
     font-weight: 650;
     line-height: 1.45;
   }
 
   .ff-muted {
-    color: #8b90a0;
+    color: var(--ff-color-text-muted);
   }
 
   .ff-empty,
@@ -395,13 +401,210 @@
   .ff-empty {
     border: 1px solid rgba(76, 82, 96, 0.22);
     background-color: rgba(28, 32, 39, 0.56);
-    color: #8b90a0;
+    color: var(--ff-color-text-muted);
   }
 
   .ff-alert-inline {
     border: 1px solid rgba(74, 142, 255, 0.26);
     background-color: rgba(74, 142, 255, 0.1);
     color: #acc7ff;
+  }
+
+  .ff-section-title {
+    margin: 0;
+    color: var(--ff-color-text-primary);
+    font-size: 1.35rem;
+    font-weight: 900;
+    line-height: 1.2;
+  }
+
+  .ff-mobile-appbar {
+    position: sticky;
+    top: 0;
+    z-index: 35;
+    display: flex;
+    min-height: 4.5rem;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    border-bottom: 1px solid var(--ff-color-border-soft);
+    background: var(--ff-color-header);
+    color: var(--ff-color-text-primary);
+    padding: 0 1.25rem;
+  }
+
+  .ff-mobile-appbar__title {
+    margin: 0;
+    min-width: 0;
+    overflow: hidden;
+    font-size: 1.45rem;
+    font-weight: 950;
+    letter-spacing: 0;
+    line-height: 1.2;
+    text-overflow: ellipsis;
+    text-shadow: var(--ff-text-shadow);
+    white-space: nowrap;
+  }
+
+  .ff-search-box {
+    position: relative;
+    display: flex;
+    min-height: 3.55rem;
+    align-items: center;
+    border: 1px solid transparent;
+    border-radius: var(--ff-radius-card);
+    background: var(--ff-color-surface-raised);
+    color: var(--ff-color-text-muted);
+    padding: 0 1rem 0 3.15rem;
+  }
+
+  .ff-search-box svg {
+    position: absolute;
+    left: 1.15rem;
+    width: 1.15rem;
+    height: 1.15rem;
+  }
+
+  .ff-search-box input {
+    width: 100%;
+    min-width: 0;
+    border: 0;
+    background: transparent;
+    color: var(--ff-color-text-primary);
+    font-size: 1rem;
+    outline: 0;
+  }
+
+  .ff-chip-row {
+    display: flex;
+    gap: 0.6rem;
+    overflow-x: auto;
+    padding-bottom: 0.2rem;
+    scrollbar-width: none;
+  }
+
+  .ff-chip-row::-webkit-scrollbar {
+    display: none;
+  }
+
+  .ff-chip {
+    display: inline-flex;
+    min-height: 2.25rem;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--ff-color-border);
+    border-radius: var(--ff-radius-pill);
+    background: transparent;
+    color: var(--ff-color-text-secondary);
+    font-size: 0.85rem;
+    font-weight: 700;
+    padding: 0 1.1rem;
+  }
+
+  .ff-chip--active {
+    border-color: var(--ff-color-primary-500);
+    background: var(--ff-color-primary-400);
+    color: #041a3b;
+  }
+
+  .ff-score-card {
+    border: 1px solid var(--ff-color-border);
+    border-radius: var(--ff-radius-panel);
+    background: var(--ff-color-surface-1);
+    color: var(--ff-color-text-primary);
+    padding: 1.25rem;
+  }
+
+  .ff-progress {
+    height: 0.45rem;
+    overflow: hidden;
+    border-radius: var(--ff-radius-pill);
+    background: #2b313b;
+  }
+
+  .ff-progress > span {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: var(--ff-color-primary-400);
+  }
+
+  .ff-segmented {
+    display: inline-grid;
+    grid-auto-flow: column;
+    gap: 0.25rem;
+    border: 1px solid var(--ff-color-border-soft);
+    border-radius: 0.95rem;
+    background: var(--ff-color-surface-2);
+    padding: 0.3rem;
+  }
+
+  .ff-segmented__item {
+    min-height: 2.55rem;
+    border: 0;
+    border-radius: 0.75rem;
+    background: transparent;
+    color: var(--ff-color-text-muted);
+    font-size: 0.84rem;
+    font-weight: 850;
+    padding: 0 1rem;
+  }
+
+  .ff-segmented__item--active,
+  .ff-segmented__item[aria-pressed='true'] {
+    background: var(--ff-color-primary-500);
+    color: #06101f;
+  }
+
+  .ff-form-grid {
+    display: grid;
+    gap: 0.85rem;
+  }
+
+  .ff-form-grid--two {
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  }
+
+  .ff-field-block {
+    display: grid;
+    gap: 0.45rem;
+  }
+
+  .ff-field-block > span,
+  .ff-field-block > label {
+    color: var(--ff-color-text-muted);
+    font-size: 0.72rem;
+    font-weight: 900;
+    text-transform: uppercase;
+  }
+
+  .ff-icon-btn {
+    display: inline-flex;
+    width: 2.8rem;
+    height: 2.8rem;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--ff-color-border-soft);
+    border-radius: 0.9rem;
+    background: var(--ff-color-surface-2);
+    color: var(--ff-color-text-secondary);
+  }
+
+  .ff-icon-btn:hover {
+    border-color: rgba(74, 142, 255, 0.48);
+    color: var(--ff-color-text-primary);
+  }
+
+  .ff-modal-scrim {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    background: rgb(0 0 0 / 0.62);
+    padding: 1rem;
   }
 
   .ff-inline-actions {

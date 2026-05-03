@@ -17,8 +17,8 @@
     }
 
     <article class="ff-app-panel">
-      <h2 class="ff-row-title mb-3">Create user</h2>
-      <form [formGroup]="createForm" (ngSubmit)="createUser()" class="grid gap-2 md:grid-cols-2">
+      <h2 class="ff-row-title" style="margin-bottom: 0.75rem">Create user</h2>
+      <form [formGroup]="createForm" (ngSubmit)="createUser()" class="ff-form-grid ff-form-grid--two">
         <input formControlName="email" type="email" aria-label="Email" class="ff-control" />
         <input formControlName="password" type="password" aria-label="Temporary password" class="ff-control" />
         <input formControlName="first_name" type="text" aria-label="First name" class="ff-control" />
@@ -35,14 +35,14 @@
     </article>
 
     <article class="ff-app-panel">
-      <h2 class="ff-row-title mb-3">Existing users</h2>
+      <h2 class="ff-row-title" style="margin-bottom: 0.75rem">Existing users</h2>
       @if (isLoading) {
         <p class="ff-empty">Loading users...</p>
       } @else {
         <div class="ff-app-stack">
           @for (user of users; track user.id) {
             <div class="ff-data-card">
-              <div class="mb-3 flex items-center justify-between gap-2">
+              <div class="ff-inline-actions" style="justify-content: space-between; margin-bottom: 0.75rem">
                 <div>
                   <p class="ff-row-title">{{ user.first_name }} {{ user.last_name }}</p>
                   <p class="ff-row-meta">{{ user.email }}</p>
@@ -52,7 +52,7 @@
                 </span>
               </div>
               <div class="ff-inline-actions">
-                <select class="ff-control max-w-48" [value]="user.role" (change)="onRoleChange(user, $event)">
+                <select class="ff-control" style="max-width: 12rem" [value]="user.role" (change)="onRoleChange(user, $event)">
                   @for (role of roleOptions; track role) {
                     <option [value]="role">{{ role }}</option>
                   }

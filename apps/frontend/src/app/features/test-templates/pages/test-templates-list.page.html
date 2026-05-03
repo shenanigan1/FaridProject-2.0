@@ -28,9 +28,9 @@
           class="ff-data-card w-full text-left"
           [attr.aria-label]="'Open template ' + (t.name)"
         >
-          <div class="flex items-start justify-between gap-3">
-            <div class="min-w-0">
-              <h2 class="ff-row-title truncate">{{ t.name }}</h2>
+          <div class="ff-inline-actions" style="align-items: flex-start; justify-content: space-between">
+            <div style="min-width: 0">
+              <h2 class="ff-row-title">{{ t.name }}</h2>
               <p class="ff-row-meta">Updated {{ (t.updated_at || t.created_at) | date:'MMM d, y' }}</p>
             </div>
 
@@ -41,24 +41,24 @@
             }
           </div>
 
-          <div class="mt-3 grid grid-cols-3 gap-3 border-t border-[#4c5260]/20 pt-3">
+          <div class="ff-form-grid ff-form-grid--two" style="border-top: 1px solid var(--ff-color-border-soft); margin-top: 0.85rem; padding-top: 0.85rem">
             @if (t.points_total !== null && t.points_total !== undefined) {
               <div>
-                <div class="ff-app-kicker mb-1">POINTS</div>
-                <div class="text-xs text-[#e0e2ec]">{{ t.points_total }} pts</div>
+                <div class="ff-app-kicker">POINTS</div>
+                <div class="ff-row-title">{{ t.points_total }} pts</div>
               </div>
             }
 
             @if (t.duration_minutes !== null && t.duration_minutes !== undefined) {
               <div>
-                <div class="ff-app-kicker mb-1">DURATION</div>
-                <div class="text-xs text-[#e0e2ec]">{{ t.duration_minutes }} min</div>
+                <div class="ff-app-kicker">DURATION</div>
+                <div class="ff-row-title">{{ t.duration_minutes }} min</div>
               </div>
             }
 
-            <div class="text-right">
-              <div class="ff-app-kicker mb-1">CREATED</div>
-              <div class="text-xs text-[#e0e2ec]">{{ t.created_at | date:'MMM d' }}</div>
+            <div>
+              <div class="ff-app-kicker">CREATED</div>
+              <div class="ff-row-title">{{ t.created_at | date:'MMM d' }}</div>
             </div>
           </div>
         </button>

@@ -24,6 +24,9 @@ export interface TemplateSectionPoolRuleDto {
 
 export interface TemplateQuestionDto {
   id: number;
+  title?: string;
+  format?: string;
+  poolId?: string;
   text: string;
   points: number;
   mandatory?: boolean;

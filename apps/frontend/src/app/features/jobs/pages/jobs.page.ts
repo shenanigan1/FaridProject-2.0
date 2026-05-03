@@ -6,6 +6,7 @@ import {
   inject,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BehaviorSubject, combineLatest, map, startWith } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -60,6 +61,7 @@ type JobEditorForm = FormGroup<{
 })
 export class JobsPage {
   private readonly jobsApi = inject(JobsApiService);
+  private readonly router = inject(Router);
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly destroyRef = inject(DestroyRef);
 
@@ -277,6 +279,10 @@ export class JobsPage {
           this.cdr.markForCheck();
         },
       });
+  }
+
+  openApplicants(offer: JobOfferVm): void {
+    void this.router.navigate(['/positions', offer.id, 'applicants']);
   }
 
   trackJob(_index: number, offer: JobOfferVm): number {

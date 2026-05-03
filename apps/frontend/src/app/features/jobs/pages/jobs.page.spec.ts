@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { Router } from '@angular/router';
 import { firstValueFrom, of, take } from 'rxjs';
 
 import { PositionDto } from '@features/positions/services/positions-api.service';
@@ -44,6 +45,7 @@ function makeWorkspace(overrides: Partial<JobsWorkspace> = {}): JobsWorkspace {
 
 describe('JobsPage', () => {
   let api: jasmine.SpyObj<JobsApiService>;
+  let router: jasmine.SpyObj<Router>;
 
   beforeEach(async () => {
     api = jasmine.createSpyObj<JobsApiService>('JobsApiService', [
@@ -60,10 +62,15 @@ describe('JobsPage', () => {
       of(makePosition({ id, title: payload.title ?? 'Updated job' })),
     );
     api.archivePosition.and.callFake((id) => of(makePosition({ id, is_active: false })));
+    router = jasmine.createSpyObj<Router>('Router', ['navigate']);
+    router.navigate.and.resolveTo(true);
 
     await TestBed.configureTestingModule({
       imports: [JobsPage],
-      providers: [{ provide: JobsApiService, useValue: api }],
+      providers: [
+        { provide: JobsApiService, useValue: api },
+        { provide: Router, useValue: router },
+      ],
     }).compileComponents();
   });
 
@@ -146,5 +153,17 @@ describe('JobsPage', () => {
 
     component.archiveJob(offers[0]);
     expect(api.archivePosition).toHaveBeenCalledWith(1);
+  });
+
+  it('opens applicants list from the three-dot job action', () => {
+    const fixture = TestBed.createComponent(JobsPage);
+    fixture.detectChanges();
+
+    const moreButton = fixture.debugElement.query(By.css('.ff-job-card__more'))
+      .nativeElement as HTMLButtonElement;
+    moreButton.click();
+
+    expect(router.navigate).toHaveBeenCalledOnceWith(['/positions', 1, 'applicants']);
+    expect(api.archivePosition).not.toHaveBeenCalled();
   });
 });

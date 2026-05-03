@@ -43,11 +43,20 @@ export interface ManagerTestItem {
   validatedAt: string | null;
 }
 
-export type ManagerQuestionFormat = 'mcq' | 'true_false' | 'practical' | string;
+export type ManagerQuestionFormat =
+  | 'mcq'
+  | 'true_false'
+  | 'yes_no'
+  | 'free_text'
+  | 'rating'
+  | 'practical'
+  | string;
 export type ManagerQuestionRubric = Record<string, unknown> | unknown[] | null;
 
 export interface ManagerQuestionnaireQuestion {
   question_id: number;
+  section_id: number;
+  section_title: string;
   format: ManagerQuestionFormat;
   title: string;
   text: string;
@@ -61,9 +70,23 @@ export interface ManagerQuestionnaireQuestion {
   score: number | null;
 }
 
+export interface ManagerQuestionnaireSection {
+  section_id: number;
+  title: string;
+  description: string;
+  weight: number;
+  assigned_to: number | null;
+  assigned_to_full_name: string;
+  manager_comment: string;
+  completed_at: string | null;
+  questions: ManagerQuestionnaireQuestion[];
+}
+
 export interface ManagerQuestionnaire {
   evaluation_id: number;
   template_name: string;
+  test_manager_comment: string;
+  sections: ManagerQuestionnaireSection[];
   questions: ManagerQuestionnaireQuestion[];
 }
 
@@ -98,16 +121,25 @@ export class ManagerTestsService {
 
   saveQuestionnaire(
     evaluationId: number,
-    answers: {
-      question_id: number;
-      candidate_answer: string;
-      manager_comment: string;
-      score: number | null;
-    }[],
+    payload: {
+      answers: {
+        question_id: number;
+        candidate_answer: string;
+        manager_comment: string;
+        score: number | null;
+      }[];
+      section_comments?: {
+        section_id: number;
+        manager_comment: string;
+        completed?: boolean;
+      }[];
+      test_manager_comment?: string;
+      complete_sections?: boolean;
+    },
   ): Observable<ManagerQuestionnaire> {
     return this.http.post<ManagerQuestionnaire>(
       `${this.evaluationsUrl}${evaluationId}/questionnaire/`,
-      { answers },
+      payload,
     );
   }
 

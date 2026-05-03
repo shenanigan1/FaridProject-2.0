@@ -118,7 +118,7 @@ interface SkillQuestionsStoreMock {
   isLoading: ReturnType<typeof signal<boolean>>;
   error: ReturnType<typeof signal<string | null>>;
   loadOne: jasmine.Spy<(id: string, cb: (row: SkillQuestion | null) => void) => void>;
-  createInPool: jasmine.Spy<(poolId: string, dto: unknown, onSuccess?: () => void) => void>;
+  createInPool: jasmine.Spy<(poolId: string, dto: unknown, onSuccess?: (created: SkillQuestion) => void) => void>;
   update: jasmine.Spy<(id: string, dto: unknown, onSuccess?: () => void) => void>;
 }
 
@@ -194,6 +194,20 @@ describe('QuestionEditorPageComponent', () => {
     expect(storeMock.loadOne).not.toHaveBeenCalled();
   });
 
+  it('should expose free text, yes/no and rating question types for pool authoring', () => {
+    const { fixture, component } = setup({ poolId: 'p1', questionId: null });
+
+    fixture.detectChanges();
+    const text = (fixture.nativeElement as HTMLElement).textContent ?? '';
+
+    expect(text).toContain('Libre');
+    expect(text).toContain('Oui/Non');
+    expect(text).toContain('Note');
+
+    component.setFormat('free_text');
+    expect(component.form.controls.format.value).toBe('free_text');
+  });
+
   it('should init in edit mode and call store.loadOne()', () => {
     const { component, storeMock } = setup({ poolId: 'p1', questionId: 'q42' });
 
@@ -226,6 +240,96 @@ describe('QuestionEditorPageComponent', () => {
     expect(component.form.controls.points.value).toBe(7);
     expect(component.form.controls.difficulty.value).toBe('hard');
     expect(component.form.controls.order.value).toBe(3);
+  });
+
+  it('should load and save editable QCM answers from rubric options', () => {
+    const { component, storeMock } = setup({ poolId: 'p1', questionId: 'q42' });
+
+    const [, cb] = storeMock.loadOne.calls.mostRecent().args;
+    cb({
+      id: 'q42',
+      poolId: 'p1',
+      format: 'mcq',
+      title: 'Controle securite',
+      text: 'Quel equipement est requis ?',
+      explanation: '',
+      rubric: { options: ['Gilet', 'Sandales'] },
+      is_mandatory: true,
+      points: 10,
+      difficulty: 'intermediate',
+      order: 0,
+      createdAt: '',
+      updatedAt: '',
+    });
+
+    expect(component.form.controls.choice_options_text.value).toBe('Gilet\nSandales');
+
+    component.form.controls.choice_options_text.setValue('Gilet\nCasque\nGants');
+    component.save();
+
+    const [, dto] = storeMock.update.calls.mostRecent().args;
+    expect(dto).toEqual(jasmine.objectContaining({
+      format: 'mcq',
+      rubric: { options: ['Gilet', 'Casque', 'Gants'] },
+    }));
+  });
+
+  it('should expose the correct answer field while editing QCM choices', () => {
+    const { fixture, component, storeMock } = setup({ poolId: 'p1', questionId: null });
+
+    component.form.controls.format.setValue('mcq');
+    component.form.controls.title.setValue('Controle securite');
+    component.form.controls.text.setValue('Quel equipement est requis ?');
+    component.form.controls.choice_options_text.setValue('Gilet\nCasque\nGants');
+    component.form.controls.explanation.setValue('  Casque  ');
+    fixture.detectChanges();
+
+    const text = (fixture.nativeElement as HTMLElement).textContent ?? '';
+    expect(text).toContain('Choix de reponse QCM');
+    expect(text).toContain('Bonne reponse');
+
+    component.save();
+
+    const [, dto] = storeMock.createInPool.calls.mostRecent().args;
+    expect(dto).toEqual(jasmine.objectContaining({
+      format: 'mcq',
+      explanation: 'Casque',
+      rubric: { options: ['Gilet', 'Casque', 'Gants'] },
+    }));
+  });
+
+  it('should load and save editable rating bounds from rubric', () => {
+    const { component, storeMock } = setup({ poolId: 'p1', questionId: 'q99' });
+
+    const [, cb] = storeMock.loadOne.calls.mostRecent().args;
+    cb({
+      id: 'q99',
+      poolId: 'p1',
+      format: 'rating',
+      title: 'Note conduite',
+      text: 'Noter la conduite',
+      explanation: '',
+      rubric: { scoring: 'rating', min: 1, max: 5 },
+      is_mandatory: false,
+      points: 5,
+      difficulty: 'easy',
+      order: 0,
+      createdAt: '',
+      updatedAt: '',
+    });
+
+    expect(component.form.controls.rating_min.value).toBe(1);
+    expect(component.form.controls.rating_max.value).toBe(5);
+
+    component.form.controls.rating_min.setValue(0);
+    component.form.controls.rating_max.setValue(10);
+    component.save();
+
+    const [, dto] = storeMock.update.calls.mostRecent().args;
+    expect(dto).toEqual(jasmine.objectContaining({
+      format: 'rating',
+      rubric: { scoring: 'rating', min: 0, max: 10 },
+    }));
   });
 
   it('back() should navigate to /pools/:poolId', () => {
@@ -277,6 +381,61 @@ describe('QuestionEditorPageComponent', () => {
       difficulty: 'easy',
       order: 2,
     });
+  });
+
+  it('save() should create a scored free-text question', () => {
+    const { component, storeMock } = setup({ poolId: 'p1', questionId: null });
+
+    component.form.controls.format.setValue('free_text');
+    component.form.controls.title.setValue('Observation manager');
+    component.form.controls.text.setValue('Decrire la manoeuvre effectuee par le candidat');
+    component.form.controls.points.setValue(20);
+    component.form.controls.difficulty.setValue('intermediate');
+
+    component.save();
+
+    const [, dto] = storeMock.createInPool.calls.mostRecent().args;
+    expect(dto).toEqual(jasmine.objectContaining({
+      format: 'free_text',
+      points: 20,
+      rubric: jasmine.objectContaining({ scoring: 'manual' }),
+    }));
+  });
+
+  it('saveAndAddAnother() should save, reset the form and stay on the same pool', () => {
+    const { component, storeMock, routerMock } = setup({ poolId: 'p1', questionId: null });
+
+    component.form.controls.format.setValue('free_text');
+    component.form.controls.title.setValue('Observation manager');
+    component.form.controls.text.setValue('Decrire la manoeuvre effectuee par le candidat');
+    component.form.controls.points.setValue(20);
+
+    component.saveAndAddAnother();
+
+    expect(storeMock.createInPool).toHaveBeenCalledTimes(1);
+    const [, , cb] = storeMock.createInPool.calls.mostRecent().args;
+    expect(cb).toEqual(jasmine.any(Function));
+
+    cb?.({
+      id: 'q-new',
+      poolId: 'p1',
+      format: 'free_text',
+      title: 'Observation manager',
+      text: 'Decrire la manoeuvre effectuee par le candidat',
+      explanation: '',
+      rubric: { scoring: 'manual' },
+      is_mandatory: false,
+      points: 20,
+      difficulty: 'intermediate',
+      order: 0,
+      createdAt: '',
+      updatedAt: '',
+    });
+
+    expect(routerMock.navigate).not.toHaveBeenCalled();
+    expect(component.form.controls.text.value).toBe('');
+    expect(component.form.controls.points.value).toBe(10);
+    expect(component.tab()).toBe('editor');
   });
 
   it('save() should call store.update in edit mode', () => {

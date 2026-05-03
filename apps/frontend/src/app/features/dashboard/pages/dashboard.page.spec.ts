@@ -107,7 +107,7 @@ describe('DashboardPage', () => {
     const { fixture } = createComponent('admin');
     const content = (fixture.nativeElement as HTMLElement).textContent ?? '';
 
-    expect(content).toContain('TABLEAU DE BORD');
+    expect(content).toContain('SYSTEM_CORE');
     expect(content).toContain('1');
     expect(content).toContain('ACTIVE REQUISITIONS');
     expect(content).toContain('RECENT INFLOW');

@@ -7,6 +7,7 @@ import {
   ManagerQuestionnaire,
   ManagerQuestionnaireQuestion,
   ManagerQuestionRubric,
+  ManagerQuestionnaireSection,
   ManagerTestItem,
   ManagerTestsService,
 } from '../services/manager-tests.service';
@@ -69,19 +70,20 @@ export class ManagerTestDetailPage {
   readonly error = signal<string | null>(null);
   readonly message = signal<string | null>(null);
   readonly saving = signal(false);
-  readonly questionCount = computed(() => this.questionnaire()?.questions.length ?? 0);
+  readonly questions = computed(() => this.questionnaire()?.sections.flatMap((section) => section.questions) ?? []);
+  readonly questionCount = computed(() => this.questions().length);
   readonly answeredCount = computed(
-    () => this.questionnaire()?.questions.filter((question) => this.isAnswered(question)).length ?? 0,
+    () => this.questions().filter((question) => this.isAnswered(question)).length,
   );
   readonly progressPercent = computed(() => {
     const total = this.questionCount();
     return total === 0 ? 0 : Math.round((this.answeredCount() / total) * 100);
   });
   readonly totalScore = computed(() =>
-    this.questionnaire()?.questions.reduce((sum, question) => sum + (question.score ?? 0), 0) ?? 0,
+    this.questions().reduce((sum, question) => sum + (question.score ?? 0), 0),
   );
   readonly maxScore = computed(
-    () => this.questionnaire()?.questions.reduce((sum, question) => sum + question.points, 0) ?? 0,
+    () => this.questions().reduce((sum, question) => sum + question.points, 0),
   );
 
   private readonly evaluationId = Number(this.route.snapshot.paramMap.get('id'));
@@ -96,51 +98,53 @@ export class ManagerTestDetailPage {
     this.load();
   }
 
-  updateAnswer(index: number, field: 'candidate_answer' | 'manager_comment', value: string): void {
+  updateTestComment(value: string): void {
     this.questionnaire.update((current) => {
       if (!current) return current;
-      return {
-        ...current,
-        questions: current.questions.map((question, questionIndex) =>
-          questionIndex === index ? { ...question, [field]: value } : question,
-        ),
-      };
+      return { ...current, test_manager_comment: value };
     });
   }
 
-  updateScore(index: number, value: string): void {
+  updateSectionComment(sectionId: number, value: string): void {
     this.questionnaire.update((current) => {
       if (!current) return current;
-      return {
-        ...current,
-        questions: current.questions.map((question, questionIndex) => {
-          if (questionIndex !== index) return question;
-          if (value.trim() === '') {
-            return { ...question, score: null };
-          }
-          const score = Number(value);
-          if (!Number.isFinite(score)) {
-            return { ...question, score: null };
-          }
-          const boundedScore = Math.min(Math.max(Math.round(score), 0), question.points);
-          return { ...question, score: boundedScore };
-        }),
-      };
+      const sections = current.sections.map((section) =>
+        section.section_id === sectionId ? { ...section, manager_comment: value } : section,
+      );
+      return { ...current, sections, questions: this.flattenSections(sections) };
     });
   }
 
-  setChoice(index: number, value: string): void {
-    this.updateAnswer(index, 'candidate_answer', value);
+  updateAnswer(questionId: number, field: 'candidate_answer' | 'manager_comment', value: string): void {
+    this.patchQuestion(questionId, (question) => ({ ...question, [field]: value }));
   }
 
-  saveQuestionnaire(): void {
+  updateScore(questionId: number, value: string): void {
+    this.patchQuestion(questionId, (question) => {
+      if (value.trim() === '') {
+        return { ...question, score: null };
+      }
+      const score = Number(value);
+      if (!Number.isFinite(score)) {
+        return { ...question, score: null };
+      }
+      const boundedScore = Math.min(Math.max(Math.round(score), 0), question.points);
+      return { ...question, score: boundedScore };
+    });
+  }
+
+  setChoice(questionId: number, value: string): void {
+    this.updateAnswer(questionId, 'candidate_answer', value);
+  }
+
+  saveQuestionnaire(completeSections = false): void {
     const questionnaire = this.questionnaire();
     const test = this.test();
     if (!questionnaire || !test || test.status !== 'in_progress') {
       return;
     }
 
-    const invalidMessage = this.validateQuestionnaire(questionnaire);
+    const invalidMessage = completeSections ? this.validateQuestionnaire(questionnaire) : null;
     if (invalidMessage) {
       this.message.set(invalidMessage);
       return;
@@ -149,20 +153,30 @@ export class ManagerTestDetailPage {
     this.saving.set(true);
     this.message.set(null);
 
-    const answers = questionnaire.questions.map((question) => ({
+    const answers = this.questions().map((question) => ({
       question_id: question.question_id,
       candidate_answer: question.candidate_answer,
       manager_comment: question.manager_comment,
       score: question.score,
     }));
+    const sectionComments = questionnaire.sections.map((section) => ({
+      section_id: section.section_id,
+      manager_comment: section.manager_comment,
+      completed: completeSections,
+    }));
 
     this.testsService
-      .saveQuestionnaire(test.id, answers)
+      .saveQuestionnaire(test.id, {
+        answers,
+        section_comments: sectionComments,
+        test_manager_comment: questionnaire.test_manager_comment,
+        complete_sections: completeSections,
+      })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (saved) => {
           this.questionnaire.set(saved);
-          this.message.set('Questionnaire enregistre.');
+          this.message.set(completeSections ? 'Sections validees.' : 'Questionnaire enregistre.');
           this.saving.set(false);
         },
         error: () => {
@@ -196,10 +210,29 @@ export class ManagerTestDetailPage {
     return 'draft';
   }
 
+  sectionQuestionCount(section: ManagerQuestionnaireSection): number {
+    return section.questions.length;
+  }
+
+  sectionAnsweredCount(section: ManagerQuestionnaireSection): number {
+    return section.questions.filter((question) => this.isAnswered(question)).length;
+  }
+
+  canEditSection(test: ManagerTestItem, section: ManagerQuestionnaireSection): boolean {
+    return test.status === 'in_progress' && section.completed_at === null;
+  }
+
+  hasOpenSection(): boolean {
+    return this.questionnaire()?.sections.some((section) => section.completed_at === null) ?? false;
+  }
+
   formatLabel(format: string): string {
     const labels: Record<string, string> = {
       mcq: 'QCM',
       true_false: 'Vrai / Faux',
+      yes_no: 'Oui / Non',
+      free_text: 'Reponse libre notee',
+      rating: 'Note',
       practical: 'Pratique',
     };
     return labels[format] ?? format;
@@ -217,6 +250,16 @@ export class ManagerTestDetailPage {
   choiceOptions(question: ManagerQuestionnaireQuestion): string[] {
     if (question.format === 'true_false') {
       return ['Vrai', 'Faux'];
+    }
+
+    if (question.format === 'yes_no') {
+      return ['Oui', 'Non'];
+    }
+
+    if (question.format === 'rating') {
+      const min = Math.max(0, Math.round(this.rubricNumber(question.rubric, 'min', 0)));
+      const max = Math.max(min, Math.round(this.rubricNumber(question.rubric, 'max', question.points)));
+      return Array.from({ length: max - min + 1 }, (_, index) => String(min + index));
     }
 
     const candidates = this.rubricOptionCandidates(question.rubric);
@@ -272,21 +315,51 @@ export class ManagerTestDetailPage {
     return [rubric['options'], rubric['choices'], rubric['answers']];
   }
 
+  private rubricNumber(rubric: ManagerQuestionRubric, key: string, fallback: number): number {
+    if (!isRecord(rubric)) {
+      return fallback;
+    }
+    const value = rubric[key];
+    return typeof value === 'number' && Number.isFinite(value) ? value : fallback;
+  }
+
   private validateQuestionnaire(questionnaire: ManagerQuestionnaire): string | null {
-    const missingQuestion = questionnaire.questions.find(
-      (question) => question.is_mandatory && !this.isAnswered(question),
-    );
+    const missingQuestion = questionnaire.sections
+      .flatMap((section) => section.questions)
+      .find((question) => question.is_mandatory && !this.isAnswered(question));
     if (missingQuestion) {
       return `Reponse obligatoire manquante : ${missingQuestion.title || missingQuestion.text}`;
     }
 
-    const invalidScore = questionnaire.questions.find(
-      (question) => question.score !== null && (question.score < 0 || question.score > question.points),
-    );
+    const invalidScore = questionnaire.sections
+      .flatMap((section) => section.questions)
+      .find(
+        (question) => question.score !== null && (question.score < 0 || question.score > question.points),
+      );
     if (invalidScore) {
       return `Score invalide : ${invalidScore.title || invalidScore.text}`;
     }
 
     return null;
+  }
+
+  private patchQuestion(
+    questionId: number,
+    patcher: (question: ManagerQuestionnaireQuestion) => ManagerQuestionnaireQuestion,
+  ): void {
+    this.questionnaire.update((current) => {
+      if (!current) return current;
+      const sections = current.sections.map((section) => ({
+        ...section,
+        questions: section.questions.map((question) =>
+          question.question_id === questionId ? patcher(question) : question,
+        ),
+      }));
+      return { ...current, sections, questions: this.flattenSections(sections) };
+    });
+  }
+
+  private flattenSections(sections: ManagerQuestionnaireSection[]): ManagerQuestionnaireQuestion[] {
+    return sections.flatMap((section) => section.questions);
   }
 }

@@ -66,6 +66,53 @@ def test_create_skill_question_success(api_client):
     assert res.data["pool"] == pool.id
 
 
+def test_create_skill_question_from_pool_nested_route_uses_pool_from_url(api_client):
+    user = UserFactory.create(is_staff=True, role=UserRoles.ADMIN)
+    api_client.force_authenticate(user=user)
+    pool = QuestionPoolFactory.create(name="Pool", code="POOL_NESTED")
+    url = reverse(f"{BASENAME_POOLS}-questions", kwargs={"pk": pool.id})
+
+    res = api_client.post(
+        url,
+        {
+            "format": "free_text",
+            "title": "Observation",
+            "text": "Decrire la manoeuvre observee par le manager",
+            "points": 20,
+        },
+        format="json",
+    )
+
+    assert res.status_code == 201, res.data
+    assert res.data["pool"] == pool.id
+    assert res.data["format"] == "free_text"
+
+
+@pytest.mark.parametrize("question_format", ["free_text", "yes_no", "rating"])
+def test_create_skill_question_supports_manager_question_formats(api_client, question_format):
+    user = UserFactory.create(is_staff=True, role=UserRoles.ADMIN)
+    api_client.force_authenticate(user=user)
+    pool = QuestionPoolFactory.create(name="Pool", code=f"POOL_{question_format.upper()}")
+    url = reverse(f"{BASENAME_QUESTIONS}-list")
+
+    res = api_client.post(
+        url,
+        {
+            "pool": pool.id,
+            "format": question_format,
+            "title": "Evaluation",
+            "text": "Question lisible pour le manager",
+            "points": 20,
+            "rubric": {"scoring": "manual"},
+        },
+        format="json",
+    )
+
+    assert res.status_code == 201, res.data
+    assert res.data["format"] == question_format
+    assert res.data["points"] == 20
+
+
 def test_create_template_success(api_client):
     url = reverse(f"{BASENAME_TEMPLATES}-list")
     payload = {"name": "Driver Template", "is_active": True}

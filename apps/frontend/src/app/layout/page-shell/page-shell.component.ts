@@ -6,25 +6,26 @@ import { CommonModule } from '@angular/common';
   selector: 'app-form-page-shell',
   imports: [CommonModule],
   template: `
-    <div class="min-h-[calc(100vh-144px)] bg-slate-950 text-slate-100 p-6">
-      <div class="max-w-2xl mx-auto">
-        <div class="mb-6 flex items-start justify-between gap-4">
+    <section class="ff-app-screen">
+      <div class="ff-app-container ff-app-stack" style="max-width: 48rem">
+        <header class="ff-app-header">
           <div>
-            <h2 class="text-xl font-semibold">{{ title }}</h2>
+            <p class="ff-app-kicker">Workspace</p>
+            <h1 class="ff-app-title">{{ title }}</h1>
 
             @if (subtitle) {
-              <p class="text-sm text-slate-400">
+              <p class="ff-app-subtitle">
                 {{ subtitle }}
               </p>
             }
           </div>
 
           <ng-content select="[shell-actions]"></ng-content>
-        </div>
+        </header>
 
         <ng-content></ng-content>
       </div>
-    </div>
+    </section>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -90,9 +90,7 @@ export class DashboardPage implements OnInit {
     return currentRole === 'hr' || currentRole === 'admin' || currentRole === 'director';
   });
 
-  readonly pageTitle = computed(() =>
-    this.isRecruitmentRole() ? 'TABLEAU DE BORD' : 'FLEET OPERATIONS',
-  );
+  readonly pageTitle = computed(() => (this.isRecruitmentRole() ? 'SYSTEM_CORE' : 'FLEET OPERATIONS'));
 
   readonly recruitmentCards = computed<DashboardStatCard[]>(() => {
     const snapshot = this.snapshot();
