@@ -77,10 +77,49 @@ class TemplateSectionReadSerializer(serializers.ModelSerializer):
     title = serializers.CharField(source="name")
     pools = TemplatePoolRuleReadSerializer(many=True, source="pool_rules")
     weight = serializers.IntegerField(min_value=0, max_value=1000000)
+    questions = serializers.SerializerMethodField()
 
     class Meta:
         model = TemplateSection
-        fields = ["id", "title", "description", "weight", "order", "pools"]
+        fields = [
+            "id",
+            "title",
+            "description",
+            "weight",
+            "order",
+            "pools",
+            "questions",
+        ]
+
+    def get_questions(self, obj: TemplateSection) -> list[dict]:
+        questions = []
+        for rule in obj.pool_rules.select_related("pool").prefetch_related(
+            "pool__questions"
+        ):
+            pool_questions = list(rule.pool.questions.all().order_by("order", "id"))
+            if rule.random_count > 0:
+                mandatory = [
+                    question for question in pool_questions if question.is_mandatory
+                ]
+                optional = [
+                    question for question in pool_questions if not question.is_mandatory
+                ]
+                pool_questions = mandatory + optional[: rule.random_count]
+
+            for question in pool_questions:
+                questions.append(
+                    {
+                        "id": question.id,
+                        "text": question.text,
+                        "title": question.title,
+                        "format": question.format,
+                        "points": question.points,
+                        "mandatory": question.is_mandatory,
+                        "poolId": str(rule.pool_id),
+                    }
+                )
+
+        return questions
 
 
 class TemplateEditorSerializer(serializers.ModelSerializer):

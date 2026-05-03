@@ -1,13 +1,9 @@
-import { Component, Input } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-auth-card',
   standalone: true,
-  imports: [CommonModule],
   templateUrl: './auth-card.component.html',
+  styleUrl: './auth-card.component.scss',
 })
-export class AuthCardComponent {
-  @Input({ required: true }) title!: string;
-  @Input() subtitle: string | null = null;
-}
+export class AuthCardComponent {}

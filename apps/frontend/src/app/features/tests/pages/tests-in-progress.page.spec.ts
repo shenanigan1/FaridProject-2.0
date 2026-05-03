@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { of, throwError } from 'rxjs';
 
 import {
@@ -88,7 +89,10 @@ describe('TestsInProgressPage', () => {
 
     await TestBed.configureTestingModule({
       imports: [TestsInProgressPage],
-      providers: [{ provide: PositionApplicantsService, useValue: applicantsServiceSpy }],
+      providers: [
+        provideRouter([]),
+        { provide: PositionApplicantsService, useValue: applicantsServiceSpy },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(TestsInProgressPage);
@@ -120,7 +124,10 @@ describe('TestsInProgressPage', () => {
     await TestBed.resetTestingModule();
     await TestBed.configureTestingModule({
       imports: [TestsInProgressPage],
-      providers: [{ provide: PositionApplicantsService, useValue: applicantsServiceSpy }],
+      providers: [
+        provideRouter([]),
+        { provide: PositionApplicantsService, useValue: applicantsServiceSpy },
+      ],
     }).compileComponents();
 
     const errorFixture = TestBed.createComponent(TestsInProgressPage);

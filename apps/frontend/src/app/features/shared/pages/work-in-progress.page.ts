@@ -10,35 +10,19 @@ import { APP_ICONS } from '@shared/icons/app-icons';
   imports: [CommonModule, RouterLink, LucideDynamicIcon],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <section class="flex min-h-screen items-center justify-center bg-[#05143a] px-4 text-slate-100">
-      <article
-        class="w-full max-w-lg rounded-3xl border border-slate-700/40 bg-[#1a2948] p-8 shadow-2xl"
-      >
-        <div
-          class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-500/20 text-amber-300"
-        >
-          <svg [lucideIcon]="icons.warning" class="h-7 w-7"></svg>
+    <section class="ff-app-screen">
+      <article class="ff-app-container ff-app-panel ff-app-stack" style="max-width: 32rem">
+        <div class="ff-icon-btn" style="margin-inline: auto; color: #fbbf24">
+          <svg [lucideIcon]="icons.warning" style="width: 1.5rem; height: 1.5rem"></svg>
         </div>
 
-        <h1 class="mt-4 text-center text-2xl font-black uppercase tracking-[0.08em]">
-          {{ title() }}
-        </h1>
+        <h1 class="ff-section-title" style="text-align: center">{{ title() }}</h1>
+        <p class="ff-app-subtitle" style="text-align: center">{{ description() }}</p>
 
-        <p class="mt-3 text-center text-sm text-slate-300">
-          {{ description() }}
-        </p>
+        <div class="ff-empty">Error: {{ errorCode() }} - {{ errorMessage() }}</div>
 
-        <div
-          class="mt-6 rounded-xl border border-slate-700/60 bg-[#121f3b] px-4 py-3 text-sm text-slate-300"
-        >
-          Error: {{ errorCode() }} — {{ errorMessage() }}
-        </div>
-
-        <a
-          routerLink="/login"
-          class="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#3b82f6] px-4 py-3 text-sm font-bold uppercase tracking-[0.08em] transition hover:bg-blue-500"
-        >
-          <svg [lucideIcon]="icons.back" class="h-4 w-4"></svg>
+        <a routerLink="/login" class="ff-btn ff-btn-primary">
+          <svg [lucideIcon]="icons.back" style="width: 1rem; height: 1rem"></svg>
           Back to login
         </a>
       </article>

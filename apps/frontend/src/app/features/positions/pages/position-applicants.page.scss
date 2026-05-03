@@ -1,0 +1,50 @@
+:host {
+  display: block;
+}
+
+.launch-panel {
+  margin-top: 1rem;
+  border: 1px solid var(--ff-color-border);
+  border-radius: var(--ff-radius-panel);
+  background: var(--ff-color-surface-2);
+  padding: 1rem;
+  box-shadow: var(--ff-shadow-card);
+}
+
+.launch-panel__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.launch-label {
+  display: block;
+  margin-top: 0.85rem;
+  color: var(--ff-color-text-muted);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.launch-control {
+  margin-top: 0.35rem;
+}
+
+.launch-section-list {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 0.85rem;
+}
+
+.launch-section {
+  border: 1px solid var(--ff-color-border-soft);
+  border-radius: var(--ff-radius-card);
+  background: var(--ff-color-surface-1);
+  padding: 0.85rem;
+}
+
+.launch-submit {
+  margin-top: 1rem;
+}

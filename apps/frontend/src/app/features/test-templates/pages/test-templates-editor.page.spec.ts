@@ -79,6 +79,17 @@ function makeRouteMock(id: string | null): Pick<ActivatedRoute, 'snapshot'> {
   };
 }
 
+function makeReadyTemplate(component: TestTemplateEditorPage): void {
+  component.form.controls.name.setValue('Driver Safety Test');
+  component.form.controls.duration_minutes.setValue(60);
+  component.form.controls.min_pass_score.setValue(80);
+  component.addSection();
+  const sectionId = component.sections()[0].id;
+  component.updateSectionTitle(sectionId, 'Conduite terrain');
+  component.updateSectionWeight(sectionId, 100);
+  component.attachPoolToSection(sectionId, 'p1');
+}
+
 describe('TestTemplateEditorPage', () => {
   const pools: QuestionPool[] = [
     { id: 'p1', code: 'SAF', name: 'Safety', description: '', updatedAt: new Date().toISOString() },
@@ -144,10 +155,25 @@ describe('TestTemplateEditorPage', () => {
       },
     });
 
-    expect(component.mode()).toBe('view');
+    expect(component.mode()).toBe('edit');
     expect(apiMock.get).toHaveBeenCalledWith(7);
     expect(component.form.controls.name.value).toBe('Template A');
-    expect(component.form.disabled).toBeTrue();
+    expect(component.form.disabled).toBeFalse();
+  });
+
+  it('should render the Figma single-page editor with general info, sections and pools together', () => {
+    const { fixture, component } = setup({ routeId: null });
+
+    component.addSection();
+    fixture.detectChanges();
+
+    const text = (fixture.nativeElement as HTMLElement).textContent ?? '';
+
+    expect(text).toContain('INFORMATIONS GENERALES');
+    expect(text).toContain('STRUCTURE DU TEST');
+    expect(text).toContain('Ajouter un Pool');
+    expect(text).toContain('Ajouter une Section');
+    expect(text).toContain('Enregistrer le Template');
   });
 
   it('filteredPools() should filter by name/code (case-insensitive)', () => {
@@ -164,7 +190,7 @@ describe('TestTemplateEditorPage', () => {
     expect(r2[0].id).toBe('p2');
   });
 
-  it('toggleEdit() should switch from view -> edit and enable form', () => {
+  it('toggleEdit() should keep existing templates editable in manage mode', () => {
     const { component } = setup({
       routeId: '9',
       api: {
@@ -180,14 +206,14 @@ describe('TestTemplateEditorPage', () => {
       },
     });
 
-    expect(component.mode()).toBe('view');
+    expect(component.mode()).toBe('edit');
     component.toggleEdit();
 
     expect(component.mode()).toBe('edit');
     expect(component.form.disabled).toBeFalse();
   });
 
-  it('cancelEdit() should restore snapshot and return to view mode (when editing existing template)', () => {
+  it('cancelEdit() should restore snapshot and keep existing template in manage mode', () => {
     const { component } = setup({
       routeId: '10',
       api: {
@@ -203,16 +229,15 @@ describe('TestTemplateEditorPage', () => {
       },
     });
 
-    component.toggleEdit(); // -> edit
     component.form.controls.name.setValue('Changed');
     component.addSection();
 
     component.cancelEdit();
 
-    expect(component.mode()).toBe('view');
+    expect(component.mode()).toBe('edit');
     expect(component.form.controls.name.value).toBe('Original');
     expect(component.sections().length).toBe(0);
-    expect(component.form.disabled).toBeTrue();
+    expect(component.form.disabled).toBeFalse();
   });
 
   it('addSection/removeSection should update sections in edit mode', () => {
@@ -244,15 +269,39 @@ describe('TestTemplateEditorPage', () => {
     expect(component.sections()[0].pools.length).toBe(0);
   });
 
+  it('pool bottom sheet should scope selection to the active section', () => {
+    const { component } = setup({ routeId: null });
+
+    component.addSection();
+    const sectionId = component.sections()[0].id;
+
+    component.openPoolSheet(sectionId);
+    expect(component.poolSheetOpen()).toBeTrue();
+    expect(component.poolSheetSection()?.id).toBe(sectionId);
+
+    component.attachPoolFromSheet('p2');
+
+    expect(component.poolSheetOpen()).toBeFalse();
+    expect(component.sections()[0].pools).toEqual([
+      jasmine.objectContaining({ poolId: 'p2' }),
+    ]);
+  });
+
+  it('pool bottom sheet should route to pool creation from backend library action', () => {
+    const { component, routerMock } = setup({ routeId: null });
+
+    component.createPoolFromSheet();
+
+    expect(routerMock.navigate).toHaveBeenCalledWith(['/pools/new']);
+  });
+
   it('save() in create mode should call api.create and navigate to /templates/:id', async () => {
     const { component, apiMock, routerMock } = setup({
       routeId: null,
       api: { createResult: { id: 555 } },
     });
 
-    component.form.controls.name.setValue('New Template');
-    component.form.controls.duration_minutes.setValue(40);
-    component.form.controls.min_pass_score.setValue(60);
+    makeReadyTemplate(component);
 
     component.save();
 
@@ -275,7 +324,15 @@ describe('TestTemplateEditorPage', () => {
           min_pass_score: 80,
           difficulty: 'medium',
           is_active: true,
-          sections: [],
+          sections: [
+            {
+              id: 's1',
+              title: 'Conduite terrain',
+              weight: 100,
+              questions: [],
+              pools: [{ poolId: 'p1', randomCount: 3 }],
+            },
+          ],
         },
         updateResult: { id: 12 },
       },
@@ -286,8 +343,8 @@ describe('TestTemplateEditorPage', () => {
     component.save();
 
     expect(apiMock.update).toHaveBeenCalledTimes(1);
-    expect(component.mode()).toBe('view');
-    expect(component.form.disabled).toBeTrue();
+    expect(component.mode()).toBe('edit');
+    expect(component.form.disabled).toBeFalse();
   });
 
   it('save() should set apiError when API fails', () => {
@@ -296,10 +353,20 @@ describe('TestTemplateEditorPage', () => {
       api: { createError: { error: { detail: 'Nope.' } } },
     });
 
-    component.form.controls.name.setValue('Xxx'); // enough to pass minLength 3
+    makeReadyTemplate(component);
     component.save();
 
     expect(component.apiError()).toBe('Nope.');
+  });
+
+  it('save() should block incomplete workflow before calling API', () => {
+    const { component, apiMock } = setup({ routeId: null });
+
+    component.form.controls.name.setValue('Incomplete Template');
+    component.save();
+
+    expect(apiMock.create).not.toHaveBeenCalled();
+    expect(component.apiError()).toContain('Complete the workflow');
   });
 
   it('completion() should be between 0 and 100 and increase when form is filled + weights sum to 100', () => {

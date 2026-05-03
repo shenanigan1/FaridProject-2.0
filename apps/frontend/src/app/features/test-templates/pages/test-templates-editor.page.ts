@@ -8,17 +8,13 @@ import { TemplatesApi } from '@features/test-templates/services/test-templates.a
 import { PoolsStore } from '@features/pools/services/pools.store';
 import { QuestionPool } from '@features/pools/models/question-pool.model';
 
-import { UiIconButtonComponent } from '@lib-ui/icon-button/icon-button.component';
-import { UiButtonPrimaryComponent } from '@lib-ui/button-primary/button-primary.component';
-import { UiButtonSecondaryComponent } from '@lib-ui/button-secondary/button-secondary.component';
-import { UiProgressBarComponent } from '@lib-ui/progress-bar/progress-bar.component';
-import { APP_ICONS } from '@shared/icons/app-icons';
-import { LucideDynamicIcon } from '@lucide/angular';
-
 type Difficulty = 'easy' | 'medium' | 'hard';
 
 interface QuestionVm {
   id: number;
+  title?: string;
+  format?: string;
+  poolId?: string;
   text: string;
   points: number;
   mandatory?: boolean;
@@ -40,6 +36,7 @@ interface SectionVm {
 }
 
 type Mode = 'create' | 'view' | 'edit';
+type WorkflowStepKey = 'test' | 'sections' | 'pools' | 'review';
 
 interface TemplateFormValue {
   name: string;
@@ -94,13 +91,9 @@ function pick(v: UnknownRecord, ...keys: string[]): unknown {
     CommonModule,
     RouterModule,
     ReactiveFormsModule,
-    UiIconButtonComponent,
-    UiButtonPrimaryComponent,
-    UiButtonSecondaryComponent,
-    UiProgressBarComponent,
-    LucideDynamicIcon
   ],
   templateUrl: './test-templates-editor.page.html',
+  styleUrl: './test-templates-editor.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TestTemplateEditorPage {
@@ -109,8 +102,6 @@ export class TestTemplateEditorPage {
   private readonly router = inject(Router);
   private readonly api = inject(TemplatesApi);
   private readonly poolsStore = inject(PoolsStore);
-
-  readonly icons = APP_ICONS;
 
   // --- routing ---
   readonly templateId = computed<number | null>(() => {
@@ -136,8 +127,10 @@ export class TestTemplateEditorPage {
   readonly poolsLoading = this.poolsStore.isLoading;
   readonly poolsError = this.poolsStore.error;
 
-  // optional: helps avoid “unused” for assignSection and is useful later
+  // Keeps the section/pool assignment flow explicit in the UI state.
   readonly assigningSectionId = signal<string | null>(null);
+  readonly poolSheetOpen = signal(false);
+  readonly poolSheetSectionId = signal<string | null>(null);
 
   // form
   readonly form = this.fb.nonNullable.group({
@@ -161,6 +154,8 @@ export class TestTemplateEditorPage {
   });
 
   readonly sections = signal<SectionVm[]>([]);
+  readonly selectedSectionId = signal<string | null>(null);
+  readonly activeStep = signal<WorkflowStepKey>('test');
 
   // ---- derived ----
   readonly isEditMode = computed(() => this.mode() === 'edit' || this.mode() === 'create');
@@ -182,6 +177,20 @@ export class TestTemplateEditorPage {
   readonly totalQuestions = computed(() =>
     this.sections().reduce((acc, s) => acc + s.questions.length, 0),
   );
+
+  readonly attachedPoolCount = computed(() =>
+    this.sections().reduce((acc, section) => acc + section.pools.length, 0),
+  );
+
+  readonly selectedSection = computed(() => {
+    const selectedId = this.selectedSectionId();
+    return this.sections().find((section) => section.id === selectedId) ?? this.sections()[0] ?? null;
+  });
+
+  readonly poolSheetSection = computed(() => {
+    const sectionId = this.poolSheetSectionId();
+    return this.sections().find((section) => section.id === sectionId) ?? null;
+  });
 
   readonly totalPoints = computed(() =>
     this.sections().reduce(
@@ -209,6 +218,29 @@ export class TestTemplateEditorPage {
     return Math.min(100, Math.max(0, score));
   });
 
+  readonly workflowSteps = computed(() => [
+    {
+      key: 'test' as const,
+      label: 'Test',
+      done: this.form.controls.name.valid && this.form.controls.duration_minutes.valid,
+    },
+    {
+      key: 'sections' as const,
+      label: 'Sections',
+      done: this.sections().length > 0 && this.totalWeight() === 100,
+    },
+    {
+      key: 'pools' as const,
+      label: 'Pools',
+      done: this.sections().length > 0 && this.sections().every((section) => section.pools.length > 0),
+    },
+    {
+      key: 'review' as const,
+      label: 'Review',
+      done: this.isTemplateReady(),
+    },
+  ]);
+
   constructor() {
     this.poolsStore.loadAll();
 
@@ -223,9 +255,9 @@ export class TestTemplateEditorPage {
       return;
     }
 
-    // /templates/:id
-    this.mode.set('view');
-    this.form.disable({ emitEvent: false });
+    // /templates/:id opens directly as the Figma "manage template" editor.
+    this.mode.set('edit');
+    this.form.enable({ emitEvent: false });
     this.load(id);
   }
 
@@ -253,6 +285,7 @@ export class TestTemplateEditorPage {
           const mapped: SectionVm[] = dtoSections.map((sUnknown) => this.mapSection(sUnknown));
 
           this.sections.set(mapped);
+          this.selectedSectionId.set(mapped[0]?.id ?? null);
 
           this.snapshot = {
             formValue: this.form.getRawValue(),
@@ -269,7 +302,7 @@ export class TestTemplateEditorPage {
     const s = isRecord(sUnknown) ? sUnknown : {};
 
     const id = asString(pick(s, 'id'), uid());
-    const title = asString(pick(s, 'title', 'name'), 'Untitled Section');
+    const title = asString(pick(s, 'title', 'name'), '');
     const description = asString(pick(s, 'description'), '');
     const weight = Math.max(0, Math.min(100, Math.floor(asNumber(pick(s, 'weight'), 0))));
 
@@ -277,7 +310,10 @@ export class TestTemplateEditorPage {
       const q = isRecord(qUnknown) ? qUnknown : {};
       return {
         id: asNumber(pick(q, 'id'), 0),
-        text: asString(pick(q, 'text', 'label'), 'Question'),
+        title: asString(pick(q, 'title'), ''),
+        format: asString(pick(q, 'format'), ''),
+        poolId: asString(pick(q, 'poolId', 'pool_id', 'pool'), ''),
+        text: asString(pick(q, 'text', 'label'), ''),
         points: asNumber(pick(q, 'points'), 0),
         mandatory: asBoolean(pick(q, 'mandatory'), false),
       };
@@ -322,17 +358,8 @@ export class TestTemplateEditorPage {
   toggleEdit(): void {
     if (this.templateId() === null) return;
 
-    if (this.mode() === 'view') {
-      this.snapshot = {
-        formValue: this.form.getRawValue(),
-        sections: structuredClone(this.sections()),
-      };
-      this.mode.set('edit');
-      this.form.enable({ emitEvent: false });
-      return;
-    }
-
-    this.cancelEdit();
+    this.mode.set('edit');
+    this.form.enable({ emitEvent: false });
   }
 
   cancelEdit(): void {
@@ -346,8 +373,8 @@ export class TestTemplateEditorPage {
       this.sections.set(structuredClone(this.snapshot.sections));
     }
 
-    this.mode.set('view');
-    this.form.disable({ emitEvent: false });
+    this.mode.set('edit');
+    this.form.enable({ emitEvent: false });
   }
 
   // ---- sidebar ----
@@ -359,8 +386,41 @@ export class TestTemplateEditorPage {
     this.poolQuery.set(value ?? '');
   }
 
+  setWorkflowStep(step: WorkflowStepKey): void {
+    this.activeStep.set(step);
+  }
+
+  selectSection(sectionId: string): void {
+    this.selectedSectionId.set(sectionId);
+    this.activeStep.set('pools');
+  }
+
+  openPoolSheet(sectionId: string): void {
+    if (!this.isEditMode()) return;
+    this.selectedSectionId.set(sectionId);
+    this.poolSheetSectionId.set(sectionId);
+    this.poolSheetOpen.set(true);
+  }
+
+  closePoolSheet(): void {
+    this.poolSheetOpen.set(false);
+    this.poolSheetSectionId.set(null);
+  }
+
+  createPoolFromSheet(): void {
+    void this.router.navigate(['/pools/new']);
+  }
+
+  attachPoolFromSheet(poolId: string): void {
+    const sectionId = this.poolSheetSectionId();
+    if (!sectionId) return;
+
+    this.attachPoolToSection(sectionId, poolId);
+    this.closePoolSheet();
+  }
+
   poolName(poolId: string): string {
-    return this.pools().find((p) => p.id === poolId)?.name ?? `Pool #${poolId}`;
+    return this.pools().find((p) => p.id === poolId)?.name ?? poolId;
   }
 
   // ---- sections actions ----
@@ -368,10 +428,11 @@ export class TestTemplateEditorPage {
     if (!this.isEditMode()) return;
 
     const nextIndex = this.sections().length + 1;
+    const sectionId = uid();
     this.sections.update((list) => [
       ...list,
       {
-        id: uid(),
+        id: sectionId,
         title: `Section ${nextIndex}`,
         description: '',
         weight: 0,
@@ -379,17 +440,29 @@ export class TestTemplateEditorPage {
         pools: [],
       },
     ]);
+    this.selectedSectionId.set(sectionId);
+    this.activeStep.set('sections');
   }
 
   removeSection(sectionId: string): void {
     if (!this.isEditMode()) return;
     this.sections.update((list) => list.filter((s) => s.id !== sectionId));
+    if (this.selectedSectionId() === sectionId) {
+      this.selectedSectionId.set(this.sections()[0]?.id ?? null);
+    }
   }
 
   updateSectionTitle(sectionId: string, title: string): void {
     if (!this.isEditMode()) return;
     this.sections.update((list) =>
       list.map((s) => (s.id === sectionId ? { ...s, title: title ?? '' } : s)),
+    );
+  }
+
+  updateSectionDescription(sectionId: string, description: string): void {
+    if (!this.isEditMode()) return;
+    this.sections.update((list) =>
+      list.map((s) => (s.id === sectionId ? { ...s, description: description ?? '' } : s)),
     );
   }
 
@@ -402,9 +475,18 @@ export class TestTemplateEditorPage {
 
   assignSection(sectionId: string): void {
     if (!this.isEditMode()) return;
-    // Placeholder utile (et plus propre que "void sectionId")
     this.assigningSectionId.set(sectionId);
-    this.apiError.set('Assign UI not implemented yet.');
+
+    const target = this.sections().find((s) => s.id === sectionId);
+    const pool = this.filteredPools().find((p) => !target?.pools.some((rule) => rule.poolId === p.id));
+
+    if (!pool) {
+      this.apiError.set('No available pool returned by the backend for this section.');
+      return;
+    }
+
+    this.attachPoolToSection(sectionId, pool.id);
+    this.apiError.set(null);
   }
 
   attachPoolToSection(sectionId: string, poolId: string): void {
@@ -453,7 +535,7 @@ export class TestTemplateEditorPage {
     return items.map((s) => {
       const raw = Number(s.weight) || 0;
       const pct = sum > 0 ? (raw / sum) * 100 : 0;
-      return { label: s.title || 'Untitled', weight: pct };
+      return { label: s.title, weight: pct };
     });
   }
 
@@ -468,6 +550,13 @@ export class TestTemplateEditorPage {
       return;
     }
 
+    if (!this.isTemplateReady()) {
+      this.apiError.set(
+        'Complete the workflow: add sections, set total weight to 100, and attach at least one pool to every section.',
+      );
+      return;
+    }
+
     this.isSaving.set(true);
 
     const payload: TemplatePayload = {
@@ -477,7 +566,6 @@ export class TestTemplateEditorPage {
 
     const id = this.templateId();
 
-    // Si tes méthodes API sont typées, enlève les casts.
     const req$: Observable<unknown> =
       id === null ? this.api.create(payload) : this.api.update(id, payload);
 
@@ -496,8 +584,8 @@ export class TestTemplateEditorPage {
           return;
         }
 
-        this.mode.set('view');
-        this.form.disable({ emitEvent: false });
+        this.mode.set('edit');
+        this.form.enable({ emitEvent: false });
         this.snapshot = {
           formValue: this.form.getRawValue(),
           sections: structuredClone(this.sections()),
@@ -507,5 +595,24 @@ export class TestTemplateEditorPage {
         this.apiError.set(this.extractErrorMessage(err, 'Save failed. Please try again.'));
       },
     });
+  }
+
+  isTemplateReady(): boolean {
+    const sections = this.sections();
+    return (
+      this.form.valid &&
+      sections.length > 0 &&
+      this.totalWeight() === 100 &&
+      sections.every((section) => section.title.trim().length > 0 && section.pools.length > 0)
+    );
+  }
+
+  formatLabel(format?: string): string {
+    const labels: Record<string, string> = {
+      mcq: 'QCM',
+      true_false: 'Vrai/Faux',
+      practical: 'Pratique',
+    };
+    return labels[format ?? ''] ?? (format || 'Question');
   }
 }

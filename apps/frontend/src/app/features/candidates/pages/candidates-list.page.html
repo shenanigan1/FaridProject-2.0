@@ -1,59 +1,57 @@
-<section class="min-h-[calc(100vh-144px)] bg-slate-950 p-4 text-slate-100">
-  <header class="mb-4">
-    <h1 class="text-xl font-semibold">Candidates</h1>
-    <p class="text-sm text-slate-400">Browse and search candidate profiles.</p>
-  </header>
+<section class="ff-app-screen">
+  <div class="ff-app-container ff-app-stack">
+    <header class="ff-app-header">
+      <div>
+        <p class="ff-app-kicker">CANDIDATES</p>
+        <h1 class="ff-app-title">Profiles</h1>
+      </div>
+    </header>
 
-  <div class="mb-4">
     <input
       type="search"
       [formControl]="searchControl"
-      placeholder="Search by name, email or phone..."
-      class="w-full rounded-xl border border-slate-700 bg-slate-900 px-4 py-3 text-sm text-slate-100 outline-none focus:border-blue-500"
+      aria-label="Search candidates"
+      class="ff-control"
     />
-  </div>
 
-  @if (isLoading) {
-    <p class="text-sm text-slate-400">Loading candidates...</p>
-  }
+    @if (isLoading) {
+      <p class="ff-empty">Loading candidates...</p>
+    }
 
-  @if (!isLoading && errorMessage) {
-    <div class="rounded-xl border border-red-500/25 bg-red-500/10 p-3 text-sm text-red-200">
-      {{ errorMessage }}
-    </div>
-  }
-
-  @if (!isLoading && !errorMessage) {
-    @if (filteredCandidates$ | async; as candidates) {
-      <div class="space-y-3">
-        @for (candidate of candidates; track candidate.id) {
-          <article class="rounded-2xl border border-slate-800 bg-slate-900/60 p-4">
-            <div class="flex items-start justify-between gap-3">
-              <div>
-                <h2 class="text-sm font-semibold">
-                  {{ candidate.user.first_name }} {{ candidate.user.last_name }}
-                </h2>
-                <p class="mt-1 text-xs text-slate-400">{{ candidate.user.email }}</p>
-                <p class="text-xs text-slate-500">{{ candidate.user.phone || 'No phone' }}</p>
-              </div>
-
-              <span
-                class="rounded-full border px-2 py-1 text-[10px] font-semibold uppercase tracking-wide"
-                [class.border-emerald-500/40]="candidate.status === 'pending'"
-                [class.text-emerald-300]="candidate.status === 'pending'"
-                [class.border-slate-600]="candidate.status !== 'pending'"
-                [class.text-slate-300]="candidate.status !== 'pending'"
-              >
-                {{ candidate.status }}
-              </span>
-            </div>
-          </article>
-        }
-
-        @if (candidates.length === 0) {
-          <p class="text-sm text-slate-400">No candidates found for this search.</p>
-        }
+    @if (!isLoading && errorMessage) {
+      <div class="ff-alert-inline">
+        {{ errorMessage }}
       </div>
     }
-  }
+
+    @if (!isLoading && !errorMessage) {
+      @if (filteredCandidates$ | async; as candidates) {
+        <div class="ff-app-stack">
+          @for (candidate of candidates; track candidate.id) {
+            <article class="ff-data-card">
+              <div class="ff-inline-actions" style="align-items: flex-start; justify-content: space-between">
+                <div>
+                  <h2 class="ff-row-title">
+                    {{ candidate.user.first_name }} {{ candidate.user.last_name }}
+                  </h2>
+                  <p class="ff-row-meta">{{ candidate.user.email }}</p>
+                  @if (candidate.user.phone) {
+                    <p class="ff-row-meta">{{ candidate.user.phone }}</p>
+                  }
+                </div>
+
+                <span class="ff-status-pill">
+                  {{ candidate.status }}
+                </span>
+              </div>
+            </article>
+          }
+
+          @if (candidates.length === 0) {
+            <p class="ff-empty">Aucun candidat en base pour cette recherche.</p>
+          }
+        </div>
+      }
+    }
+  </div>
 </section>

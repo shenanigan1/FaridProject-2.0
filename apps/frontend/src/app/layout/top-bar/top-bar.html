@@ -1,84 +1,48 @@
-<header
-  class="relative flex h-[72px] items-center justify-between border-b border-[#111d2d] bg-[#070d18] px-4"
->
-  <!-- LEFT -->
-  <div class="flex items-center gap-3">
-    <div
-      class="flex h-9 w-9 items-center justify-center rounded-full bg-[#1480ec] shadow-[0_0_20px_rgba(20,128,236,0.5)]"
-      aria-hidden="true"
-    >
-      <svg
-        [lucideIcon]="icons.brand"
-        class="h-4 w-4 text-white"
-        [attr.stroke-width]="2"
-      ></svg>
-    </div>
-
-    <div class="leading-[1.05]">
-      <p class="text-[14px] font-black uppercase italic tracking-[0.05em] text-white">
-        MIDNIGHT
-      </p>
-      <p class="text-[10px] font-semibold uppercase tracking-[0.28em] text-[#61a3df]">
-        KINETIC
-      </p>
-    </div>
+<header class="ff-topbar">
+  <div class="ff-topbar__brand" aria-label="Application section">
+    <svg [lucideIcon]="icons.menu" class="ff-topbar__menu-mark" aria-hidden="true"></svg>
+    <span class="ff-topbar__brand-name">{{ title }}</span>
   </div>
 
-  <!-- RIGHT ACTION -->
-  <button
-    type="button"
-    class="flex h-9 w-9 items-center justify-center rounded-lg border border-[#1b2a3b] bg-[#0b1422] text-slate-200 transition hover:border-[#2f4763]"
-    aria-label="Open navigation menu"
-    (click)="toggleMenu()"
-  >
-    <svg
-      [lucideIcon]="icons.dashboard"
-      class="h-4 w-4"
-      [attr.stroke-width]="2"
-    ></svg>
-  </button>
+  <div class="ff-topbar__actions">
+    <button type="button" class="ff-topbar__icon-button" aria-label="Notifications">
+      <svg [lucideIcon]="icons.bell" class="ff-topbar__action-icon"></svg>
+      @if (notificationCount > 0) {
+        <span class="ff-topbar__notification-count">{{ notificationCount }}</span>
+      }
+    </button>
 
-  <!-- DROPDOWN -->
-  @if (menuOpen()) {
-    <div
-      class="absolute right-4 top-14 z-50 w-56 rounded-xl border border-slate-700 bg-slate-900 p-2 shadow-2xl"
+    <button
+      type="button"
+      class="ff-topbar__user"
+      aria-label="Open user menu"
+      [attr.aria-expanded]="menuOpen()"
+      (click)="toggleMenu()"
     >
+      <span class="ff-topbar__avatar">{{ userInitials }}</span>
+    </button>
+  </div>
+
+  @if (menuOpen()) {
+    <div class="ff-topbar__menu">
       @if (user) {
-        <div
-          class="mb-2 flex items-center gap-2 rounded-lg border border-slate-800 bg-slate-950/50 px-2 py-1.5"
-        >
-          <div
-            class="flex h-7 w-7 items-center justify-center rounded-full border border-slate-700 bg-slate-800 text-xs"
-          >
-            {{ userInitials }}
-          </div>
-          <span class="truncate text-xs text-slate-300">
-            {{ user.fullName }}
-          </span>
+        <div class="ff-topbar__menu-user">
+          <span class="ff-topbar__avatar ff-topbar__avatar--menu">{{ userInitials }}</span>
+          <span class="ff-topbar__menu-name">{{ user.fullName }}</span>
         </div>
       }
 
-      <button
-        type="button"
-        class="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm text-slate-200 transition hover:bg-slate-800"
-        (click)="requestEditProfile()"
-      >
-        <svg
-          [lucideIcon]="icons.users"
-          class="h-4 w-4"
-        ></svg>
+      <button type="button" class="ff-topbar__menu-action" (click)="requestEditProfile()">
+        <svg [lucideIcon]="icons.user" class="ff-topbar__menu-icon"></svg>
         Edit profile
       </button>
 
       <button
         type="button"
-        class="mt-1 flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm text-red-300 transition hover:bg-red-500/10"
+        class="ff-topbar__menu-action ff-topbar__menu-action--danger"
         (click)="requestLogout()"
       >
-        <svg
-          [lucideIcon]="icons.logout"
-          class="h-4 w-4"
-        ></svg>
+        <svg [lucideIcon]="icons.logout" class="ff-topbar__menu-icon"></svg>
         Logout
       </button>
     </div>

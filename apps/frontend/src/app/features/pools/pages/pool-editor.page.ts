@@ -10,13 +10,7 @@ import { POOL_CODE_PATTERN, normalizePoolCode } from '@features/pools/models/poo
 import { PoolFormComponent, PoolFormGroup, PoolFormMode } from '@features/pools/components/pool-form.component';
 
 import { UiTabsComponent, UiTabItem } from '@lib-ui/tabs/tabs.component';
-import { UiIconButtonComponent } from '@lib-ui/icon-button/icon-button.component';
-import { UiButtonPrimaryComponent } from '@lib-ui/button-primary/button-primary.component';
-import { UiButtonSecondaryComponent } from '@lib-ui/button-secondary/button-secondary.component';
-import { UiCardComponent } from '@lib-ui/card/card.component';
 import { UiAlertComponent } from '@lib-ui/alert/alert.component';
-import { UiSpinnerComponent } from '@lib-ui/spinner/spinner.component';
-import { UiEmptyStateComponent } from '@lib-ui/empty-state/empty-state.component';
 
 type TabKey = 'questions' | 'settings';
 type EditorMode = 'create' | 'detail';
@@ -34,13 +28,7 @@ type EditorMode = 'create' | 'detail';
     PoolFormComponent,
 
     UiTabsComponent,
-    UiIconButtonComponent,
-    UiButtonPrimaryComponent,
-    UiButtonSecondaryComponent,
-    UiCardComponent,
     UiAlertComponent,
-    UiSpinnerComponent,
-    UiEmptyStateComponent,
   ],
   templateUrl: './pool-editor.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -159,7 +147,9 @@ export class PoolEditorPageComponent implements OnInit {
     };
 
     if (this.pageMode() === 'create') {
-      this.store.create(dto, () => this.back());
+      this.store.create(dto, (created) => {
+        void this.router.navigate(['/pools', created.id]);
+      });
       return;
     }
 

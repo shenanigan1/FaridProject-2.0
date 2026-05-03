@@ -35,6 +35,16 @@ interface TemplateDto {
   name: string;
 }
 
+export interface LaunchTemplateSection {
+  id: number;
+  title: string;
+  description?: string;
+}
+
+interface TemplateDetailDto extends TemplateDto {
+  sections: LaunchTemplateSection[];
+}
+
 interface EvaluationDto {
   id: number;
   application: number | null;
@@ -99,6 +109,10 @@ interface LaunchEvaluationPayload {
   application_id: number;
   template_id?: number;
   assigned_to_id?: number;
+  section_assignments?: {
+    section_id: number;
+    manager_id: number;
+  }[];
 }
 
 interface LaunchEvaluationResponse {
@@ -224,15 +238,23 @@ export class PositionApplicantsService {
     );
   }
 
+  getLaunchTemplateDetail(templateId: number): Observable<TemplateDetailDto> {
+    return this.http.get<TemplateDetailDto>(`${this.templatesUrl}${templateId}/`);
+  }
+
   launchTestForApplication(
     applicationId: number,
     templateId?: number,
+    sectionAssignments: { section_id: number; manager_id: number }[] = [],
   ): Observable<LaunchEvaluationResponse[]> {
     const payload: LaunchEvaluationPayload = {
       application_id: applicationId,
     };
     if (templateId !== undefined) {
       payload.template_id = templateId;
+    }
+    if (sectionAssignments.length > 0) {
+      payload.section_assignments = sectionAssignments;
     }
 
     return this.http

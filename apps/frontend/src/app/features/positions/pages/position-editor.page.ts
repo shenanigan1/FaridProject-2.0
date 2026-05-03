@@ -22,7 +22,6 @@ import {
 } from '@features/positions/services/positions-api.service';
 
 import { UiLinkButtonComponent } from '@lib-ui/link-button/ui-link-button.component';
-import { UiCardComponent } from '@lib-ui/card/card.component';
 
 type Mode = 'create' | 'edit';
 
@@ -46,7 +45,6 @@ function isRecord(value: unknown): value is Record<string, unknown> {
     PageShellComponent,
     PositionFormComponent,
     UiLinkButtonComponent,
-    UiCardComponent,
   ],
   templateUrl: './position-editor.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

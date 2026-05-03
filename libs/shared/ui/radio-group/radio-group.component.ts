@@ -21,23 +21,21 @@ export interface UiRadioOption<T extends string = string> {
   selector: 'app-ui-radio-group',
   imports: [CommonModule],
   template: `
-    <div class="block" role="radiogroup" [attr.aria-invalid]="error ? 'true' : null">
+    <div class="ff-field" role="radiogroup" [attr.aria-invalid]="error ? 'true' : null">
 
       @if (label) {
-        <div class="mb-2 text-sm font-medium text-slate-300">{{ label }}</div>
+        <div class="ff-field-label mb-2">{{ label }}</div>
       }
 
-      <div class="flex flex-wrap gap-2">
+      <div class="mt-1 flex flex-wrap gap-2">
         @for (opt of options; track opt.value) {
           <label
-            class="inline-flex items-center gap-2 rounded-xl border px-3 py-2 text-sm transition select-none
-                   border-slate-800 bg-slate-900/40 text-slate-200
-                   hover:bg-slate-800/50"
+            class="ff-radio-option select-none"
             [class.opacity-60]="opt.disabled || disabled()"
           >
             <input
               type="radio"
-              class="accent-blue-500"
+              class="accent-primary-500"
               [disabled]="disabled() || !!opt.disabled"
               [checked]="value() === opt.value"
               [attr.aria-invalid]="error ? 'true' : null"
@@ -50,9 +48,9 @@ export interface UiRadioOption<T extends string = string> {
       </div>
 
       @if (error) {
-        <p class="mt-1 text-xs text-red-300">{{ error }}</p>
+        <p class="ff-field-error">{{ error }}</p>
       } @else if (hint) {
-        <p class="mt-1 text-xs text-slate-500">{{ hint }}</p>
+        <p class="ff-field-hint">{{ hint }}</p>
       }
 
     </div>

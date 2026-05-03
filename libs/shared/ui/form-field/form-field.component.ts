@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
     <div>
       @if (label) {
         <!-- not a native <label> to avoid association lint error -->
-        <div class="text-sm text-slate-300">
+        <div class="ff-field-label">
           {{ label }}
         </div>
       }
@@ -19,11 +19,11 @@ import { CommonModule } from '@angular/common';
       </div>
 
       @if (error) {
-        <p class="mt-1 text-xs text-red-300">
+        <p class="ff-field-error">
           {{ error }}
         </p>
       } @else if (hint) {
-        <p class="mt-1 text-xs text-slate-500">
+        <p class="ff-field-hint">
           {{ hint }}
         </p>
       }

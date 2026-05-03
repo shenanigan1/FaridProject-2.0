@@ -1,10 +1,12 @@
 from django.db.models import Q
+from django.utils import timezone
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from evaluations.models.evaluation import Evaluation
+from evaluations.models.evaluation import EvaluationStatus
 from evaluations.serializers import (
     EvaluationSerializer,
     EvaluationQuestionnaireUpdateSerializer,
@@ -40,7 +42,9 @@ class EvaluationViewSet(ModelViewSet):
             return queryset
 
         if user.role == UserRoles.MANAGER:
-            return queryset.filter(assigned_to=user)
+            return queryset.filter(
+                Q(assigned_to=user) | Q(section_assignments__assigned_to=user)
+            ).distinct()
 
         if user.role in {UserRoles.CANDIDATE, UserRoles.DRIVER, UserRoles.EMPLOYEE}:
             return queryset.filter(subject=user)
@@ -91,7 +95,7 @@ class EvaluationViewSet(ModelViewSet):
     @action(detail=True, methods=["get"], url_path="questionnaire")
     def questionnaire(self, request, pk=None):
         evaluation = self.get_object()
-        payload = build_questionnaire_payload(evaluation)
+        payload = build_questionnaire_payload(evaluation, request.user)
         return Response(payload, status=status.HTTP_200_OK)
 
     @questionnaire.mapping.post
@@ -99,18 +103,67 @@ class EvaluationViewSet(ModelViewSet):
         evaluation = self.get_object()
         serializer = EvaluationQuestionnaireUpdateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        payload_scope = build_questionnaire_payload(evaluation, request.user)
+        allowed_question_ids = {
+            question["question_id"]
+            for section in payload_scope["sections"]
+            for question in section["questions"]
+        }
+        allowed_section_ids = {
+            section["section_id"] for section in payload_scope["sections"]
+        }
 
-        allowed_question_ids = set(
-            SkillQuestion.objects.filter(
-                pool_id__in=evaluation.template_version.template.pool_rules.values_list(
-                    "pool_id", flat=True
+        allowed_questions = {
+            question.id: question
+            for question in SkillQuestion.objects.filter(
+                id__in=allowed_question_ids
+            ).only("id", "points", "is_mandatory")
+        }
+
+        if "test_manager_comment" in serializer.validated_data:
+            evaluation.internal_comment = serializer.validated_data[
+                "test_manager_comment"
+            ]
+            evaluation.save(update_fields=["internal_comment", "updated_at"])
+
+        section_assignments = {
+            (assignment.section.name, assignment.section.order): assignment
+            for assignment in evaluation.section_assignments.select_related(
+                "section"
+            ).all()
+        }
+        template_sections = {
+            section.id: section
+            for section in evaluation.template_version.template.sections.all()
+        }
+
+        for section_input in serializer.validated_data.get("section_comments", []):
+            section_id = section_input["section_id"]
+            if section_id not in allowed_section_ids:
+                return Response(
+                    {"sections": [f"Section {section_id} is not assigned to you."]},
+                    status=status.HTTP_400_BAD_REQUEST,
                 )
-            ).values_list("id", flat=True)
-        )
+            template_section = template_sections.get(section_id)
+            if template_section is None:
+                return Response(
+                    {"sections": [f"Unknown section {section_id}."]},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+            assignment = section_assignments.get(
+                (template_section.name, template_section.order)
+            )
+            if assignment is None:
+                continue
+            assignment.manager_comment = section_input.get("manager_comment", "")
+            if section_input.get("completed"):
+                assignment.completed_at = timezone.now()
+            assignment.save(update_fields=["manager_comment", "completed_at"])
 
-        for answer in serializer.validated_data["answers"]:
+        for answer in serializer.validated_data.get("answers", []):
             question_id = answer["question_id"]
-            if question_id not in allowed_question_ids:
+            question = allowed_questions.get(question_id)
+            if question is None:
                 return Response(
                     {
                         "answers": [
@@ -122,6 +175,24 @@ class EvaluationViewSet(ModelViewSet):
             candidate_answer = answer.get("candidate_answer", "")
             manager_comment = answer.get("manager_comment", "")
             score = answer.get("score")
+            if (
+                serializer.validated_data.get("complete_sections")
+                and question.is_mandatory
+                and not candidate_answer.strip()
+            ):
+                return Response(
+                    {"answers": [f"Question {question_id} requires an answer."]},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+            if score is not None and (score < 0 or score > question.points):
+                return Response(
+                    {
+                        "answers": [
+                            f"Question {question_id} score must be between 0 and {question.points}."
+                        ]
+                    },
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
 
             response, _ = evaluation.responses.get_or_create(question_id=question_id)
             response.candidate_answer = candidate_answer
@@ -129,5 +200,28 @@ class EvaluationViewSet(ModelViewSet):
             response.score = score
             response.save()
 
-        payload = build_questionnaire_payload(evaluation)
+        if serializer.validated_data.get("complete_sections"):
+            now = timezone.now()
+            for section in payload_scope["sections"]:
+                if section["section_id"] not in allowed_section_ids:
+                    continue
+                template_section = template_sections.get(section["section_id"])
+                if template_section is None:
+                    continue
+                assignment = section_assignments.get(
+                    (template_section.name, template_section.order)
+                )
+                if assignment is not None and assignment.completed_at is None:
+                    assignment.completed_at = now
+                    assignment.save(update_fields=["completed_at"])
+
+        all_assignments = list(evaluation.section_assignments.all())
+        if all_assignments and all(
+            assignment.completed_at is not None for assignment in all_assignments
+        ):
+            evaluation.status = EvaluationStatus.COMPLETED
+            evaluation.completed_at = evaluation.completed_at or timezone.now()
+            evaluation.save(update_fields=["status", "completed_at", "updated_at"])
+
+        payload = build_questionnaire_payload(evaluation, request.user)
         return Response(payload, status=status.HTTP_200_OK)

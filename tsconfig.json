@@ -1,9 +1,8 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
     "paths": {
-      "@lib/*": ["libs/*"],
-      "@lib-ui/*": ["libs/shared/ui/*"],
+      "@lib/*": ["./libs/*"],
+      "@lib-ui/*": ["./libs/shared/ui/*"],
     }
   },
   "files": [],

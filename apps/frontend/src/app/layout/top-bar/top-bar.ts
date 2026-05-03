@@ -20,6 +20,7 @@ export interface TopBarUser {
   standalone: true,
   imports: [CommonModule, LucideDynamicIcon],
   templateUrl: './top-bar.html',
+  styleUrl: './top-bar.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TopBarComponent {

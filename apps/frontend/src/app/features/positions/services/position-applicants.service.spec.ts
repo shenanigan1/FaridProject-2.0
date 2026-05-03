@@ -225,7 +225,7 @@ describe('PositionApplicantsService', () => {
   it('launches a test for an application', () => {
     let responseId = 0;
 
-    service.launchTestForApplication(10, 3).subscribe((response) => {
+    service.launchTestForApplication(10, 3, [{ section_id: 8, manager_id: 12 }]).subscribe((response) => {
       responseId = response[0].id;
     });
 
@@ -234,6 +234,7 @@ describe('PositionApplicantsService', () => {
     expect(request.request.body).toEqual({
       application_id: 10,
       template_id: 3,
+      section_assignments: [{ section_id: 8, manager_id: 12 }],
     });
 
     request.flush([

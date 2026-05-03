@@ -75,6 +75,15 @@ def test_list_positions(api_client):
     assert len(items) >= 2
 
 
+def test_list_positions_requires_authentication(api_client):
+    PositionFactory.create(title="Private Driver")
+
+    url = reverse("positions-list")
+    response = api_client.get(url)
+
+    assert response.status_code == 401
+
+
 def test_retrieve_position(api_client):
     user = UserFactory.create(is_staff=True, role=UserRoles.ADMIN)
     api_client.force_authenticate(user=user)

@@ -1,149 +1,81 @@
-<section
-  class="min-h-screen overflow-x-hidden bg-background px-3 py-4 text-text-primary sm:px-4 sm:py-6 lg:px-6 lg:py-8"
->
-  <div
-    class="mx-auto flex min-h-screen w-full max-w-sm items-center justify-center md:max-w-md"
-  >
-    <div
-      class="w-full rounded-2xl bg-primary-900 px-4 py-5 sm:px-5 sm:py-6 md:px-6 md:py-7"
-    >
-      <header class="mb-4 text-center sm:mb-5 md:mb-6">
-        <div class="inline-flex items-center gap-3">
-          <div
-            class="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-primary-500 shadow-md sm:h-12 sm:w-12 md:h-14 md:w-14"
-          >
-            <svg
-              [lucideIcon]="icons.brand"
-              class="h-5 w-5 text-white sm:h-6 sm:w-6 md:h-7 md:w-7"
-              [attr.stroke-width]="2"
-            ></svg>
-          </div>
+<section class="ff-login-screen">
+  <div class="ff-login-shell">
+    <header class="ff-login-header">
+      <div class="ff-login-brand">
+        <span class="ff-login-brand__icon" aria-hidden="true">
+          <svg [lucideIcon]="icons.brand"></svg>
+        </span>
 
-          <div class="text-left leading-none">
-            <h1
-              class="text-3xl font-black uppercase italic tracking-tight text-text-primary sm:text-4xl"
-            >
-              <span class="text-white">Fleet</span><span class="text-primary-500">Flow</span>
-            </h1>
-
-            <p
-              class="mt-1 text-[10px] font-semibold uppercase tracking-[0.28em] text-text-secondary sm:text-[11px]"
-            >
-              Logistics & Recruitment Portal
-            </p>
-          </div>
+        <div class="ff-login-brand__wordmark" aria-label="FleetFlow">
+          <span>Fleet</span><strong>Flow</strong>
         </div>
-      </header>
-
-      <article class="ff-card-elevated px-4 py-4 sm:px-4 sm:py-5 md:px-5 md:py-6">
-        @if (errorMessage()) {
-          <div
-            class="mb-4 rounded-lg border border-error/40 bg-error/10 px-3 py-2 text-xs text-red-200 sm:text-sm"
-          >
-            {{ errorMessage() }}
-          </div>
-        }
-
-        <form [formGroup]="form" (ngSubmit)="submit()" class="space-y-4 sm:space-y-5">
-          <div class="space-y-2">
-            <label
-              class="block text-[10px] font-semibold uppercase tracking-[0.12em] text-text-secondary"
-              for="login-email"
-            >
-              Email address
-            </label>
-
-            <div class="relative">
-              <svg
-                [lucideIcon]="icons.loginEmail"
-                class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-secondary"
-                [attr.stroke-width]="1.9"
-              ></svg>
-
-              <input
-                id="login-email"
-                formControlName="email"
-                type="email"
-                placeholder="name@fleetflow.com"
-                class="ff-input pl-10 text-sm md:text-[15px]"
-              />
-            </div>
-          </div>
-
-          <div class="space-y-2">
-            <div class="flex items-center justify-between gap-3">
-              <label
-                class="text-[10px] font-semibold uppercase tracking-[0.12em] text-text-secondary"
-                for="login-password"
-              >
-                Password
-              </label>
-
-              <a
-                routerLink="/forgot-password"
-                class="text-[10px] font-semibold uppercase tracking-[0.08em] text-primary-400 hover:text-primary-300"
-              >
-                Forgot password?
-              </a>
-            </div>
-
-            <div class="relative">
-              <svg
-                [lucideIcon]="icons.loginPassword"
-                class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-secondary"
-                [attr.stroke-width]="1.9"
-              ></svg>
-
-              <input
-                id="login-password"
-                formControlName="password"
-                type="password"
-                placeholder="••••••••"
-                class="ff-input pl-10 text-sm tracking-[0.18em] md:text-[15px]"
-              />
-            </div>
-          </div>
-
-          <button
-            type="submit"
-            class="ff-btn-primary h-11 w-full text-sm font-bold uppercase tracking-[0.06em] sm:h-12 md:h-12 md:text-base"
-            [disabled]="loading()"
-          >
-            @if (loading()) {
-              Logging in…
-            } @else {
-              Log in
-              <svg
-                [lucideIcon]="icons.loginSubmit"
-                class="h-4 w-4"
-                [attr.stroke-width]="2"
-              ></svg>
-            }
-          </button>
-
-          <label class="sr-only">
-            <input type="checkbox" formControlName="rememberMe" />
-          </label>
-        </form>
-      </article>
-
-      <div class="mt-4 text-center text-xs text-text-secondary sm:mt-5 sm:text-sm">
-        Don’t have an account?
-        <a
-          routerLink="/request-access"
-          class="font-semibold text-text-primary underline decoration-primary-500 decoration-2 underline-offset-2"
-        >
-          Request Access
-        </a>
       </div>
 
-      <div class="mt-4 border-t border-border pt-3 text-center sm:mt-5 sm:pt-4">
-        <p
-          class="mx-auto inline-flex rounded-full border border-border bg-surface-1 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.14em] text-text-muted sm:px-4"
-        >
-          V 0.0.0 "KINETIC" // SYSTEM_ACTIVE
-        </p>
-      </div>
-    </div>
+      <p>Logistics &amp; Recruitment Portal</p>
+    </header>
+
+    <article class="ff-login-card">
+      @if (errorMessage()) {
+        <p class="ff-login-alert" role="alert">{{ errorMessage() }}</p>
+      }
+
+      <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+        <label class="ff-login-field" for="login-email">
+          <span>Email address</span>
+          <span class="ff-login-control">
+            <svg [lucideIcon]="icons.loginEmail" aria-hidden="true"></svg>
+            <input
+              id="login-email"
+              formControlName="email"
+              type="email"
+              autocomplete="email"
+              placeholder="name@fleetflow.com"
+            />
+          </span>
+          @if (emailError()) {
+            <small>{{ emailError() }}</small>
+          }
+        </label>
+
+        <label class="ff-login-field" for="login-password">
+          <span class="ff-login-field__row">
+            <span>Password</span>
+            <a routerLink="/forgot-password">Forgot password?</a>
+          </span>
+          <span class="ff-login-control">
+            <svg [lucideIcon]="icons.loginPassword" aria-hidden="true"></svg>
+            <input
+              id="login-password"
+              formControlName="password"
+              type="password"
+              autocomplete="current-password"
+              placeholder="Password"
+            />
+          </span>
+          @if (passwordError()) {
+            <small>{{ passwordError() }}</small>
+          }
+        </label>
+
+        <label class="ff-login-remember" for="login-remember-me">
+          <input id="login-remember-me" type="checkbox" formControlName="rememberMe" />
+          <span>Remember me</span>
+        </label>
+
+        <button type="submit" class="ff-login-submit" [disabled]="loading()">
+          <span>{{ loading() ? 'Logging in...' : 'Log in' }}</span>
+          <svg [lucideIcon]="icons.loginSubmit" aria-hidden="true"></svg>
+        </button>
+      </form>
+    </article>
+
+    <p class="ff-login-access">
+      Don't have an account?
+      <a routerLink="/request-access">Request Access</a>
+    </p>
+
+    <div class="ff-login-divider" aria-hidden="true"></div>
+
+    <p class="ff-login-status">V 0.0.0 "KINETIC" // SYSTEM_ACTIVE</p>
   </div>
 </section>

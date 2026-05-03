@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { BehaviorSubject, combineLatest, map, startWith } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
@@ -21,10 +21,12 @@ import {
   selector: 'app-position-applicants-page',
   imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './position-applicants.page.html',
+  styleUrl: './position-applicants.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PositionApplicantsPage {
   private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   private readonly applicantsService = inject(PositionApplicantsService);
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly destroyRef = inject(DestroyRef);
@@ -95,23 +97,11 @@ export class PositionApplicantsPage {
       this.cdr.markForCheck();
       return;
     }
+
     this.launchMessage = null;
-    this.setLaunching(applicant.applicationId, true);
-    this.applicantsService
-      .launchTestForApplication(applicant.applicationId)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (createdEvaluations) => {
-          this.launchMessage = `${createdEvaluations.length} test(s) launched for ${applicant.fullName}.`;
-          this.loadApplicants();
-          this.setLaunching(applicant.applicationId, false);
-        },
-        error: () => {
-          this.launchMessage = `Unable to launch test for ${applicant.fullName}.`;
-          this.setLaunching(applicant.applicationId, false);
-          this.cdr.markForCheck();
-        },
-      });
+    void this.router.navigate(['/tests/relaunch', applicant.candidateId], {
+      queryParams: { applicationId: applicant.applicationId },
+    });
   }
 
   rejectApplicant(applicant: PositionApplicant): void {

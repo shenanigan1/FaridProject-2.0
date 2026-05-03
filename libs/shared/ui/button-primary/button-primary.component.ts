@@ -14,6 +14,7 @@ export type UiButtonType = 'button' | 'submit' | 'reset';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './button-primary.component.html',
+  styleUrl: './button-primary.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UiButtonPrimaryComponent {
@@ -34,7 +35,8 @@ export class UiButtonPrimaryComponent {
     return [
       'ff-btn',
       'ff-btn-primary',
-      this.fullWidth ? 'w-full' : '',
+      this.fullWidth ? 'ff-btn--full' : '',
+      this.loading ? 'ff-btn-loading' : '',
       this.isDisabled ? 'ff-btn-disabled' : '',
     ]
       .filter(Boolean)
@@ -42,7 +44,7 @@ export class UiButtonPrimaryComponent {
   }
 
   onButtonClicked(): void {
-    if (this.isDisabled) {
+    if (this.isDisabled || this.type === 'submit') {
       return;
     }
 

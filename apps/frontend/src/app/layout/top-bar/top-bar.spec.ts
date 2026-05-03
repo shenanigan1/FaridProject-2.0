@@ -3,7 +3,7 @@ import { By } from '@angular/platform-browser';
 
 import { TopBarComponent } from './top-bar';
 
-describe('TopBar', () => {
+describe('TopBarComponent', () => {
   let component: TopBarComponent;
   let fixture: ComponentFixture<TopBarComponent>;
 
@@ -14,34 +14,32 @@ describe('TopBar', () => {
 
     fixture = TestBed.createComponent(TopBarComponent);
     component = fixture.componentInstance;
+    component.title = 'Recruitment Overview';
+    component.user = { fullName: 'Test User' };
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('renders desktop console identity and user initials', () => {
+    const text = (fixture.nativeElement as HTMLElement).textContent ?? '';
+
+    expect(text).toContain('Recruitment Overview');
+    expect(text).toContain('TU');
   });
 
   it('emits editProfile and logout from user menu actions', () => {
-    component.user = { fullName: 'Test User' };
-    fixture.detectChanges();
-
     spyOn(component.editProfile, 'emit');
     spyOn(component.logout, 'emit');
 
-    const avatarButton = fixture.debugElement.query(
-      By.css('button[aria-label="Open navigation menu"]'),
-    );
-    avatarButton.nativeElement.click();
+    fixture.debugElement.query(By.css('button[aria-label="Open user menu"]')).nativeElement.click();
     fixture.detectChanges();
 
-    const menuButtons = fixture.debugElement.queryAll(By.css('div.absolute button'));
+    const menuButtons = fixture.debugElement.queryAll(By.css('.ff-topbar__menu-action'));
     menuButtons[0].nativeElement.click();
     fixture.detectChanges();
 
-    avatarButton.nativeElement.click();
+    fixture.debugElement.query(By.css('button[aria-label="Open user menu"]')).nativeElement.click();
     fixture.detectChanges();
-    const refreshedButtons = fixture.debugElement.queryAll(By.css('div.absolute button'));
-    refreshedButtons[1].nativeElement.click();
+    fixture.debugElement.queryAll(By.css('.ff-topbar__menu-action'))[1].nativeElement.click();
 
     expect(component.editProfile.emit).toHaveBeenCalledTimes(1);
     expect(component.logout.emit).toHaveBeenCalledTimes(1);

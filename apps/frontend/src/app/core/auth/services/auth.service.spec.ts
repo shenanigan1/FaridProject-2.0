@@ -34,6 +34,7 @@ describe('AuthService', () => {
     const mockResponse: LoginResponse = {
       access: 'ACCESS_TOKEN',
       refresh: 'REFRESH_TOKEN',
+      user: null,
     };
 
     service.login(payload).subscribe((res) => {

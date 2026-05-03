@@ -1,79 +1,50 @@
-<div class="min-h-screen bg-slate-950 text-slate-100">
-  <div class="mx-auto w-full max-w-sm px-4 pt-6 pb-24">
-
-    <!-- Header -->
-    <div class="flex items-start justify-between gap-3">
-      <div class="flex items-center gap-3">
-        <app-ui-icon-button ariaLabel="Back" (click)="back()">
-          <svg viewBox="0 0 24 24" class="h-5 w-5 fill-none stroke-current" stroke-width="2">
-            <path d="M15 18l-6-6 6-6" />
-          </svg>
-        </app-ui-icon-button>
-
-        <div class="min-w-0">
-          @if (pageMode() === 'create') {
-            <h1 class="text-lg font-semibold">Create Pool</h1>
-            <p class="mt-1 text-xs text-slate-400">Create a reusable question pool.</p>
-          } @else {
-            <h1 class="text-lg font-semibold truncate">
-              {{ (pool()?.name ?? 'Pool') }}
-            </h1>
-
-            @if (pool(); as p) {
-              <p class="mt-1 text-xs text-slate-400">
-                <span class="font-mono text-slate-300">{{ p.code }}</span>
-
-                @if (p.updatedAt) {
-                  <span> • Updated {{ p.updatedAt | date:'MMM d, y, HH:mm' }}</span>
-                }
-              </p>
-            }
+<section class="ff-app-screen">
+  <div class="ff-app-container ff-app-stack" style="max-width: 48rem">
+    <header class="ff-app-header">
+      <div>
+        <p class="ff-app-kicker">QUESTION POOL</p>
+        @if (pageMode() === 'create') {
+          <h1 class="ff-app-title">Create Pool</h1>
+          <p class="ff-app-subtitle">Create a reusable question bank.</p>
+        } @else {
+          <h1 class="ff-app-title">{{ pool()?.name ?? 'Pool' }}</h1>
+          @if (pool(); as p) {
+            <p class="ff-app-subtitle">
+              {{ p.code }}
+              @if (p.updatedAt) {
+                <span> - Updated {{ p.updatedAt | date:'MMM d, y, HH:mm' }}</span>
+              }
+            </p>
           }
-        </div>
+        }
       </div>
 
-      <!-- Top right action (detail only) -->
-      @if (pageMode() === 'detail') {
-        <div class="shrink-0">
-          @if (pool() && !isEditing()) {
-            <app-ui-icon-button ariaLabel="Edit" (click)="startEdit()">
-              <svg viewBox="0 0 24 24" class="h-5 w-5 fill-none stroke-current" stroke-width="2">
-                <path d="M12 20h9" />
-                <path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4 12.5-12.5z" />
-              </svg>
-            </app-ui-icon-button>
-          }
-        </div>
-      }
-    </div>
+      <div class="ff-inline-actions">
+        <button type="button" class="ff-btn ff-btn-secondary" (click)="back()">Back</button>
+        @if (pageMode() === 'detail' && pool() && !isEditing()) {
+          <button type="button" class="ff-btn ff-btn-primary" (click)="startEdit()">Edit pool</button>
+        }
+      </div>
+    </header>
 
-    <!-- Tabs (detail only) -->
     @if (pageMode() === 'detail') {
-      <div class="mt-5">
-        <app-ui-tabs [items]="tabs()" [activeKey]="tab()" (activeKeyChange)="setTab($event)" />
-      </div>
+      <app-ui-tabs [items]="tabs()" [activeKey]="tab()" (activeKeyChange)="setTab($event)" />
     }
 
-    <!-- Loading -->
     @if (isLoading()) {
-      <app-ui-card class="mt-5">
-        <div class="flex items-center gap-3 text-sm text-slate-300">
-          <app-ui-spinner />
-          Loading…
-        </div>
-      </app-ui-card>
+      <section class="ff-app-panel">
+        <p class="ff-muted">Loading...</p>
+      </section>
     }
 
-    <!-- Error -->
-    <app-ui-alert class="mt-5" variant="error" [message]="error()"></app-ui-alert>
+    <app-ui-alert variant="error" [message]="error()"></app-ui-alert>
 
     @if (error() && pageMode() === 'detail') {
-      <app-ui-card class="mt-5">
-        <app-ui-button-primary block (click)="retry()">Retry</app-ui-button-primary>
-      </app-ui-card>
+      <section class="ff-app-panel">
+        <button type="button" class="ff-btn ff-btn-primary" (click)="retry()">Retry</button>
+      </section>
     }
 
-    <!-- CREATE MODE: just the form -->
     @if (pageMode() === 'create') {
       <app-pool-form
         [mode]="formMode()"
@@ -86,73 +57,56 @@
       />
     }
 
-    <!-- DETAIL MODE -->
     @if (pageMode() === 'detail' && !isLoading() && !error()) {
-
       @if (pool(); as p) {
-
-        <!-- QUESTIONS -->
         @if (tab() === 'questions') {
-          <app-ui-card class="mt-5">
-            <div class="flex items-center justify-between">
+          <section class="ff-app-panel ff-app-stack">
+            <header class="ff-inline-actions" style="justify-content: space-between">
               <div>
-                <p class="text-sm font-semibold">Questions</p>
-                <p class="mt-1 text-xs text-slate-400">Manage questions inside this pool.</p>
+                <p class="ff-app-kicker">QUESTIONS</p>
+                <h2 class="ff-section-title">Pool questions</h2>
               </div>
-
               @if (!isEditing()) {
-                <app-ui-button-secondary (click)="startEdit()">
-                  Edit pool
-                </app-ui-button-secondary>
+                <button type="button" class="ff-btn ff-btn-secondary" (click)="startEdit()">Edit pool</button>
               }
-            </div>
-          </app-ui-card>
+            </header>
 
-          <div class="mt-5">
             <app-pool-questions-panel [poolId]="p.id" />
-          </div>
+          </section>
         }
 
-        <!-- SETTINGS -->
         @if (tab() === 'settings') {
-
-          <app-ui-card class="mt-5">
-            <div class="flex items-start justify-between gap-3">
+          <section class="ff-app-panel ff-app-stack">
+            <header class="ff-inline-actions" style="align-items: flex-start; justify-content: space-between">
               <div>
-                <p class="text-sm font-semibold">Pool settings</p>
-                <p class="mt-1 text-xs text-slate-400">Name, code, description.</p>
+                <p class="ff-app-kicker">SETTINGS</p>
+                <h2 class="ff-section-title">Pool settings</h2>
               </div>
 
               @if (isEditing()) {
-                <div class="flex flex-col gap-2">
-                  <app-ui-button-primary [disabled]="isLoading()" (click)="submit()">Save</app-ui-button-primary>
-                  <app-ui-button-secondary (click)="cancelEdit()">Cancel</app-ui-button-secondary>
+                <div class="ff-inline-actions">
+                  <button type="button" class="ff-btn ff-btn-primary" [disabled]="isLoading()" (click)="submit()">Save</button>
+                  <button type="button" class="ff-btn ff-btn-secondary" (click)="cancelEdit()">Cancel</button>
                 </div>
               } @else {
-                <app-ui-button-secondary (click)="startEdit()">Edit</app-ui-button-secondary>
+                <button type="button" class="ff-btn ff-btn-secondary" (click)="startEdit()">Edit</button>
               }
-            </div>
-          </app-ui-card>
+            </header>
 
-          <app-pool-form
-            [mode]="formMode()"
-            [form]="form"
-            [isLoading]="isLoading()"
-            [apiError]="error()"
-            (normalize)="normalizeCode()"
-            (submitForm)="submit()"
-            (cancel)="cancelEdit()"
-          />
+            <app-pool-form
+              [mode]="formMode()"
+              [form]="form"
+              [isLoading]="isLoading()"
+              [apiError]="error()"
+              (normalize)="normalizeCode()"
+              (submitForm)="submit()"
+              (cancel)="cancelEdit()"
+            />
+          </section>
         }
-
       } @else {
-        <app-ui-empty-state
-          class="mt-5"
-          title="Pool not found"
-          description="This pool doesn't exist or you don't have access."
-        />
+        <div class="ff-empty">Pool not found.</div>
       }
     }
-
   </div>
-</div>
+</section>

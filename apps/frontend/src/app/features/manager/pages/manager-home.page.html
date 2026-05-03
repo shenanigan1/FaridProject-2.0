@@ -1,0 +1,81 @@
+<section class="manager-screen">
+  <div class="manager-shell">
+    <section class="manager-hero">
+      <p class="manager-kicker">DriveRecruit</p>
+      <h1>Bonjour {{ greetingName() }}</h1>
+      <p>Voici l'activite de vos tests assignes par le portail RH.</p>
+    </section>
+
+    @if (isLoading()) {
+      <p class="manager-empty">Chargement des tests assignes...</p>
+    } @else if (error()) {
+      <p class="manager-alert" role="alert">{{ error() }}</p>
+    } @else {
+      <section class="manager-card" aria-labelledby="manager-pending-title">
+        <header class="manager-card__header">
+          <h2 id="manager-pending-title">Tests a faire passer</h2>
+          <span>{{ pendingTests().length }} assignes</span>
+        </header>
+
+        <div class="manager-list">
+          @for (test of latestPendingTests(); track test.id) {
+            <a class="manager-test-row" [routerLink]="['/manager/tests', test.id]">
+              <span class="manager-avatar" aria-hidden="true">{{ initials(test) }}</span>
+              <span class="manager-test-row__body">
+                <strong>{{ test.candidateName }}</strong>
+                <small>{{ test.templateName }}</small>
+                @if (test.positionTitle) {
+                  <small>{{ test.positionTitle }}</small>
+                }
+              </span>
+              <span class="manager-test-row__meta">A remplir</span>
+            </a>
+          }
+
+          @if (latestPendingTests().length === 0) {
+            <p class="manager-empty manager-empty--compact">Aucun test assigne a faire passer.</p>
+          }
+        </div>
+      </section>
+
+      <section class="manager-grid" aria-label="Indicateurs manager">
+        <article class="manager-stat">
+          <span>Tests assignes</span>
+          <strong>{{ tests().length }}</strong>
+        </article>
+        <article class="manager-stat">
+          <span>En cours</span>
+          <strong>{{ pendingTests().length }}</strong>
+        </article>
+      </section>
+
+      <section class="manager-card" aria-labelledby="manager-history-title">
+        <header class="manager-card__header">
+          <h2 id="manager-history-title">Historique recent</h2>
+          <a routerLink="/manager/tests">Voir tout</a>
+        </header>
+
+        <div class="manager-list">
+          @for (test of latestCompletedTests(); track test.id) {
+            <a class="manager-test-row" [routerLink]="['/manager/tests', test.id]">
+              <span class="manager-avatar manager-avatar--muted" aria-hidden="true">
+                {{ initials(test) }}
+              </span>
+              <span class="manager-test-row__body">
+                <strong>{{ test.candidateName }}</strong>
+                <small>{{ test.templateName }}</small>
+              </span>
+              <span class="manager-test-row__meta">{{ test.status }}</span>
+            </a>
+          }
+
+          @if (latestCompletedTests().length === 0) {
+            <p class="manager-empty manager-empty--compact">Aucun test termine pour le moment.</p>
+          }
+        </div>
+      </section>
+
+      <a routerLink="/manager/tests" class="manager-fab" aria-label="Ouvrir les tests">+</a>
+    }
+  </div>
+</section>

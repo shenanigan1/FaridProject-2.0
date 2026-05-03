@@ -9,9 +9,9 @@ import {
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { APP_ICONS } from '@shared/icons/app-icons';
 import { LucideDynamicIcon } from '@lucide/angular';
 
+import { APP_ICONS } from '@shared/icons/app-icons';
 import {
   AdminUser,
   RolesAdminService,
@@ -34,131 +34,73 @@ const ROLE_OPTIONS: UserRole[] = [
   imports: [CommonModule, RouterLink, LucideDynamicIcon],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <section class="min-h-[calc(100vh-144px)] bg-slate-950 px-4 py-4 text-slate-100">
-      <div class="mx-auto max-w-3xl space-y-4">
-        <header class="flex items-center justify-between">
-          <button
-            routerLink="/contact"
-            class="inline-flex items-center gap-2 rounded-full border border-slate-700 px-3 py-1.5 text-sm"
-          >
-            <svg [lucideIcon]="icons.back" class="h-4 w-4"></svg>
+    <section class="ff-app-screen">
+      <div class="ff-app-container ff-app-stack">
+        <header class="ff-app-header">
+          <button routerLink="/contact" class="ff-btn ff-btn-secondary">
+            <svg [lucideIcon]="icons.back" style="width: 1rem; height: 1rem"></svg>
             Back
           </button>
 
-          <button
-            type="button"
-            class="inline-flex items-center rounded-full border border-slate-700 px-3 py-1.5 text-sm"
-            (click)="menuOpen.set(true)"
-          >
-            <svg [lucideIcon]="icons.home" class="h-4 w-4"></svg>
-          </button>
+          @if (contact()) {
+            <button type="button" class="ff-btn ff-btn-secondary" (click)="menuOpen.set(true)">
+              <svg [lucideIcon]="icons.moreVertical" style="width: 1rem; height: 1rem"></svg>
+            </button>
+          }
         </header>
 
         @if (pageMessage()) {
-          <div
-            class="rounded-xl border border-blue-500/25 bg-blue-500/10 p-3 text-sm text-blue-200"
-          >
-            {{ pageMessage() }}
-          </div>
+          <div class="ff-alert-inline">{{ pageMessage() }}</div>
         }
 
         @if (contact(); as currentContact) {
-          <article class="rounded-2xl border border-slate-800 bg-slate-900/70 p-5">
-            <div class="flex items-center justify-between gap-3">
+          <article class="ff-data-card">
+            <div class="ff-inline-actions" style="align-items: flex-start; justify-content: space-between">
               <div>
-                <h1 class="text-3xl font-bold">{{ fullName() }}</h1>
-                <p class="mt-1 text-slate-400">
-                  {{ currentContact.role }} • {{ currentContact.email }}
-                </p>
+                <p class="ff-app-kicker">{{ currentContact.role }}</p>
+                <h1 class="ff-app-title">{{ fullName() }}</h1>
+                <p class="ff-row-meta">{{ currentContact.email }}</p>
               </div>
 
-              <span
-                class="rounded-md border px-2 py-1 text-xs font-semibold uppercase"
-                [class.border-emerald-500/40]="currentContact.is_active"
-                [class.text-emerald-300]="currentContact.is_active"
-                [class.border-slate-600]="!currentContact.is_active"
-                [class.text-slate-400]="!currentContact.is_active"
-              >
+              <span class="ff-status-pill" [class.ff-status-pill--muted]="!currentContact.is_active">
                 {{ currentContact.is_active ? 'Active' : 'Inactive' }}
               </span>
             </div>
-
-            <div class="mt-4 grid grid-cols-3 gap-2">
-              <button type="button" class="rounded-lg bg-blue-600 px-3 py-2 text-xs font-semibold">
-                Call
-              </button>
-              <button type="button" class="rounded-lg border border-slate-700 px-3 py-2 text-xs">
-                Message
-              </button>
-              <button type="button" class="rounded-lg border border-slate-700 px-3 py-2 text-xs">
-                Email
-              </button>
-            </div>
-
-            <div
-              class="mt-4 rounded-xl border border-slate-800 bg-slate-950/60 p-3 text-sm text-slate-300"
-            >
-              TODO: add personal info block (phone, address, notes) when profile/contact endpoint
-              fields are exposed.
-            </div>
           </article>
         } @else {
-          <p class="text-sm text-slate-400">Loading contact details…</p>
+          <p class="ff-empty">Loading contact details...</p>
         }
       </div>
 
       @if (menuOpen() && contact(); as currentContact) {
-        <div class="fixed inset-0 z-50 flex items-end bg-black/60 p-4">
-          <div class="mx-auto w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-4">
-            <h2 class="text-lg font-semibold">Action Menu</h2>
-            <p class="text-xs text-slate-400">ID: {{ currentContact.id }} • {{ currentContact.role }}</p>
+        <div class="ff-modal-scrim">
+          <div class="ff-app-panel" style="width: min(100%, 28rem)">
+            <header class="ff-app-header" style="margin-bottom: 1rem">
+              <div>
+                <p class="ff-app-kicker">ACTIONS</p>
+                <h2 class="ff-app-title">Contact</h2>
+              </div>
+            </header>
 
-            <div class="mt-4 space-y-3">
-              <button
-                type="button"
-                class="w-full rounded-lg border border-slate-700 px-3 py-2 text-left"
-                (click)="roleMenuOpen.set(!roleMenuOpen())"
-              >
-                Change Role
+            <div class="ff-app-stack">
+              <button type="button" class="ff-btn ff-btn-secondary" (click)="roleMenuOpen.set(!roleMenuOpen())">
+                Change role
               </button>
 
               @if (roleMenuOpen()) {
-                <div class="rounded-xl border border-slate-700 bg-slate-950 p-3">
-                  <label class="mb-1 block text-xs text-slate-400" for="role-select">
-                    New role
-                  </label>
-
-                  <select
-                    id="role-select"
-                    class="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm"
-                    [value]="currentContact.role"
-                    (change)="onRoleChange($event)"
-                  >
-                    @for (role of roleOptions; track role) {
-                      <option [value]="role">{{ role }}</option>
-                    }
-                  </select>
-                </div>
+                <select class="ff-control" [value]="currentContact.role" (change)="onRoleChange($event)">
+                  @for (role of roleOptions; track role) {
+                    <option [value]="role">{{ role }}</option>
+                  }
+                </select>
               }
 
-              <button
-                type="button"
-                class="w-full rounded-lg px-3 py-2 text-left"
-                [class.bg-red-500/15]="currentContact.is_active"
-                [class.text-red-300]="currentContact.is_active"
-                [class.bg-emerald-500/15]="!currentContact.is_active"
-                [class.text-emerald-300]="!currentContact.is_active"
-                (click)="toggleActive()"
-              >
+              <button type="button" class="ff-btn ff-btn-secondary" (click)="toggleActive()">
                 {{ currentContact.is_active ? 'Deactivate' : 'Activate' }}
               </button>
 
-              <button
-                type="button"
-                class="w-full rounded-lg border border-slate-700 px-3 py-2 text-sm"
-                (click)="dismissMenu()"
-              >
-                Dismiss
+              <button type="button" class="ff-btn ff-btn-primary" (click)="dismissMenu()">
+                Close
               </button>
             </div>
           </div>
@@ -174,7 +116,6 @@ export class ContactDetailPage {
   private readonly destroyRef = inject(DestroyRef);
 
   readonly icons = APP_ICONS;
-
   readonly roleOptions = ROLE_OPTIONS;
   readonly contact = signal<AdminUser | null>(null);
   readonly pageMessage = signal<string | null>(null);
@@ -206,10 +147,8 @@ export class ContactDetailPage {
       return;
     }
 
-    const role = target.value as UserRole;
-
     this.api
-      .updateUserRole(user.id, role)
+      .updateUserRole(user.id, target.value as UserRole)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (updated) => {

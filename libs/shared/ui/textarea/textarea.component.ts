@@ -57,4 +57,9 @@ export class UiTextareaComponent implements ControlValueAccessor {
   blur(): void {
     this.onTouched();
   }
+
+
+  get textareaClasses(): string {
+    return ['ff-input', 'mt-1', 'min-h-24', this.error ? 'ff-input-error' : ''].filter(Boolean).join(' ');
+  }
 }

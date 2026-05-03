@@ -1,0 +1,65 @@
+<section class="test-flow">
+  <header class="test-flow__appbar">
+    <a routerLink="/tests" class="test-flow__icon-btn" aria-label="Retour">&#8592;</a>
+    <h1>Test Assessment</h1>
+    <span class="test-flow__icon-btn" aria-hidden="true">&#8942;</span>
+  </header>
+
+  <div class="test-flow__shell">
+    @if (isLoading()) {
+      <p class="test-flow__empty">Chargement de l'evaluation...</p>
+    } @else if (error()) {
+      <p class="test-flow__alert">{{ error() }}</p>
+    } @else if (assessment(); as item) {
+      <section class="test-flow__score">
+        <p class="test-flow__kicker">Score global</p>
+        <strong>{{ item.score }}</strong>
+        <span>/ {{ item.maxScore }}</span>
+        <p class="test-flow__status">{{ item.status }}</p>
+      </section>
+
+      <section class="test-flow__hero" style="margin-top: 1rem">
+        <p class="test-flow__kicker">{{ item.templateName }}</p>
+        <h2>{{ item.candidateName }}</h2>
+        @if (item.positionTitle) {
+          <p class="test-flow__meta">{{ item.positionTitle }}</p>
+        }
+      </section>
+
+      <div class="test-flow__stack">
+        @for (module of item.modules; track module.sectionId) {
+          <article class="test-flow__card">
+            <div class="test-flow__metric-row">
+              <h3 class="test-flow__title">{{ module.title }}</h3>
+              <strong>{{ module.score }}%</strong>
+            </div>
+            <div class="test-flow__progress" aria-hidden="true">
+              <span [style.width.%]="module.score"></span>
+            </div>
+          </article>
+        }
+
+        <section class="test-flow__card">
+          <p class="test-flow__kicker">Evaluator Feedback</p>
+          <p class="test-flow__meta">{{ item.feedback || 'Aucun commentaire evaluateur en base.' }}</p>
+          @if (item.evaluatorName) {
+            <p class="test-flow__title">{{ item.evaluatorName }}</p>
+          }
+        </section>
+      </div>
+
+      @if (message()) {
+        <p class="test-flow__empty">{{ message() }}</p>
+      }
+
+      <div class="test-flow__actions">
+        <button type="button" class="test-flow__btn test-flow__btn--primary" (click)="validateResults()">
+          Validate Results
+        </button>
+        <a class="test-flow__btn" [routerLink]="['/tests/relaunch', item.evaluationId]">
+          Request Re-test
+        </a>
+      </div>
+    }
+  </div>
+</section>
