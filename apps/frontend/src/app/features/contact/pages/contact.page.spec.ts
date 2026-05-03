@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { of } from 'rxjs';
 
 import { RolesAdminService } from '@features/roles/services/roles-admin.service';
@@ -33,7 +34,7 @@ describe('ContactPage', () => {
 
     await TestBed.configureTestingModule({
       imports: [ContactPage],
-      providers: [{ provide: RolesAdminService, useValue: rolesAdminSpy }],
+      providers: [provideRouter([]), { provide: RolesAdminService, useValue: rolesAdminSpy }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ContactPage);

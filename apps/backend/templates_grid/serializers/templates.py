@@ -98,7 +98,9 @@ class TemplateSectionReadSerializer(serializers.ModelSerializer):
         ):
             pool_questions = list(rule.pool.questions.all().order_by("order", "id"))
             if rule.random_count > 0:
-                mandatory = [question for question in pool_questions if question.is_mandatory]
+                mandatory = [
+                    question for question in pool_questions if question.is_mandatory
+                ]
                 optional = [
                     question for question in pool_questions if not question.is_mandatory
                 ]

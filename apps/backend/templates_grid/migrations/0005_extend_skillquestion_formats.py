@@ -3,7 +3,10 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("templates_grid", "0004_template_difficulty_template_duration_minutes_and_more"),
+        (
+            "templates_grid",
+            "0004_template_difficulty_template_duration_minutes_and_more",
+        ),
     ]
 
     operations = [

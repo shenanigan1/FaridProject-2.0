@@ -67,7 +67,7 @@ class CandidateSerializer(serializers.ModelSerializer):
                     phone=user_data.get("phone", ""),
                     role=UserRoles.CANDIDATE,
                 )
-            except IntegrityError:
+            except (IntegrityError, DjangoValidationError):
                 raise self._email_already_used_error()
 
             return Candidate.objects.create(user=user, **validated_data)

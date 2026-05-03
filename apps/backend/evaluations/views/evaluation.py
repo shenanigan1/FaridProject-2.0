@@ -115,8 +115,9 @@ class EvaluationViewSet(ModelViewSet):
 
         allowed_questions = {
             question.id: question
-            for question in SkillQuestion.objects.filter(id__in=allowed_question_ids)
-            .only("id", "points", "is_mandatory")
+            for question in SkillQuestion.objects.filter(
+                id__in=allowed_question_ids
+            ).only("id", "points", "is_mandatory")
         }
 
         if "test_manager_comment" in serializer.validated_data:

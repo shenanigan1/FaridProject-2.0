@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { of, throwError } from 'rxjs';
+import { of, skip, take, throwError } from 'rxjs';
 
 import {
   CandidateDto,
@@ -62,13 +62,13 @@ describe('CandidatesListPage', () => {
   });
 
   it('filters candidates by search query', (done) => {
-    component.searchControl.setValue('jane');
-
-    component.filteredCandidates$.subscribe((results) => {
+    component.filteredCandidates$.pipe(skip(1), take(1)).subscribe((results) => {
       expect(results.length).toBe(1);
       expect(results[0].user.email).toBe('jane@example.com');
       done();
     });
+
+    component.searchControl.setValue('jane');
   });
 
   it('shows error message when API fails', async () => {

@@ -89,10 +89,14 @@ def test_create_skill_question_from_pool_nested_route_uses_pool_from_url(api_cli
 
 
 @pytest.mark.parametrize("question_format", ["free_text", "yes_no", "rating"])
-def test_create_skill_question_supports_manager_question_formats(api_client, question_format):
+def test_create_skill_question_supports_manager_question_formats(
+    api_client, question_format
+):
     user = UserFactory.create(is_staff=True, role=UserRoles.ADMIN)
     api_client.force_authenticate(user=user)
-    pool = QuestionPoolFactory.create(name="Pool", code=f"POOL_{question_format.upper()}")
+    pool = QuestionPoolFactory.create(
+        name="Pool", code=f"POOL_{question_format.upper()}"
+    )
     url = reverse(f"{BASENAME_QUESTIONS}-list")
 
     res = api_client.post(

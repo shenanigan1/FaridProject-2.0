@@ -60,7 +60,7 @@ class EvaluationSerializer(serializers.ModelSerializer):
         ]
 
     def get_subject_full_name(self, obj: Evaluation) -> str:
-        return obj.subject.full_name or obj.subject.email
+        return obj.subject.email
 
     def get_position_title(self, obj: Evaluation) -> str:
         return obj.position.title if obj.position else ""
@@ -427,10 +427,11 @@ class EvaluationQuestionnaireQuestionSerializer(serializers.Serializer):
     score = serializers.IntegerField(allow_null=True)
 
 
-def _manager_can_access_assignment(user, assignment: EvaluationSectionAssignment | None) -> bool:
-    return (
-        getattr(user, "role", None) != UserRoles.MANAGER
-        or (assignment is not None and assignment.assigned_to_id == user.id)
+def _manager_can_access_assignment(
+    user, assignment: EvaluationSectionAssignment | None
+) -> bool:
+    return getattr(user, "role", None) != UserRoles.MANAGER or (
+        assignment is not None and assignment.assigned_to_id == user.id
     )
 
 

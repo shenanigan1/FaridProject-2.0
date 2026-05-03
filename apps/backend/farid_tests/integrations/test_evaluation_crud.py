@@ -439,7 +439,9 @@ def test_evaluation_questionnaire_rejects_foreign_question(api_client):
     assert "answers" in res.data
 
 
-def test_launch_evaluation_assigns_managers_by_section_and_scopes_questionnaire(api_client):
+def test_launch_evaluation_assigns_managers_by_section_and_scopes_questionnaire(
+    api_client,
+):
     hr = UserFactory.create(
         email="hr-sections@example.com", password="Passw0rd!", role=UserRoles.HR
     )
@@ -497,7 +499,9 @@ def test_launch_evaluation_assigns_managers_by_section_and_scopes_questionnaire(
 
     assert launch_res.status_code == 201
     evaluation = Evaluation.objects.get(id=launch_res.data[0]["id"])
-    assert EvaluationSectionAssignment.objects.filter(evaluation=evaluation).count() == 2
+    assert (
+        EvaluationSectionAssignment.objects.filter(evaluation=evaluation).count() == 2
+    )
 
     questionnaire_url = reverse(f"{BASENAME}-questionnaire", args=[evaluation.id])
     api_client.force_authenticate(user=manager_a)

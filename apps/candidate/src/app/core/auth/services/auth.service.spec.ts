@@ -50,7 +50,7 @@ describe('AuthService (candidate)', () => {
   });
 
   it('signIn stores tokens and resolves candidate profile from /candidates/me/', () => {
-    let candidateId: number | null = null;
+    let candidateId: number | undefined;
 
     service
       .signIn({ email: 'john@example.com', password: 'Secret123' })
@@ -88,7 +88,7 @@ describe('AuthService (candidate)', () => {
   });
 
   it('signIn returns explicit message when user is not a candidate', () => {
-    let actualError: string | null = null;
+    let actualError: string | undefined;
 
     service.signIn({ email: 'hr@example.com', password: 'Secret123' }).subscribe({
       next: () => fail('Expected error'),
@@ -116,7 +116,7 @@ describe('AuthService (candidate)', () => {
   });
 
   it('maps nested backend validation errors to user-friendly message', () => {
-    let actualError: string | null = null;
+    let actualError: string | undefined;
 
     service
       .signUp({
@@ -147,7 +147,7 @@ describe('AuthService (candidate)', () => {
   });
 
   it('refresh calls backend refresh endpoint', () => {
-    let access: string | null = null;
+    let access: string | undefined;
 
     service.refresh('refresh-token').subscribe((response) => {
       access = response.access;

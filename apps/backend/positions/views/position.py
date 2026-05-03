@@ -55,7 +55,7 @@ class PositionViewSet(ModelViewSet):
     @action(detail=True, methods=["get"], url_path="test-templates")
     def test_templates(self, request, pk=None):
         position = self.get_object()
-        queryset = self._safe_assignments_queryset(position)
+        queryset = type(self)._safe_assignments_queryset(position)
         if queryset is None:
             return Response(
                 {
@@ -104,7 +104,7 @@ class PositionViewSet(ModelViewSet):
                 order=item.get("order", index),
             )
 
-        queryset = self._safe_assignments_queryset(position)
+        queryset = type(self)._safe_assignments_queryset(position)
         if queryset is None:
             return Response(
                 {

@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { of } from 'rxjs';
 
 import { RolesAdminPage } from './roles-admin.page';
@@ -54,7 +55,7 @@ describe('RolesAdminPage', () => {
 
     await TestBed.configureTestingModule({
       imports: [RolesAdminPage],
-      providers: [{ provide: RolesAdminService, useValue: apiSpy }],
+      providers: [provideRouter([]), { provide: RolesAdminService, useValue: apiSpy }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(RolesAdminPage);
@@ -63,11 +64,12 @@ describe('RolesAdminPage', () => {
   });
 
   it('auto-saves role when role dropdown changes', () => {
-    const event = {
-      target: {
-        value: 'hr',
-      },
-    } as unknown as Event;
+    const select = document.createElement('select');
+    const option = document.createElement('option');
+    option.value = 'hr';
+    select.appendChild(option);
+    select.value = 'hr';
+    const event = { target: select } as unknown as Event;
 
     component.onRoleChange(component.users[0], event);
 
