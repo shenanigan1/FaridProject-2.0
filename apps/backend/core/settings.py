@@ -5,37 +5,45 @@ from datetime import timedelta
 import dj_database_url
 from dotenv import load_dotenv
 
+# =============================================================================
+# BASE CONFIG
+# =============================================================================
+
 BASE_DIR = Path(__file__).resolve().parent.parent
+
 load_dotenv(BASE_DIR / ".env")
 
-SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret-key")
+# =============================================================================
+# SECURITY
+# =============================================================================
+
+SECRET_KEY = os.getenv("SECRET_KEY")
+
 DEBUG = os.getenv("DEBUG", "False").lower() == "true"
 
 ALLOWED_HOSTS = os.getenv(
     "ALLOWED_HOSTS",
-    "localhost,127.0.0.1,.onrender.com"
+    "localhost,127.0.0.1,.onrender.com",
 ).split(",")
 
-SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
-    "ROTATE_REFRESH_TOKENS": True,
-    "BLACKLIST_AFTER_ROTATION": True,
-}
-
-AUTH_USER_MODEL = "users.User"
+# =============================================================================
+# APPLICATIONS
+# =============================================================================
 
 INSTALLED_APPS = [
+    # Third party
     "corsheaders",
-    "django.contrib.contenttypes",
+    "django_filters",
+    "rest_framework",
+
+    # Django
     "django.contrib.auth",
+    "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
 
-    "django_filters",
-    "rest_framework",
-
+    # Local apps
     "candidates",
     "companies",
     "driver_tests",
@@ -47,6 +55,32 @@ INSTALLED_APPS = [
     "users",
 ]
 
+# =============================================================================
+# MIDDLEWARE
+# =============================================================================
+
+MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+]
+
+# =============================================================================
+# AUTHENTICATION
+# =============================================================================
+
+AUTH_USER_MODEL = "users.User"
+
+AUTHENTICATION_BACKENDS = [
+    "core.auth_backend.EmailAuthBackend",
+]
+
+# =============================================================================
+# DJANGO REST FRAMEWORK
+# =============================================================================
+
 REST_FRAMEWORK = {
     "DEFAULT_FILTER_BACKENDS": [
         "django_filters.rest_framework.DjangoFilterBackend",
@@ -57,24 +91,35 @@ REST_FRAMEWORK = {
     ),
 }
 
-MIDDLEWARE = [
-    "corsheaders.middleware.CorsMiddleware",
-    "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",
-    "django.contrib.sessions.middleware.SessionMiddleware",
-    "django.middleware.common.CommonMiddleware",
-]
+# =============================================================================
+# JWT
+# =============================================================================
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+    "ROTATE_REFRESH_TOKENS": True,
+    "BLACKLIST_AFTER_ROTATION": True,
+}
+
+# =============================================================================
+# URLS
+# =============================================================================
+
+ROOT_URLCONF = "core.urls"
+
+# =============================================================================
+# CORS
+# =============================================================================
 
 CORS_ALLOWED_ORIGINS = os.getenv(
     "CORS_ALLOWED_ORIGINS",
-    "http://localhost:4200,http://127.0.0.1:4200,http://localhost:4201,http://127.0.0.1:4201"
+    "http://localhost:4200,http://127.0.0.1:4200",
 ).split(",")
 
-AUTHENTICATION_BACKENDS = [
-    "core.auth_backend.EmailAuthBackend",
-]
-
-ROOT_URLCONF = "core.urls"
+# =============================================================================
+# DATABASE
+# =============================================================================
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 
@@ -93,13 +138,25 @@ else:
             "NAME": os.getenv("DB_NAME"),
             "USER": os.getenv("DB_USER"),
             "PASSWORD": os.getenv("DB_PASSWORD"),
-            "HOST": os.getenv("DB_HOST"),
-            "PORT": os.getenv("DB_PORT"),
+            "HOST": os.getenv("DB_HOST", "127.0.0.1"),
+            "PORT": os.getenv("DB_PORT", "5432"),
         }
     }
 
+# =============================================================================
+# STATIC FILES
+# =============================================================================
+
 STATIC_URL = "/static/"
+
 STATIC_ROOT = BASE_DIR / "staticfiles"
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+STATICFILES_STORAGE = (
+    "whitenoise.storage.CompressedManifestStaticFilesStorage"
+)
+
+# =============================================================================
+# DEFAULTS
+# =============================================================================
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
