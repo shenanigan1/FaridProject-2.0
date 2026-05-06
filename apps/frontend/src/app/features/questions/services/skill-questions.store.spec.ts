@@ -105,6 +105,23 @@ describe('SkillQuestionsStore', () => {
     expect(store.error()).toBe('Bad request');
   });
 
+  it('createInPool() should translate backend field validation errors for users', () => {
+    const { store, apiMock } = setup();
+
+    apiMock.createInPool.and.returnValue(
+      throwError(() =>
+        httpError(400, {
+          rubric: ['Rubric is required for practical questions.'],
+        }),
+      ),
+    );
+
+    store.createInPool('p1', { format: 'practical', text: 'Controle pratique' });
+
+    expect(store.isLoading()).toBeFalse();
+    expect(store.error()).toBe("Grille d'evaluation : champ obligatoire");
+  });
+
   it('loadByPool() should set network error message when status=0', () => {
     const { store, apiMock } = setup();
 
@@ -113,7 +130,7 @@ describe('SkillQuestionsStore', () => {
     store.loadByPool('p1');
 
     expect(store.isLoading()).toBeFalse();
-    expect(store.error()).toBe('Network error (API unreachable).');
+    expect(store.error()).toBe('Connexion impossible avec le serveur.');
   });
 
   it('loadOne() should call onSuccess with mapped entity', () => {

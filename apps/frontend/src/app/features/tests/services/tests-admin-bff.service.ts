@@ -52,6 +52,15 @@ interface TemplateSectionDto {
 
 interface QuestionnaireQuestionDto {
   question_id: number;
+  section_id?: number;
+  section_title?: string;
+  format?: string;
+  title?: string;
+  text?: string;
+  explanation?: string;
+  rubric?: Record<string, unknown> | null;
+  candidate_answer?: string;
+  manager_comment?: string;
   points: number;
   score: number | null;
 }
@@ -78,6 +87,7 @@ interface QuestionnaireDto {
 
 export interface AdminValidationQueueItem {
   evaluationId: number;
+  applicationId: number | null;
   candidateName: string;
   candidateEmail: string;
   templateName: string;
@@ -131,6 +141,19 @@ export interface AdminAssessmentModule {
   maxScore: number;
 }
 
+export interface AdminAssessmentQuestion {
+  questionId: number;
+  sectionTitle: string;
+  title: string;
+  text: string;
+  format: string;
+  candidateAnswer: string;
+  expectedAnswer: string;
+  managerComment: string;
+  score: number | null;
+  points: number;
+}
+
 export interface AdminAssessment {
   evaluationId: number;
   candidateName: string;
@@ -142,6 +165,7 @@ export interface AdminAssessment {
   feedback: string;
   evaluatorName: string;
   modules: AdminAssessmentModule[];
+  questions: AdminAssessmentQuestion[];
 }
 
 export interface LaunchEvaluationResult {
@@ -163,6 +187,7 @@ export class TestsAdminBffService {
     return this.fetchAll<EvaluationDto>('/api/evaluations/').pipe(
       map((evaluations) =>
         evaluations
+          .filter((evaluation) => this.hasConfiguredSections(evaluation))
           .map((evaluation) => this.toQueueItem(evaluation))
           .sort((left, right) => right.receivedAt.localeCompare(left.receivedAt)),
       ),
@@ -173,7 +198,7 @@ export class TestsAdminBffService {
     return this.fetchAll<EvaluationDto>('/api/evaluations/').pipe(
       map((evaluations) =>
         evaluations
-          .filter((evaluation) => evaluation.status !== 'completed' && evaluation.status !== 'validated')
+          .filter((evaluation) => this.shouldShowAdminTest(evaluation))
           .map((evaluation) => this.toTestListItem(evaluation))
           .sort((left, right) => right.receivedAt.localeCompare(left.receivedAt)),
       ),
@@ -248,9 +273,18 @@ export class TestsAdminBffService {
     return status;
   }
 
+  private shouldShowAdminTest(evaluation: EvaluationDto): boolean {
+    return this.hasConfiguredSections(evaluation);
+  }
+
+  private hasConfiguredSections(evaluation: EvaluationDto): boolean {
+    return (evaluation.total_sections_count ?? 0) > 0;
+  }
+
   private toQueueItem(evaluation: EvaluationDto): AdminValidationQueueItem {
     return {
       evaluationId: evaluation.id,
+      applicationId: evaluation.application,
       candidateName: evaluation.subject_full_name || evaluation.subject_email || 'Non renseigne',
       candidateEmail: evaluation.subject_email ?? '',
       templateName: evaluation.template_name || 'Non renseigne',
@@ -339,6 +373,34 @@ export class TestsAdminBffService {
         evaluation.assigned_to_full_name ||
         '',
       modules,
+      questions: questionnaire.questions.map((question) => this.toAssessmentQuestion(question)),
     };
+  }
+
+  private toAssessmentQuestion(question: QuestionnaireQuestionDto): AdminAssessmentQuestion {
+    return {
+      questionId: question.question_id,
+      sectionTitle: question.section_title ?? '',
+      title: question.title || question.text || 'Question',
+      text: question.text ?? '',
+      format: question.format ?? '',
+      candidateAnswer: question.candidate_answer ?? '',
+      expectedAnswer: this.expectedAnswer(question),
+      managerComment: question.manager_comment ?? '',
+      score: question.score,
+      points: question.points,
+    };
+  }
+
+  private expectedAnswer(question: QuestionnaireQuestionDto): string {
+    const explanation = question.explanation?.trim();
+    if (explanation) return explanation;
+
+    const correctAnswers = question.rubric?.['correct_answers'];
+    if (!Array.isArray(correctAnswers)) return '';
+    return correctAnswers
+      .map((answer) => (typeof answer === 'string' ? answer.trim() : ''))
+      .filter(Boolean)
+      .join('; ');
   }
 }

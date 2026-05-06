@@ -104,6 +104,18 @@ export class PositionApplicantsPage {
     });
   }
 
+  completedTestsQuery(applicant: PositionApplicant): {
+    q: string;
+    status: 'done';
+    applicationId: number;
+  } {
+    return {
+      q: applicant.email || applicant.fullName,
+      status: 'done',
+      applicationId: applicant.applicationId,
+    };
+  }
+
   rejectApplicant(applicant: PositionApplicant): void {
     this.launchMessage = null;
     this.setRejecting(applicant.applicationId, true);

@@ -230,6 +230,30 @@ class LaunchEvaluationSerializer(serializers.Serializer):
 
         return parsed
 
+    def _validate_section_manager_coverage(
+        self,
+        template: Template,
+        section_assignments: dict[int, User],
+        fallback_manager: User | None,
+    ) -> None:
+        if fallback_manager is not None:
+            return
+
+        section_ids = set(template.sections.values_list("id", flat=True))
+        if not section_ids:
+            return
+
+        missing_section_ids = section_ids - set(section_assignments)
+        if missing_section_ids:
+            raise serializers.ValidationError(
+                {
+                    "section_assignments": (
+                        "Assign a manager to every template section before "
+                        "launching this test."
+                    )
+                }
+            )
+
     def validate(self, attrs):
         try:
             application = JobApplication.objects.select_related(
@@ -240,9 +264,12 @@ class LaunchEvaluationSerializer(serializers.Serializer):
                 {"application_id": "Unknown job application."}
             )
 
-        duplicate = Evaluation.objects.filter(
-            application=application, status="in_progress"
-        ).exists()
+        duplicate = (
+            Evaluation.objects.filter(application=application, status="in_progress")
+            .filter(section_assignments__isnull=False)
+            .distinct()
+            .exists()
+        )
         if duplicate:
             raise serializers.ValidationError(
                 {"application_id": "This application already has an in-progress test."}
@@ -270,6 +297,12 @@ class LaunchEvaluationSerializer(serializers.Serializer):
                     raise serializers.ValidationError(
                         {"assigned_to_id": "Unknown assigned user."}
                     )
+
+            self._validate_section_manager_coverage(
+                template=template,
+                section_assignments=section_assignments,
+                fallback_manager=assigned_to,
+            )
 
             template_pairs.append(
                 {
@@ -300,6 +333,11 @@ class LaunchEvaluationSerializer(serializers.Serializer):
                             )
                         }
                     )
+                self._validate_section_manager_coverage(
+                    template=fallback_template,
+                    section_assignments={},
+                    fallback_manager=None,
+                )
                 template_pairs.append(
                     {
                         "template_version": self._resolve_template_version(
@@ -315,6 +353,11 @@ class LaunchEvaluationSerializer(serializers.Serializer):
 
             for assignment in assignments:
                 template_version = self._resolve_template_version(assignment.template)
+                self._validate_section_manager_coverage(
+                    template=assignment.template,
+                    section_assignments={},
+                    fallback_manager=assignment.manager,
+                )
                 template_pairs.append(
                     {
                         "template_version": template_version,

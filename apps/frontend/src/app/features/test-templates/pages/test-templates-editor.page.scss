@@ -364,7 +364,7 @@
 }
 
 .pool-create-row,
-.pool-list button {
+.pool-list__row {
   border: 1px solid var(--ff-color-border, #3b4352);
   border-radius: 1rem;
   background: var(--ff-color-surface-raised, #151922);
@@ -395,16 +395,39 @@
   color: var(--ff-color-text-secondary, #aeb7ca);
 }
 
-.pool-list button {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.pool-list__row {
+  display: grid;
   min-height: 4.25rem;
+  grid-template-columns: minmax(0, 1fr) 3rem auto;
+  align-items: center;
+  gap: 0.7rem;
 }
 
-.pool-list button::after {
-  content: "+";
-  color: var(--ff-color-text-secondary, #aeb7ca);
-  font-size: 1.5rem;
-  font-weight: 700;
+.pool-list__info {
+  min-width: 0;
+}
+
+.pool-list__add,
+.pool-list__manage {
+  border: 1px solid var(--ff-color-border, #3b4352);
+  border-radius: 0.75rem;
+  background: var(--ff-color-surface-2, #171c25);
+  font: inherit;
+}
+
+.pool-list__add {
+  display: grid;
+  width: 3rem;
+  height: 3rem;
+  place-items: center;
+  color: var(--ff-color-primary-200, #b8d4ff);
+  font-size: 1.55rem;
+  font-weight: 950;
+}
+
+.pool-list__manage {
+  min-height: 3rem;
+  color: var(--ff-color-primary-100, #d8e7ff);
+  font-weight: 900;
+  padding: 0 0.9rem;
 }

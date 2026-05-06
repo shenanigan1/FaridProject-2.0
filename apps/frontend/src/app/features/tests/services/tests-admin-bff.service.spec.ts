@@ -21,7 +21,7 @@ describe('TestsAdminBffService', () => {
     http.verify();
   });
 
-  it('maps evaluations into validation queue items from API data only', () => {
+  it('maps configured evaluations into validation queue items from API data only', () => {
     const result = service.listValidationQueue();
     let rows: ReturnType<typeof service.listValidationQueue> extends import('rxjs').Observable<infer T> ? T : never = [];
     result.subscribe((items) => {
@@ -37,6 +37,17 @@ describe('TestsAdminBffService', () => {
         subject_email: 'nadia@example.com',
         position_title: 'Chauffeur SPL',
         updated_at: '2026-05-01T10:00:00Z',
+        total_sections_count: 1,
+      },
+      {
+        id: 8,
+        status: 'in_progress',
+        template_name: 'Orphan Evaluation',
+        subject_full_name: 'Ghost Eval',
+        subject_email: 'ghost@example.com',
+        position_title: 'Chauffeur SPL',
+        updated_at: '2026-05-01T11:00:00Z',
+        total_sections_count: 0,
       },
     ]);
 
@@ -50,7 +61,7 @@ describe('TestsAdminBffService', () => {
     ]);
   });
 
-  it('lists only unfinished created tests with progress from API data', () => {
+  it('lists every configured test status and hides orphan evaluations without sections', () => {
     let rows: ReturnType<typeof service.listActiveTests> extends import('rxjs').Observable<infer T> ? T : never = [];
 
     service.listActiveTests().subscribe((items) => {
@@ -76,6 +87,8 @@ describe('TestsAdminBffService', () => {
         subject_full_name: 'John Doe',
         updated_at: '2026-05-01T11:00:00Z',
         progress_percent: 100,
+        completed_sections_count: 2,
+        total_sections_count: 2,
       },
       {
         id: 9,
@@ -84,10 +97,38 @@ describe('TestsAdminBffService', () => {
         subject_full_name: 'Sarah Miller',
         updated_at: '2026-05-01T12:00:00Z',
         progress_percent: 100,
+        completed_sections_count: 2,
+        total_sections_count: 2,
+      },
+      {
+        id: 10,
+        status: 'in_progress',
+        template_name: 'Orphan',
+        subject_full_name: 'Ghost Eval',
+        updated_at: '2026-05-01T13:00:00Z',
+        progress_percent: 0,
+        completed_sections_count: 0,
+        total_sections_count: 0,
       },
     ]);
 
     expect(rows).toEqual([
+      jasmine.objectContaining({
+        evaluationId: 9,
+        candidateName: 'Sarah Miller',
+        templateName: 'Routier',
+        progressPercent: 100,
+        completedSectionsCount: 2,
+        totalSectionsCount: 2,
+      }),
+      jasmine.objectContaining({
+        evaluationId: 8,
+        candidateName: 'John Doe',
+        templateName: 'Hazmat',
+        progressPercent: 100,
+        completedSectionsCount: 2,
+        totalSectionsCount: 2,
+      }),
       jasmine.objectContaining({
         evaluationId: 7,
         candidateName: 'Nadia Benali',
@@ -99,11 +140,15 @@ describe('TestsAdminBffService', () => {
     ]);
   });
 
-  it('builds assessment scores from questionnaire sections', () => {
+  it('builds assessment scores and question answers from questionnaire sections', () => {
     let score = 0;
+    let answer = '';
+    let expected = '';
 
     service.getAssessment(4).subscribe((assessment) => {
       score = assessment.score;
+      answer = assessment.questions[0].candidateAnswer;
+      expected = assessment.questions[0].expectedAnswer;
     });
 
     http.expectOne('/api/evaluations/4/').flush({
@@ -129,12 +174,36 @@ describe('TestsAdminBffService', () => {
           assigned_to_full_name: 'Marc Manager',
           manager_comment: '',
           completed_at: null,
-          questions: [{ question_id: 9, points: 10, score: 9 }],
+          questions: [{
+            question_id: 9,
+            title: 'Equipements',
+            text: 'Quels equipements ?',
+            format: 'mcq',
+            explanation: 'Gilet; Casque',
+            rubric: { correct_answers: ['Gilet', 'Casque'] },
+            candidate_answer: 'Gilet',
+            manager_comment: 'Partiel',
+            points: 10,
+            score: 9,
+          }],
         },
       ],
-      questions: [{ question_id: 9, points: 10, score: 9 }],
+      questions: [{
+        question_id: 9,
+        title: 'Equipements',
+        text: 'Quels equipements ?',
+        format: 'mcq',
+        explanation: 'Gilet; Casque',
+        rubric: { correct_answers: ['Gilet', 'Casque'] },
+        candidate_answer: 'Gilet',
+        manager_comment: 'Partiel',
+        points: 10,
+        score: 9,
+      }],
     });
 
     expect(score).toBe(90);
+    expect(answer).toBe('Gilet');
+    expect(expected).toBe('Gilet; Casque');
   });
 });

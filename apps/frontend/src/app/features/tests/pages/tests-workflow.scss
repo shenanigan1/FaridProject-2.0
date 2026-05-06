@@ -95,6 +95,36 @@
   padding: 0 1rem;
 }
 
+.test-flow__toolbar {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-top: 0.8rem;
+}
+
+.test-flow__select {
+  display: grid;
+  gap: 0.35rem;
+  color: var(--ff-color-text-muted);
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.test-flow__select select {
+  min-width: 0;
+  min-height: 3rem;
+  border: 1px solid var(--ff-color-border);
+  border-radius: 0.75rem;
+  background: var(--ff-color-surface-raised);
+  color: var(--ff-color-text-primary);
+  font-size: 0.92rem;
+  font-weight: 800;
+  outline: 0;
+  padding: 0 0.7rem;
+}
+
 .test-flow__filters {
   display: flex;
   gap: 0.6rem;
@@ -191,6 +221,11 @@
   background: var(--ff-color-surface-raised);
   color: var(--ff-color-text-secondary);
   padding: 0.8rem;
+}
+
+.test-flow__answer {
+  border-top: 1px solid var(--ff-color-border-soft);
+  padding-top: 1rem;
 }
 
 .test-flow__progress-block {

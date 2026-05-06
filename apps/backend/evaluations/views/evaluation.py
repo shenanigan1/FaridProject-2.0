@@ -1,3 +1,5 @@
+import json
+
 from django.db.models import Q
 from django.utils import timezone
 from rest_framework import status
@@ -14,9 +16,71 @@ from evaluations.serializers import (
     SubjectEvaluationSerializer,
     build_questionnaire_payload,
 )
-from templates_grid.models import SkillQuestion
+from templates_grid.models import QuestionFormat, SkillQuestion
 from users.models import User, UserRoles
 from users.permissions import IsHrAdminOrDirector
+
+
+def _normalize_answer(value: str) -> str:
+    return value.strip().casefold()
+
+
+def _split_answer_values(value: str) -> list[str]:
+    raw = value.strip()
+    if not raw:
+        return []
+
+    try:
+        parsed = json.loads(raw)
+    except json.JSONDecodeError:
+        parsed = None
+
+    if isinstance(parsed, list):
+        return [str(item).strip() for item in parsed if str(item).strip()]
+
+    return [item.strip() for item in raw.replace(";", ",").split(",") if item.strip()]
+
+
+def _rubric_correct_answers(question: SkillQuestion) -> list[str]:
+    rubric = question.rubric if isinstance(question.rubric, dict) else {}
+    raw_answers = rubric.get("correct_answers")
+    if isinstance(raw_answers, list):
+        answers = [
+            answer.strip()
+            for answer in raw_answers
+            if isinstance(answer, str) and answer.strip()
+        ]
+        if answers:
+            return answers
+
+    if question.explanation:
+        return _split_answer_values(question.explanation)
+
+    return []
+
+
+def _auto_score_answer(question: SkillQuestion, candidate_answer: str) -> int | None:
+    if question.format not in {
+        QuestionFormat.MCQ,
+        QuestionFormat.TRUE_FALSE,
+        QuestionFormat.YES_NO,
+    }:
+        return None
+
+    correct_answers = {
+        _normalize_answer(answer) for answer in _rubric_correct_answers(question)
+    }
+    selected_answers = {
+        _normalize_answer(answer) for answer in _split_answer_values(candidate_answer)
+    }
+
+    if not correct_answers or not selected_answers:
+        return None
+
+    correct_hits = len(selected_answers & correct_answers)
+    wrong_hits = len(selected_answers - correct_answers)
+    ratio = max(0, correct_hits - wrong_hits) / len(correct_answers)
+    return round(ratio * question.points)
 
 
 class EvaluationViewSet(ModelViewSet):
@@ -117,7 +181,7 @@ class EvaluationViewSet(ModelViewSet):
             question.id: question
             for question in SkillQuestion.objects.filter(
                 id__in=allowed_question_ids
-            ).only("id", "points", "is_mandatory")
+            ).only("id", "points", "is_mandatory", "format", "rubric", "explanation")
         }
 
         if "test_manager_comment" in serializer.validated_data:
@@ -175,6 +239,8 @@ class EvaluationViewSet(ModelViewSet):
             candidate_answer = answer.get("candidate_answer", "")
             manager_comment = answer.get("manager_comment", "")
             score = answer.get("score")
+            if score is None:
+                score = _auto_score_answer(question, candidate_answer)
             if (
                 serializer.validated_data.get("complete_sections")
                 and question.is_mandatory

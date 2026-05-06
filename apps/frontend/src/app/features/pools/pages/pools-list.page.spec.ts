@@ -121,4 +121,15 @@ describe('PoolsListPageComponent', () => {
 
     expect(routerSpy.navigate).toHaveBeenCalledOnceWith(['/pools/new']);
   });
+
+  it('back() should return to templates workflow', () => {
+    const storeMock = makeStoreMock();
+    const { component, routerSpy } = setup(storeMock);
+
+    routerSpy.navigate.and.resolveTo(true);
+
+    component.back();
+
+    expect(routerSpy.navigate).toHaveBeenCalledWith(['/templates']);
+  });
 });

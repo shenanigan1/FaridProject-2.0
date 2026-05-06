@@ -56,6 +56,24 @@ describe('authInterceptor (candidate)', () => {
     request.flush([]);
   });
 
+  it('adds authorization header when loading the authenticated candidate profile', () => {
+    http.get('http://localhost:8000/api/candidates/me/').subscribe();
+
+    const request = httpMock.expectOne('http://localhost:8000/api/candidates/me/');
+
+    expect(request.request.headers.get('Authorization')).toBe('Bearer ACCESS');
+    request.flush({ id: 1 });
+  });
+
+  it('does not add authorization header when creating a candidate account', () => {
+    http.post('http://localhost:8000/api/candidates/', {}).subscribe();
+
+    const request = httpMock.expectOne('http://localhost:8000/api/candidates/');
+
+    expect(request.request.headers.has('Authorization')).toBeFalse();
+    request.flush({ id: 1 });
+  });
+
   it('refreshes token and retries request after 401', () => {
     authServiceSpy.refresh.and.returnValue(of({ access: 'NEW_ACCESS', refresh: 'NEW_REFRESH' }));
 

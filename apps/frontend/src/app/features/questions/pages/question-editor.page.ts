@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { SkillQuestionsStore } from '@features/questions/services/skill-questions.store';
 import { SkillQuestion, QuestionFormat, Difficulty } from '@features/questions/models/skill-question.model';
@@ -33,6 +33,7 @@ const createDefaultFormValue = () => ({
   explanation: '',
   rubric: createDefaultRubric(),
   choice_options_text: '',
+  correct_answers_text: '',
   rating_min: 0,
   rating_max: 10,
   is_mandatory: false,
@@ -63,6 +64,16 @@ function rubricOptions(rubric: unknown): string[] {
   return options
     .map((option) => (typeof option === 'string' ? option : ''))
     .map((option) => option.trim())
+    .filter(Boolean);
+}
+
+function rubricCorrectAnswers(rubric: unknown): string[] {
+  if (!isRecord(rubric)) return [];
+  const correctAnswers = rubric['correct_answers'];
+  if (!Array.isArray(correctAnswers)) return [];
+  return correctAnswers
+    .map((answer) => (typeof answer === 'string' ? answer : ''))
+    .map((answer) => answer.trim())
     .filter(Boolean);
 }
 
@@ -126,6 +137,7 @@ export class QuestionEditorPageComponent implements OnInit {
   readonly formatOptions: { value: QuestionFormat; label: string; hint: string }[] = [
     { value: 'free_text', label: 'Libre', hint: 'Reponse texte avec note manuelle' },
     { value: 'yes_no', label: 'Oui/Non', hint: 'Choix binaire rapide' },
+    { value: 'true_false', label: 'Vrai/Faux', hint: 'Correction automatique binaire' },
     { value: 'rating', label: 'Note', hint: 'Notation directe par points' },
     { value: 'mcq', label: 'QCM', hint: 'Choix depuis une liste' },
     { value: 'practical', label: 'Pratique', hint: 'Observation avec grille' },
@@ -142,6 +154,7 @@ export class QuestionEditorPageComponent implements OnInit {
     explanation: this.fb.nonNullable.control(''),
     rubric: this.fb.nonNullable.control<Rubric>(createDefaultRubric()),
     choice_options_text: this.fb.nonNullable.control(''),
+    correct_answers_text: this.fb.nonNullable.control(''),
     rating_min: this.fb.nonNullable.control(0, [Validators.min(0)]),
     rating_max: this.fb.nonNullable.control(10, [Validators.min(1)]),
 
@@ -186,11 +199,49 @@ export class QuestionEditorPageComponent implements OnInit {
 
   setFormat(fmt: QuestionFormat): void {
     this.form.controls.format.setValue(fmt);
+    this.clearRequiredError(this.form.controls.choice_options_text);
+    this.clearRequiredError(this.form.controls.correct_answers_text);
+    if (fmt === 'true_false' && !this.form.controls.correct_answers_text.value.trim()) {
+      this.form.controls.correct_answers_text.setValue('Vrai');
+    }
+    if (fmt === 'yes_no' && !this.form.controls.correct_answers_text.value.trim()) {
+      this.form.controls.correct_answers_text.setValue('Oui');
+    }
+  }
+
+  choiceOptions(): string[] {
+    return parseChoiceOptions(this.form.controls.choice_options_text.value);
+  }
+
+  selectedCorrectAnswers(): string[] {
+    return parseChoiceOptions(this.form.controls.correct_answers_text.value);
+  }
+
+  isCorrectAnswer(option: string): boolean {
+    return this.selectedCorrectAnswers().includes(option);
+  }
+
+  toggleCorrectAnswer(option: string, checked: boolean): void {
+    const cleanOption = option.trim();
+    if (!cleanOption) return;
+
+    const selected = new Set(this.selectedCorrectAnswers());
+    if (checked) {
+      selected.add(cleanOption);
+    } else {
+      selected.delete(cleanOption);
+    }
+    this.form.controls.correct_answers_text.setValue([...selected].join('\n'));
+    this.clearRequiredError(this.form.controls.correct_answers_text);
+  }
+
+  setSingleCorrectAnswer(answer: string): void {
+    this.form.controls.correct_answers_text.setValue((answer ?? '').trim());
+    this.clearRequiredError(this.form.controls.correct_answers_text);
   }
 
   save(): void {
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
+    if (!this.canSubmit()) {
       return;
     }
 
@@ -211,8 +262,7 @@ export class QuestionEditorPageComponent implements OnInit {
       return;
     }
 
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
+    if (!this.canSubmit()) {
       return;
     }
 
@@ -230,6 +280,7 @@ export class QuestionEditorPageComponent implements OnInit {
       explanation: row.explanation ?? '',
       rubric: (row.rubric && typeof row.rubric === 'object' ? row.rubric : createDefaultRubric()) as Rubric,
       choice_options_text: rubricOptions(row.rubric).join('\n'),
+      correct_answers_text: rubricCorrectAnswers(row.rubric).join('\n'),
       rating_min: rubricNumber(row.rubric, 'min', 0),
       rating_max: rubricNumber(row.rubric, 'max', row.points ?? 10),
 
@@ -247,7 +298,7 @@ export class QuestionEditorPageComponent implements OnInit {
       format,
       title: this.form.controls.title.value.trim(),
       text: this.form.controls.text.value.trim(),
-      explanation: this.form.controls.explanation.value.trim(),
+      explanation: this.explanationForFormat(format),
       rubric: this.rubricForFormat(format),
 
       is_mandatory: this.form.controls.is_mandatory.value,
@@ -263,15 +314,23 @@ export class QuestionEditorPageComponent implements OnInit {
 
     if (format === 'mcq') {
       const options = parseChoiceOptions(this.form.controls.choice_options_text.value);
-      return options.length > 0 ? { options } : current;
+      const correctAnswers = this.correctAnswersForCurrentOptions(options);
+      return options.length > 0 ? { options, correct_answers: correctAnswers } : current;
     }
 
     if (format === 'free_text') {
-      return { scoring: 'manual' };
+      return {
+        scoring: 'manual',
+        expected_answer: this.form.controls.explanation.value.trim(),
+      };
     }
 
-    if (format === 'yes_no' || format === 'true_false') {
-      return { options: ['Oui', 'Non'] };
+    if (format === 'yes_no') {
+      return { options: ['Oui', 'Non'], correct_answers: this.selectedCorrectAnswers() };
+    }
+
+    if (format === 'true_false') {
+      return { options: ['Vrai', 'Faux'], correct_answers: this.selectedCorrectAnswers() };
     }
 
     if (format === 'rating') {
@@ -282,6 +341,74 @@ export class QuestionEditorPageComponent implements OnInit {
       };
     }
 
+    if (format === 'practical') {
+      return { scoring: 'practical' };
+    }
+
     return current;
+  }
+
+  private explanationForFormat(format: QuestionFormat): string {
+    if (format === 'mcq' || format === 'yes_no' || format === 'true_false') {
+      return this.selectedCorrectAnswers().join('; ');
+    }
+    return this.form.controls.explanation.value.trim();
+  }
+
+  private correctAnswersForCurrentOptions(options: string[]): string[] {
+    const optionSet = new Set(options);
+    return this.selectedCorrectAnswers().filter((answer) => optionSet.has(answer));
+  }
+
+  private canSubmit(): boolean {
+    this.applyFormatSpecificValidation();
+
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return false;
+    }
+
+    return true;
+  }
+
+  private applyFormatSpecificValidation(): void {
+    const format = this.form.controls.format.value;
+    const choiceOptions = this.form.controls.choice_options_text;
+    const correctAnswers = this.form.controls.correct_answers_text;
+
+    this.clearRequiredError(choiceOptions);
+    this.clearRequiredError(correctAnswers);
+
+    if (format === 'mcq') {
+      const options = parseChoiceOptions(choiceOptions.value);
+      if (options.length === 0) {
+        this.setRequiredError(choiceOptions);
+      }
+
+      if (this.correctAnswersForCurrentOptions(options).length === 0) {
+        this.setRequiredError(correctAnswers);
+      }
+      return;
+    }
+
+    if ((format === 'yes_no' || format === 'true_false') && this.selectedCorrectAnswers().length === 0) {
+      this.setRequiredError(correctAnswers);
+    }
+  }
+
+  private setRequiredError(control: AbstractControl): void {
+    control.setErrors({ ...(control.errors ?? {}), required: true });
+    control.markAsTouched();
+  }
+
+  private clearRequiredError(control: AbstractControl): void {
+    const errors = control.errors;
+    if (!errors?.['required']) {
+      return;
+    }
+
+    const { required: _required, ...remaining } = errors;
+    void _required;
+    control.setErrors(Object.keys(remaining).length > 0 ? remaining : null);
   }
 }

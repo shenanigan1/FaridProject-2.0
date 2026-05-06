@@ -1,8 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { of } from 'rxjs';
+import { Router } from '@angular/router';
 
 import { TemplatesApi } from '@features/test-templates/services/test-templates.api';
 import type { TemplateListItem } from '@features/test-templates/models/test-templates.model';
+import { TemplatesListPage } from './test-templates-list.page';
 
 describe('TemplatesApi', () => {
   let api: TemplatesApi;
@@ -63,5 +66,29 @@ describe('TemplatesApi', () => {
     expect(req.request.params.has('is_active')).toBe(false);
 
     req.flush([]);
+  });
+});
+
+describe('TemplatesListPage', () => {
+  it('back() should return to tests workflow', () => {
+    const api = jasmine.createSpyObj<TemplatesApi>('TemplatesApi', ['list']);
+    api.list.and.returnValue(of([]));
+    const router = jasmine.createSpyObj<Router>('Router', ['navigate']);
+    router.navigate.and.resolveTo(true);
+
+    TestBed.configureTestingModule({
+      imports: [TemplatesListPage],
+      providers: [
+        { provide: TemplatesApi, useValue: api },
+        { provide: Router, useValue: router },
+      ],
+    }).overrideComponent(TemplatesListPage, { set: { template: '' } });
+
+    const fixture = TestBed.createComponent(TemplatesListPage);
+    fixture.detectChanges();
+
+    fixture.componentInstance.back();
+
+    expect(router.navigate).toHaveBeenCalledWith(['/tests']);
   });
 });

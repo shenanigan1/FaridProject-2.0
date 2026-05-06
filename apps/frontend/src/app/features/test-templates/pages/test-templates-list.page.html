@@ -1,5 +1,20 @@
-<section class="ff-app-screen">
-  <div class="ff-app-container ff-app-stack">
+<section class="template-library">
+  <header class="template-library__appbar">
+    <button type="button" class="template-library__icon" aria-label="Retour" (click)="back()">
+      &#8592;
+    </button>
+    <h1>Templates de Test</h1>
+    <button type="button" class="template-library__icon template-library__icon--primary" aria-label="Creer un template" (click)="openCreate()">
+      +
+    </button>
+  </header>
+
+  <div class="template-library__body ff-app-stack">
+    <header class="template-library__hero">
+      <p class="ff-app-kicker">TEMPLATE LIBRARY</p>
+      <h2>{{ templatesCount() }} templates</h2>
+    </header>
+
     <app-ui-text-input
       type="search"
       aria-label="Search templates"
@@ -12,13 +27,6 @@
       [activeKey]="difficulty()"
       (activeKeyChange)="setDifficulty($event)"
     ></app-ui-tabs>
-
-    <header class="ff-app-header">
-      <div>
-        <p class="ff-app-kicker">TEMPLATE LIBRARY</p>
-        <h1 class="ff-app-title">{{ templatesCount() }}</h1>
-      </div>
-    </header>
 
     <div class="ff-app-stack">
       @for (t of templates(); track t.id) {

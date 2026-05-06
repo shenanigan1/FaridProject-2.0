@@ -88,6 +88,59 @@ def test_create_skill_question_from_pool_nested_route_uses_pool_from_url(api_cli
     assert res.data["format"] == "free_text"
 
 
+def test_create_mcq_question_stores_correct_answers_for_auto_scoring(api_client):
+    user = UserFactory.create(is_staff=True, role=UserRoles.ADMIN)
+    api_client.force_authenticate(user=user)
+    pool = QuestionPoolFactory.create(name="Pool", code="POOL_MCQ_CORRECT")
+    url = reverse(f"{BASENAME_QUESTIONS}-list")
+
+    res = api_client.post(
+        url,
+        {
+            "pool": pool.id,
+            "format": "mcq",
+            "title": "Equipements",
+            "text": "Quels equipements sont obligatoires ?",
+            "points": 10,
+            "explanation": "Gilet; Casque",
+            "rubric": {
+                "options": ["Gilet", "Casque", "Sandales"],
+                "correct_answers": ["Gilet", "Casque"],
+            },
+        },
+        format="json",
+    )
+
+    assert res.status_code == 201, res.data
+    assert res.data["rubric"]["options"] == ["Gilet", "Casque", "Sandales"]
+    assert res.data["rubric"]["correct_answers"] == ["Gilet", "Casque"]
+    assert res.data["explanation"] == "Gilet; Casque"
+
+
+def test_create_true_false_question_stores_correct_answer(api_client):
+    user = UserFactory.create(is_staff=True, role=UserRoles.ADMIN)
+    api_client.force_authenticate(user=user)
+    pool = QuestionPoolFactory.create(name="Pool", code="POOL_TRUE_FALSE")
+    url = reverse(f"{BASENAME_QUESTIONS}-list")
+
+    res = api_client.post(
+        url,
+        {
+            "pool": pool.id,
+            "format": "true_false",
+            "title": "Reglementation",
+            "text": "Le controle pre-depart est obligatoire.",
+            "points": 10,
+            "rubric": {"correct_answers": ["Vrai"]},
+        },
+        format="json",
+    )
+
+    assert res.status_code == 201, res.data
+    assert res.data["rubric"]["options"] == ["Vrai", "Faux"]
+    assert res.data["rubric"]["correct_answers"] == ["Vrai"]
+
+
 @pytest.mark.parametrize("question_format", ["free_text", "yes_no", "rating"])
 def test_create_skill_question_supports_manager_question_formats(
     api_client, question_format

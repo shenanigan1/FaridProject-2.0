@@ -180,10 +180,28 @@
       <p class="pool-sheet__label">Pools existants</p>
       <div class="pool-list pool-list--sheet">
         @for (pool of filteredPools(); track pool.id) {
-          <button type="button" (click)="attachPoolFromSheet(pool.id)">
-            <strong>{{ pool.name }}</strong>
-            <span>{{ pool.code }}</span>
-          </button>
+          <article class="pool-list__row">
+            <div class="pool-list__info">
+              <strong>{{ pool.name }}</strong>
+              <span>{{ pool.code }}</span>
+            </div>
+            <button
+              type="button"
+              class="pool-list__add"
+              [attr.aria-label]="'Ajouter le pool ' + pool.name"
+              (click)="attachPoolFromSheet(pool.id)"
+            >
+              +
+            </button>
+            <button
+              type="button"
+              class="pool-list__manage"
+              [attr.aria-label]="'Gerer le pool ' + pool.name"
+              (click)="managePoolFromSheet(pool.id)"
+            >
+              Gerer
+            </button>
+          </article>
         }
         @if (filteredPools().length === 0) {
           <p class="template-empty">Aucun pool trouve dans la base.</p>

@@ -26,6 +26,18 @@ describe('TestAssessmentPage', () => {
         feedback: 'Bon niveau terrain.',
         evaluatorName: 'Marc Manager',
         modules: [{ sectionId: 1, title: 'Braking Technique', score: 90, maxScore: 100 }],
+        questions: [{
+          questionId: 9,
+          sectionTitle: 'Braking Technique',
+          title: 'Equipements',
+          text: 'Quels equipements ?',
+          format: 'mcq',
+          candidateAnswer: 'Gilet',
+          expectedAnswer: 'Gilet; Casque',
+          managerComment: 'Partiel',
+          score: 5,
+          points: 10,
+        }],
       }),
     );
     bff.validateAssessment.and.returnValue(of({ ok: true }));
@@ -50,6 +62,8 @@ describe('TestAssessmentPage', () => {
     expect(text).toContain('88');
     expect(text).toContain('Braking Technique');
     expect(text).toContain('Bon niveau terrain.');
+    expect(text).toContain('Reponses aux questions');
+    expect(text).toContain('Gilet; Casque');
   });
 
   it('validates assessment through API facade', () => {

@@ -242,7 +242,7 @@ describe('QuestionEditorPageComponent', () => {
     expect(component.form.controls.order.value).toBe(3);
   });
 
-  it('should load and save editable QCM answers from rubric options', () => {
+  it('should load and save editable QCM answers from rubric options and correct answers', () => {
     const { component, storeMock } = setup({ poolId: 'p1', questionId: 'q42' });
 
     const [, cb] = storeMock.loadOne.calls.mostRecent().args;
@@ -253,7 +253,7 @@ describe('QuestionEditorPageComponent', () => {
       title: 'Controle securite',
       text: 'Quel equipement est requis ?',
       explanation: '',
-      rubric: { options: ['Gilet', 'Sandales'] },
+      rubric: { options: ['Gilet', 'Sandales'], correct_answers: ['Gilet'] },
       is_mandatory: true,
       points: 10,
       difficulty: 'intermediate',
@@ -263,14 +263,17 @@ describe('QuestionEditorPageComponent', () => {
     });
 
     expect(component.form.controls.choice_options_text.value).toBe('Gilet\nSandales');
+    expect(component.form.controls.correct_answers_text.value).toBe('Gilet');
 
     component.form.controls.choice_options_text.setValue('Gilet\nCasque\nGants');
+    component.toggleCorrectAnswer('Casque', true);
     component.save();
 
     const [, dto] = storeMock.update.calls.mostRecent().args;
     expect(dto).toEqual(jasmine.objectContaining({
       format: 'mcq',
-      rubric: { options: ['Gilet', 'Casque', 'Gants'] },
+      explanation: 'Gilet; Casque',
+      rubric: { options: ['Gilet', 'Casque', 'Gants'], correct_answers: ['Gilet', 'Casque'] },
     }));
   });
 
@@ -281,7 +284,7 @@ describe('QuestionEditorPageComponent', () => {
     component.form.controls.title.setValue('Controle securite');
     component.form.controls.text.setValue('Quel equipement est requis ?');
     component.form.controls.choice_options_text.setValue('Gilet\nCasque\nGants');
-    component.form.controls.explanation.setValue('  Casque  ');
+    component.toggleCorrectAnswer('Casque', true);
     fixture.detectChanges();
 
     const text = (fixture.nativeElement as HTMLElement).textContent ?? '';
@@ -294,7 +297,24 @@ describe('QuestionEditorPageComponent', () => {
     expect(dto).toEqual(jasmine.objectContaining({
       format: 'mcq',
       explanation: 'Casque',
-      rubric: { options: ['Gilet', 'Casque', 'Gants'] },
+      rubric: { options: ['Gilet', 'Casque', 'Gants'], correct_answers: ['Casque'] },
+    }));
+  });
+
+  it('should save the selected correct answer for true/false questions', () => {
+    const { component, storeMock } = setup({ poolId: 'p1', questionId: null });
+
+    component.setFormat('true_false');
+    component.form.controls.title.setValue('Controle depart');
+    component.form.controls.text.setValue('Le controle pre-depart est obligatoire.');
+    component.setSingleCorrectAnswer('Vrai');
+    component.save();
+
+    const [, dto] = storeMock.createInPool.calls.mostRecent().args;
+    expect(dto).toEqual(jasmine.objectContaining({
+      format: 'true_false',
+      explanation: 'Vrai',
+      rubric: { options: ['Vrai', 'Faux'], correct_answers: ['Vrai'] },
     }));
   });
 
@@ -351,13 +371,41 @@ describe('QuestionEditorPageComponent', () => {
     expect(storeMock.update).not.toHaveBeenCalled();
   });
 
+  it('should show a red required message when a mandatory field is empty', () => {
+    const { fixture, component, storeMock } = setup({ poolId: 'p1', questionId: null });
+
+    component.form.controls.text.setValue('');
+    component.save();
+    fixture.detectChanges();
+
+    const error = (fixture.nativeElement as HTMLElement).querySelector('.ff-field-error');
+    expect(error?.textContent?.trim()).toBe('Champ obligatoire');
+    expect(storeMock.createInPool).not.toHaveBeenCalled();
+  });
+
+  it('should require QCM answers before saving', () => {
+    const { fixture, component, storeMock } = setup({ poolId: 'p1', questionId: null });
+
+    component.form.controls.format.setValue('mcq');
+    component.form.controls.text.setValue('Quel equipement est requis ?');
+    component.form.controls.choice_options_text.setValue('');
+
+    component.save();
+    fixture.detectChanges();
+
+    const text = (fixture.nativeElement as HTMLElement).textContent ?? '';
+    expect(text).toContain('Champ obligatoire');
+    expect(storeMock.createInPool).not.toHaveBeenCalled();
+  });
+
   it('save() should call store.createInPool in create mode', () => {
     const { component, storeMock } = setup({ poolId: 'p1', questionId: null });
 
     component.form.controls.format.setValue('mcq');
     component.form.controls.title.setValue('  T  ');
     component.form.controls.text.setValue('  Hello world  ');
-    component.form.controls.explanation.setValue('  Exp  ');
+    component.form.controls.choice_options_text.setValue('Option A\nOption B');
+    component.toggleCorrectAnswer('Option A', true);
     component.form.controls.is_mandatory.setValue(true);
     component.form.controls.points.setValue(10);
     component.form.controls.difficulty.setValue('easy');
@@ -374,8 +422,8 @@ describe('QuestionEditorPageComponent', () => {
       format: 'mcq',
       title: 'T',
       text: 'Hello world',
-      explanation: 'Exp',
-      rubric: {},
+      explanation: 'Option A',
+      rubric: { options: ['Option A', 'Option B'], correct_answers: ['Option A'] },
       is_mandatory: true,
       points: 10,
       difficulty: 'easy',
@@ -462,7 +510,7 @@ describe('QuestionEditorPageComponent', () => {
       title: 'Title',
       text: 'Some text',
       explanation: '',
-      rubric: {},
+      rubric: { scoring: 'practical' },
       is_mandatory: false,
       points: 5,
       difficulty: 'intermediate',

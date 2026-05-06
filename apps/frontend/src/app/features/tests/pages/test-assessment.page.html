@@ -46,6 +46,46 @@
             <p class="test-flow__title">{{ item.evaluatorName }}</p>
           }
         </section>
+
+        <section class="test-flow__card">
+          <p class="test-flow__kicker">Reponses aux questions</p>
+          @if (item.questions.length > 0) {
+            <div class="test-flow__stack">
+              @for (question of item.questions; track question.questionId) {
+                <article class="test-flow__answer">
+                  <div class="test-flow__metric-row">
+                    <div>
+                      @if (question.sectionTitle) {
+                        <p class="test-flow__kicker">{{ question.sectionTitle }}</p>
+                      }
+                      <h3 class="test-flow__title">{{ question.title }}</h3>
+                      @if (question.text && question.text !== question.title) {
+                        <p class="test-flow__meta">{{ question.text }}</p>
+                      }
+                    </div>
+                    <strong>{{ question.score ?? '-' }}/{{ question.points }}</strong>
+                  </div>
+                  <p class="test-flow__meta">
+                    <strong>Reponse candidat :</strong>
+                    {{ question.candidateAnswer || 'Non renseignee' }}
+                  </p>
+                  <p class="test-flow__meta">
+                    <strong>Bonne reponse :</strong>
+                    {{ question.expectedAnswer || 'Correction non renseignee' }}
+                  </p>
+                  @if (question.managerComment) {
+                    <p class="test-flow__meta">
+                      <strong>Commentaire manager :</strong>
+                      {{ question.managerComment }}
+                    </p>
+                  }
+                </article>
+              }
+            </div>
+          } @else {
+            <p class="test-flow__meta">Aucune reponse en base pour cette evaluation.</p>
+          }
+        </section>
       </div>
 
       @if (message()) {

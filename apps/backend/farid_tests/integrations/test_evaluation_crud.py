@@ -16,6 +16,7 @@ from templates_grid.models import (
     TemplateVersion,
     TemplatePoolRule,
     TemplateSection,
+    VersionedSection,
 )
 
 pytestmark = pytest.mark.django_db
@@ -220,12 +221,22 @@ def test_launch_evaluation_rejects_duplicate_in_progress_for_same_application(
     template_version = TemplateVersionFactory.create(template=template, version=1)
     application = JobApplicationFactory.create()
 
-    Evaluation.objects.create(
+    existing_evaluation = Evaluation.objects.create(
         subject=application.candidate.user,
         application=application,
         position=application.position,
         template_version=template_version,
         status="in_progress",
+    )
+    versioned_section = VersionedSection.objects.create(
+        template_version=template_version, name="Driving", order=0
+    )
+    EvaluationSectionAssignment.objects.create(
+        evaluation=existing_evaluation,
+        section=versioned_section,
+        assigned_to=UserFactory.create(
+            email="duplicate-manager@example.com", role=UserRoles.MANAGER
+        ),
     )
 
     url = reverse(f"{BASENAME}-launch")
@@ -237,6 +248,79 @@ def test_launch_evaluation_rejects_duplicate_in_progress_for_same_application(
 
     assert res.status_code == 400
     assert "application_id" in res.data
+
+
+def test_launch_evaluation_ignores_incomplete_in_progress_without_section_assignments(
+    api_client,
+):
+    _authenticate_as_hr(api_client)
+    application = JobApplicationFactory.create()
+    stale_template = TemplateFactory.create(name="Stale Template")
+    stale_template_version = TemplateVersionFactory.create(
+        template=stale_template, version=1
+    )
+    template = TemplateFactory.create(name="Relaunchable Sectioned Template")
+    section = TemplateSection.objects.create(
+        template=template, name="Driving", order=0, weight=100
+    )
+    manager = UserFactory.create(
+        email="manager-relaunch@example.com", role=UserRoles.MANAGER
+    )
+
+    Evaluation.objects.create(
+        subject=application.candidate.user,
+        application=application,
+        position=application.position,
+        template_version=stale_template_version,
+        status="in_progress",
+    )
+
+    url = reverse(f"{BASENAME}-launch")
+    res = api_client.post(
+        url,
+        {
+            "application_id": application.id,
+            "template_id": template.id,
+            "section_assignments": [
+                {"section_id": section.id, "manager_id": manager.id}
+            ],
+        },
+        format="json",
+    )
+
+    assert res.status_code == 201
+    assert len(res.data) == 1
+    assert res.data[0]["application"] == application.id
+    launched = Evaluation.objects.get(id=res.data[0]["id"])
+    assert launched.section_assignments.count() == 1
+
+
+def test_launch_evaluation_rejects_sectioned_template_without_manager_assignments(
+    api_client,
+):
+    _authenticate_as_hr(api_client)
+    application = JobApplicationFactory.create()
+    template = TemplateFactory.create(name="Sectioned Template Missing Managers")
+    TemplateSection.objects.create(
+        template=template, name="Driving", order=0, weight=100
+    )
+
+    url = reverse(f"{BASENAME}-launch")
+    res = api_client.post(
+        url,
+        {"application_id": application.id, "template_id": template.id},
+        format="json",
+    )
+
+    assert res.status_code == 400
+    assert "section_assignments" in res.data
+    assert (
+        Evaluation.objects.filter(
+            application=application,
+            template_version__template=template,
+        ).count()
+        == 0
+    )
 
 
 def test_launch_evaluation_uses_all_position_templates_with_manager_assignment(
@@ -400,6 +484,122 @@ def test_evaluation_questionnaire_get_and_save_answers(api_client):
     assert post_res.data["questions"][0]["candidate_answer"] == "Candidate answer"
     assert post_res.data["questions"][0]["manager_comment"] == "Manager comment"
     assert post_res.data["questions"][0]["score"] == 8
+
+
+def test_evaluation_questionnaire_auto_scores_mcq_and_allows_manual_override(
+    api_client,
+):
+    _authenticate_as_hr(api_client)
+    application = JobApplicationFactory.create()
+    template = TemplateFactory.create(name="Auto Scored Template")
+    template_version = TemplateVersionFactory.create(template=template, version=1)
+    section = TemplateSection.objects.create(template=template, name="Core", order=0)
+    pool = QuestionPool.objects.create(name="Pool Auto", code="POOL_AUTO")
+    TemplatePoolRule.objects.create(
+        template=template, section=section, pool=pool, random_count=0, order=0
+    )
+    question = SkillQuestion.objects.create(
+        pool=pool,
+        format="mcq",
+        title="Equipment",
+        text="Select required equipment.",
+        explanation="Gilet; Casque",
+        rubric={
+            "options": ["Gilet", "Casque", "Sandales"],
+            "correct_answers": ["Gilet", "Casque"],
+        },
+        points=10,
+    )
+    evaluation = Evaluation.objects.create(
+        subject=application.candidate.user,
+        application=application,
+        position=application.position,
+        template_version=template_version,
+        status="in_progress",
+    )
+    url = reverse(f"{BASENAME}-questionnaire", args=[evaluation.id])
+
+    auto_res = api_client.post(
+        url,
+        {
+            "answers": [
+                {
+                    "question_id": question.id,
+                    "candidate_answer": "Gilet",
+                    "manager_comment": "Partial answer",
+                    "score": None,
+                }
+            ]
+        },
+        format="json",
+    )
+
+    assert auto_res.status_code == 200, auto_res.data
+    assert auto_res.data["questions"][0]["score"] == 5
+
+    override_res = api_client.post(
+        url,
+        {
+            "answers": [
+                {
+                    "question_id": question.id,
+                    "candidate_answer": "Gilet",
+                    "manager_comment": "Evaluator override",
+                    "score": 8,
+                }
+            ]
+        },
+        format="json",
+    )
+
+    assert override_res.status_code == 200, override_res.data
+    assert override_res.data["questions"][0]["score"] == 8
+
+
+def test_evaluation_questionnaire_auto_scores_true_false(api_client):
+    _authenticate_as_hr(api_client)
+    application = JobApplicationFactory.create()
+    template = TemplateFactory.create(name="True False Template")
+    template_version = TemplateVersionFactory.create(template=template, version=1)
+    section = TemplateSection.objects.create(template=template, name="Core", order=0)
+    pool = QuestionPool.objects.create(name="Pool Boolean", code="POOL_BOOL")
+    TemplatePoolRule.objects.create(
+        template=template, section=section, pool=pool, random_count=0, order=0
+    )
+    question = SkillQuestion.objects.create(
+        pool=pool,
+        format="true_false",
+        title="Control",
+        text="Pre-trip control is mandatory.",
+        rubric={"options": ["Vrai", "Faux"], "correct_answers": ["Vrai"]},
+        points=10,
+    )
+    evaluation = Evaluation.objects.create(
+        subject=application.candidate.user,
+        application=application,
+        position=application.position,
+        template_version=template_version,
+        status="in_progress",
+    )
+    url = reverse(f"{BASENAME}-questionnaire", args=[evaluation.id])
+
+    res = api_client.post(
+        url,
+        {
+            "answers": [
+                {
+                    "question_id": question.id,
+                    "candidate_answer": "Faux",
+                    "manager_comment": "",
+                    "score": None,
+                }
+            ]
+        },
+        format="json",
+    )
+
+    assert res.status_code == 200, res.data
+    assert res.data["questions"][0]["score"] == 0
 
 
 def test_evaluation_questionnaire_rejects_foreign_question(api_client):

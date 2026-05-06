@@ -19,10 +19,32 @@
       <input
         type="search"
         [formControl]="searchControl"
-        [attr.placeholder]="isTestsView() ? 'Rechercher un candidat...' : 'Rechercher un template...'"
+        [attr.placeholder]="isTestsView() ? 'Rechercher candidat, template, poste...' : 'Rechercher un template...'"
         aria-label="Rechercher"
       />
     </label>
+
+    @if (isTestsView()) {
+      <div class="test-flow__toolbar" aria-label="Tri et statut">
+        <label class="test-flow__select">
+          <span>Statut</span>
+          <select [value]="statusFilter()" (change)="onStatusFilterChange($event)" aria-label="Filtrer par statut">
+            @for (option of statusOptions; track option.value) {
+              <option [value]="option.value">{{ option.label }}</option>
+            }
+          </select>
+        </label>
+
+        <label class="test-flow__select">
+          <span>Trier par</span>
+          <select [value]="sortKey()" (change)="onSortChange($event)" aria-label="Trier les tests">
+            @for (option of sortOptions; track option.value) {
+              <option [value]="option.value">{{ option.label }}</option>
+            }
+          </select>
+        </label>
+      </div>
+    }
 
     <div class="test-flow__filters" aria-label="Filtres">
       @for (filter of filters; track filter) {
@@ -83,7 +105,7 @@
         }
 
         @if (filteredActiveTests().length === 0) {
-          <p class="test-flow__empty">Aucun test non termine en base pour ce filtre.</p>
+          <p class="test-flow__empty">Aucun test en base pour cette recherche.</p>
         }
       </div>
     } @else {

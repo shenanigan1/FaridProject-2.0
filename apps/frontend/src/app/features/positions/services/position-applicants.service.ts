@@ -10,6 +10,9 @@ interface Paginated<T> {
 interface JobApplicationDto {
   id: number;
   candidate: number;
+  candidate_full_name?: string;
+  candidate_email?: string;
+  candidate_phone?: string;
   position: number;
   status: string;
   created_at: string;
@@ -51,6 +54,7 @@ interface EvaluationDto {
   status: string;
   updated_at: string;
   template_name?: string;
+  total_sections_count?: number | null;
 }
 
 export interface PositionApplicant {
@@ -63,6 +67,7 @@ export interface PositionApplicant {
   appliedAt: string;
   ongoingTestsCount: number;
   ongoingTestIds: number[];
+  completedTestsCount: number;
 }
 
 export interface InProgressTestItem {
@@ -153,33 +158,35 @@ export class PositionApplicantsService {
 
   listByPosition(positionId: number): Observable<PositionApplicant[]> {
     return forkJoin({
-      applications: this.fetchAllPages<JobApplicationDto>(this.applicationsUrl),
-      candidates: this.fetchAllPages<CandidateDto>(this.candidatesUrl),
+      applications: this.fetchAllPages<JobApplicationDto>(
+        `${this.applicationsUrl}?position=${positionId}`,
+      ),
       evaluations: this.fetchAllPages<EvaluationDto>(this.evaluationsUrl),
     }).pipe(
-      map(({ applications, candidates, evaluations }) => {
-        const candidateById = new Map(candidates.map((candidate) => [candidate.id, candidate]));
+      map(({ applications, evaluations }) => {
         const ongoingTestsByApplication = this.getOngoingTestsByApplication(evaluations);
+        const completedTestsByApplication = this.getCompletedTestsByApplication(evaluations);
 
         return applications
-          .filter((application) => application.position === positionId)
           .sort((left, right) => right.created_at.localeCompare(left.created_at))
           .map((application) => {
-            const candidate = candidateById.get(application.candidate);
             const ongoingTests = ongoingTestsByApplication.get(application.id) ?? [];
+            const completedTests = completedTestsByApplication.get(application.id) ?? [];
 
             return {
               applicationId: application.id,
               candidateId: application.candidate,
-              fullName: candidate
-                ? `${candidate.user.first_name} ${candidate.user.last_name}`.trim()
-                : `Candidate #${application.candidate}`,
-              email: candidate?.user.email ?? 'Unknown email',
-              phone: candidate?.user.phone ?? '',
+              fullName:
+                application.candidate_full_name?.trim() ||
+                application.candidate_email ||
+                `Candidate #${application.candidate}`,
+              email: application.candidate_email ?? 'Unknown email',
+              phone: application.candidate_phone ?? '',
               status: application.status,
               appliedAt: application.created_at,
               ongoingTestsCount: ongoingTests.length,
               ongoingTestIds: ongoingTests.map((item) => item.id),
+              completedTestsCount: completedTests.length,
             };
           });
       }),
@@ -320,6 +327,9 @@ export class PositionApplicantsService {
       if (evaluation.status !== 'in_progress' || evaluation.application === null) {
         continue;
       }
+      if (!this.isConfiguredEvaluation(evaluation)) {
+        continue;
+      }
 
       const appId = evaluation.application;
       const existing = byApplication.get(appId) ?? [];
@@ -328,5 +338,32 @@ export class PositionApplicantsService {
     }
 
     return byApplication;
+  }
+
+  private getCompletedTestsByApplication(
+    evaluations: EvaluationDto[],
+  ): Map<number, EvaluationDto[]> {
+    const byApplication = new Map<number, EvaluationDto[]>();
+    const completedStatuses = new Set(['completed', 'validated']);
+
+    for (const evaluation of evaluations) {
+      if (!completedStatuses.has(evaluation.status) || evaluation.application === null) {
+        continue;
+      }
+      if (!this.isConfiguredEvaluation(evaluation)) {
+        continue;
+      }
+
+      const appId = evaluation.application;
+      const existing = byApplication.get(appId) ?? [];
+      existing.push(evaluation);
+      byApplication.set(appId, existing);
+    }
+
+    return byApplication;
+  }
+
+  private isConfiguredEvaluation(evaluation: EvaluationDto): boolean {
+    return evaluation.total_sections_count !== 0;
   }
 }

@@ -21,7 +21,9 @@ export const authInterceptor: HttpInterceptorFn = (
   const isAuthRequest =
     request.url.includes('/api/auth/login') ||
     request.url.includes('/api/auth/refresh') ||
-    request.url.includes('/api/candidates/');
+    (request.method === 'POST' &&
+      request.url.includes('/api/candidates/') &&
+      !request.url.includes('/api/candidates/me/'));
 
   const accessToken = tokenStorage.getAccessToken();
 

@@ -408,7 +408,9 @@ export class TestTemplateEditorPage {
   }
 
   createPoolFromSheet(): void {
-    void this.router.navigate(['/pools/new']);
+    void this.router.navigate(['/pools/new'], {
+      queryParams: { returnUrl: this.templateEditorReturnUrl() },
+    });
   }
 
   attachPoolFromSheet(poolId: string): void {
@@ -419,8 +421,20 @@ export class TestTemplateEditorPage {
     this.closePoolSheet();
   }
 
+  managePoolFromSheet(poolId: string): void {
+    if (!poolId) return;
+    void this.router.navigate(['/pools', poolId], {
+      queryParams: { returnUrl: this.templateEditorReturnUrl() },
+    });
+  }
+
   poolName(poolId: string): string {
     return this.pools().find((p) => p.id === poolId)?.name ?? poolId;
+  }
+
+  private templateEditorReturnUrl(): string {
+    const id = this.templateId();
+    return id === null ? '/templates/new' : `/templates/${id}`;
   }
 
   // ---- sections actions ----

@@ -25,6 +25,15 @@ function pickString(obj: UnknownRecord, key: string): string | null {
   return typeof v === 'string' ? v : null;
 }
 
+function pickFirstString(value: unknown): string | null {
+  if (typeof value === 'string') return value;
+  if (Array.isArray(value)) {
+    const first = value.find((item) => typeof item === 'string');
+    return typeof first === 'string' ? first : null;
+  }
+  return null;
+}
+
 // function pickNumber(obj: UnknownRecord, key: string): number | null {
 //   const v = obj[key];
 //   return typeof v === 'number' && Number.isFinite(v) ? v : null;
@@ -171,19 +180,49 @@ export class SkillQuestionsStore {
 
   private toMessage(err: unknown, fallback: string): string {
     if (err instanceof HttpErrorResponse) {
-      if (err.status === 0) return 'Network error (API unreachable).';
-      if (err.status === 401) return 'Unauthorized. Please login again.';
-      if (err.status === 403) return 'Forbidden.';
+      if (err.status === 0) return 'Connexion impossible avec le serveur.';
+      if (err.status === 401) return 'Session expiree. Connectez-vous a nouveau.';
+      if (err.status === 403) return 'Vous n avez pas les droits pour effectuer cette action.';
 
       const data = err.error;
       if (isRecord(data)) {
         const detail = pickString(data, 'detail');
         if (detail) return detail;
+
+        const fieldMessage = this.toFieldValidationMessage(data);
+        if (fieldMessage) return fieldMessage;
       }
 
       return fallback;
     }
 
     return fallback;
+  }
+
+  private toFieldValidationMessage(data: UnknownRecord): string | null {
+    const labels: Record<string, string> = {
+      rubric: "Grille d'evaluation",
+      text: 'Question',
+      title: 'Titre',
+      points: 'Points',
+      format: 'Type de question',
+      difficulty: 'Difficulte',
+      explanation: 'Bonne reponse',
+    };
+
+    for (const [key, value] of Object.entries(data)) {
+      const raw = pickFirstString(value);
+      if (!raw) continue;
+
+      const normalized = raw.toLowerCase();
+      const label = labels[key] ?? key;
+      if (normalized.includes('required') || normalized.includes('blank') || normalized.includes('empty')) {
+        return `${label} : champ obligatoire`;
+      }
+
+      return `${label} : ${raw}`;
+    }
+
+    return null;
   }
 }

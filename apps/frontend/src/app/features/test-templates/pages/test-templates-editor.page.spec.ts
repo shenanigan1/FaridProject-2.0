@@ -60,7 +60,7 @@ function makePoolsStoreMock(initialPools: QuestionPool[] = []): PoolsStoreMock {
 }
 
 interface RouterMock {
-  navigate: jasmine.Spy<(commands: unknown[]) => Promise<boolean>>;
+  navigate: jasmine.Spy<(commands: unknown[], extras?: unknown) => Promise<boolean>>;
   navigateByUrl: jasmine.Spy<(url: string) => Promise<boolean>>;
 }
 
@@ -292,7 +292,71 @@ describe('TestTemplateEditorPage', () => {
 
     component.createPoolFromSheet();
 
-    expect(routerMock.navigate).toHaveBeenCalledWith(['/pools/new']);
+    expect(routerMock.navigate).toHaveBeenCalledWith(['/pools/new'], {
+      queryParams: { returnUrl: '/templates/new' },
+    });
+  });
+
+  it('pool bottom sheet should return to the current managed template when creating a pool', () => {
+    const { component, routerMock } = setup({
+      routeId: '42',
+      api: {
+        getResult: {
+          id: 42,
+          name: 'Template A',
+          duration_minutes: 60,
+          min_pass_score: 70,
+          difficulty: 'hard',
+          is_active: true,
+          sections: [],
+        },
+      },
+    });
+
+    component.createPoolFromSheet();
+
+    expect(routerMock.navigate).toHaveBeenCalledWith(['/pools/new'], {
+      queryParams: { returnUrl: '/templates/42' },
+    });
+  });
+
+  it('pool bottom sheet should route to pool management without losing template return url', () => {
+    const { component, routerMock } = setup({
+      routeId: '42',
+      api: {
+        getResult: {
+          id: 42,
+          name: 'Template A',
+          duration_minutes: 60,
+          min_pass_score: 70,
+          difficulty: 'hard',
+          is_active: true,
+          sections: [],
+        },
+      },
+    });
+
+    component.managePoolFromSheet('p2');
+
+    expect(routerMock.navigate).toHaveBeenCalledWith(['/pools', 'p2'], {
+      queryParams: { returnUrl: '/templates/42' },
+    });
+  });
+
+  it('pool bottom sheet should render a visible manage button for each pool', () => {
+    const { fixture, component } = setup({ routeId: null });
+
+    component.addSection();
+    component.openPoolSheet(component.sections()[0].id);
+    fixture.detectChanges();
+
+    const manageButtons = Array.from(
+      (fixture.nativeElement as HTMLElement).querySelectorAll<HTMLButtonElement>('.pool-list__manage'),
+    );
+
+    expect(manageButtons.length).toBe(2);
+    expect(manageButtons[0].textContent?.trim()).toBe('Gerer');
+    expect(manageButtons[0].getAttribute('aria-label')).toBe('Gerer le pool Safety');
   });
 
   it('save() in create mode should call api.create and navigate to /templates/:id', async () => {

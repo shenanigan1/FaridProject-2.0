@@ -50,6 +50,7 @@ export class PoolEditorPageComponent implements OnInit {
 
   // route-derived
   readonly poolId = signal<string | null>(null);
+  readonly returnUrl = signal<string | null>(null);
   readonly pageMode = computed<EditorMode>(() => (this.poolId() ? 'detail' : 'create'));
 
   // tabs only relevant in detail mode
@@ -79,6 +80,7 @@ export class PoolEditorPageComponent implements OnInit {
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     this.poolId.set(id);
+    this.returnUrl.set(this.safeReturnUrl(this.route.snapshot.queryParamMap.get('returnUrl')));
 
     if (!id) {
       // create page
@@ -94,7 +96,7 @@ export class PoolEditorPageComponent implements OnInit {
   }
 
   back(): void {
-    void this.router.navigateByUrl('/pools');
+    void this.router.navigateByUrl(this.returnUrl() ?? '/pools');
   }
 
   retry(): void {
@@ -148,6 +150,12 @@ export class PoolEditorPageComponent implements OnInit {
 
     if (this.pageMode() === 'create') {
       this.store.create(dto, (created) => {
+        const returnUrl = this.returnUrl();
+        if (returnUrl) {
+          void this.router.navigateByUrl(returnUrl);
+          return;
+        }
+
         void this.router.navigate(['/pools', created.id]);
       });
       return;
@@ -157,5 +165,11 @@ export class PoolEditorPageComponent implements OnInit {
     if (!p) return;
 
     this.store.update(p.id, dto, () => this.isEditing.set(false));
+  }
+
+  private safeReturnUrl(raw: string | null): string | null {
+    if (!raw) return null;
+    if (!raw.startsWith('/') || raw.startsWith('//')) return null;
+    return raw;
   }
 }

@@ -3,6 +3,16 @@ from templates_grid.models import SkillQuestion
 from templates_grid.models import QuestionFormat, Difficulty
 
 
+def _clean_string_list(value) -> list[str]:
+    if not isinstance(value, list):
+        return []
+    return [item.strip() for item in value if isinstance(item, str) and item.strip()]
+
+
+def _as_rubric(value) -> dict:
+    return value if isinstance(value, dict) else {}
+
+
 class SkillQuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = SkillQuestion
@@ -47,6 +57,7 @@ class SkillQuestionSerializer(serializers.ModelSerializer):
         # When partial update, instance may exist
         fmt = attrs.get("format", getattr(self.instance, "format", None))
         rubric = attrs.get("rubric", getattr(self.instance, "rubric", None))
+        normalized_rubric = _as_rubric(rubric)
 
         if fmt == QuestionFormat.PRACTICAL:
             # You can decide if rubric is required or just recommended.
@@ -56,14 +67,76 @@ class SkillQuestionSerializer(serializers.ModelSerializer):
                     {"rubric": "Rubric is required for practical questions."}
                 )
 
-        if fmt == QuestionFormat.FREE_TEXT and rubric in (None, "", {}, []):
-            attrs["rubric"] = {"scoring": "manual"}
+        if fmt == QuestionFormat.MCQ:
+            options = _clean_string_list(normalized_rubric.get("options"))
+            correct_answers = _clean_string_list(
+                normalized_rubric.get("correct_answers")
+            )
+            if options:
+                unknown_answers = [
+                    answer for answer in correct_answers if answer not in options
+                ]
+                if unknown_answers:
+                    raise serializers.ValidationError(
+                        {
+                            "rubric": (
+                                "Correct answers must be selected from the QCM options."
+                            )
+                        }
+                    )
+                normalized_rubric["options"] = options
+                if correct_answers:
+                    normalized_rubric["correct_answers"] = correct_answers
+                attrs["rubric"] = normalized_rubric
 
-        if fmt == QuestionFormat.YES_NO and rubric in (None, "", {}, []):
-            attrs["rubric"] = {"options": ["Oui", "Non"]}
+        if fmt == QuestionFormat.TRUE_FALSE:
+            correct_answers = _clean_string_list(
+                normalized_rubric.get("correct_answers")
+            )
+            normalized_rubric["options"] = ["Vrai", "Faux"]
+            if correct_answers:
+                unknown_answers = [
+                    answer
+                    for answer in correct_answers
+                    if answer not in normalized_rubric["options"]
+                ]
+                if unknown_answers:
+                    raise serializers.ValidationError(
+                        {"rubric": "Correct answer must be Vrai or Faux."}
+                    )
+                normalized_rubric["correct_answers"] = correct_answers
+            attrs["rubric"] = normalized_rubric
 
-        if fmt == QuestionFormat.RATING and rubric in (None, "", {}, []):
-            attrs["rubric"] = {"scoring": "rating"}
+        if fmt == QuestionFormat.YES_NO:
+            correct_answers = _clean_string_list(
+                normalized_rubric.get("correct_answers")
+            )
+            normalized_rubric["options"] = ["Oui", "Non"]
+            if correct_answers:
+                unknown_answers = [
+                    answer
+                    for answer in correct_answers
+                    if answer not in normalized_rubric["options"]
+                ]
+                if unknown_answers:
+                    raise serializers.ValidationError(
+                        {"rubric": "Correct answer must be Oui or Non."}
+                    )
+                normalized_rubric["correct_answers"] = correct_answers
+            attrs["rubric"] = normalized_rubric
+
+        if fmt == QuestionFormat.FREE_TEXT:
+            expected_answer = attrs.get(
+                "explanation", getattr(self.instance, "explanation", "")
+            )
+            normalized_rubric.setdefault("scoring", "manual")
+            if expected_answer:
+                normalized_rubric["expected_answer"] = expected_answer
+            attrs["rubric"] = normalized_rubric
+
+        if fmt == QuestionFormat.RATING:
+            normalized_rubric.setdefault("scoring", "rating")
+            attrs["rubric"] = normalized_rubric
 
         points = attrs.get("points", getattr(self.instance, "points", None))
         if points is not None and points < 1:

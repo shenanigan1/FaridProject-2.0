@@ -10,11 +10,12 @@ from users.permissions import IsHrAdminOrDirector
 
 class JobApplicationViewSet(ModelViewSet):
     queryset = (
-        JobApplication.objects.select_related("candidate", "position")
+        JobApplication.objects.select_related("candidate__user", "position")
         .all()
         .order_by("id")
     )
     serializer_class = JobApplicationSerializer
+    filterset_fields = ["position", "candidate", "status"]
 
     def get_permissions(self):
         if self.action in ["update", "partial_update", "destroy"]:

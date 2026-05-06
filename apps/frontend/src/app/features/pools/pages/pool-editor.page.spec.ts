@@ -44,9 +44,12 @@ describe('PoolEditorPageComponent', () => {
     update: jasmine.createSpy<(id: string, dto: UpdatePoolDto, onSuccess: () => void) => void>('update'),
   });
 
-  const makeRoute = (id: string | null): ActivatedRoute =>
+  const makeRoute = (id: string | null, returnUrl: string | null = null): ActivatedRoute =>
     ({
-      snapshot: { paramMap: convertToParamMap(id ? { id } : {}) },
+      snapshot: {
+        paramMap: convertToParamMap(id ? { id } : {}),
+        queryParamMap: convertToParamMap(returnUrl ? { returnUrl } : {}),
+      },
     } as ActivatedRoute);
 
   const makeRouterMock = (): jasmine.SpyObj<Router> => {
@@ -57,7 +60,7 @@ describe('PoolEditorPageComponent', () => {
     return router;
   };
 
-  const setup = (opts: { id: string | null; store?: PoolsStoreMock }): {
+  const setup = (opts: { id: string | null; returnUrl?: string | null; store?: PoolsStoreMock }): {
     fixture: ComponentFixture<PoolEditorPageComponent>;
     component: PoolEditorPageComponent;
     storeMock: PoolsStoreMock;
@@ -70,7 +73,7 @@ describe('PoolEditorPageComponent', () => {
       imports: [PoolEditorPageComponent],
       providers: [
         { provide: PoolsStore, useValue: storeMock },
-        { provide: ActivatedRoute, useValue: makeRoute(opts.id) },
+        { provide: ActivatedRoute, useValue: makeRoute(opts.id, opts.returnUrl ?? null) },
         { provide: Router, useValue: routerMock },
       ],
     });
@@ -103,6 +106,22 @@ describe('PoolEditorPageComponent', () => {
 
   it('back() should navigate to /pools', () => {
     const { component, routerMock } = setup({ id: null });
+
+    component.back();
+
+    expect(routerMock.navigateByUrl).toHaveBeenCalledWith('/pools');
+  });
+
+  it('back() should return to the template editor when returnUrl is provided', () => {
+    const { component, routerMock } = setup({ id: null, returnUrl: '/templates/42' });
+
+    component.back();
+
+    expect(routerMock.navigateByUrl).toHaveBeenCalledWith('/templates/42');
+  });
+
+  it('back() should ignore external returnUrl values', () => {
+    const { component, routerMock } = setup({ id: null, returnUrl: 'https://example.com' });
 
     component.back();
 
@@ -210,6 +229,21 @@ describe('PoolEditorPageComponent', () => {
     cb({ id: 'p-new', name: 'Pool Name', code: 'POOL_CODE', description: '' });
 
     expect(routerMock.navigate).toHaveBeenCalledWith(['/pools', 'p-new']);
+  });
+
+  it('submit() should return to the template editor after creating a pool from template workflow', () => {
+    const { component, storeMock, routerMock } = setup({ id: null, returnUrl: '/templates/new' });
+
+    component.form.controls.name.setValue('  Pool Name  ');
+    component.form.controls.code.setValue(validCode('Pool Code'));
+    component.form.controls.description.setValue('');
+    component.submit();
+
+    const [, cb] = storeMock.create.calls.mostRecent().args;
+    cb({ id: 'p-new', name: 'Pool Name', code: 'POOL_CODE', description: '' });
+
+    expect(routerMock.navigateByUrl).toHaveBeenCalledWith('/templates/new');
+    expect(routerMock.navigate).not.toHaveBeenCalledWith(['/pools', 'p-new']);
   });
 
   it('submit() should call store.update in detail mode with trimmed dto', () => {

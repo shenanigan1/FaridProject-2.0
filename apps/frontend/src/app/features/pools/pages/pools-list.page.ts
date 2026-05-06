@@ -26,6 +26,7 @@ import { UiTextInputComponent } from '@lib-ui/text-input/text-input.component';
     UiTextInputComponent
   ],
   templateUrl: './pools-list.page.html',
+  styleUrl: './pools-list.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PoolsListPageComponent {
@@ -63,5 +64,9 @@ export class PoolsListPageComponent {
 
   onCreate(): void {
     this.router.navigate(['/pools/new']);
+  }
+
+  back(): void {
+    void this.router.navigate(['/templates']);
   }
 }

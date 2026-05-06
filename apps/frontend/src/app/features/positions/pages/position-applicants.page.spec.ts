@@ -26,6 +26,7 @@ describe('PositionApplicantsPage', () => {
       appliedAt: '2026-04-08T10:00:00Z',
       ongoingTestsCount: 2,
       ongoingTestIds: [10, 11],
+      completedTestsCount: 3,
     },
     {
       applicationId: 2,
@@ -37,6 +38,7 @@ describe('PositionApplicantsPage', () => {
       appliedAt: '2026-04-08T09:00:00Z',
       ongoingTestsCount: 0,
       ongoingTestIds: [],
+      completedTestsCount: 0,
     },
   ];
 
@@ -74,6 +76,21 @@ describe('PositionApplicantsPage', () => {
   it('loads applicants for current position', () => {
     expect(applicantsServiceSpy.listByPosition).toHaveBeenCalledOnceWith(9);
     expect(component.isLoading).toBeFalse();
+  });
+
+  it('renders completed test count for each applicant', () => {
+    const text = (fixture.nativeElement as HTMLElement).textContent ?? '';
+
+    expect(text).toContain('Tests effectues: 3');
+    expect(text).toContain('Tests effectues: 0');
+  });
+
+  it('builds a tests page filter link for completed applicant tests on this application', () => {
+    expect(component.completedTestsQuery(applicants[0])).toEqual({
+      q: 'jane@example.com',
+      status: 'done',
+      applicationId: 1,
+    });
   });
 
   it('filters applicants by search query', (done) => {

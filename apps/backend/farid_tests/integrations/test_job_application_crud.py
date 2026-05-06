@@ -77,6 +77,42 @@ def test_list_job_applications(api_client):
     assert len(items) >= 2
 
 
+def test_list_job_applications_can_filter_by_position_with_candidate_summary(
+    api_client,
+):
+    _authenticate_as_hr(api_client)
+    JobApplication.objects.all().delete()
+    target_position = PositionFactory.create(title="Launchable Driver")
+    other_position = PositionFactory.create(title="Other Driver")
+    target_candidate = CandidateFactory.create(
+        first_name="Marc",
+        last_name="Lambert",
+        email="marc.launch@example.com",
+        phone="+33123456789",
+    )
+    target_application = JobApplication.objects.create(
+        candidate=target_candidate,
+        position=target_position,
+    )
+    JobApplication.objects.create(
+        candidate=CandidateFactory.create(),
+        position=other_position,
+    )
+
+    url = reverse(f"{BASENAME}-list")
+    res = api_client.get(url, {"position": target_position.id})
+
+    assert res.status_code == 200
+    items = _unwrap_list_response(res.data)
+    assert len(items) == 1
+    assert items[0]["id"] == target_application.id
+    assert items[0]["position"] == target_position.id
+    assert items[0]["candidate"] == target_candidate.id
+    assert items[0]["candidate_full_name"] == "Marc Lambert"
+    assert items[0]["candidate_email"] == "marc.launch@example.com"
+    assert items[0]["candidate_phone"] == "+33123456789"
+
+
 def test_retrieve_job_application(api_client):
     _authenticate_as_hr(api_client)
     app = JobApplication.objects.create(

@@ -37,7 +37,7 @@
         <p class="ff-muted">Loading...</p>
       </div>
     } @else if (error()) {
-      <div class="ff-alert-inline">{{ error() }}</div>
+      <div class="ff-alert-inline ff-alert-inline--error">{{ error() }}</div>
     } @else {
       <form class="ff-app-stack" [formGroup]="form">
         @if (tab() === 'editor') {
@@ -66,8 +66,10 @@
               </div>
               <textarea id="question-text" rows="7" formControlName="text" class="ff-control"></textarea>
 
-              @if (form.controls.text.touched && form.controls.text.invalid) {
-                <p class="ff-field-error">Text is required (min 5 chars).</p>
+              @if (form.controls.text.touched && form.controls.text.hasError('required')) {
+                <p class="ff-field-error">Champ obligatoire</p>
+              } @else if (form.controls.text.touched && form.controls.text.hasError('minlength')) {
+                <p class="ff-field-error">Minimum 5 caracteres.</p>
               }
             </div>
 
@@ -75,8 +77,10 @@
               <div class="ff-field-block">
                 <label for="question-points">Points</label>
                 <input id="question-points" type="number" formControlName="points" class="ff-control" />
-                @if (form.controls.points.touched && form.controls.points.invalid) {
-                  <p class="ff-field-error">Points must be at least 1.</p>
+                @if (form.controls.points.touched && form.controls.points.hasError('required')) {
+                  <p class="ff-field-error">Champ obligatoire</p>
+                } @else if (form.controls.points.touched && form.controls.points.invalid) {
+                  <p class="ff-field-error">Les points doivent etre superieurs a 0.</p>
                 }
                 @if (form.controls.format.value === 'free_text') {
                   <p class="ff-row-meta">Le manager pourra noter cette reponse libre sur ce total.</p>
@@ -99,19 +103,55 @@
                   class="ff-control"
                   placeholder="Une reponse par ligne"
                 ></textarea>
+                @if (form.controls.choice_options_text.touched && form.controls.choice_options_text.hasError('required')) {
+                  <p class="ff-field-error">Champ obligatoire</p>
+                }
                 <p class="ff-row-meta">Une ligne = une reponse disponible pendant le passage du test.</p>
               </div>
 
               <div class="ff-field-block">
-                <label for="question-explanation">Bonne reponse</label>
-                <textarea
-                  id="question-explanation"
-                  rows="3"
-                  formControlName="explanation"
+                <span>Bonne reponse</span>
+                <div class="ff-option-list">
+                  @for (option of choiceOptions(); track option) {
+                    <label class="ff-data-card ff-inline-actions">
+                      <input
+                        type="checkbox"
+                        class="ff-checkbox"
+                        [checked]="isCorrectAnswer(option)"
+                        (change)="toggleCorrectAnswer(option, $any($event.target).checked)"
+                      />
+                      <span>{{ option }}</span>
+                    </label>
+                  }
+                </div>
+                @if (form.controls.correct_answers_text.touched && form.controls.correct_answers_text.hasError('required')) {
+                  <p class="ff-field-error">Champ obligatoire</p>
+                }
+                <p class="ff-row-meta">La selection est stockee dans explanation et dans la correction du rubric.</p>
+              </div>
+            }
+
+            @if (form.controls.format.value === 'yes_no' || form.controls.format.value === 'true_false') {
+              <div class="ff-field-block">
+                <label for="question-correct-answer">Bonne reponse</label>
+                <select
+                  id="question-correct-answer"
                   class="ff-control"
-                  placeholder="Saisir la ou les bonnes reponses attendues"
-                ></textarea>
-                <p class="ff-row-meta">Ce champ est stocke dans explanation pour servir de correction RH/Admin.</p>
+                  [value]="selectedCorrectAnswers()[0] || ''"
+                  (change)="setSingleCorrectAnswer($any($event.target).value)"
+                >
+                  <option value="">Selectionner</option>
+                  @if (form.controls.format.value === 'true_false') {
+                    <option value="Vrai">Vrai</option>
+                    <option value="Faux">Faux</option>
+                  } @else {
+                    <option value="Oui">Oui</option>
+                    <option value="Non">Non</option>
+                  }
+                </select>
+                @if (form.controls.correct_answers_text.touched && form.controls.correct_answers_text.hasError('required')) {
+                  <p class="ff-field-error">Champ obligatoire</p>
+                }
               </div>
             }
 
@@ -147,10 +187,15 @@
               <input id="question-title" formControlName="title" class="ff-control" />
             </div>
 
-            @if (form.controls.format.value !== 'mcq') {
+            @if (form.controls.format.value !== 'mcq' && form.controls.format.value !== 'yes_no' && form.controls.format.value !== 'true_false') {
               <div class="ff-field-block">
-                <label for="question-explanation">Explanation optional</label>
+                <label for="question-explanation">
+                  {{ form.controls.format.value === 'free_text' ? 'Reponse attendue / correction' : 'Explanation optional' }}
+                </label>
                 <textarea id="question-explanation" rows="4" formControlName="explanation" class="ff-control"></textarea>
+                @if (form.controls.format.value === 'free_text') {
+                  <p class="ff-row-meta">Le manager pourra noter cette reponse libre et modifier le score final.</p>
+                }
               </div>
             }
 

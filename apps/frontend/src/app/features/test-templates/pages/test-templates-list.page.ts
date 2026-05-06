@@ -28,6 +28,7 @@ type DifficultyFilter = 'all' | TemplateDifficulty;
     UiTextInputComponent
   ],
   templateUrl: './test-templates-list.page.html',
+  styleUrl: './test-templates-list.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TemplatesListPage {
@@ -92,6 +93,10 @@ export class TemplatesListPage {
 
   openCreate(): void {
     void this.router.navigate(['/templates/new']);
+  }
+
+  back(): void {
+    void this.router.navigate(['/tests']);
   }
 
   openView(t: TemplateListItem): void {

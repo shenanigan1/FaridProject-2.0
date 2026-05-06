@@ -1,10 +1,18 @@
-<section class="ff-app-screen">
-  <div class="ff-app-container ff-app-stack">
-    <header class="ff-app-header">
-      <div>
-        <p class="ff-app-kicker">QUESTION POOLS</p>
-        <h1 class="ff-app-title">Reusable Banks</h1>
-      </div>
+<section class="pool-library">
+  <header class="pool-library__appbar">
+    <button type="button" class="pool-library__icon" aria-label="Retour" (click)="back()">
+      &#8592;
+    </button>
+    <h1>Question Pools</h1>
+    <button type="button" class="pool-library__icon pool-library__icon--primary" aria-label="Creer un pool" (click)="onCreate()">
+      +
+    </button>
+  </header>
+
+  <div class="pool-library__body ff-app-stack">
+    <header class="pool-library__hero">
+      <p class="ff-app-kicker">QUESTION POOLS</p>
+      <h2>Reusable Banks</h2>
     </header>
 
     <app-ui-text-input
@@ -29,7 +37,7 @@
         @if (filtered().length) {
           @for (pool of filtered(); track pool.id) {
             <article class="ff-data-card">
-              <div class="ff-inline-actions" style="align-items: flex-start; justify-content: space-between">
+              <div class="pool-library__card">
                 <div>
                   <h2 class="ff-row-title">{{ pool.name }}</h2>
                   <p class="ff-row-meta">
@@ -58,11 +66,11 @@
         }
       </div>
     }
-  </div>
 
   <button type="button" class="ff-fab" (click)="onCreate()" aria-label="Create pool">
     <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
       <path d="M12 5v14M5 12h14" />
     </svg>
   </button>
+  </div>
 </section>

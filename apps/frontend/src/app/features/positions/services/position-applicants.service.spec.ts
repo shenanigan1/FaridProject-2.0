@@ -24,58 +24,98 @@ describe('PositionApplicantsService', () => {
     httpMock.verify();
   });
 
-  it('maps applicants for a position with candidate details and ongoing tests count', () => {
+  it('maps applicants for a position with candidate details and test counters', () => {
     let names: string[] = [];
     let ongoingTestsCount = 0;
+    let completedTestsCount = 0;
 
     service.listByPosition(9).subscribe((applicants) => {
       names = applicants.map((applicant) => applicant.fullName);
       ongoingTestsCount = applicants[0]?.ongoingTestsCount ?? 0;
+      completedTestsCount = applicants[0]?.completedTestsCount ?? 0;
     });
 
-    const applicationsRequest = httpMock.expectOne('/api/jobapplications/');
-    const candidatesRequest = httpMock.expectOne('/api/candidates/');
+    const applicationsRequest = httpMock.expectOne('/api/jobapplications/?position=9');
     const evaluationsRequest = httpMock.expectOne('/api/evaluations/');
 
     applicationsRequest.flush([
       {
         id: 1,
         candidate: 11,
+        candidate_full_name: 'Jane Doe',
+        candidate_email: 'jane@example.com',
+        candidate_phone: '+330000000',
         position: 9,
         status: 'applied',
         created_at: '2026-04-08T10:00:00Z',
       },
-      {
-        id: 2,
-        candidate: 12,
-        position: 7,
-        status: 'applied',
-        created_at: '2026-04-08T09:00:00Z',
-      },
     ]);
 
-    candidatesRequest.flush([
-      {
-        id: 11,
-        user: {
-          first_name: 'Jane',
-          last_name: 'Doe',
-          email: 'jane@example.com',
-          phone: '+330000000',
-        },
-      },
-    ]);
     evaluationsRequest.flush([
       {
         id: 700,
         application: 1,
         status: 'in_progress',
+        total_sections_count: 1,
         updated_at: '2026-04-08T11:00:00Z',
+      },
+      {
+        id: 701,
+        application: 1,
+        status: 'completed',
+        total_sections_count: 1,
+        updated_at: '2026-04-08T12:00:00Z',
+      },
+      {
+        id: 702,
+        application: 1,
+        status: 'validated',
+        total_sections_count: 1,
+        updated_at: '2026-04-08T13:00:00Z',
+      },
+      {
+        id: 703,
+        application: 1,
+        status: 'completed',
+        total_sections_count: 0,
+        updated_at: '2026-04-08T14:00:00Z',
       },
     ]);
 
     expect(names).toEqual(['Jane Doe']);
     expect(ongoingTestsCount).toBe(1);
+    expect(completedTestsCount).toBe(2);
+  });
+
+  it('does not count incomplete in-progress evaluations without sections as launched tests', () => {
+    let ongoingTestsCount = -1;
+
+    service.listByPosition(9).subscribe((applicants) => {
+      ongoingTestsCount = applicants[0]?.ongoingTestsCount ?? -1;
+    });
+
+    httpMock.expectOne('/api/jobapplications/?position=9').flush([
+      {
+        id: 1,
+        candidate: 11,
+        candidate_full_name: 'Jane Doe',
+        candidate_email: 'jane@example.com',
+        position: 9,
+        status: 'applied',
+        created_at: '2026-04-08T10:00:00Z',
+      },
+    ]);
+    httpMock.expectOne('/api/evaluations/').flush([
+      {
+        id: 700,
+        application: 1,
+        status: 'in_progress',
+        total_sections_count: 0,
+        updated_at: '2026-04-08T11:00:00Z',
+      },
+    ]);
+
+    expect(ongoingTestsCount).toBe(0);
   });
 
   it('lists in-progress tests for all positions', () => {

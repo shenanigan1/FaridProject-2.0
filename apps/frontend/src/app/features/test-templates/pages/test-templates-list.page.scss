@@ -1,0 +1,65 @@
+:host {
+  display: block;
+}
+
+.template-library {
+  min-height: 100dvh;
+  background: var(--ff-color-background, #10141b);
+  color: var(--ff-color-text-primary, #f4f7ff);
+  padding-bottom: 6rem;
+}
+
+.template-library__appbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: grid;
+  min-height: 4.5rem;
+  grid-template-columns: 2.75rem 1fr 2.75rem;
+  align-items: center;
+  gap: 0.75rem;
+  border-bottom: 1px solid var(--ff-color-border-soft, #293244);
+  background: var(--ff-color-header, #030816);
+  padding: 0 1rem;
+}
+
+.template-library__appbar h1 {
+  margin: 0;
+  font-size: 1.45rem;
+  font-weight: 950;
+  line-height: 1.1;
+  text-shadow: var(--ff-text-shadow, 0 1px 0 #000);
+}
+
+.template-library__icon {
+  display: grid;
+  width: 2.5rem;
+  height: 2.5rem;
+  place-items: center;
+  border: 0;
+  border-radius: 0.75rem;
+  background: transparent;
+  color: var(--ff-color-primary-400, #4a8eff);
+  font: inherit;
+  font-size: 1.45rem;
+  font-weight: 900;
+}
+
+.template-library__icon--primary {
+  background: var(--ff-color-primary-400, #4a8eff);
+  color: #06101f;
+}
+
+.template-library__body {
+  width: min(100%, 32rem);
+  margin: 0 auto;
+  padding: 1.25rem 1rem;
+}
+
+.template-library__hero h2 {
+  margin: 0.2rem 0 0;
+  font-size: 1.7rem;
+  font-weight: 950;
+  line-height: 1.05;
+  text-shadow: var(--ff-text-shadow, 0 1px 0 #000);
+}
