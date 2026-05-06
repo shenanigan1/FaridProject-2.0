@@ -1,0 +1,96 @@
+<section class="ff-app-screen">
+  <div class="ff-app-container ff-app-stack">
+    <header class="ff-app-header">
+      <div>
+        <p class="ff-app-kicker">POSITION #{{ positionId }}</p>
+        <h1 class="ff-app-title">Applicants</h1>
+      </div>
+
+      <a [routerLink]="['/positions']" class="ff-btn ff-btn-secondary">
+        Back
+      </a>
+    </header>
+
+    <input
+      type="search"
+      [formControl]="searchControl"
+      aria-label="Search applicants"
+      class="ff-control"
+    />
+
+    @if (isLoading) {
+      <p class="ff-empty">Loading applicants...</p>
+    }
+
+    @if (!isLoading && errorMessage) {
+      <div class="ff-alert-inline">{{ errorMessage }}</div>
+    }
+
+    @if (!isLoading && !errorMessage && launchMessage) {
+      <div class="ff-alert-inline">{{ launchMessage }}</div>
+    }
+
+    @if (!isLoading && !errorMessage) {
+      @if (filteredApplicants$ | async; as applicants) {
+        <div class="ff-app-stack">
+          @for (applicant of applicants; track applicant.applicationId) {
+            <article class="ff-data-card">
+              <div class="flex items-start justify-between gap-3">
+                <div>
+                  <h2 class="ff-row-title">{{ applicant.fullName }}</h2>
+                  <p class="ff-row-meta">{{ applicant.email }}</p>
+                  @if (applicant.phone) {
+                    <p class="ff-row-meta">{{ applicant.phone }}</p>
+                  }
+                </div>
+
+                <span class="ff-status-pill">{{ applicant.status }}</span>
+              </div>
+
+              <div class="mt-3 ff-inline-actions text-xs">
+                <span class="ff-row-meta">Applied at: {{ applicant.appliedAt }}</span>
+                <span class="ff-status-pill">Ongoing tests: {{ applicant.ongoingTestsCount }}</span>
+              </div>
+
+              @if (applicant.ongoingTestsCount > 0) {
+                <div class="mt-2 text-[11px] text-[#8b90a0]">
+                  This applicant has active evaluations on
+                  <a class="text-[#acc7ff]" routerLink="/tests">Tests page</a>.
+                </div>
+              }
+
+              <div class="mt-3 ff-inline-actions">
+                <button
+                  type="button"
+                  (click)="launchTest(applicant)"
+                  [disabled]="isLaunching(applicant.applicationId) || applicant.ongoingTestsCount > 0"
+                  class="ff-btn ff-btn-primary"
+                >
+                  @if (applicant.ongoingTestsCount > 0) {
+                    Test already launched
+                  } @else {
+                    {{ isLaunching(applicant.applicationId) ? 'Launching...' : 'Launch test' }}
+                  }
+                </button>
+
+                <button
+                  type="button"
+                  (click)="rejectApplicant(applicant)"
+                  [disabled]="isRejecting(applicant.applicationId)"
+                  class="ff-btn ff-btn-secondary"
+                >
+                  {{ isRejecting(applicant.applicationId) ? 'Rejecting...' : 'Reject application' }}
+                </button>
+              </div>
+
+            </article>
+          }
+
+          @if (applicants.length === 0) {
+            <p class="ff-empty">No applicants for this position in database.</p>
+          }
+        </div>
+      }
+    }
+  </div>
+</section>

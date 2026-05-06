@@ -1,0 +1,25 @@
+# Angular build
+/dist
+/out-tsc
+/.angular
+
+# Node
+/node_modules
+npm-debug.log
+yarn-error.log
+
+# Environment files
+/src/environments/*.local.ts
+/src/environments/*.prod.ts
+/src/environments/*.dev.ts
+
+# IDE
+.vscode
+.idea
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Tests
+/coverage

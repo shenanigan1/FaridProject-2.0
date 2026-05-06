@@ -1,0 +1,9 @@
+@if (hasMessage) {
+  <div
+    [class]="classes"
+    [attr.role]="role"
+    aria-live="polite"
+  >
+    <span class="ff-alert-text">{{ message }}</span>
+  </div>
+}

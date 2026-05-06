@@ -1,0 +1,69 @@
+<section class="ff-app-screen">
+  <div class="ff-app-container ff-app-stack">
+    <input
+      [formControl]="searchCtrl"
+      type="search"
+      aria-label="Search positions"
+      class="ff-control"
+    />
+
+    @if (isLoading) {
+      <p class="ff-empty">Loading positions...</p>
+    }
+
+    @if (!isLoading && error) {
+      <div class="ff-alert-inline">
+        {{ error }}
+      </div>
+    }
+
+    @if (!isLoading && !error) {
+      @if (filteredPositions$ | async; as positions) {
+        @if (appliedCountByPosition$ | async; as appliedCounts) {
+          <div class="ff-app-stack">
+            @for (p of positions; track p.id) {
+              <article class="ff-data-card">
+                <div class="ff-inline-actions" style="align-items: flex-start; justify-content: space-between">
+                  <div>
+                    <h2 class="ff-row-title">{{ p.title }}</h2>
+                    <p class="ff-row-meta">
+                      @if (p.location) {
+                        <span>{{ p.location }}</span>
+                      }
+                      <span>{{ p.contract_type }}</span>
+                    </p>
+                    <p class="ff-row-meta">{{ p.department }}</p>
+                  </div>
+
+                  @if (getBadge(p); as b) {
+                    <app-ui-badge [tone]="b.tone">
+                      {{ b.label }}
+                    </app-ui-badge>
+                  }
+                </div>
+
+                <footer class="ff-inline-actions" style="justify-content: space-between; margin-top: 1rem">
+                  <a class="ff-status-pill" [routerLink]="['/positions', p.id, 'applicants']">
+                    Applicants: {{ getAppliedCount(p.id, appliedCounts) }}
+                  </a>
+
+                  <a [routerLink]="['/positions', p.id]" class="ff-btn ff-btn-primary">
+                    Manage
+                  </a>
+                </footer>
+              </article>
+            }
+
+            @if (positions.length === 0) {
+              <p class="ff-empty">No positions found in database for this search.</p>
+            }
+          </div>
+        }
+      }
+    }
+  </div>
+
+  <a routerLink="/positions/new" class="ff-fab" aria-label="Add position">
+    +
+  </a>
+</section>

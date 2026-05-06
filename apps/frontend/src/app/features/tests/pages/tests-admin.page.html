@@ -1,0 +1,119 @@
+<section class="test-flow">
+  <header class="test-flow__appbar">
+    <button type="button" class="test-flow__icon-btn" aria-label="Menu">&#9776;</button>
+    <h1>{{ isTestsView() ? 'Tests' : 'Templates de Test' }}</h1>
+    <button type="button" class="test-flow__icon-btn" aria-label="Search">&#8981;</button>
+  </header>
+
+  <div class="test-flow__shell">
+    <div class="test-flow__tabs">
+      <button type="button" [attr.aria-pressed]="isTestsView()" (click)="setView('tests')">
+        Tests
+      </button>
+      <button type="button" [attr.aria-pressed]="!isTestsView()" (click)="setView('templates')">
+        Templates
+      </button>
+    </div>
+
+    <label class="test-flow__search">
+      <input
+        type="search"
+        [formControl]="searchControl"
+        [attr.placeholder]="isTestsView() ? 'Rechercher un candidat...' : 'Rechercher un template...'"
+        aria-label="Rechercher"
+      />
+    </label>
+
+    <div class="test-flow__filters" aria-label="Filtres">
+      @for (filter of filters; track filter) {
+        <button
+          type="button"
+          class="test-flow__chip"
+          [class.test-flow__chip--active]="activeFilter() === filter"
+          (click)="setFilter(filter)"
+        >
+          {{ filter }}
+        </button>
+      }
+    </div>
+
+    @if (isLoading()) {
+      <p class="test-flow__empty">Chargement des donnees...</p>
+    } @else if (error()) {
+      <p class="test-flow__alert" role="alert">{{ error() }}</p>
+    } @else if (isTestsView()) {
+      <div class="test-flow__stack">
+        @for (test of filteredActiveTests(); track test.evaluationId) {
+          <article class="test-flow__card">
+            <div class="test-flow__card-head">
+              <div>
+                <h2 class="test-flow__title">{{ test.candidateName }}</h2>
+                <p class="test-flow__meta">{{ test.templateName }}</p>
+                @if (test.positionTitle) {
+                  <p class="test-flow__meta">{{ test.positionTitle }}</p>
+                }
+              </div>
+              <span class="test-flow__status">{{ test.status }}</span>
+            </div>
+
+            <div class="test-flow__progress-block">
+              <div class="test-flow__metric-row">
+                <span class="test-flow__meta">{{ test.statusLabel }}</span>
+                <strong>{{ test.progressPercent }}%</strong>
+              </div>
+              <div class="test-flow__progress" aria-hidden="true">
+                <span [style.width.%]="test.progressPercent"></span>
+              </div>
+              @if (test.totalSectionsCount > 0) {
+                <p class="test-flow__meta">
+                  {{ test.completedSectionsCount }} / {{ test.totalSectionsCount }} sections terminees
+                </p>
+              }
+            </div>
+
+            <div class="test-flow__actions">
+              <a class="test-flow__btn test-flow__btn--primary" [routerLink]="['/tests', test.evaluationId]">
+                Ouvrir
+              </a>
+              <a class="test-flow__btn" [routerLink]="['/tests', test.evaluationId]">
+                Voir details
+              </a>
+            </div>
+          </article>
+        }
+
+        @if (filteredActiveTests().length === 0) {
+          <p class="test-flow__empty">Aucun test non termine en base pour ce filtre.</p>
+        }
+      </div>
+    } @else {
+      <div class="test-flow__stack">
+        @for (template of filteredTemplates(); track template.id) {
+          <article class="test-flow__card">
+            <div class="test-flow__card-head">
+              <div>
+                <span class="test-flow__status" [class.test-flow__status--warning]="template.difficulty === 'medium'">
+                  {{ difficultyLabel(template.difficulty) }}
+                </span>
+                <h2 class="test-flow__title" style="margin-top: 1rem">{{ template.name }}</h2>
+                <p class="test-flow__meta">{{ template.description }}</p>
+              </div>
+              <a class="test-flow__icon-btn" [routerLink]="['/templates', template.id]" aria-label="Modifier">&#8942;</a>
+            </div>
+
+            <div class="test-flow__actions">
+              <span class="test-flow__meta">{{ template.pointsTotal }} pts</span>
+              <span class="test-flow__meta">{{ template.durationMinutes }} min</span>
+            </div>
+          </article>
+        }
+
+        @if (filteredTemplates().length === 0) {
+          <p class="test-flow__empty">Aucun template en base pour ce filtre.</p>
+        }
+      </div>
+
+      <a routerLink="/templates/new" class="test-flow__fab" aria-label="Nouveau template">+</a>
+    }
+  </div>
+</section>

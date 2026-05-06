@@ -1,0 +1,66 @@
+<section class="min-h-screen bg-slate-950 px-4 py-6 text-white sm:px-6 lg:px-8">
+  <div class="mx-auto max-w-5xl">
+    <header class="mb-6">
+      <h1 class="text-2xl font-bold tracking-tight text-white">
+        Job Opportunities
+      </h1>
+      <p class="mt-2 text-sm text-slate-400">
+        Browse available positions and find the role that matches your profile.
+      </p>
+    </header>
+
+    <app-job-filters
+      [filters]="filters"
+      (filtersChange)="onFiltersChange($event)"
+      (resetFilters)="onResetFilters()"
+    />
+
+    <div class="mt-6">
+      @switch (state.kind) {
+        @case ('loading') {
+          <div class="space-y-4">
+            @for (item of [1, 2, 3]; track item) {
+              <div class="animate-pulse rounded-2xl border border-slate-800 bg-slate-900 p-5">
+                <div class="h-5 w-48 rounded bg-slate-800"></div>
+                <div class="mt-3 h-4 w-72 rounded bg-slate-800"></div>
+                <div class="mt-5 h-4 w-full rounded bg-slate-800"></div>
+                <div class="mt-2 h-4 w-4/5 rounded bg-slate-800"></div>
+                <div class="mt-5 h-10 w-32 rounded bg-slate-800"></div>
+              </div>
+            }
+          </div>
+        }
+
+        @case ('error') {
+          <div class="rounded-2xl border border-rose-800 bg-rose-950/40 p-5 text-rose-200">
+            <p class="font-semibold">Unable to load job offers</p>
+            <p class="mt-1 text-sm text-rose-300">
+              {{ state.message }}
+            </p>
+          </div>
+        }
+
+        @case ('empty') {
+          <div class="rounded-2xl border border-slate-800 bg-slate-900 p-8 text-center">
+            <h2 class="text-lg font-semibold text-white">No jobs found</h2>
+            <p class="mt-2 text-sm text-slate-400">
+              Try changing your search or filters.
+            </p>
+          </div>
+        }
+
+        @case ('loaded') {
+          <div class="mb-4 text-sm text-slate-400">
+            {{ state.total }} job offer(s) found
+          </div>
+
+          <div class="space-y-4">
+            @for (job of state.jobs; track trackByJobId($index, job)) {
+              <app-job-card [job]="job" />
+            }
+          </div>
+        }
+      }
+    </div>
+  </div>
+</section>

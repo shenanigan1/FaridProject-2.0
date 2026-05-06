@@ -1,0 +1,47 @@
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+pnpm-debug.log
+
+# Python / Django (si backend Django)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+db.sqlite3
+.env
+.env.local
+.env.dev
+.env.prod
+
+# Docker
+docker-data/
+*.pid
+*.sock
+
+# Logs
+*.log
+logs/
+tmp/
+temp/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Build artifacts
+dist/
+build/
+coverage/
+
+# Monorepo
+apps/*/node_modules/
+apps/*/dist/
+apps/*/coverage/

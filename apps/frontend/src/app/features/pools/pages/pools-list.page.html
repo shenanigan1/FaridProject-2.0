@@ -1,0 +1,68 @@
+<section class="ff-app-screen">
+  <div class="ff-app-container ff-app-stack">
+    <header class="ff-app-header">
+      <div>
+        <p class="ff-app-kicker">QUESTION POOLS</p>
+        <h1 class="ff-app-title">Reusable Banks</h1>
+      </div>
+    </header>
+
+    <app-ui-text-input
+      [formControl]="queryCtrl"
+      type="search"
+      aria-label="Search pool names or codes"
+    ></app-ui-text-input>
+
+    @if (isLoading()) {
+      <p class="ff-empty">Loading pools...</p>
+    }
+
+    @if (error()) {
+      <div class="ff-app-stack">
+        <app-ui-alert [message]="error()" variant="error"></app-ui-alert>
+        <app-ui-button-primary class="w-full" (click)="onRetry()">Retry</app-ui-button-primary>
+      </div>
+    }
+
+    @if (!isLoading() && !error()) {
+      <div class="ff-app-stack">
+        @if (filtered().length) {
+          @for (pool of filtered(); track pool.id) {
+            <article class="ff-data-card">
+              <div class="ff-inline-actions" style="align-items: flex-start; justify-content: space-between">
+                <div>
+                  <h2 class="ff-row-title">{{ pool.name }}</h2>
+                  <p class="ff-row-meta">
+                    <span>{{ pool.code }}</span>
+                    @if (pool.updatedAt) {
+                      <span> Updated {{ pool.updatedAt | date:'MMM d, y' }}</span>
+                    }
+                  </p>
+                </div>
+
+                <app-ui-button-primary [routerLink]="['/pools', pool.id]">Manage</app-ui-button-primary>
+              </div>
+            </article>
+          }
+        } @else {
+          <app-ui-empty-state
+            [title]="queryCtrl.value ? 'No matches' : 'No pools in database'"
+            [subtitle]="queryCtrl.value ? 'Try a different search.' : 'Create the first pool from backend data.'"
+          >
+            @if (!queryCtrl.value) {
+              <div actions>
+                <app-ui-button-primary (click)="onCreate()">Create pool</app-ui-button-primary>
+              </div>
+            }
+          </app-ui-empty-state>
+        }
+      </div>
+    }
+  </div>
+
+  <button type="button" class="ff-fab" (click)="onCreate()" aria-label="Create pool">
+    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M12 5v14M5 12h14" />
+    </svg>
+  </button>
+</section>

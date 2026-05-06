@@ -1,0 +1,141 @@
+<section class="ff-dashboard-page">
+  <div class="ff-dashboard-content">
+    <header class="ff-dashboard-hero">
+      <h1 class="ff-dashboard-hero__title">{{ pageTitle() }}</h1>
+    </header>
+
+    <section class="ff-dashboard-kpis" aria-label="Indicateurs cles">
+      @for (card of recruitmentCards(); track card.id) {
+        <button
+          type="button"
+          class="ff-dashboard-kpi-card"
+          [class.ff-dashboard-kpi-card--active]="card.tone === 'blue'"
+          [class.ff-dashboard-kpi-card--cyan]="card.tone === 'cyan'"
+          [class.ff-dashboard-kpi-card--disabled]="!card.route"
+          [attr.aria-label]="card.label"
+          (click)="openRecruitmentCard(card.route)"
+        >
+          <div class="ff-dashboard-kpi-card__content">
+            <p class="ff-dashboard-kpi-card__label">{{ card.label }}</p>
+
+            <div class="ff-dashboard-kpi-card__metric">
+              <span class="ff-dashboard-kpi-card__value">{{ card.value }}</span>
+              <span class="ff-dashboard-kpi-card__meta">{{ card.badge }}</span>
+            </div>
+          </div>
+
+          <div class="ff-dashboard-kpi-card__icon" aria-hidden="true">
+            <svg [lucideIcon]="getIcon(card.icon)" class="ff-dashboard-kpi-card__icon-svg"></svg>
+          </div>
+        </button>
+      }
+    </section>
+
+    <section class="ff-dashboard-grid" aria-label="Panels du dashboard">
+      <section class="ff-dashboard-panel" aria-labelledby="recent-inflow-title">
+        <div class="ff-dashboard-panel__header">
+          <h2 id="recent-inflow-title" class="ff-dashboard-panel__title ff-dashboard-panel__title--primary">
+            RECENT INFLOW
+          </h2>
+
+          <button
+            type="button"
+            class="ff-dashboard-panel__action"
+            aria-label="Ouvrir recent inflow"
+            (click)="openPanelItem('/contact')"
+          >
+            <svg [lucideIcon]="icons.loginSubmit" class="ff-dashboard-panel__icon"></svg>
+          </button>
+        </div>
+
+        <div class="ff-dashboard-inflow">
+          @for (item of recentInflow(); track item.id) {
+            <button type="button" class="ff-dashboard-inflow__item" (click)="openPanelItem(item.route)">
+              <div class="ff-dashboard-inflow__avatar" aria-hidden="true">
+                <svg [lucideIcon]="icons.user" class="ff-dashboard-inflow__avatar-icon"></svg>
+              </div>
+
+              <div class="ff-dashboard-inflow__content">
+                <p class="ff-dashboard-inflow__name">{{ item.name }}</p>
+                <p class="ff-dashboard-inflow__role">{{ item.role }}</p>
+              </div>
+
+              <span class="ff-dashboard-inflow__time">{{ item.timeLabel }}</span>
+            </button>
+          }
+
+          @if (!dataLoading() && recentInflow().length === 0) {
+            <p class="ff-dashboard-panel__empty">Aucune candidature en base.</p>
+          }
+        </div>
+      </section>
+
+      <section class="ff-dashboard-panel" aria-labelledby="test-metrics-title">
+        <div class="ff-dashboard-panel__header">
+          <h2 id="test-metrics-title" class="ff-dashboard-panel__title">TEST METRICS</h2>
+
+          <span class="ff-dashboard-panel__mini-icon" aria-hidden="true">
+            <svg [lucideIcon]="icons.clipboard_check" class="ff-dashboard-panel__icon"></svg>
+          </span>
+        </div>
+
+        <div class="ff-dashboard-metrics">
+          @for (item of testMetrics(); track item.id) {
+            <button type="button" class="ff-dashboard-metrics__item ff-dashboard-metrics__item--progress" (click)="openPanelItem(item.route)">
+              <div class="ff-dashboard-metrics__bar" aria-hidden="true"></div>
+
+              <div class="ff-dashboard-metrics__content">
+                <div>
+                  <p class="ff-dashboard-metrics__name">{{ item.name }}</p>
+                  <p class="ff-dashboard-metrics__label">{{ item.label }}</p>
+                </div>
+
+                <div class="ff-dashboard-metrics__score-wrap">
+                  <p class="ff-dashboard-metrics__score ff-dashboard-metrics__score--progress">
+                    {{ item.score }}
+                  </p>
+
+                  <span class="ff-dashboard-metrics__badge ff-dashboard-metrics__badge--progress">
+                    IN PROGRESS
+                  </span>
+                </div>
+              </div>
+            </button>
+          }
+
+          @if (!dataLoading() && testMetrics().length === 0) {
+            <p class="ff-dashboard-panel__empty">Aucun test en cours.</p>
+          }
+        </div>
+      </section>
+
+      <section class="ff-dashboard-panel" aria-labelledby="live-feeds-title">
+        <div class="ff-dashboard-panel__header">
+          <h2 id="live-feeds-title" class="ff-dashboard-panel__title">LIVE FEEDS</h2>
+
+          <div class="ff-dashboard-live__status">
+            <span class="ff-dashboard-live__dot"></span>
+            <span>{{ dataLoading() ? 'LOADING' : 'LIVE DATA' }}</span>
+          </div>
+        </div>
+
+        <div class="ff-dashboard-live">
+          @for (item of liveFeeds(); track item.id) {
+            <button type="button" class="ff-dashboard-live__item" (click)="openPanelItem(item.route)">
+              <div class="ff-dashboard-live__row">
+                <p class="ff-dashboard-live__name">{{ item.name }}</p>
+                <span class="ff-dashboard-live__value">{{ item.valueLabel }}</span>
+              </div>
+
+              <p class="ff-dashboard-live__label">{{ item.label }}</p>
+            </button>
+          }
+
+          @if (!dataLoading() && liveFeeds().length === 0) {
+            <p class="ff-dashboard-panel__empty">Aucun flux de test actif.</p>
+          }
+        </div>
+      </section>
+    </section>
+  </div>
+</section>

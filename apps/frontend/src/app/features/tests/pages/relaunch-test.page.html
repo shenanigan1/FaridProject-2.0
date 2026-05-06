@@ -1,0 +1,60 @@
+<section class="test-flow">
+  <header class="test-flow__appbar">
+    <a routerLink="/tests" class="test-flow__icon-btn" aria-label="Retour">&#8592;</a>
+    <h1>Relancer un test</h1>
+    <span></span>
+  </header>
+
+  <div class="test-flow__shell">
+    <section class="test-flow__hero" style="border: 0; box-shadow: none; padding-inline: 0">
+      <h2>Selectionner un module de re-test</h2>
+      <p class="test-flow__meta">
+        Choisissez le module specifique pour evaluer les competences du conducteur.
+      </p>
+    </section>
+
+    <label class="test-flow__search">
+      <input
+        type="search"
+        [formControl]="searchControl"
+        placeholder="Rechercher un module..."
+        aria-label="Rechercher un module"
+      />
+    </label>
+
+    @if (error()) {
+      <p class="test-flow__alert">{{ error() }}</p>
+    }
+
+    <div class="test-flow__stack">
+      @for (template of filteredTemplates(); track template.id) {
+        <button
+          type="button"
+          class="test-flow__card"
+          style="text-align: left"
+          [style.border-color]="selectedTemplateId() === template.id ? 'var(--ff-color-primary-400)' : null"
+          (click)="selectTemplate(template.id)"
+        >
+          <span class="test-flow__status">{{ template.difficulty }}</span>
+          <h2 class="test-flow__title" style="margin-top: 1rem">{{ template.name }}</h2>
+          <p class="test-flow__meta">{{ template.durationMinutes }} min &bull; {{ template.pointsTotal }} pts</p>
+          <p class="test-flow__meta">{{ template.description }}</p>
+        </button>
+      }
+
+      @if (filteredTemplates().length === 0) {
+        <p class="test-flow__empty">Aucun module de test en base.</p>
+      }
+    </div>
+  </div>
+
+  <div class="test-flow__sticky">
+    @if (selectedTemplate(); as selected) {
+      <p class="test-flow__kicker">Selection active</p>
+      <p class="test-flow__title">{{ selected.name }} &bull; {{ selected.durationMinutes }} min</p>
+    }
+    <button type="button" class="test-flow__btn test-flow__btn--primary" style="width: 100%" (click)="confirmSelection()">
+      Lancer le nouveau test
+    </button>
+  </div>
+</section>

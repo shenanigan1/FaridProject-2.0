@@ -1,0 +1,179 @@
+<section class="ff-app-screen">
+  <div class="ff-app-container ff-app-stack" style="max-width: 48rem">
+    <header class="ff-app-header">
+      <div>
+        <p class="ff-app-kicker">QUESTION BANK</p>
+        <h1 class="ff-app-title">{{ isEditMode() ? 'Edit Question' : 'Create Question' }}</h1>
+        <p class="ff-app-subtitle">Configuration de la question stockee dans le pool selectionne.</p>
+      </div>
+
+      <div class="ff-inline-actions">
+        <button type="button" class="ff-btn ff-btn-secondary" (click)="back()">Cancel</button>
+        @if (!isEditMode()) {
+          <button
+            type="button"
+            class="ff-btn ff-btn-secondary"
+            [disabled]="isLoading()"
+            (click)="saveAndAddAnother()"
+          >
+            Save & add another
+          </button>
+        }
+        <button type="button" class="ff-btn ff-btn-primary" [disabled]="isLoading()" (click)="save()">
+          {{ isLoading() ? 'Saving...' : 'Save' }}
+        </button>
+      </div>
+    </header>
+
+    <app-ui-tabs
+      variant="underline"
+      [items]="tabs"
+      [activeKey]="tab()"
+      (activeKeyChange)="setTab($event)"
+    ></app-ui-tabs>
+
+    @if (isLoading()) {
+      <div class="ff-app-panel">
+        <p class="ff-muted">Loading...</p>
+      </div>
+    } @else if (error()) {
+      <div class="ff-alert-inline">{{ error() }}</div>
+    } @else {
+      <form class="ff-app-stack" [formGroup]="form">
+        @if (tab() === 'editor') {
+          <section class="ff-app-panel ff-app-stack">
+            <div>
+              <p class="ff-app-kicker">QUESTION TYPE</p>
+              <div class="ff-segmented" role="group" aria-label="Question type">
+                @for (format of formatOptions; track format.value) {
+                  <button
+                    type="button"
+                    class="ff-segmented__item"
+                    [attr.aria-pressed]="form.controls.format.value === format.value"
+                    [title]="format.hint"
+                    (click)="setFormat(format.value)"
+                  >
+                    {{ format.label }}
+                  </button>
+                }
+              </div>
+            </div>
+
+            <div class="ff-field-block">
+              <div class="ff-inline-actions" style="justify-content: space-between">
+                <label for="question-text">Question</label>
+                <span class="ff-muted">{{ textCount() }}/2500</span>
+              </div>
+              <textarea id="question-text" rows="7" formControlName="text" class="ff-control"></textarea>
+
+              @if (form.controls.text.touched && form.controls.text.invalid) {
+                <p class="ff-field-error">Text is required (min 5 chars).</p>
+              }
+            </div>
+
+            <div class="ff-form-grid ff-form-grid--two">
+              <div class="ff-field-block">
+                <label for="question-points">Points</label>
+                <input id="question-points" type="number" formControlName="points" class="ff-control" />
+                @if (form.controls.points.touched && form.controls.points.invalid) {
+                  <p class="ff-field-error">Points must be at least 1.</p>
+                }
+                @if (form.controls.format.value === 'free_text') {
+                  <p class="ff-row-meta">Le manager pourra noter cette reponse libre sur ce total.</p>
+                }
+              </div>
+
+              <div class="ff-field-block">
+                <span>Difficulty</span>
+                <app-ui-select [formControl]="form.controls.difficulty" [options]="difficultyOptions" />
+              </div>
+            </div>
+
+            @if (form.controls.format.value === 'mcq') {
+              <div class="ff-field-block">
+                <label for="question-options">Choix de reponse QCM</label>
+                <textarea
+                  id="question-options"
+                  rows="5"
+                  formControlName="choice_options_text"
+                  class="ff-control"
+                  placeholder="Une reponse par ligne"
+                ></textarea>
+                <p class="ff-row-meta">Une ligne = une reponse disponible pendant le passage du test.</p>
+              </div>
+
+              <div class="ff-field-block">
+                <label for="question-explanation">Bonne reponse</label>
+                <textarea
+                  id="question-explanation"
+                  rows="3"
+                  formControlName="explanation"
+                  class="ff-control"
+                  placeholder="Saisir la ou les bonnes reponses attendues"
+                ></textarea>
+                <p class="ff-row-meta">Ce champ est stocke dans explanation pour servir de correction RH/Admin.</p>
+              </div>
+            }
+
+            @if (form.controls.format.value === 'rating') {
+              <div class="ff-form-grid ff-form-grid--two">
+                <div class="ff-field-block">
+                  <label for="rating-min">Note minimum</label>
+                  <input id="rating-min" type="number" formControlName="rating_min" class="ff-control" />
+                </div>
+                <div class="ff-field-block">
+                  <label for="rating-max">Note maximum</label>
+                  <input id="rating-max" type="number" formControlName="rating_max" class="ff-control" />
+                </div>
+              </div>
+            }
+          </section>
+        } @else if (tab() === 'preview') {
+          <section class="ff-app-panel">
+            <p class="ff-app-kicker">PREVIEW</p>
+            @if (form.controls.title.value) {
+              <h2 class="ff-section-title">{{ form.controls.title.value }}</h2>
+            }
+            @if (form.controls.text.value) {
+              <p class="ff-row-meta" style="white-space: pre-wrap">{{ form.controls.text.value }}</p>
+            } @else {
+              <p class="ff-empty">Question text is empty.</p>
+            }
+          </section>
+        } @else if (tab() === 'settings') {
+          <section class="ff-app-panel ff-app-stack">
+            <div class="ff-field-block">
+              <label for="question-title">Title optional</label>
+              <input id="question-title" formControlName="title" class="ff-control" />
+            </div>
+
+            @if (form.controls.format.value !== 'mcq') {
+              <div class="ff-field-block">
+                <label for="question-explanation">Explanation optional</label>
+                <textarea id="question-explanation" rows="4" formControlName="explanation" class="ff-control"></textarea>
+              </div>
+            }
+
+            <label class="ff-data-card ff-inline-actions" for="question-mandatory">
+              <input id="question-mandatory" type="checkbox" formControlName="is_mandatory" class="ff-checkbox" />
+              <span>
+                <strong class="ff-row-title">Mandatory</strong>
+                <small class="ff-row-meta">Always included when selected from a pool rule.</small>
+              </span>
+            </label>
+
+            <div class="ff-field-block">
+              <label for="question-order">Order optional</label>
+              <input id="question-order" type="number" formControlName="order" class="ff-control" />
+            </div>
+          </section>
+        } @else if (tab() === 'history') {
+          <section class="ff-app-panel">
+            <p class="ff-app-kicker">HISTORY</p>
+            <p class="ff-row-meta">No question history returned by the backend.</p>
+          </section>
+        }
+      </form>
+    }
+  </div>
+</section>

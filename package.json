@@ -1,0 +1,11 @@
+{
+  "private": true,
+  "workspaces": [
+    "apps/frontend",
+    "apps/candidate"
+  ],
+  
+  "scripts": {
+    "lint:eslint": "ng lint"
+  }
+}

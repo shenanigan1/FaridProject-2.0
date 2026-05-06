@@ -1,0 +1,25 @@
+<nav
+  class="ff-menu"
+  [class.ff-menu--mobile]="variant === 'mobile'"
+  [class.ff-menu--desktop]="variant === 'desktop'"
+  aria-label="Main navigation"
+>
+  <div class="ff-menu__items">
+    @for (item of items; track item.route) {
+      <a
+        class="ff-menu__link"
+        [routerLink]="item.route"
+        routerLinkActive="ff-menu__link--active"
+        [routerLinkActiveOptions]="{ exact: item.route === '/dashboard' }"
+        #rla="routerLinkActive"
+        [attr.aria-current]="rla.isActive ? 'page' : null"
+      >
+        <span class="ff-menu__icon" aria-hidden="true">
+          <svg [lucideIcon]="item.icon" class="ff-menu__icon-svg"></svg>
+        </span>
+
+        <span class="ff-menu__label">{{ item.label }}</span>
+      </a>
+    }
+  </div>
+</nav>

@@ -1,0 +1,51 @@
+<app-ui-alert variant="error" [message]="apiError"></app-ui-alert>
+
+<form [formGroup]="form" (ngSubmit)="submitForm.emit()" class="ff-app-stack">
+  <div class="ff-field-block">
+    <label for="pool-name">Pool name</label>
+    <input id="pool-name" formControlName="name" class="ff-control" [readOnly]="isView" />
+  </div>
+
+  <div class="ff-field-block">
+    <label for="pool-description">Description optional</label>
+    <textarea
+      id="pool-description"
+      formControlName="description"
+      rows="4"
+      class="ff-control"
+      [readOnly]="isView"
+    ></textarea>
+  </div>
+
+  <div class="ff-field-block">
+    <div class="ff-inline-actions" style="justify-content: space-between">
+      <label for="pool-code">Code</label>
+      @if (!isView) {
+        <button type="button" class="ff-status-pill" (click)="normalize.emit()">Normalize</button>
+      }
+    </div>
+    <input
+      id="pool-code"
+      formControlName="code"
+      class="ff-control"
+      [readOnly]="isView"
+      (blur)="!isView && normalize.emit()"
+    />
+  </div>
+
+  @if (showNormalizeHint) {
+    <p class="ff-row-meta">Use uppercase letters, numbers and underscore.</p>
+  }
+
+  @if (mode === 'create' || mode === 'edit') {
+    <footer class="ff-app-stack">
+      <button type="submit" class="ff-btn ff-btn-primary" [disabled]="isLoading">
+        {{ mode === 'create' ? 'Create pool' : 'Save' }}
+      </button>
+
+      <button type="button" class="ff-btn ff-btn-secondary" (click)="cancelForm.emit()">
+        Cancel
+      </button>
+    </footer>
+  }
+</form>

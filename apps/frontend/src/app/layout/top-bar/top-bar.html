@@ -1,0 +1,50 @@
+<header class="ff-topbar">
+  <div class="ff-topbar__brand" aria-label="Application section">
+    <svg [lucideIcon]="icons.menu" class="ff-topbar__menu-mark" aria-hidden="true"></svg>
+    <span class="ff-topbar__brand-name">{{ title }}</span>
+  </div>
+
+  <div class="ff-topbar__actions">
+    <button type="button" class="ff-topbar__icon-button" aria-label="Notifications">
+      <svg [lucideIcon]="icons.bell" class="ff-topbar__action-icon"></svg>
+      @if (notificationCount > 0) {
+        <span class="ff-topbar__notification-count">{{ notificationCount }}</span>
+      }
+    </button>
+
+    <button
+      type="button"
+      class="ff-topbar__user"
+      aria-label="Open user menu"
+      [attr.aria-expanded]="menuOpen()"
+      (click)="toggleMenu()"
+    >
+      <span class="ff-topbar__avatar">{{ userInitials }}</span>
+    </button>
+  </div>
+
+  @if (menuOpen()) {
+    <div class="ff-topbar__menu">
+      @if (user) {
+        <div class="ff-topbar__menu-user">
+          <span class="ff-topbar__avatar ff-topbar__avatar--menu">{{ userInitials }}</span>
+          <span class="ff-topbar__menu-name">{{ user.fullName }}</span>
+        </div>
+      }
+
+      <button type="button" class="ff-topbar__menu-action" (click)="requestEditProfile()">
+        <svg [lucideIcon]="icons.user" class="ff-topbar__menu-icon"></svg>
+        Edit profile
+      </button>
+
+      <button
+        type="button"
+        class="ff-topbar__menu-action ff-topbar__menu-action--danger"
+        (click)="requestLogout()"
+      >
+        <svg [lucideIcon]="icons.logout" class="ff-topbar__menu-icon"></svg>
+        Logout
+      </button>
+    </div>
+  }
+</header>

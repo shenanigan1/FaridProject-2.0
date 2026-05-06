@@ -1,0 +1,34 @@
+<label class="ff-field">
+  @if (label) {
+    <span class="ff-field-label">
+      {{ label }}
+    </span>
+  }
+
+  <select
+    [class]="selectClasses"
+    [disabled]="disabled()"
+    [value]="value() ?? ''"
+    (change)="handleChange($event)"
+    (blur)="blur()"
+  >
+    <option value="" disabled selected hidden>
+      {{ placeholder }}
+    </option>
+
+    @for (opt of options; track opt.value) {
+      <option
+        [value]="opt.value"
+        [disabled]="opt.disabled"
+      >
+        {{ opt.label }}
+      </option>
+    }
+  </select>
+
+  @if (error) {
+    <p class="ff-field-error">{{ error }}</p>
+  } @else if (hint) {
+    <p class="ff-field-hint">{{ hint }}</p>
+  }
+</label>

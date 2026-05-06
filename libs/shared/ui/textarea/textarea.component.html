@@ -1,0 +1,21 @@
+<label class="ff-field">
+  @if (label) {
+    <span class="ff-field-label">{{ label }}</span>
+  }
+
+  <textarea
+    [class]="textareaClasses"
+    [attr.placeholder]="placeholder"
+    [attr.rows]="rows"
+    [disabled]="disabled()"
+    [value]="value()"
+    (input)="handleInput($event)"
+    (blur)="blur()"
+  ></textarea>
+
+  @if (error) {
+    <p class="ff-field-error">{{ error }}</p>
+  } @else if (hint) {
+    <p class="ff-field-hint">{{ hint }}</p>
+  }
+</label>

@@ -1,0 +1,76 @@
+<section class="ff-app-screen">
+  <div class="ff-app-container ff-app-stack">
+    <app-ui-text-input
+      type="search"
+      aria-label="Search templates"
+      [formControl]="searchCtrl"
+    ></app-ui-text-input>
+
+    <app-ui-tabs
+      variant="pill"
+      [items]="difficultyTabs"
+      [activeKey]="difficulty()"
+      (activeKeyChange)="setDifficulty($event)"
+    ></app-ui-tabs>
+
+    <header class="ff-app-header">
+      <div>
+        <p class="ff-app-kicker">TEMPLATE LIBRARY</p>
+        <h1 class="ff-app-title">{{ templatesCount() }}</h1>
+      </div>
+    </header>
+
+    <div class="ff-app-stack">
+      @for (t of templates(); track t.id) {
+        <button
+          type="button"
+          (click)="openView(t)"
+          class="ff-data-card w-full text-left"
+          [attr.aria-label]="'Open template ' + (t.name)"
+        >
+          <div class="ff-inline-actions" style="align-items: flex-start; justify-content: space-between">
+            <div style="min-width: 0">
+              <h2 class="ff-row-title">{{ t.name }}</h2>
+              <p class="ff-row-meta">Updated {{ (t.updated_at || t.created_at) | date:'MMM d, y' }}</p>
+            </div>
+
+            @if (t.difficulty) {
+              <app-ui-badge [tone]="badgeTone(t.difficulty)">
+                {{ t.difficulty | uppercase }}
+              </app-ui-badge>
+            }
+          </div>
+
+          <div class="ff-form-grid ff-form-grid--two" style="border-top: 1px solid var(--ff-color-border-soft); margin-top: 0.85rem; padding-top: 0.85rem">
+            @if (t.points_total !== null && t.points_total !== undefined) {
+              <div>
+                <div class="ff-app-kicker">POINTS</div>
+                <div class="ff-row-title">{{ t.points_total }} pts</div>
+              </div>
+            }
+
+            @if (t.duration_minutes !== null && t.duration_minutes !== undefined) {
+              <div>
+                <div class="ff-app-kicker">DURATION</div>
+                <div class="ff-row-title">{{ t.duration_minutes }} min</div>
+              </div>
+            }
+
+            <div>
+              <div class="ff-app-kicker">CREATED</div>
+              <div class="ff-row-title">{{ t.created_at | date:'MMM d' }}</div>
+            </div>
+          </div>
+        </button>
+      } @empty {
+        <div class="ff-empty">
+          No templates found in database.
+        </div>
+      }
+    </div>
+
+    <app-ui-button-primary type="button" (click)="openCreate()">
+      Create New Template
+    </app-ui-button-primary>
+  </div>
+</section>

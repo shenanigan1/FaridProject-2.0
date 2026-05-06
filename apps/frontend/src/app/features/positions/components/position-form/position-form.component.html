@@ -1,0 +1,62 @@
+<section class="ff-app-panel ff-app-stack">
+  <app-ui-alert [message]="apiError"></app-ui-alert>
+
+  @if (isLoading) {
+    <div class="ff-muted">Loading...</div>
+  }
+
+  @if (!isLoading) {
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="ff-app-stack">
+      <div class="ff-form-grid ff-form-grid--two">
+        <app-ui-form-field label="Company ID" [error]="backendError('company')">
+          <input type="number" formControlName="company" class="ff-control" />
+        </app-ui-form-field>
+
+        <app-ui-form-field label="Contract type" [error]="backendError('contract_type')">
+          <input type="text" formControlName="contract_type" class="ff-control" />
+        </app-ui-form-field>
+      </div>
+
+      <app-ui-form-field label="Title" [error]="backendError('title')">
+        <input type="text" formControlName="title" class="ff-control" />
+      </app-ui-form-field>
+
+      <app-ui-form-field label="Department" [error]="backendError('department')">
+        <input type="text" formControlName="department" class="ff-control" />
+      </app-ui-form-field>
+
+      <app-ui-form-field label="Description">
+        <textarea rows="4" formControlName="description" class="ff-control"></textarea>
+      </app-ui-form-field>
+
+      <div class="ff-form-grid ff-form-grid--two">
+        <app-ui-form-field label="Location">
+          <input type="text" formControlName="location" class="ff-control" />
+        </app-ui-form-field>
+
+        <app-ui-form-field label="Salary">
+          <input type="number" formControlName="salary" class="ff-control" />
+        </app-ui-form-field>
+      </div>
+
+      <label class="ff-data-card ff-inline-actions">
+        <input type="checkbox" formControlName="is_active" class="ff-checkbox" />
+        <span class="ff-row-title">Active</span>
+      </label>
+
+      <footer class="ff-inline-actions" style="justify-content: flex-end">
+        <button type="button" class="ff-btn ff-btn-secondary" (click)="cancelForm.emit()" [disabled]="isSubmitting">
+          Cancel
+        </button>
+
+        <button type="submit" class="ff-btn ff-btn-primary" [disabled]="isSubmitting">
+          {{
+            isSubmitting
+              ? (mode === 'create' ? 'Creating...' : 'Saving...')
+              : (mode === 'create' ? 'Create' : 'Save changes')
+          }}
+        </button>
+      </footer>
+    </form>
+  }
+</section>

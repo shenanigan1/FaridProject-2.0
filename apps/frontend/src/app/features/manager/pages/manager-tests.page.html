@@ -1,0 +1,67 @@
+<section class="manager-tests-screen">
+  <div class="manager-tests-shell">
+    <header class="manager-tests-header">
+      <a class="manager-icon-button manager-icon-button--menu" routerLink="/manager" aria-label="Retour accueil"></a>
+      <h1>Tests Manager</h1>
+      <span class="manager-icon-button manager-icon-button--search" aria-hidden="true"></span>
+    </header>
+
+    <input
+      type="search"
+      class="manager-search"
+      [formControl]="query"
+      aria-label="Rechercher un test ou candidat"
+    />
+
+    <div class="manager-tabs" role="tablist" aria-label="Tests manager">
+      <button
+        type="button"
+        role="tab"
+        [attr.aria-selected]="activeTab() === 'todo'"
+        [class.manager-tabs__button--active]="activeTab() === 'todo'"
+        (click)="setTab('todo')"
+      >
+        Tests a passer
+      </button>
+      <button
+        type="button"
+        role="tab"
+        [attr.aria-selected]="activeTab() === 'history'"
+        [class.manager-tabs__button--active]="activeTab() === 'history'"
+        (click)="setTab('history')"
+      >
+        Tests effectues
+      </button>
+    </div>
+
+    @if (isLoading()) {
+      <p class="manager-empty">Chargement des tests assignes...</p>
+    } @else if (error()) {
+      <p class="manager-alert">{{ error() }}</p>
+    } @else {
+      <div class="manager-tests-list">
+        @for (test of filteredTests(); track test.id) {
+          <a class="manager-test-card" [routerLink]="['/manager/tests', test.id]">
+            <span class="manager-avatar">{{ initials(test) }}</span>
+            <span class="manager-test-card__body">
+              <strong>{{ test.templateName }}</strong>
+              <small>{{ test.candidateName }}</small>
+              @if (test.positionTitle) {
+                <small>{{ test.positionTitle }}</small>
+              }
+            </span>
+            <span class="manager-test-card__status">
+              {{ test.status === 'in_progress' ? 'A remplir' : test.status }}
+            </span>
+          </a>
+        }
+
+        @if (filteredTests().length === 0) {
+          <p class="manager-empty">
+            {{ activeTab() === 'todo' ? 'Aucun test a faire passer.' : 'Aucun historique de test.' }}
+          </p>
+        }
+      </div>
+    }
+  </div>
+</section>

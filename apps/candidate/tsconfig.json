@@ -1,0 +1,62 @@
+/* To learn more about Typescript configuration file: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html. */
+/* To learn more about Angular compiler options: https://angular.dev/reference/configs/angular-compiler-options. */
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "strict": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "ES2022",
+    "module": "preserve",
+
+    "baseUrl": ".",
+    "paths": {
+      // Core aliases
+      "@core/*": ["src/app/core/*"],
+      "@auth/*": ["src/app/core/auth/*"],
+      "@guard/*": ["src/app/core/guard/*"],
+      "@interceptor/*": ["src/app/core/interceptor/*"],
+
+      //Feature aliases
+      "@features/*": ["src/app/features/*"],
+      "@jobs/*": ["src/app/features/jobs/*"],
+
+      // Layout aliases
+      "@layout/*": ["src/app/layout/*"],
+
+      // Shared aliases
+      "@shared/*": ["src/app/shared/*"],
+      "@ui/*": ["src/app/shared/ui/*"],
+
+      "@lib-ui/*": ["../../libs/shared/ui/*"],
+
+      // Environment aliases
+      "@env/*": ["src/environments/*"],
+
+      //test aliases
+      "@test/*": ["src/test/*"]
+    }
+  },
+  "angularCompilerOptions": {
+    "enableI18nLegacyMessageIdFormat": false,
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true,
+    "typeCheckHostBindings": true,
+    "strictTemplates": true
+  },
+  "files": [],
+  "references": [
+    {
+      "path": "./tsconfig.app.json"
+    },
+    {
+      "path": "./tsconfig.spec.json"
+    }
+  ]
+}

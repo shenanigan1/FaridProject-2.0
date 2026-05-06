@@ -1,0 +1,78 @@
+<section class="test-flow">
+  <header class="test-flow__appbar">
+    <a routerLink="/tests" class="test-flow__icon-btn" aria-label="Retour">&#8592;</a>
+    <h1>Lancement du Test</h1>
+    <span></span>
+  </header>
+
+  <div class="test-flow__shell">
+    @if (isLoading()) {
+      <p class="test-flow__empty">Chargement de la configuration...</p>
+    } @else if (context(); as launchContext) {
+      <section class="test-flow__hero">
+        <p class="test-flow__status">Configuration finale</p>
+        <h2>{{ launchContext.templateName }}</h2>
+        <p class="test-flow__meta">
+          Assignez les managers responsables pour chaque module avant de debuter l'evaluation terrain.
+        </p>
+
+        <div style="margin-top: 1.5rem">
+          <div class="test-flow__metric-row">
+            <p class="test-flow__kicker">Progression de la configuration</p>
+            <strong>{{ completion() }}%</strong>
+          </div>
+          <div class="test-flow__progress">
+            <span [style.width.%]="completion()"></span>
+          </div>
+          <p class="test-flow__meta">{{ completedCount() }} / {{ launchContext.sections.length }} completes</p>
+        </div>
+      </section>
+
+      @if (error()) {
+        <p class="test-flow__alert">{{ error() }}</p>
+      }
+
+      <div class="test-flow__stack">
+        @for (section of launchContext.sections; track section.id; let index = $index) {
+          <article class="test-flow__card">
+            <div class="test-flow__card-head">
+              <div>
+                <h2 class="test-flow__title">{{ section.title }}</h2>
+                <p class="test-flow__meta">{{ section.points }} pts &bull; {{ section.durationMinutes }} min</p>
+              </div>
+              <span class="test-flow__status">Module {{ index + 1 }}</span>
+            </div>
+
+            <label class="test-flow__field" [attr.for]="'manager-' + section.id">
+              Assigner manager
+              <select
+                [id]="'manager-' + section.id"
+                [value]="managerBySection()[section.id]"
+                (change)="setManager(section.id, $any($event.target).value)"
+              >
+                <option value="">Choisir un manager</option>
+                @for (manager of launchContext.managers; track manager.id) {
+                  <option [value]="manager.id">{{ manager.full_name }} - {{ manager.email }}</option>
+                }
+              </select>
+            </label>
+          </article>
+        }
+      </div>
+
+      <div class="test-flow__sticky">
+        <button
+          type="button"
+          class="test-flow__btn test-flow__btn--primary"
+          style="width: 100%"
+          [disabled]="isSubmitting()"
+          (click)="launch()"
+        >
+          {{ isSubmitting() ? 'Lancement...' : "Lancer l'evaluation" }}
+        </button>
+      </div>
+    } @else if (error()) {
+      <p class="test-flow__alert">{{ error() }}</p>
+    }
+  </div>
+</section>

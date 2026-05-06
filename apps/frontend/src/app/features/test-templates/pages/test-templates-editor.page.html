@@ -1,0 +1,194 @@
+<section class="template-workflow template-mobile">
+  <header class="template-mobile__topbar">
+    <button type="button" class="template-mobile__icon" aria-label="Retour" (click)="discard()">
+      &#8592;
+    </button>
+    <h1>{{ templateId() === null ? 'Nouveau Template' : form.controls.name.value || 'Manage Template' }}</h1>
+    <button type="button" class="template-mobile__save" [disabled]="isSaving()" (click)="save()">
+      Save
+    </button>
+  </header>
+
+  @if (pageLoading()) {
+    <p class="template-empty">Chargement du template...</p>
+  } @else if (pageError()) {
+    <p class="template-alert">{{ pageError() }}</p>
+  } @else {
+    <main class="template-mobile__body">
+      <section class="template-section-title">
+        <span class="template-section-title__icon">i</span>
+        <h2>INFORMATIONS GENERALES</h2>
+      </section>
+
+      <section class="template-figma-card" [formGroup]="form">
+        <label class="template-figma-field template-figma-field--full">
+          <span>Nom du Template</span>
+          <input formControlName="name" placeholder="ex: Inspection Securite" />
+        </label>
+
+        <div class="template-figma-grid">
+          <label class="template-figma-field">
+            <span>Duree (min)</span>
+            <input type="number" formControlName="duration_minutes" />
+          </label>
+
+          <label class="template-figma-field">
+            <span>Difficulte</span>
+            <select formControlName="difficulty">
+              <option value="easy">Facile</option>
+              <option value="medium">Moyen</option>
+              <option value="hard">Difficile</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="template-figma-grid">
+          <label class="template-figma-field">
+            <span>Score minimum</span>
+            <input type="number" formControlName="min_pass_score" />
+          </label>
+
+          <label class="template-figma-toggle">
+            <span>Template actif</span>
+            <input type="checkbox" formControlName="is_active" />
+          </label>
+        </div>
+      </section>
+
+      <section class="template-section-title">
+        <span class="template-section-title__icon">+</span>
+        <h2>STRUCTURE DU TEST</h2>
+        <strong>{{ sections().length }} Section{{ sections().length > 1 ? 's' : '' }}</strong>
+      </section>
+
+      <div class="template-mobile__sections">
+        @for (section of sections(); track section.id; let index = $index) {
+          <article class="template-section-card">
+            <header class="template-section-card__head">
+              <span>{{ (index + 1).toString().padStart(2, '0') }}</span>
+              <label class="template-figma-field template-figma-field--compact">
+                <span>Section</span>
+                <input
+                  [value]="section.title"
+                  (input)="updateSectionTitle(section.id, $any($event.target).value)"
+                />
+              </label>
+              <button type="button" aria-label="Supprimer la section" (click)="removeSection(section.id)">
+                &#128465;
+              </button>
+            </header>
+
+            <label class="template-figma-field">
+              <span>Commentaire manager</span>
+              <textarea
+                [value]="section.description"
+                placeholder="Consignes ou commentaire visible pour le manager..."
+                (input)="updateSectionDescription(section.id, $any($event.target).value)"
+              ></textarea>
+            </label>
+
+            <label class="template-figma-field">
+              <span>Poids de la section</span>
+              <input
+                type="number"
+                [value]="section.weight"
+                (input)="updateSectionWeight(section.id, $any($event.target).valueAsNumber)"
+              />
+            </label>
+
+            <div class="template-section-card__pools">
+              @for (rule of section.pools; track rule.poolId) {
+                <article class="template-pool-row">
+                  <div>
+                    <strong>{{ poolName(rule.poolId) }}</strong>
+                    <span>{{ rule.randomCount }} questions</span>
+                  </div>
+                  <input
+                    type="number"
+                    [value]="rule.randomCount"
+                    aria-label="Nombre de questions"
+                    (input)="updatePoolRandomCount(section.id, rule.poolId, $any($event.target).valueAsNumber)"
+                  />
+                  <button type="button" (click)="detachPool(section.id, rule.poolId)">Retirer</button>
+                </article>
+              }
+
+              @if (section.pools.length === 0) {
+                <p class="template-mobile__hint">Aucun pool attache a cette section.</p>
+              }
+            </div>
+
+            <button type="button" class="template-mobile__primary" (click)="openPoolSheet(section.id)">
+              Ajouter un Pool
+            </button>
+          </article>
+        }
+      </div>
+
+      <button type="button" class="template-mobile__add-section" (click)="addSection()">
+        <span>+</span>
+        Ajouter une Section
+      </button>
+
+      @if (apiError()) {
+        <p class="template-alert">{{ apiError() }}</p>
+      }
+
+      <button type="button" class="template-mobile__save-large" [disabled]="isSaving()" (click)="save()">
+        Enregistrer le Template
+      </button>
+    </main>
+  }
+
+  @if (poolSheetOpen()) {
+    <div
+      class="pool-sheet-backdrop"
+      role="presentation"
+      (click)="closePoolSheet()"
+    ></div>
+
+    <section
+      class="pool-sheet"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="poolSheetTitle"
+    >
+      <div class="pool-sheet__handle" aria-hidden="true"></div>
+      <header class="pool-sheet__head">
+        <div>
+          <p>Question Pools</p>
+          <h2 id="poolSheetTitle">Ajouter un Pool</h2>
+        </div>
+        <button type="button" (click)="closePoolSheet()" aria-label="Fermer">x</button>
+      </header>
+
+      <label class="pool-search">
+        <span>Filtrer les pools de questions</span>
+        <input
+          type="search"
+          [value]="poolQuery()"
+          (input)="setPoolSearch($any($event.target).value)"
+        />
+      </label>
+
+      <button type="button" class="pool-create-row" (click)="createPoolFromSheet()">
+        <span>+</span>
+        <strong>Creer un nouveau Pool</strong>
+        <small>Commencer une nouvelle bibliotheque</small>
+      </button>
+
+      <p class="pool-sheet__label">Pools existants</p>
+      <div class="pool-list pool-list--sheet">
+        @for (pool of filteredPools(); track pool.id) {
+          <button type="button" (click)="attachPoolFromSheet(pool.id)">
+            <strong>{{ pool.name }}</strong>
+            <span>{{ pool.code }}</span>
+          </button>
+        }
+        @if (filteredPools().length === 0) {
+          <p class="template-empty">Aucun pool trouve dans la base.</p>
+        }
+      </div>
+    </section>
+  }
+</section>

@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "paths": {
+      "@lib/*": ["./libs/*"],
+      "@lib-ui/*": ["./libs/shared/ui/*"],
+    }
+  },
+  "files": [],
+  "references": [
+    { "path": "./apps/frontend" },
+    { "path": "./apps/candidate" },
+    { "path": "./libs/shared/ui" }
+  ]
+}

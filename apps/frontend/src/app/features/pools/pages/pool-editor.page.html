@@ -1,0 +1,112 @@
+<section class="ff-app-screen">
+  <div class="ff-app-container ff-app-stack" style="max-width: 48rem">
+    <header class="ff-app-header">
+      <div>
+        <p class="ff-app-kicker">QUESTION POOL</p>
+        @if (pageMode() === 'create') {
+          <h1 class="ff-app-title">Create Pool</h1>
+          <p class="ff-app-subtitle">Create a reusable question bank.</p>
+        } @else {
+          <h1 class="ff-app-title">{{ pool()?.name ?? 'Pool' }}</h1>
+          @if (pool(); as p) {
+            <p class="ff-app-subtitle">
+              {{ p.code }}
+              @if (p.updatedAt) {
+                <span> - Updated {{ p.updatedAt | date:'MMM d, y, HH:mm' }}</span>
+              }
+            </p>
+          }
+        }
+      </div>
+
+      <div class="ff-inline-actions">
+        <button type="button" class="ff-btn ff-btn-secondary" (click)="back()">Back</button>
+        @if (pageMode() === 'detail' && pool() && !isEditing()) {
+          <button type="button" class="ff-btn ff-btn-primary" (click)="startEdit()">Edit pool</button>
+        }
+      </div>
+    </header>
+
+    @if (pageMode() === 'detail') {
+      <app-ui-tabs [items]="tabs()" [activeKey]="tab()" (activeKeyChange)="setTab($event)" />
+    }
+
+    @if (isLoading()) {
+      <section class="ff-app-panel">
+        <p class="ff-muted">Loading...</p>
+      </section>
+    }
+
+    <app-ui-alert variant="error" [message]="error()"></app-ui-alert>
+
+    @if (error() && pageMode() === 'detail') {
+      <section class="ff-app-panel">
+        <button type="button" class="ff-btn ff-btn-primary" (click)="retry()">Retry</button>
+      </section>
+    }
+
+    @if (pageMode() === 'create') {
+      <app-pool-form
+        [mode]="formMode()"
+        [form]="form"
+        [isLoading]="isLoading()"
+        [apiError]="error()"
+        (normalize)="normalizeCode()"
+        (submitForm)="submit()"
+        (cancel)="cancelEdit()"
+      />
+    }
+
+    @if (pageMode() === 'detail' && !isLoading() && !error()) {
+      @if (pool(); as p) {
+        @if (tab() === 'questions') {
+          <section class="ff-app-panel ff-app-stack">
+            <header class="ff-inline-actions" style="justify-content: space-between">
+              <div>
+                <p class="ff-app-kicker">QUESTIONS</p>
+                <h2 class="ff-section-title">Pool questions</h2>
+              </div>
+              @if (!isEditing()) {
+                <button type="button" class="ff-btn ff-btn-secondary" (click)="startEdit()">Edit pool</button>
+              }
+            </header>
+
+            <app-pool-questions-panel [poolId]="p.id" />
+          </section>
+        }
+
+        @if (tab() === 'settings') {
+          <section class="ff-app-panel ff-app-stack">
+            <header class="ff-inline-actions" style="align-items: flex-start; justify-content: space-between">
+              <div>
+                <p class="ff-app-kicker">SETTINGS</p>
+                <h2 class="ff-section-title">Pool settings</h2>
+              </div>
+
+              @if (isEditing()) {
+                <div class="ff-inline-actions">
+                  <button type="button" class="ff-btn ff-btn-primary" [disabled]="isLoading()" (click)="submit()">Save</button>
+                  <button type="button" class="ff-btn ff-btn-secondary" (click)="cancelEdit()">Cancel</button>
+                </div>
+              } @else {
+                <button type="button" class="ff-btn ff-btn-secondary" (click)="startEdit()">Edit</button>
+              }
+            </header>
+
+            <app-pool-form
+              [mode]="formMode()"
+              [form]="form"
+              [isLoading]="isLoading()"
+              [apiError]="error()"
+              (normalize)="normalizeCode()"
+              (submitForm)="submit()"
+              (cancel)="cancelEdit()"
+            />
+          </section>
+        }
+      } @else {
+        <div class="ff-empty">Pool not found.</div>
+      }
+    }
+  </div>
+</section>

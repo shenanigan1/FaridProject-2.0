@@ -1,0 +1,81 @@
+<section class="ff-login-screen">
+  <div class="ff-login-shell">
+    <header class="ff-login-header">
+      <div class="ff-login-brand">
+        <span class="ff-login-brand__icon" aria-hidden="true">
+          <svg [lucideIcon]="icons.brand"></svg>
+        </span>
+
+        <div class="ff-login-brand__wordmark" aria-label="FleetFlow">
+          <span>Fleet</span><strong>Flow</strong>
+        </div>
+      </div>
+
+      <p>Logistics &amp; Recruitment Portal</p>
+    </header>
+
+    <article class="ff-login-card">
+      @if (errorMessage()) {
+        <p class="ff-login-alert" role="alert">{{ errorMessage() }}</p>
+      }
+
+      <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+        <label class="ff-login-field" for="login-email">
+          <span>Email address</span>
+          <span class="ff-login-control">
+            <svg [lucideIcon]="icons.loginEmail" aria-hidden="true"></svg>
+            <input
+              id="login-email"
+              formControlName="email"
+              type="email"
+              autocomplete="email"
+              placeholder="name@fleetflow.com"
+            />
+          </span>
+          @if (emailError()) {
+            <small>{{ emailError() }}</small>
+          }
+        </label>
+
+        <label class="ff-login-field" for="login-password">
+          <span class="ff-login-field__row">
+            <span>Password</span>
+            <a routerLink="/forgot-password">Forgot password?</a>
+          </span>
+          <span class="ff-login-control">
+            <svg [lucideIcon]="icons.loginPassword" aria-hidden="true"></svg>
+            <input
+              id="login-password"
+              formControlName="password"
+              type="password"
+              autocomplete="current-password"
+              placeholder="Password"
+            />
+          </span>
+          @if (passwordError()) {
+            <small>{{ passwordError() }}</small>
+          }
+        </label>
+
+        <label class="ff-login-remember" for="login-remember-me">
+          <input id="login-remember-me" type="checkbox" formControlName="rememberMe" />
+          <span>Remember me</span>
+        </label>
+
+        <button type="submit" class="ff-login-submit" [disabled]="loading()">
+          <span>{{ loading() ? 'Logging in...' : 'Log in' }}</span>
+          <svg [lucideIcon]="icons.loginSubmit" aria-hidden="true"></svg>
+        </button>
+      </form>
+    </article>
+
+    <p class="ff-login-access">
+      Don't have an account?
+      <a routerLink="/request-access">Request Access</a>
+    </p>
+
+    <div class="ff-login-divider" aria-hidden="true"></div>
+
+    <p class="ff-login-status">V 0.0.0 "KINETIC" // SYSTEM_ACTIVE</p>
+  </div>
+</section>
