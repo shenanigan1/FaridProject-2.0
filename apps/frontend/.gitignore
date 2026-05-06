@@ -8,11 +8,6 @@
 npm-debug.log
 yarn-error.log
 
-# Environment files
-/src/environments/*.local.ts
-/src/environments/*.prod.ts
-/src/environments/*.dev.ts
-
 # IDE
 .vscode
 .idea
