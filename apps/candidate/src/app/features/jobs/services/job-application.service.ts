@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, map } from 'rxjs';
+import { environment } from '@env/environment';
 
 export interface JobApplicationPayload {
   positionId: number;
@@ -33,7 +34,7 @@ export interface JobApplicationResult {
 })
 export class JobApplicationService {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = 'http://localhost:8000/api/jobapplications/';
+  private readonly baseUrl = `${environment.apiBaseUrl}/api/jobapplications/`;
 
   applyToOffer(payload: JobApplicationPayload): Observable<JobApplicationResult> {
     const requestBody = {
