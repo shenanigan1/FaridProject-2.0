@@ -14,7 +14,7 @@ import { environment } from '@env/environment';
 })
 export class JobPublicApiService {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = `${environment.apiBaseUrl}/api/public/positions`;
+  private readonly baseUrl = `${environment.apiBaseUrl}/api/public/positions/`;
 
   getJobOffers(
     filters: Partial<JobOfferFilters>,
@@ -56,7 +56,7 @@ export class JobPublicApiService {
 
   getOfferById(id: number): Observable<JobOffer> {
     return this.http
-      .get<PublicJobOfferDto>(`${this.baseUrl}/${id}/`)
+      .get<PublicJobOfferDto>(`${this.baseUrl}${id}/`)
       .pipe(
         map((response) => this.mapDtoToModel(response))
       );
