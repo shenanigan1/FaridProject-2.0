@@ -37,6 +37,7 @@
       "@lib-ui/*": ["../../libs/shared/ui/*"],
 
       // Environment aliases
+      "@env/environment": ["src/environments/environment.ts"],
       "@env/*": ["src/environments/*"],
 
       //test aliases
