@@ -42,6 +42,10 @@ export class App {
     phone: [''],
   });
 
+  constructor() {
+    this.authService.restoreSession().subscribe();
+  }
+
   onProfileClicked(): void {
     if (!this.authService.isAuthenticated()) {
       this.authModalOpen = true;

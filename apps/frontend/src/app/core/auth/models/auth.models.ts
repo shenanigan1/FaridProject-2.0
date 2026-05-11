@@ -21,7 +21,7 @@ export interface MeResponse {
 
 export interface LoginResponse {
   access: string;
-  refresh: string;
+  refresh?: string;
   user: MeResponse | null;
 }
 

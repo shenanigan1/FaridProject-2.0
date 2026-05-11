@@ -18,10 +18,13 @@ export const authInterceptor: HttpInterceptorFn = (
   const tokenStorage = inject(TokenStorageService);
   const authService = inject(AuthService);
 
+  const isCandidateCreationRequest =
+    request.method === 'POST' && /\/api\/candidates\/?$/.test(request.url);
+
   const isAuthRequest =
     request.url.includes('/api/auth/login') ||
     request.url.includes('/api/auth/refresh') ||
-    request.url.includes('/api/candidates/');
+    isCandidateCreationRequest;
 
   const accessToken = tokenStorage.getAccessToken();
 
@@ -44,15 +47,9 @@ export const authInterceptor: HttpInterceptorFn = (
         return throwError(() => error);
       }
 
-      const refreshToken = tokenStorage.getRefreshToken();
-      if (!refreshToken) {
-        tokenStorage.clear();
-        return throwError(() => error);
-      }
-
-      return authService.refresh(refreshToken).pipe(
+      return authService.refresh().pipe(
         switchMap((response) => {
-          tokenStorage.saveTokens(response.access, response.refresh ?? refreshToken);
+          tokenStorage.saveTokens(response.access, response.refresh);
 
           const retriedRequest = request.clone({
             setHeaders: {

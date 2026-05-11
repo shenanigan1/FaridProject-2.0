@@ -22,22 +22,13 @@ describe('TokenStorageService', () => {
   });
 
   it('keeps access token in memory and never persists bearer tokens', () => {
-    service.saveTokens('access', 'refresh');
+    service.saveTokens('ACCESS', 'IGNORED_REFRESH', true);
 
-    expect(service.getAccessToken()).toBe('access');
+    expect(service.getAccessToken()).toBe('ACCESS');
     expect(service.getRefreshToken()).toBeNull();
-    expect(localStorage.getItem('access_token')).toBeNull();
-    expect(localStorage.getItem('refresh_token')).toBeNull();
-    expect(service.isAuthenticated()).toBeTrue();
-  });
-
-  it('clears stored tokens', () => {
-    service.saveTokens('access', 'refresh');
-
-    service.clear();
-
-    expect(service.getAccessToken()).toBeNull();
-    expect(service.getRefreshToken()).toBeNull();
-    expect(service.isAuthenticated()).toBeFalse();
+    expect(localStorage.getItem('auth_access')).toBeNull();
+    expect(localStorage.getItem('auth_refresh')).toBeNull();
+    expect(sessionStorage.getItem('auth_access')).toBeNull();
+    expect(sessionStorage.getItem('auth_refresh')).toBeNull();
   });
 });

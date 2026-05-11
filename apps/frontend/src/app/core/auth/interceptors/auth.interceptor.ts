@@ -47,19 +47,11 @@ export const authInterceptor: HttpInterceptorFn = (
         return throwError(() => err);
       }
 
-      const refreshToken = tokenStorage.getRefreshToken();
-
-      if (!refreshToken) {
-        tokenStorage.clear();
-        return throwError(() => err);
-      }
-
-      return authService.refresh(refreshToken).pipe(
+      return authService.refresh().pipe(
         switchMap((response) => {
           const rememberMe = tokenStorage.getRememberMe();
-          const nextRefreshToken = response.refresh ?? refreshToken;
 
-          tokenStorage.saveTokens(response.access, nextRefreshToken, rememberMe);
+          tokenStorage.saveTokens(response.access, response.refresh, rememberMe);
 
           const retryReq = req.clone({
             setHeaders: {
