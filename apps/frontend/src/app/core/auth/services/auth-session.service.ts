@@ -1,4 +1,3 @@
-// auth-session.service.ts
 import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject, Observable, catchError, map, of, switchMap, take, tap } from 'rxjs';
 import { AuthService } from './auth.service';
@@ -43,14 +42,17 @@ export class AuthSessionService {
           return this.api.me().pipe(tap((me) => this.meSubject.next(me)));
         }
 
-        return this.api.refresh().pipe(
+        const refreshToken = this.tokens.getRefreshToken();
+        if (!refreshToken) return of(null);
+
+        return this.api.refresh(refreshToken).pipe(
           switchMap((tokens) => {
             this.tokens.saveTokens(tokens.access, tokens.refresh, false);
             return this.api.me().pipe(tap((me) => this.meSubject.next(me)));
           }),
           catchError(() => of(null)),
         );
-      })
+      }),
     );
   }
 
@@ -59,8 +61,9 @@ export class AuthSessionService {
   }
 
   logout(): void {
+    const refreshToken = this.tokens.getRefreshToken();
     this.tokens.clear();
     this.clearMe();
-    this.api.logout().pipe(take(1), catchError(() => of(undefined))).subscribe();
+    this.api.logout(refreshToken).pipe(take(1), catchError(() => of(undefined))).subscribe();
   }
 }

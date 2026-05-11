@@ -13,8 +13,6 @@ export class AuthService {
     return this.http.post<LoginResponse>(`${this.base}/login/`, {
       email: payload.email.trim(),
       password: payload.password,
-    }, {
-      withCredentials: true,
     });
   }
 
@@ -26,11 +24,10 @@ export class AuthService {
     return this.http.post<{ access: string; refresh?: string }>(
       `${this.base}/refresh/`,
       refresh ? { refresh } : {},
-      { withCredentials: true },
     );
   }
 
-  logout(): Observable<void> {
-    return this.http.post<void>(`${this.base}/logout/`, {}, { withCredentials: true });
+  logout(refresh?: string | null): Observable<void> {
+    return this.http.post<void>(`${this.base}/logout/`, refresh ? { refresh } : {});
   }
 }

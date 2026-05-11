@@ -31,6 +31,7 @@ describe('AuthSessionService', () => {
     apiSpy = jasmine.createSpyObj<AuthService>('AuthService', ['login', 'me', 'refresh', 'logout']);
     tokenStorageSpy = jasmine.createSpyObj<TokenStorageService>('TokenStorageService', [
       'saveTokens',
+      'getRefreshToken',
       'isAuthenticated',
       'clear',
     ]);
@@ -47,9 +48,7 @@ describe('AuthSessionService', () => {
   });
 
   it('refreshes /me after login so permissions are available without page reload', () => {
-    apiSpy.login.and.returnValue(
-      of({ access: 'ACCESS', user: loginUser }),
-    );
+    apiSpy.login.and.returnValue(of({ access: 'ACCESS', refresh: 'REFRESH', user: loginUser }));
     apiSpy.me.and.returnValue(of(freshUser));
 
     let actualUser: MeResponse | null | undefined;
@@ -58,14 +57,15 @@ describe('AuthSessionService', () => {
       actualUser = response.user;
     });
 
-    expect(tokenStorageSpy.saveTokens).toHaveBeenCalledOnceWith('ACCESS', undefined, true);
+    expect(tokenStorageSpy.saveTokens).toHaveBeenCalledOnceWith('ACCESS', 'REFRESH', true);
     expect(apiSpy.me).toHaveBeenCalled();
     expect(actualUser).toEqual(freshUser);
   });
 
-  it('restores /me from the HttpOnly refresh cookie when access token is only in memory', () => {
+  it('restores /me from the bearer refresh token when access token is missing', () => {
     tokenStorageSpy.isAuthenticated.and.returnValue(false);
-    apiSpy.refresh.and.returnValue(of({ access: 'ACCESS' }));
+    tokenStorageSpy.getRefreshToken.and.returnValue('REFRESH');
+    apiSpy.refresh.and.returnValue(of({ access: 'ACCESS', refresh: 'NEXT_REFRESH' }));
     apiSpy.me.and.returnValue(of(freshUser));
 
     let actualUser: MeResponse | null | undefined;
@@ -74,26 +74,28 @@ describe('AuthSessionService', () => {
       actualUser = user;
     });
 
-    expect(apiSpy.refresh).toHaveBeenCalledOnceWith();
-    expect(tokenStorageSpy.saveTokens).toHaveBeenCalledWith('ACCESS', undefined, false);
+    expect(apiSpy.refresh).toHaveBeenCalledOnceWith('REFRESH');
+    expect(tokenStorageSpy.saveTokens).toHaveBeenCalledWith('ACCESS', 'NEXT_REFRESH', false);
     expect(actualUser).toEqual(freshUser);
   });
 
-  it('clears local session and calls backend logout to delete the refresh cookie', () => {
+  it('clears local session and calls backend logout with bearer refresh token', () => {
+    tokenStorageSpy.getRefreshToken.and.returnValue('REFRESH');
     apiSpy.logout.and.returnValue(of(undefined));
 
     service.logout();
 
     expect(tokenStorageSpy.clear).toHaveBeenCalled();
-    expect(apiSpy.logout).toHaveBeenCalledOnceWith();
+    expect(apiSpy.logout).toHaveBeenCalledOnceWith('REFRESH');
   });
 
   it('still clears local session when backend logout fails', () => {
+    tokenStorageSpy.getRefreshToken.and.returnValue('REFRESH');
     apiSpy.logout.and.returnValue(throwError(() => new Error('network')));
 
     service.logout();
 
     expect(tokenStorageSpy.clear).toHaveBeenCalled();
-    expect(apiSpy.logout).toHaveBeenCalledOnceWith();
+    expect(apiSpy.logout).toHaveBeenCalledOnceWith('REFRESH');
   });
 });

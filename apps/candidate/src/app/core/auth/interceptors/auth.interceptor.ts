@@ -47,7 +47,13 @@ export const authInterceptor: HttpInterceptorFn = (
         return throwError(() => error);
       }
 
-      return authService.refresh().pipe(
+      const refreshToken = tokenStorage.getRefreshToken();
+      if (!refreshToken) {
+        tokenStorage.clear();
+        return throwError(() => error);
+      }
+
+      return authService.refresh(refreshToken).pipe(
         switchMap((response) => {
           tokenStorage.saveTokens(response.access, response.refresh);
 

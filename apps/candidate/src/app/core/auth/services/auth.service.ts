@@ -3,7 +3,6 @@ import { Injectable, inject } from '@angular/core';
 import { Observable, catchError, map, of, switchMap, tap, throwError } from 'rxjs';
 
 import { environment } from '@env/environment';
-
 import { TokenStorageService } from '@core/auth/services/token-storage.service';
 
 export interface AuthenticatedCandidate {
@@ -64,7 +63,6 @@ export class AuthService {
   private readonly tokenStorage = inject(TokenStorageService);
 
   private readonly candidateProfileKey = 'candidate_profile';
-
   private readonly authBaseUrl = `${environment.apiBaseUrl}/api/auth`;
   private readonly candidatesUrl = `${environment.apiBaseUrl}/api/candidates/`;
   private readonly candidateMeUrl = `${environment.apiBaseUrl}/api/candidates/me/`;
@@ -78,13 +76,10 @@ export class AuthService {
       .post<LoginResponseDto>(`${this.authBaseUrl}/login/`, {
         email: payload.email,
         password: payload.password,
-      }, {
-        withCredentials: true,
       })
       .pipe(
         switchMap((response) => {
           this.persistTokens(response.access, response.refresh);
-
           return this.resolveCandidateProfile();
         }),
         map((candidate) => {
@@ -148,10 +143,11 @@ export class AuthService {
   }
 
   logout(): void {
+    const refreshToken = this.tokenStorage.getRefreshToken();
     this.tokenStorage.clear();
     localStorage.removeItem(this.candidateProfileKey);
     this.http
-      .post<void>(`${this.authBaseUrl}/logout/`, {}, { withCredentials: true })
+      .post<void>(`${this.authBaseUrl}/logout/`, refreshToken ? { refresh: refreshToken } : {})
       .subscribe({ error: () => void 0 });
   }
 
@@ -159,7 +155,6 @@ export class AuthService {
     return this.http.post<{ access: string; refresh?: string }>(
       `${this.authBaseUrl}/refresh/`,
       refreshToken ? { refresh: refreshToken } : {},
-      { withCredentials: true },
     );
   }
 
@@ -171,7 +166,12 @@ export class AuthService {
       }
     }
 
-    return this.refresh().pipe(
+    const refreshToken = this.tokenStorage.getRefreshToken();
+    if (!refreshToken) {
+      return of(null);
+    }
+
+    return this.refresh(refreshToken).pipe(
       tap((tokens) => this.persistTokens(tokens.access, tokens.refresh)),
       switchMap(() => this.resolveCandidateProfile()),
       tap((candidate) => this.saveAuthenticatedCandidate(candidate)),

@@ -1,15 +1,14 @@
-import { TestBed } from '@angular/core/testing';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import {
   HttpTestingController,
   provideHttpClientTesting,
 } from '@angular/common/http/testing';
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { HttpClient } from '@angular/common/http';
+import { TestBed } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
 
 import { AuthService } from '@core/auth/services/auth.service';
 import { TokenStorageService } from '@core/auth/services/token-storage.service';
-
 import { authInterceptor } from './auth.interceptor';
 
 describe('authInterceptor (candidate)', () => {
@@ -22,11 +21,13 @@ describe('authInterceptor (candidate)', () => {
     authServiceSpy = jasmine.createSpyObj<AuthService>('AuthService', ['refresh']);
     tokenStorageSpy = jasmine.createSpyObj<TokenStorageService>('TokenStorageService', [
       'getAccessToken',
+      'getRefreshToken',
       'saveTokens',
       'clear',
     ]);
 
     tokenStorageSpy.getAccessToken.and.returnValue('ACCESS');
+    tokenStorageSpy.getRefreshToken.and.returnValue('REFRESH');
 
     TestBed.configureTestingModule({
       providers: [
@@ -64,7 +65,7 @@ describe('authInterceptor (candidate)', () => {
   });
 
   it('refreshes token and retries request after 401', () => {
-    authServiceSpy.refresh.and.returnValue(of({ access: 'NEW_ACCESS' }));
+    authServiceSpy.refresh.and.returnValue(of({ access: 'NEW_ACCESS', refresh: 'NEXT_REFRESH' }));
 
     http.get('/api/public/positions').subscribe();
 
@@ -75,8 +76,8 @@ describe('authInterceptor (candidate)', () => {
     expect(retriedRequest.request.headers.get('Authorization')).toBe('Bearer NEW_ACCESS');
     retriedRequest.flush([]);
 
-    expect(authServiceSpy.refresh).toHaveBeenCalledOnceWith();
-    expect(tokenStorageSpy.saveTokens).toHaveBeenCalledWith('NEW_ACCESS', undefined);
+    expect(authServiceSpy.refresh).toHaveBeenCalledOnceWith('REFRESH');
+    expect(tokenStorageSpy.saveTokens).toHaveBeenCalledWith('NEW_ACCESS', 'NEXT_REFRESH');
   });
 
   it('clears tokens if refresh fails', () => {

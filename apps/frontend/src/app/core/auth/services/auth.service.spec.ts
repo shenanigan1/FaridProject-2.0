@@ -25,7 +25,7 @@ describe('AuthService', () => {
     httpMock.verify();
   });
 
-  it('login should POST /login/ with email/password and return LoginResponse', () => {
+  it('login should POST /login/ without credentials and return bearer tokens', () => {
     const payload: LoginRequest = {
       email: 'test@test.com',
       password: 'password123',
@@ -33,6 +33,7 @@ describe('AuthService', () => {
 
     const mockResponse: LoginResponse = {
       access: 'ACCESS_TOKEN',
+      refresh: 'REFRESH_TOKEN',
       user: null,
     };
 
@@ -42,7 +43,7 @@ describe('AuthService', () => {
 
     const req = httpMock.expectOne(`${base}/login/`);
     expect(req.request.method).toBe('POST');
-    expect(req.request.withCredentials).toBeTrue();
+    expect(req.request.withCredentials).toBeFalse();
     expect(req.request.body).toEqual({
       email: payload.email,
       password: payload.password,
@@ -52,10 +53,13 @@ describe('AuthService', () => {
   });
 
   it('me should GET /me/ and return MeResponse', () => {
-    // If you know the real shape, fill it here.
     const mockResponse: MeResponse = {
-      // e.g. id: 1, email: 'test@test.com', role: 'driver'
-    } as unknown as MeResponse;
+      id: 1,
+      email: 'test@test.com',
+      first_name: 'Test',
+      last_name: 'User',
+      role: 'admin',
+    };
 
     service.me().subscribe((res) => {
       expect(res).toEqual(mockResponse);
@@ -67,32 +71,33 @@ describe('AuthService', () => {
     req.flush(mockResponse);
   });
 
-  it('refresh should POST /refresh/ with credentials and no exposed refresh token', () => {
+  it('refresh should POST /refresh/ with bearer refresh token and no credentials', () => {
     const mockResponse: { access: string; refresh?: string } = {
       access: 'NEW_ACCESS_TOKEN',
+      refresh: 'NEW_REFRESH_TOKEN',
     };
 
-    service.refresh().subscribe((res) => {
+    service.refresh('REFRESH_TOKEN').subscribe((res) => {
       expect(res).toEqual(mockResponse);
     });
 
     const req = httpMock.expectOne(`${base}/refresh/`);
     expect(req.request.method).toBe('POST');
-    expect(req.request.withCredentials).toBeTrue();
-    expect(req.request.body).toEqual({});
+    expect(req.request.withCredentials).toBeFalse();
+    expect(req.request.body).toEqual({ refresh: 'REFRESH_TOKEN' });
 
     req.flush(mockResponse);
   });
 
-  it('logout should POST /logout/ with credentials so the HttpOnly cookie is cleared', () => {
-    service.logout().subscribe((res) => {
+  it('logout should POST /logout/ with bearer refresh token and no credentials', () => {
+    service.logout('REFRESH_TOKEN').subscribe((res) => {
       expect(res).toBeNull();
     });
 
     const req = httpMock.expectOne(`${base}/logout/`);
     expect(req.request.method).toBe('POST');
-    expect(req.request.withCredentials).toBeTrue();
-    expect(req.request.body).toEqual({});
+    expect(req.request.withCredentials).toBeFalse();
+    expect(req.request.body).toEqual({ refresh: 'REFRESH_TOKEN' });
 
     req.flush(null);
   });

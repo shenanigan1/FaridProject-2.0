@@ -6,9 +6,7 @@ import {
 import { TestBed } from '@angular/core/testing';
 
 import { environment } from '@env/environment';
-
 import { TokenStorageService } from '@core/auth/services/token-storage.service';
-
 import { AuthService } from './auth.service';
 
 describe('AuthService (candidate)', () => {
@@ -26,6 +24,7 @@ describe('AuthService (candidate)', () => {
 
     tokenStorageSpy = jasmine.createSpyObj<TokenStorageService>('TokenStorageService', [
       'saveTokens',
+      'getRefreshToken',
       'clear',
       'isAuthenticated',
     ]);
@@ -60,9 +59,10 @@ describe('AuthService (candidate)', () => {
 
     const loginRequest = httpMock.expectOne(loginUrl);
     expect(loginRequest.request.method).toBe('POST');
-    expect(loginRequest.request.withCredentials).toBeTrue();
+    expect(loginRequest.request.withCredentials).toBeFalse();
     loginRequest.flush({
       access: 'access-token',
+      refresh: 'refresh-token',
       user: {
         id: 2,
         email: 'john@example.com',
@@ -84,7 +84,7 @@ describe('AuthService (candidate)', () => {
     });
 
     expect(candidateId).toBe(44);
-    expect(tokenStorageSpy.saveTokens).toHaveBeenCalledWith('access-token', undefined);
+    expect(tokenStorageSpy.saveTokens).toHaveBeenCalledWith('access-token', 'refresh-token');
   });
 
   it('signIn returns explicit message when user is not a candidate', () => {
@@ -100,6 +100,7 @@ describe('AuthService (candidate)', () => {
     const loginRequest = httpMock.expectOne(loginUrl);
     loginRequest.flush({
       access: 'access-token',
+      refresh: 'refresh-token',
       user: {
         id: 8,
         email: 'hr@example.com',
@@ -145,24 +146,25 @@ describe('AuthService (candidate)', () => {
     expect(actualError).toContain('at least 8 characters');
   });
 
-  it('refresh calls backend refresh endpoint with credentials and no exposed refresh token', () => {
+  it('refresh calls backend refresh endpoint with bearer refresh token and no credentials', () => {
     let access: string | undefined;
 
-    service.refresh().subscribe((response) => {
+    service.refresh('refresh-token').subscribe((response) => {
       access = response.access;
     });
 
     const request = httpMock.expectOne(refreshUrl);
     expect(request.request.method).toBe('POST');
-    expect(request.request.withCredentials).toBeTrue();
-    expect(request.request.body).toEqual({});
+    expect(request.request.withCredentials).toBeFalse();
+    expect(request.request.body).toEqual({ refresh: 'refresh-token' });
 
     request.flush({ access: 'new-access' });
 
     expect(access).toBe('new-access');
   });
 
-  it('restoreSession refreshes through the HttpOnly cookie and stores the candidate profile', () => {
+  it('restoreSession refreshes through stored bearer refresh token and stores the candidate profile', () => {
+    tokenStorageSpy.getRefreshToken.and.returnValue('refresh-token');
     let candidateId: number | null | undefined;
 
     service.restoreSession().subscribe((candidate) => {
@@ -171,9 +173,9 @@ describe('AuthService (candidate)', () => {
 
     const refreshRequest = httpMock.expectOne(refreshUrl);
     expect(refreshRequest.request.method).toBe('POST');
-    expect(refreshRequest.request.withCredentials).toBeTrue();
-    expect(refreshRequest.request.body).toEqual({});
-    refreshRequest.flush({ access: 'restored-access' });
+    expect(refreshRequest.request.withCredentials).toBeFalse();
+    expect(refreshRequest.request.body).toEqual({ refresh: 'refresh-token' });
+    refreshRequest.flush({ access: 'restored-access', refresh: 'next-refresh' });
 
     const meRequest = httpMock.expectOne(candidateMeUrl);
     expect(meRequest.request.method).toBe('GET');
@@ -187,12 +189,13 @@ describe('AuthService (candidate)', () => {
       },
     });
 
-    expect(tokenStorageSpy.saveTokens).toHaveBeenCalledWith('restored-access', undefined);
+    expect(tokenStorageSpy.saveTokens).toHaveBeenCalledWith('restored-access', 'next-refresh');
     expect(candidateId).toBe(51);
     expect(service.getAuthenticatedCandidate()?.email).toBe('restore@example.com');
   });
 
-  it('logout clears local candidate state and asks backend to clear the refresh cookie', () => {
+  it('logout clears local candidate state and sends bearer refresh token to backend', () => {
+    tokenStorageSpy.getRefreshToken.and.returnValue('refresh-token');
     service.saveAuthenticatedCandidate({
       candidateId: 99,
       email: 'logout@example.com',
@@ -205,7 +208,8 @@ describe('AuthService (candidate)', () => {
 
     const request = httpMock.expectOne(`${environment.apiBaseUrl}/api/auth/logout/`);
     expect(request.request.method).toBe('POST');
-    expect(request.request.withCredentials).toBeTrue();
+    expect(request.request.withCredentials).toBeFalse();
+    expect(request.request.body).toEqual({ refresh: 'refresh-token' });
     request.flush(null);
 
     expect(tokenStorageSpy.clear).toHaveBeenCalled();

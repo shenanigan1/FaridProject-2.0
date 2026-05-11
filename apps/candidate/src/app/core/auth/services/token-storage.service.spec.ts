@@ -21,13 +21,13 @@ describe('TokenStorageService', () => {
     sessionStorage.clear();
   });
 
-  it('keeps access token in memory and never persists bearer tokens', () => {
+  it('stores bearer tokens for the candidate session', () => {
     service.saveTokens('access', 'refresh');
 
     expect(service.getAccessToken()).toBe('access');
-    expect(service.getRefreshToken()).toBeNull();
-    expect(localStorage.getItem('access_token')).toBeNull();
-    expect(localStorage.getItem('refresh_token')).toBeNull();
+    expect(service.getRefreshToken()).toBe('refresh');
+    expect(localStorage.getItem('access_token')).toBe('access');
+    expect(localStorage.getItem('refresh_token')).toBe('refresh');
     expect(service.isAuthenticated()).toBeTrue();
   });
 
