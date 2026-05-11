@@ -35,14 +35,12 @@ INSTALLED_APPS = [
     "corsheaders",
     "django_filters",
     "rest_framework",
-
     # Django
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-
     # Local apps
     "candidates",
     "companies",
@@ -124,11 +122,12 @@ CORS_ALLOWED_ORIGINS = os.getenv(
 DATABASE_URL = os.getenv("DATABASE_URL")
 
 if DATABASE_URL:
+    database_ssl_require = os.getenv("DATABASE_SSL_REQUIRE", "True").lower() == "true"
     DATABASES = {
         "default": dj_database_url.config(
             default=DATABASE_URL,
             conn_max_age=600,
-            ssl_require=True,
+            ssl_require=database_ssl_require,
         )
     }
 else:
@@ -151,9 +150,7 @@ STATIC_URL = "/static/"
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
-STATICFILES_STORAGE = (
-    "whitenoise.storage.CompressedManifestStaticFilesStorage"
-)
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # =============================================================================
 # DEFAULTS
