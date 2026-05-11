@@ -19,6 +19,7 @@ def test_login_success(api_client):
     assert "refresh" in res.data
     assert "user" in res.data
     assert res.data["user"]["email"] == user.email
+    assert "ff_refresh" not in res.cookies
 
 
 def test_login_invalid_credentials(api_client):
@@ -54,3 +55,40 @@ def test_me_success(api_client):
 
     assert res.status_code == 200
     assert res.data["email"] == user.email
+
+
+def test_refresh_uses_bearer_refresh_token_body(api_client):
+    user = UserFactory.create(email="u4@example.com", password="Passw0rd!")
+    login_url = reverse("auth-login")
+    refresh_url = reverse("auth-refresh")
+
+    login = api_client.post(
+        login_url, {"email": user.email, "password": "Passw0rd!"}, format="json"
+    )
+    refresh_token = login.data["refresh"]
+
+    res = api_client.post(refresh_url, {"refresh": refresh_token}, format="json")
+
+    assert res.status_code == 200, res.data
+    assert "access" in res.data
+    assert "refresh" in res.data
+    assert "ff_refresh" not in res.cookies
+
+
+def test_logout_blacklists_bearer_refresh_token(api_client):
+    user = UserFactory.create(email="u5@example.com", password="Passw0rd!")
+    login_url = reverse("auth-login")
+    logout_url = reverse("auth-logout")
+
+    login = api_client.post(
+        login_url, {"email": user.email, "password": "Passw0rd!"}, format="json"
+    )
+    refresh_token = login.data["refresh"]
+
+    res = api_client.post(logout_url, {"refresh": refresh_token}, format="json")
+
+    assert res.status_code == 204
+    refresh_res = api_client.post(
+        reverse("auth-refresh"), {"refresh": refresh_token}, format="json"
+    )
+    assert refresh_res.status_code == 401

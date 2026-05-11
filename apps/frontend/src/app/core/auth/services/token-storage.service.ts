@@ -2,23 +2,27 @@ import { Injectable } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class TokenStorageService {
+  private readonly REMEMBER_KEY = 'auth_remember';
   private readonly ACCESS_KEY = 'auth_access';
   private readonly REFRESH_KEY = 'auth_refresh';
-  private readonly REMEMBER_KEY = 'auth_remember';
+  private accessToken: string | null = null;
 
-  saveTokens(access: string, refresh: string, rememberMe: boolean): void {
+  saveTokens(access: string, refresh?: string, rememberMe = false): void {
+    this.accessToken = access;
     const targetStorage = rememberMe ? localStorage : sessionStorage;
     const otherStorage = rememberMe ? sessionStorage : localStorage;
 
     this.clearStorage(otherStorage);
-
-    targetStorage.setItem(this.ACCESS_KEY, access);
-    targetStorage.setItem(this.REFRESH_KEY, refresh);
     targetStorage.setItem(this.REMEMBER_KEY, String(rememberMe));
+    targetStorage.setItem(this.ACCESS_KEY, access);
+    if (refresh) {
+      targetStorage.setItem(this.REFRESH_KEY, refresh);
+    }
   }
 
   getAccessToken(): string | null {
-    return this.read(this.ACCESS_KEY);
+    this.accessToken = this.accessToken ?? this.read(this.ACCESS_KEY);
+    return this.accessToken;
   }
 
   getRefreshToken(): string | null {
@@ -34,6 +38,7 @@ export class TokenStorageService {
   }
 
   clear(): void {
+    this.accessToken = null;
     this.clearStorage(localStorage);
     this.clearStorage(sessionStorage);
   }
@@ -43,8 +48,8 @@ export class TokenStorageService {
   }
 
   private clearStorage(storage: Storage): void {
+    storage.removeItem(this.REMEMBER_KEY);
     storage.removeItem(this.ACCESS_KEY);
     storage.removeItem(this.REFRESH_KEY);
-    storage.removeItem(this.REMEMBER_KEY);
   }
 }

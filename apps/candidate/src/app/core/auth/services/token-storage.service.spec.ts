@@ -7,6 +7,7 @@ describe('TokenStorageService', () => {
 
   beforeEach(() => {
     localStorage.clear();
+    sessionStorage.clear();
 
     TestBed.configureTestingModule({
       providers: [TokenStorageService],
@@ -17,13 +18,16 @@ describe('TokenStorageService', () => {
 
   afterEach(() => {
     localStorage.clear();
+    sessionStorage.clear();
   });
 
-  it('saves and retrieves tokens', () => {
+  it('stores bearer tokens for the candidate session', () => {
     service.saveTokens('access', 'refresh');
 
     expect(service.getAccessToken()).toBe('access');
     expect(service.getRefreshToken()).toBe('refresh');
+    expect(localStorage.getItem('access_token')).toBe('access');
+    expect(localStorage.getItem('refresh_token')).toBe('refresh');
     expect(service.isAuthenticated()).toBeTrue();
   });
 

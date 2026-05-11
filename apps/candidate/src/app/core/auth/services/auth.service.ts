@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable, catchError, map, switchMap, throwError } from 'rxjs';
+import { Observable, catchError, map, of, switchMap, tap, throwError } from 'rxjs';
 
 import { environment } from '@env/environment';
 
@@ -29,7 +29,7 @@ export interface SignUpPayload {
 
 interface LoginResponseDto {
   access: string;
-  refresh: string;
+  refresh?: string;
   user?: {
     id: number;
     email: string;
@@ -146,14 +146,43 @@ export class AuthService {
   }
 
   logout(): void {
+    const refreshToken = this.tokenStorage.getRefreshToken();
     this.tokenStorage.clear();
     localStorage.removeItem(this.candidateProfileKey);
+    this.http
+      .post<void>(`${this.authBaseUrl}/logout/`, refreshToken ? { refresh: refreshToken } : {})
+      .subscribe({ error: () => void 0 });
   }
 
-  refresh(refreshToken: string): Observable<{ access: string; refresh?: string }> {
-    return this.http.post<{ access: string; refresh?: string }>(`${this.authBaseUrl}/refresh/`, {
-      refresh: refreshToken,
-    });
+  refresh(refreshToken?: string): Observable<{ access: string; refresh?: string }> {
+    return this.http.post<{ access: string; refresh?: string }>(
+      `${this.authBaseUrl}/refresh/`,
+      refreshToken ? { refresh: refreshToken } : {},
+    );
+  }
+
+  restoreSession(): Observable<AuthenticatedCandidate | null> {
+    if (this.isAuthenticated()) {
+      const cachedCandidate = this.getAuthenticatedCandidate();
+      if (cachedCandidate) {
+        return of(cachedCandidate);
+      }
+    }
+
+    const refreshToken = this.tokenStorage.getRefreshToken();
+    if (!refreshToken) {
+      return of(null);
+    }
+
+    return this.refresh(refreshToken).pipe(
+      tap((tokens) => this.persistTokens(tokens.access, tokens.refresh)),
+      switchMap(() => this.resolveCandidateProfile()),
+      tap((candidate) => this.saveAuthenticatedCandidate(candidate)),
+      catchError(() => {
+        this.logout();
+        return of(null);
+      }),
+    );
   }
 
   private resolveCandidateProfile(): Observable<AuthenticatedCandidate> {
@@ -179,7 +208,7 @@ export class AuthService {
     );
   }
 
-  private persistTokens(accessToken: string, refreshToken: string): void {
+  private persistTokens(accessToken: string, refreshToken?: string): void {
     this.tokenStorage.saveTokens(accessToken, refreshToken);
   }
 

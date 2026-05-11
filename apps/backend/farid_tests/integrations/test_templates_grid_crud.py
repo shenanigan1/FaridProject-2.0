@@ -19,6 +19,12 @@ BASENAME_SECTIONS = "templatesections"
 BASENAME_RULES = "templatepoolrules"
 
 
+@pytest.fixture(autouse=True)
+def authenticate_admin(api_client):
+    user = UserFactory.create(is_staff=True, role=UserRoles.ADMIN)
+    api_client.force_authenticate(user=user)
+
+
 def _unwrap_list_response(data):
     return data["results"] if isinstance(data, dict) and "results" in data else data
 

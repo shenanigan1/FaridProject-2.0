@@ -20,9 +20,14 @@ export class AuthService {
     return this.http.get<MeResponse>(`${this.base}/me/`);
   }
 
-  refresh(refresh: string): Observable<{ access: string; refresh?: string }> {
-    return this.http.post<{ access: string; refresh?: string }>(`${this.base}/refresh/`, {
-      refresh,
-    });
+  refresh(refresh?: string): Observable<{ access: string; refresh?: string }> {
+    return this.http.post<{ access: string; refresh?: string }>(
+      `${this.base}/refresh/`,
+      refresh ? { refresh } : {},
+    );
+  }
+
+  logout(refresh?: string | null): Observable<void> {
+    return this.http.post<void>(`${this.base}/logout/`, refresh ? { refresh } : {});
   }
 }

@@ -56,8 +56,17 @@ describe('authInterceptor (candidate)', () => {
     request.flush([]);
   });
 
+  it('adds authorization header when loading the signed-in candidate profile', () => {
+    http.get('/api/candidates/me/').subscribe();
+
+    const request = httpMock.expectOne('/api/candidates/me/');
+
+    expect(request.request.headers.get('Authorization')).toBe('Bearer ACCESS');
+    request.flush({ id: 1 });
+  });
+
   it('refreshes token and retries request after 401', () => {
-    authServiceSpy.refresh.and.returnValue(of({ access: 'NEW_ACCESS', refresh: 'NEW_REFRESH' }));
+    authServiceSpy.refresh.and.returnValue(of({ access: 'NEW_ACCESS', refresh: 'NEXT_REFRESH' }));
 
     http.get('/api/public/positions').subscribe();
 
@@ -69,7 +78,7 @@ describe('authInterceptor (candidate)', () => {
     retriedRequest.flush([]);
 
     expect(authServiceSpy.refresh).toHaveBeenCalledOnceWith('REFRESH');
-    expect(tokenStorageSpy.saveTokens).toHaveBeenCalledWith('NEW_ACCESS', 'NEW_REFRESH');
+    expect(tokenStorageSpy.saveTokens).toHaveBeenCalledWith('NEW_ACCESS', 'NEXT_REFRESH');
   });
 
   it('clears tokens if refresh fails', () => {

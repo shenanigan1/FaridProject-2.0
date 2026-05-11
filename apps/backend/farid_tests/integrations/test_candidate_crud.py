@@ -75,6 +75,7 @@ def test_create_candidate_with_password_can_login(api_client):
     assert login_res.status_code == 200
     assert "access" in login_res.data
     assert "refresh" in login_res.data
+    assert "ff_refresh" not in login_res.cookies
 
 
 def test_create_candidate_with_weak_password_rejected(api_client):

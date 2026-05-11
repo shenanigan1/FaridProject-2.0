@@ -48,7 +48,6 @@ export const authInterceptor: HttpInterceptorFn = (
       }
 
       const refreshToken = tokenStorage.getRefreshToken();
-
       if (!refreshToken) {
         tokenStorage.clear();
         return throwError(() => err);
@@ -57,9 +56,8 @@ export const authInterceptor: HttpInterceptorFn = (
       return authService.refresh(refreshToken).pipe(
         switchMap((response) => {
           const rememberMe = tokenStorage.getRememberMe();
-          const nextRefreshToken = response.refresh ?? refreshToken;
 
-          tokenStorage.saveTokens(response.access, nextRefreshToken, rememberMe);
+          tokenStorage.saveTokens(response.access, response.refresh, rememberMe);
 
           const retryReq = req.clone({
             setHeaders: {
