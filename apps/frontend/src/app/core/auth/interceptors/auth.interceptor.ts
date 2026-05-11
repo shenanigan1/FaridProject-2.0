@@ -1,4 +1,3 @@
-// auth.interceptor.ts
 import { inject } from '@angular/core';
 import {
   HttpErrorResponse,
@@ -13,7 +12,7 @@ import { TokenStorageService } from 'src/app/core/auth/services/token-storage.se
 
 export const authInterceptor: HttpInterceptorFn = (
   req: HttpRequest<unknown>,
-  next: HttpHandlerFn
+  next: HttpHandlerFn,
 ): Observable<HttpEvent<unknown>> => {
   const tokenStorage = inject(TokenStorageService);
   const authService = inject(AuthService);
@@ -70,8 +69,8 @@ export const authInterceptor: HttpInterceptorFn = (
         catchError((refreshErr: unknown) => {
           tokenStorage.clear();
           return throwError(() => refreshErr);
-        })
+        }),
       );
-    })
+    }),
   );
 };

@@ -6,9 +6,7 @@ import {
 import { TestBed } from '@angular/core/testing';
 
 import { environment } from '@env/environment';
-
 import { TokenStorageService } from '@core/auth/services/token-storage.service';
-
 import { AuthService } from './auth.service';
 
 describe('AuthService (candidate)', () => {
@@ -102,6 +100,7 @@ describe('AuthService (candidate)', () => {
     const loginRequest = httpMock.expectOne(loginUrl);
     loginRequest.flush({
       access: 'access-token',
+      refresh: 'refresh-token',
       user: {
         id: 8,
         email: 'hr@example.com',

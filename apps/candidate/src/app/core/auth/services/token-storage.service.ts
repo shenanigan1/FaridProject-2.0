@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class TokenStorageService {
-  private accessToken: string | null = null;
   private readonly accessKey = 'access_token';
   private readonly refreshKey = 'refresh_token';
+  private accessToken: string | null = null;
 
   getAccessToken(): string | null {
     this.accessToken = this.accessToken ?? localStorage.getItem(this.accessKey);

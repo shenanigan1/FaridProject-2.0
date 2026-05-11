@@ -1,4 +1,3 @@
-// auth-session.service.ts
 import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject, Observable, catchError, map, of, switchMap, take, tap } from 'rxjs';
 import { AuthService } from './auth.service';
@@ -53,7 +52,7 @@ export class AuthSessionService {
           }),
           catchError(() => of(null)),
         );
-      })
+      }),
     );
   }
 

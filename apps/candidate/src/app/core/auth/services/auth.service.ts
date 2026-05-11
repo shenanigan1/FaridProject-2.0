@@ -3,7 +3,6 @@ import { Injectable, inject } from '@angular/core';
 import { Observable, catchError, map, of, switchMap, tap, throwError } from 'rxjs';
 
 import { environment } from '@env/environment';
-
 import { TokenStorageService } from '@core/auth/services/token-storage.service';
 
 export interface AuthenticatedCandidate {
@@ -64,7 +63,6 @@ export class AuthService {
   private readonly tokenStorage = inject(TokenStorageService);
 
   private readonly candidateProfileKey = 'candidate_profile';
-
   private readonly authBaseUrl = `${environment.apiBaseUrl}/api/auth`;
   private readonly candidatesUrl = `${environment.apiBaseUrl}/api/candidates/`;
   private readonly candidateMeUrl = `${environment.apiBaseUrl}/api/candidates/me/`;
@@ -82,7 +80,6 @@ export class AuthService {
       .pipe(
         switchMap((response) => {
           this.persistTokens(response.access, response.refresh);
-
           return this.resolveCandidateProfile();
         }),
         map((candidate) => {

@@ -48,9 +48,7 @@ describe('AuthSessionService', () => {
   });
 
   it('refreshes /me after login so permissions are available without page reload', () => {
-    apiSpy.login.and.returnValue(
-      of({ access: 'ACCESS', refresh: 'REFRESH', user: loginUser }),
-    );
+    apiSpy.login.and.returnValue(of({ access: 'ACCESS', refresh: 'REFRESH', user: loginUser }));
     apiSpy.me.and.returnValue(of(freshUser));
 
     let actualUser: MeResponse | null | undefined;
@@ -92,8 +90,8 @@ describe('AuthSessionService', () => {
   });
 
   it('still clears local session when backend logout fails', () => {
-    apiSpy.logout.and.returnValue(throwError(() => new Error('network')));
     tokenStorageSpy.getRefreshToken.and.returnValue('REFRESH');
+    apiSpy.logout.and.returnValue(throwError(() => new Error('network')));
 
     service.logout();
 

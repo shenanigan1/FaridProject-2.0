@@ -25,7 +25,7 @@ describe('AuthService', () => {
     httpMock.verify();
   });
 
-  it('login should POST /login/ with email/password and return LoginResponse', () => {
+  it('login should POST /login/ without credentials and return bearer tokens', () => {
     const payload: LoginRequest = {
       email: 'test@test.com',
       password: 'password123',
@@ -53,10 +53,13 @@ describe('AuthService', () => {
   });
 
   it('me should GET /me/ and return MeResponse', () => {
-    // If you know the real shape, fill it here.
     const mockResponse: MeResponse = {
-      // e.g. id: 1, email: 'test@test.com', role: 'driver'
-    } as unknown as MeResponse;
+      id: 1,
+      email: 'test@test.com',
+      first_name: 'Test',
+      last_name: 'User',
+      role: 'admin',
+    };
 
     service.me().subscribe((res) => {
       expect(res).toEqual(mockResponse);

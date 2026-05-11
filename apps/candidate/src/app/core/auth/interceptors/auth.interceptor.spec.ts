@@ -1,15 +1,14 @@
-import { TestBed } from '@angular/core/testing';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import {
   HttpTestingController,
   provideHttpClientTesting,
 } from '@angular/common/http/testing';
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { HttpClient } from '@angular/common/http';
+import { TestBed } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
 
 import { AuthService } from '@core/auth/services/auth.service';
 import { TokenStorageService } from '@core/auth/services/token-storage.service';
-
 import { authInterceptor } from './auth.interceptor';
 
 describe('authInterceptor (candidate)', () => {

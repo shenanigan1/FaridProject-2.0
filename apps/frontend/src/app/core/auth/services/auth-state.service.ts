@@ -12,15 +12,10 @@ export class AuthStateService {
   private readonly meSubject = new BehaviorSubject<MeResponse | null>(null);
   readonly me$ = this.meSubject.asObservable();
 
-  /** Fast check (token presence). Does not guarantee token validity. */
   isAuthenticated(): boolean {
     return this.tokens.isAuthenticated();
   }
 
-  /**
-   * Ensure we have /me in memory (cached). Uses token presence as a prerequisite.
-   * If already loaded, returns cached value.
-   */
   loadMeOnce(): Observable<MeResponse | null> {
     return this.me$.pipe(
       take(1),
@@ -40,7 +35,7 @@ export class AuthStateService {
           }),
           catchError(() => of(null)),
         );
-      })
+      }),
     );
   }
 
