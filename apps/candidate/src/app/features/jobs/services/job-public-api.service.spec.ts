@@ -10,7 +10,7 @@ describe('JobPublicApiService', () => {
   let service: JobPublicApiService;
   let httpMock: HttpTestingController;
 
-  const expectedUrl = 'http://localhost:8000/api/public/positions';
+  const expectedUrl = 'http://localhost:8000/api/public/positions/';
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -132,7 +132,7 @@ describe('JobPublicApiService', () => {
       expect(offer).toEqual(expectedModel);
     });
 
-    const request = httpMock.expectOne(`${expectedUrl}/1/`);
+    const request = httpMock.expectOne(`${expectedUrl}1/`);
     expect(request.request.method).toBe('GET');
     request.flush(mockDto);
   });
@@ -147,7 +147,7 @@ describe('JobPublicApiService', () => {
     },
   });
 
-  const request = httpMock.expectOne(`${expectedUrl}/999/`);
+  const request = httpMock.expectOne(`${expectedUrl}999/`);
 
   request.flush(
     { detail: 'Not found' },

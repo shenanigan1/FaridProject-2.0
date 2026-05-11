@@ -1,0 +1,41 @@
+name: CD
+
+on:
+  workflow_run:
+    workflows:
+      - CI
+    types:
+      - completed
+    branches:
+      - dev
+
+permissions:
+  contents: write
+
+jobs:
+  merge-dev-to-main:
+    name: Merge dev into main
+    runs-on: ubuntu-latest
+
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Merge dev into main
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+          git fetch origin dev main
+
+          git checkout main
+          git pull origin main
+
+          git merge origin/dev --no-ff -m "chore: auto merge dev into main"
+
+          git push origin main
