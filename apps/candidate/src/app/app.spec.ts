@@ -5,6 +5,7 @@ import {
   AuthService,
   AuthenticatedCandidate,
 } from '@core/auth/services/auth.service';
+import { of } from 'rxjs';
 
 import { App } from './app';
 
@@ -25,10 +26,12 @@ describe('App', () => {
       'getAuthenticatedCandidate',
       'saveAuthenticatedCandidate',
       'logout',
+      'restoreSession',
     ]);
 
     authServiceSpy.isAuthenticated.and.returnValue(false);
     authServiceSpy.getAuthenticatedCandidate.and.returnValue(null);
+    authServiceSpy.restoreSession.and.returnValue(of(null));
 
     await TestBed.configureTestingModule({
       imports: [App],

@@ -5,10 +5,18 @@ from django.urls import reverse
 from employees.models import Employee
 from users.models import User
 from farid_tests.factories.employees import EmployeeFactory
+from farid_tests.factories.users import UserFactory
+from users.models.roles import UserRoles
 
 pytestmark = pytest.mark.django_db
 
 BASENAME = "employees"
+
+
+@pytest.fixture(autouse=True)
+def authenticate_admin(api_client):
+    user = UserFactory.create(is_staff=True, role=UserRoles.ADMIN)
+    api_client.force_authenticate(user=user)
 
 
 def _unwrap_list_response(data):

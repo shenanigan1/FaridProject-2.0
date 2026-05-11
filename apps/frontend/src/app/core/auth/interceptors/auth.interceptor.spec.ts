@@ -1,9 +1,6 @@
 // src/app/core/auth/auth.interceptor.spec.ts
 import { TestBed } from '@angular/core/testing';
-import {
-  HttpClient,
-  HttpErrorResponse,
-} from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import {
   provideHttpClient,
   withInterceptors,
@@ -28,7 +25,6 @@ describe('authInterceptor (HttpInterceptorFn)', () => {
   beforeEach(() => {
     tokenStorageMock = jasmine.createSpyObj<TokenStorageService>('TokenStorageService', [
       'getAccessToken',
-      'getRefreshToken',
       'getRememberMe',
       'saveTokens',
       'clear',
@@ -92,14 +88,13 @@ describe('authInterceptor (HttpInterceptorFn)', () => {
     req.flush({ ok: true });
   });
 
-  it('should refresh and retry request on 401 (non-auth endpoint) when refresh token exists', () => {
+  it('should refresh through HttpOnly cookie and retry request on 401', () => {
     // Given
     tokenStorageMock.getAccessToken.and.returnValue('OLD_ACCESS');
-    tokenStorageMock.getRefreshToken.and.returnValue('REFRESH_TOKEN');
     tokenStorageMock.getRememberMe.and.returnValue(true);
 
     authServiceMock.refresh.and.returnValue(
-      of({ access: 'NEW_ACCESS', refresh: 'NEW_REFRESH' } as {access: string, refresh: string})
+      of({ access: 'NEW_ACCESS' } as { access: string })
     );
 
     let responseBody: { ok: boolean } | undefined;
@@ -116,7 +111,7 @@ describe('authInterceptor (HttpInterceptorFn)', () => {
     );
 
     // Interceptor should call refresh()
-    expect(authServiceMock.refresh).toHaveBeenCalledOnceWith('REFRESH_TOKEN');
+    expect(authServiceMock.refresh).toHaveBeenCalledOnceWith();
 
     // Then it should retry original request with NEW token
     const retryReq = httpMock.expectOne('/api/protected');
@@ -125,7 +120,7 @@ describe('authInterceptor (HttpInterceptorFn)', () => {
     // And it should save tokens
     expect(tokenStorageMock.saveTokens).toHaveBeenCalledOnceWith(
       'NEW_ACCESS',
-      'NEW_REFRESH',
+      undefined,
       true
     );
 
@@ -136,34 +131,9 @@ describe('authInterceptor (HttpInterceptorFn)', () => {
     expect(tokenStorageMock.clear).not.toHaveBeenCalled();
   });
 
-  it('should clear tokens and propagate error on 401 when no refresh token exists', () => {
-    // Given
-    tokenStorageMock.getAccessToken.and.returnValue('ACCESS');
-    tokenStorageMock.getRefreshToken.and.returnValue(null);
-
-    let receivedError: HttpErrorResponse | null = null;
-
-    http.get('/api/protected').subscribe({
-      next: () => fail('Expected an error'),
-      error: (err) => (receivedError = err),
-    });
-
-    const req = httpMock.expectOne('/api/protected');
-    req.flush(
-      { message: 'Unauthorized' },
-      { status: 401, statusText: 'Unauthorized' }
-    );
-
-    expect(tokenStorageMock.clear).toHaveBeenCalled();
-    expect(receivedError).toBeTruthy();
-    expect(receivedError!.status).toBe(401);
-    expect(authServiceMock.refresh).not.toHaveBeenCalled();
-  });
-
   it('should clear tokens and propagate error when refresh fails', () => {
     // Given
     tokenStorageMock.getAccessToken.and.returnValue('ACCESS');
-    tokenStorageMock.getRefreshToken.and.returnValue('REFRESH_TOKEN');
 
     const refreshErr = new Error('refresh failed');
     authServiceMock.refresh.and.returnValue(throwError(() => refreshErr));
@@ -182,7 +152,7 @@ describe('authInterceptor (HttpInterceptorFn)', () => {
       { status: 401, statusText: 'Unauthorized' }
     );
 
-    expect(authServiceMock.refresh).toHaveBeenCalledOnceWith('REFRESH_TOKEN');
+    expect(authServiceMock.refresh).toHaveBeenCalledOnceWith();
     expect(tokenStorageMock.clear).toHaveBeenCalled();
     expect(receivedError).toBe(refreshErr);
 
