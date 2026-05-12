@@ -1,3 +1,6 @@
+import json
+import re
+
 from rest_framework import serializers
 from evaluations.models import Evaluation
 from candidates.models import Candidate
@@ -25,6 +28,10 @@ class EvaluationSerializer(serializers.ModelSerializer):
     completed_sections_count = serializers.SerializerMethodField()
     total_sections_count = serializers.SerializerMethodField()
     progress_percent = serializers.SerializerMethodField()
+    total_score = serializers.SerializerMethodField()
+    max_score = serializers.SerializerMethodField()
+    score_percent = serializers.SerializerMethodField()
+    is_eliminated = serializers.SerializerMethodField()
 
     class Meta:
         model = Evaluation
@@ -46,6 +53,10 @@ class EvaluationSerializer(serializers.ModelSerializer):
             "completed_sections_count",
             "total_sections_count",
             "progress_percent",
+            "total_score",
+            "max_score",
+            "score_percent",
+            "is_eliminated",
             "created_at",
             "updated_at",
             "completed_at",
@@ -86,6 +97,18 @@ class EvaluationSerializer(serializers.ModelSerializer):
 
         completed = self.get_completed_sections_count(obj)
         return round((completed / total) * 100)
+
+    def get_total_score(self, obj: Evaluation) -> int:
+        return _evaluation_score_summary(obj)["total_score"]
+
+    def get_max_score(self, obj: Evaluation) -> int:
+        return _evaluation_score_summary(obj)["max_score"]
+
+    def get_score_percent(self, obj: Evaluation) -> int:
+        return _evaluation_score_summary(obj)["score_percent"]
+
+    def get_is_eliminated(self, obj: Evaluation) -> bool:
+        return _evaluation_score_summary(obj)["is_eliminated"]
 
 
 class SubjectEvaluationSerializer(serializers.ModelSerializer):
@@ -419,7 +442,9 @@ class EvaluationQuestionnaireQuestionSerializer(serializers.Serializer):
     text = serializers.CharField()
     explanation = serializers.CharField(allow_blank=True)
     is_mandatory = serializers.BooleanField()
+    is_eliminatory = serializers.BooleanField()
     points = serializers.IntegerField()
+    max_score = serializers.IntegerField()
     difficulty = serializers.CharField()
     rubric = serializers.JSONField()
     candidate_answer = serializers.CharField(allow_blank=True)
@@ -449,6 +474,137 @@ def _questions_for_rule(rule) -> list[SkillQuestion]:
     mandatory = [question for question in questions if question.is_mandatory]
     optional = [question for question in questions if not question.is_mandatory]
     return mandatory + optional[: rule.random_count]
+
+
+def _normalize_answer(value: object) -> str:
+    return str(value or "").strip().casefold()
+
+
+def _stringify_rubric_option(value: object) -> str:
+    if isinstance(value, dict):
+        for key in ("label", "text", "value", "answer"):
+            if value.get(key) not in (None, ""):
+                return str(value[key])
+        return ""
+    return str(value) if value not in (None, "") else ""
+
+
+def _split_answers(raw: object) -> list[str]:
+    if raw in (None, ""):
+        return []
+    if isinstance(raw, list):
+        return [
+            _stringify_rubric_option(item).strip()
+            for item in raw
+            if item not in (None, "")
+        ]
+    if not isinstance(raw, str):
+        return [str(raw).strip()]
+
+    raw = raw.strip()
+    if not raw:
+        return []
+
+    try:
+        parsed = json.loads(raw)
+    except (TypeError, ValueError, json.JSONDecodeError):
+        parsed = None
+
+    if isinstance(parsed, list):
+        return _split_answers(parsed)
+    if parsed not in (None, "") and not isinstance(parsed, (dict, list)):
+        return [str(parsed).strip()]
+
+    return [part.strip() for part in re.split(r"[\n;,|]+", raw) if part.strip()]
+
+
+def _correct_answers_for_question(question: SkillQuestion) -> list[str]:
+    rubric = question.rubric if isinstance(question.rubric, dict) else {}
+    candidates = (
+        rubric.get("correct_answers"),
+        rubric.get("correct_answer"),
+        rubric.get("answer"),
+        question.explanation,
+    )
+
+    for candidate in candidates:
+        answers = _split_answers(candidate)
+        if answers:
+            return answers
+
+    return []
+
+
+def score_answer_for_question(
+    question: SkillQuestion, candidate_answer: str
+) -> int | None:
+    selected = {
+        _normalize_answer(answer) for answer in _split_answers(candidate_answer)
+    }
+    selected.discard("")
+
+    if question.format == "mcq":
+        correct = {
+            _normalize_answer(answer)
+            for answer in _correct_answers_for_question(question)
+        }
+        correct.discard("")
+        if not correct:
+            return None
+        correct_hits = len(selected & correct)
+        wrong_hits = len(selected - correct)
+        ratio = max(correct_hits - wrong_hits, 0) / len(correct)
+        return round(question.points * ratio)
+
+    if question.format in {"true_false", "yes_no"}:
+        correct = {
+            _normalize_answer(answer)
+            for answer in _correct_answers_for_question(question)
+        }
+        correct.discard("")
+        if not correct or not selected:
+            return None
+        return question.points if selected & correct else 0
+
+    if question.format == "rating":
+        try:
+            value = float(candidate_answer)
+        except (TypeError, ValueError):
+            return None
+        rubric = question.rubric if isinstance(question.rubric, dict) else {}
+        minimum = float(rubric.get("min", 0) or 0)
+        maximum = float(rubric.get("max", question.points) or question.points)
+        if maximum <= minimum:
+            return min(max(round(value), 0), question.points)
+        ratio = (value - minimum) / (maximum - minimum)
+        return min(max(round(question.points * ratio), 0), question.points)
+
+    return None
+
+
+def _evaluation_score_summary(evaluation: Evaluation) -> dict:
+    responses = evaluation.responses.select_related("question").all()
+    total_score = 0
+    max_score = 0
+    is_eliminated = False
+
+    for response in responses:
+        max_score += response.question.points
+        total_score += response.score or 0
+        if (
+            response.question.is_eliminatory
+            and response.score is not None
+            and response.score <= 0
+        ):
+            is_eliminated = True
+
+    score_percent = round((total_score / max_score) * 100) if max_score else 0
+    return {
+        "total_score": total_score,
+        "max_score": max_score,
+        "score_percent": score_percent,
+        "is_eliminated": is_eliminated,
+    }
 
 
 def build_questionnaire_payload(evaluation: Evaluation, user=None) -> dict:
@@ -492,7 +648,9 @@ def build_questionnaire_payload(evaluation: Evaluation, user=None) -> dict:
                     "text": question.text,
                     "explanation": question.explanation,
                     "is_mandatory": question.is_mandatory,
+                    "is_eliminatory": question.is_eliminatory,
                     "points": question.points,
+                    "max_score": question.points,
                     "difficulty": question.difficulty,
                     "rubric": question.rubric,
                     "candidate_answer": response.candidate_answer if response else "",
@@ -516,10 +674,24 @@ def build_questionnaire_payload(evaluation: Evaluation, user=None) -> dict:
             }
         )
 
+    total_score = sum((question["score"] or 0) for question in flat_questions)
+    max_score = sum(question["max_score"] for question in flat_questions)
+    score_percent = round((total_score / max_score) * 100) if max_score else 0
+    is_eliminated = any(
+        question["is_eliminatory"]
+        and question["score"] is not None
+        and question["score"] <= 0
+        for question in flat_questions
+    )
+
     return {
         "evaluation_id": evaluation.id,
         "template_name": template.name,
         "test_manager_comment": evaluation.internal_comment,
         "sections": serialized_sections,
         "questions": flat_questions,
+        "total_score": total_score,
+        "max_score": max_score,
+        "score_percent": score_percent,
+        "is_eliminated": is_eliminated,
     }

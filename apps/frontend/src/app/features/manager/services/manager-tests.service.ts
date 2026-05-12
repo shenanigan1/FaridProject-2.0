@@ -62,7 +62,9 @@ export interface ManagerQuestionnaireQuestion {
   text: string;
   explanation: string;
   is_mandatory: boolean;
+  is_eliminatory: boolean;
   points: number;
+  max_score: number;
   difficulty: string;
   rubric: ManagerQuestionRubric;
   candidate_answer: string;

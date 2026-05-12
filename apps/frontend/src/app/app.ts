@@ -56,10 +56,14 @@ export class App {
       )
       .subscribe((event) => this.currentUrl.set(event.urlAfterRedirects));
 
+    this.session.me$
+      .pipe(takeUntilDestroyed())
+      .subscribe((me) => this.me.set(me));
+
     this.session
       .loadMeOnce()
       .pipe(takeUntilDestroyed())
-      .subscribe((me) => this.me.set(me));
+      .subscribe();
   }
 
   onEditProfile(): void {

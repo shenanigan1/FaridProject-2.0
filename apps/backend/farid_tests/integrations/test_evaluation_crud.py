@@ -402,6 +402,78 @@ def test_evaluation_questionnaire_get_and_save_answers(api_client):
     assert post_res.data["questions"][0]["score"] == 8
 
 
+def test_evaluation_questionnaire_auto_scores_answers_and_flags_eliminatory_question(
+    api_client,
+):
+    _authenticate_as_hr(api_client)
+    application = JobApplicationFactory.create()
+    template = TemplateFactory.create(name="Scored Questionnaire Template")
+    template_version = TemplateVersionFactory.create(template=template, version=1)
+    section = TemplateSection.objects.create(template=template, name="Core", order=0)
+    pool = QuestionPool.objects.create(name="Scoring Pool", code="SCORING_POOL")
+    TemplatePoolRule.objects.create(
+        template=template, section=section, pool=pool, random_count=0, order=0
+    )
+    mcq_question = SkillQuestion.objects.create(
+        pool=pool,
+        format="mcq",
+        title="PPE",
+        text="Which PPE items are mandatory?",
+        explanation="Gilet\nCasque",
+        rubric={"options": ["Gilet", "Casque", "Sandales"]},
+        points=10,
+    )
+    eliminatory_question = SkillQuestion.objects.create(
+        pool=pool,
+        format="yes_no",
+        title="License valid",
+        text="Is the license valid?",
+        explanation="Oui",
+        is_eliminatory=True,
+        points=10,
+    )
+    evaluation = Evaluation.objects.create(
+        subject=application.candidate.user,
+        application=application,
+        position=application.position,
+        template_version=template_version,
+        status="in_progress",
+    )
+
+    url = reverse(f"{BASENAME}-questionnaire", args=[evaluation.id])
+    post_res = api_client.post(
+        url,
+        {
+            "answers": [
+                {
+                    "question_id": mcq_question.id,
+                    "candidate_answer": '["Gilet"]',
+                    "manager_comment": "",
+                },
+                {
+                    "question_id": eliminatory_question.id,
+                    "candidate_answer": "Non",
+                    "manager_comment": "",
+                },
+            ]
+        },
+        format="json",
+    )
+
+    assert post_res.status_code == 200
+    by_id = {
+        question["question_id"]: question for question in post_res.data["questions"]
+    }
+    assert by_id[mcq_question.id]["score"] == 5
+    assert by_id[mcq_question.id]["max_score"] == 10
+    assert by_id[eliminatory_question.id]["is_eliminatory"] is True
+    assert by_id[eliminatory_question.id]["score"] == 0
+    assert post_res.data["total_score"] == 5
+    assert post_res.data["max_score"] == 20
+    assert post_res.data["score_percent"] == 25
+    assert post_res.data["is_eliminated"] is True
+
+
 def test_evaluation_questionnaire_rejects_foreign_question(api_client):
     _authenticate_as_hr(api_client)
     application = JobApplicationFactory.create()

@@ -40,13 +40,17 @@
           <div class="manager-progress">
             <div>
               <strong>{{ answeredCount() }}/{{ questionCount() }} questions</strong>
-              <span>{{ totalScore() }}/{{ maxScore() }} pts</span>
+              <span>{{ totalScore() }}/{{ maxScore() }} pts - {{ normalizedScore() }}/100</span>
             </div>
             <span>{{ progressPercent() }}%</span>
             <div class="manager-progress__track" aria-hidden="true">
               <i [style.width.%]="progressPercent()"></i>
             </div>
           </div>
+
+          @if (hasEliminatoryFailure()) {
+            <p class="manager-alert">Question eliminatoire echouee : validation impossible sans correction manager.</p>
+          }
 
           <label class="manager-field-label" for="test-manager-comment">Commentaire test</label>
           <textarea
@@ -116,9 +120,12 @@
                             @if (question.is_mandatory) {
                               <b>Obligatoire</b>
                             }
+                            @if (question.is_eliminatory) {
+                              <b>Eliminatoire</b>
+                            }
                           </small>
                         </div>
-                        <span>{{ question.points }} pts</span>
+                        <span>{{ questionMaxScore(question) }} pts</span>
                       </div>
                       <p>{{ question.text }}</p>
                       @if (question.explanation) {
@@ -133,9 +140,9 @@
                               <button
                                 type="button"
                                 class="manager-choice"
-                                [class.manager-choice--active]="question.candidate_answer === option"
+                                [class.manager-choice--active]="question.format === 'mcq' ? isChoiceSelected(question, option) : question.candidate_answer === option"
                                 [disabled]="!canEditSection(selectedTest, section)"
-                                (click)="setChoice(question.question_id, option); question.format === 'rating' ? updateScore(question.question_id, option) : null"
+                                (click)="question.format === 'mcq' ? toggleChoice(question.question_id, option) : setChoice(question.question_id, option)"
                               >
                                 {{ option }}
                               </button>
@@ -174,12 +181,12 @@
 
                       <div class="manager-score-row">
                         <label [attr.for]="'score-' + question.question_id">Note</label>
-                        <span>{{ question.score ?? 0 }}/{{ question.points }}</span>
+                        <span>{{ question.score ?? 0 }}/{{ questionMaxScore(question) }}</span>
                         <input
                           [id]="'score-' + question.question_id"
                           type="number"
                           min="0"
-                          [max]="question.points"
+                          [max]="questionMaxScore(question)"
                           [disabled]="!canEditSection(selectedTest, section)"
                           [value]="question.score ?? ''"
                           (input)="updateScore(question.question_id, $any($event.target).value)"

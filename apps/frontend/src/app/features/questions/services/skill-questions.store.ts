@@ -159,6 +159,7 @@ export class SkillQuestionsStore {
       rubric: rubricSafe,
 
       is_mandatory: !!r.is_mandatory,
+      is_eliminatory: !!r.is_eliminatory,
       points: typeof r.points === 'number' ? r.points : 10,
       difficulty: r.difficulty ?? 'intermediate',
 

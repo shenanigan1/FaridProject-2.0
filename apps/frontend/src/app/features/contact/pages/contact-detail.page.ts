@@ -7,10 +7,13 @@ import {
   signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { LucideDynamicIcon } from '@lucide/angular';
 
+import { AuthSessionService } from '@auth/services/auth-session.service';
+import { MeResponse } from '@auth/models/auth.models';
 import { APP_ICONS } from '@shared/icons/app-icons';
 import {
   AdminUser,
@@ -31,7 +34,7 @@ const ROLE_OPTIONS: UserRole[] = [
 @Component({
   standalone: true,
   selector: 'app-contact-detail-page',
-  imports: [CommonModule, RouterLink, LucideDynamicIcon],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, LucideDynamicIcon],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section class="ff-app-screen">
@@ -42,7 +45,7 @@ const ROLE_OPTIONS: UserRole[] = [
             Back
           </button>
 
-          @if (contact()) {
+          @if (contact() && canManageContacts()) {
             <button type="button" class="ff-btn ff-btn-secondary" (click)="menuOpen.set(true)">
               <svg [lucideIcon]="icons.moreVertical" style="width: 1rem; height: 1rem"></svg>
             </button>
@@ -67,6 +70,63 @@ const ROLE_OPTIONS: UserRole[] = [
               </span>
             </div>
           </article>
+
+          @if (canManageContacts()) {
+            <article class="ff-app-panel ff-app-stack">
+              <div>
+                <p class="ff-app-kicker">ADMIN ACCESS</p>
+                <h2 class="ff-row-title">Modifier le contact</h2>
+              </div>
+
+              <form [formGroup]="editForm" (ngSubmit)="saveContact()" class="ff-form-grid ff-form-grid--two">
+                <label>
+                  <span class="ff-field-label">Email</span>
+                  <input formControlName="email" type="email" class="ff-control" />
+                  @if (editForm.controls.email.touched && editForm.controls.email.hasError('required')) {
+                    <small class="ff-field-error">Champ obligatoire</small>
+                  }
+                </label>
+
+                <label>
+                  <span class="ff-field-label">Nouveau mot de passe</span>
+                  <input formControlName="password" type="password" class="ff-control" />
+                </label>
+
+                <label>
+                  <span class="ff-field-label">Prénom</span>
+                  <input formControlName="first_name" type="text" class="ff-control" />
+                  @if (editForm.controls.first_name.touched && editForm.controls.first_name.hasError('required')) {
+                    <small class="ff-field-error">Champ obligatoire</small>
+                  }
+                </label>
+
+                <label>
+                  <span class="ff-field-label">Nom</span>
+                  <input formControlName="last_name" type="text" class="ff-control" />
+                  @if (editForm.controls.last_name.touched && editForm.controls.last_name.hasError('required')) {
+                    <small class="ff-field-error">Champ obligatoire</small>
+                  }
+                </label>
+
+                <label>
+                  <span class="ff-field-label">Rôle</span>
+                  <select formControlName="role" class="ff-control">
+                    @for (role of roleOptions; track role) {
+                      <option [value]="role">{{ role }}</option>
+                    }
+                  </select>
+                </label>
+
+                <button type="submit" class="ff-btn ff-btn-primary">
+                  Enregistrer
+                </button>
+              </form>
+            </article>
+          } @else {
+            <div class="ff-alert-inline">
+              La modification du contact est réservée aux administrateurs et à la direction.
+            </div>
+          }
         } @else {
           <p class="ff-empty">Loading contact details...</p>
         }
@@ -111,6 +171,8 @@ const ROLE_OPTIONS: UserRole[] = [
 })
 export class ContactDetailPage {
   private readonly api = inject(RolesAdminService);
+  private readonly auth = inject(AuthSessionService);
+  private readonly fb = inject(FormBuilder);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
@@ -118,9 +180,22 @@ export class ContactDetailPage {
   readonly icons = APP_ICONS;
   readonly roleOptions = ROLE_OPTIONS;
   readonly contact = signal<AdminUser | null>(null);
+  readonly currentUser = signal<MeResponse | null>(null);
   readonly pageMessage = signal<string | null>(null);
   readonly menuOpen = signal(false);
   readonly roleMenuOpen = signal(false);
+  readonly editForm = this.fb.nonNullable.group({
+    email: ['', [Validators.required, Validators.email]],
+    password: [''],
+    first_name: ['', Validators.required],
+    last_name: ['', Validators.required],
+    role: this.fb.nonNullable.control<UserRole>('employee', Validators.required),
+  });
+
+  readonly canManageContacts = computed(() => {
+    const role = this.currentUser()?.role;
+    return role === 'admin' || role === 'director';
+  });
 
   readonly fullName = computed(() => {
     const user = this.contact();
@@ -128,6 +203,10 @@ export class ContactDetailPage {
   });
 
   constructor() {
+    this.auth
+      .loadMeOnce()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((me) => this.currentUser.set(me));
     this.loadContact();
   }
 
@@ -137,6 +216,11 @@ export class ContactDetailPage {
   }
 
   onRoleChange(event: Event): void {
+    if (!this.canManageContacts()) {
+      this.pageMessage.set('Action réservée aux administrateurs et à la direction.');
+      return;
+    }
+
     const target = event.target;
     if (!(target instanceof HTMLSelectElement)) {
       return;
@@ -162,9 +246,54 @@ export class ContactDetailPage {
       });
   }
 
+  saveContact(): void {
+    const user = this.contact();
+    if (!user) {
+      return;
+    }
+
+    if (!this.canManageContacts()) {
+      this.pageMessage.set('Action réservée aux administrateurs et à la direction.');
+      return;
+    }
+
+    if (this.editForm.invalid) {
+      this.editForm.markAllAsTouched();
+      return;
+    }
+
+    const payload = this.editForm.getRawValue();
+    const password = payload.password.trim();
+
+    this.api
+      .updateUser(user.id, {
+        email: payload.email,
+        first_name: payload.first_name,
+        last_name: payload.last_name,
+        role: payload.role,
+        ...(password ? { password } : {}),
+      })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (updated) => {
+          this.contact.set(updated);
+          this.patchEditForm(updated);
+          this.pageMessage.set('Contact mis à jour.');
+        },
+        error: () => {
+          this.pageMessage.set('Impossible de modifier le contact.');
+        },
+      });
+  }
+
   toggleActive(): void {
     const user = this.contact();
     if (!user) {
+      return;
+    }
+
+    if (!this.canManageContacts()) {
+      this.pageMessage.set('Action réservée aux administrateurs et à la direction.');
       return;
     }
 
@@ -206,10 +335,21 @@ export class ContactDetailPage {
           }
 
           this.contact.set(contact);
+          this.patchEditForm(contact);
         },
         error: () => {
           this.pageMessage.set('Unable to load contact details.');
         },
       });
+  }
+
+  private patchEditForm(user: AdminUser): void {
+    this.editForm.reset({
+      email: user.email,
+      password: '',
+      first_name: user.first_name,
+      last_name: user.last_name,
+      role: user.role,
+    });
   }
 }

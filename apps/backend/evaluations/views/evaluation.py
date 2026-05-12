@@ -13,6 +13,7 @@ from evaluations.serializers import (
     LaunchEvaluationSerializer,
     SubjectEvaluationSerializer,
     build_questionnaire_payload,
+    score_answer_for_question,
 )
 from templates_grid.models import SkillQuestion
 from users.models import User, UserRoles
@@ -117,7 +118,15 @@ class EvaluationViewSet(ModelViewSet):
             question.id: question
             for question in SkillQuestion.objects.filter(
                 id__in=allowed_question_ids
-            ).only("id", "points", "is_mandatory")
+            ).only(
+                "id",
+                "format",
+                "points",
+                "is_mandatory",
+                "is_eliminatory",
+                "explanation",
+                "rubric",
+            )
         }
 
         if "test_manager_comment" in serializer.validated_data:
@@ -175,6 +184,8 @@ class EvaluationViewSet(ModelViewSet):
             candidate_answer = answer.get("candidate_answer", "")
             manager_comment = answer.get("manager_comment", "")
             score = answer.get("score")
+            if score is None:
+                score = score_answer_for_question(question, candidate_answer)
             if (
                 serializer.validated_data.get("complete_sections")
                 and question.is_mandatory

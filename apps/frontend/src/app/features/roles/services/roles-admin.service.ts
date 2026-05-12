@@ -28,6 +28,15 @@ export interface CreateAdminUserPayload {
   role: UserRole;
 }
 
+export interface UpdateAdminUserPayload {
+  email?: string;
+  password?: string;
+  first_name?: string;
+  last_name?: string;
+  role?: UserRole;
+  is_active?: boolean;
+}
+
 @Injectable({ providedIn: 'root' })
 export class RolesAdminService {
   private readonly http = inject(HttpClient);
@@ -45,6 +54,10 @@ export class RolesAdminService {
 
   updateUserRole(userId: number, role: UserRole): Observable<AdminUser> {
     return this.http.patch<AdminUser>(`/api/users/${userId}/`, { role });
+  }
+
+  updateUser(userId: number, payload: UpdateAdminUserPayload): Observable<AdminUser> {
+    return this.http.patch<AdminUser>(`/api/users/${userId}/`, payload);
   }
 
   activateUser(userId: number): Observable<{ status: string }> {

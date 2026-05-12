@@ -1,10 +1,22 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+import { AuthSessionService } from '@auth/services/auth-session.service';
+import { MeResponse } from '@auth/models/auth.models';
 import { AdminUser, RolesAdminService, UserRole } from '@features/roles/services/roles-admin.service';
+
+const ROLE_OPTIONS: UserRole[] = [
+  'admin',
+  'hr',
+  'director',
+  'manager',
+  'employee',
+  'candidate',
+  'driver',
+];
 
 @Component({
   standalone: true,
@@ -19,7 +31,72 @@ import { AdminUser, RolesAdminService, UserRole } from '@features/roles/services
             <p class="ff-app-kicker">CONTACTS</p>
             <h1 class="ff-app-title">Directory</h1>
           </div>
+
+          @if (canManageContacts()) {
+            <button type="button" class="ff-btn ff-btn-primary" (click)="createPanelOpen.set(!createPanelOpen())">
+              Create Contact
+            </button>
+          }
         </header>
+
+        @if (canManageContacts() && createPanelOpen()) {
+          <article class="ff-app-panel ff-app-stack">
+            <div>
+              <p class="ff-app-kicker">NEW CONTACT</p>
+              <h2 class="ff-row-title">Créer un accès</h2>
+            </div>
+
+            <form [formGroup]="createForm" (ngSubmit)="createContact()" class="ff-form-grid ff-form-grid--two">
+              <label>
+                <span class="ff-field-label">Email</span>
+                <input formControlName="email" type="email" class="ff-control" />
+                @if (createForm.controls.email.touched && createForm.controls.email.hasError('required')) {
+                  <small class="ff-field-error">Champ obligatoire</small>
+                }
+              </label>
+
+              <label>
+                <span class="ff-field-label">Mot de passe</span>
+                <input formControlName="password" type="password" class="ff-control" />
+                @if (createForm.controls.password.touched && createForm.controls.password.hasError('required')) {
+                  <small class="ff-field-error">Champ obligatoire</small>
+                }
+              </label>
+
+              <label>
+                <span class="ff-field-label">Prénom</span>
+                <input formControlName="first_name" type="text" class="ff-control" />
+                @if (createForm.controls.first_name.touched && createForm.controls.first_name.hasError('required')) {
+                  <small class="ff-field-error">Champ obligatoire</small>
+                }
+              </label>
+
+              <label>
+                <span class="ff-field-label">Nom</span>
+                <input formControlName="last_name" type="text" class="ff-control" />
+                @if (createForm.controls.last_name.touched && createForm.controls.last_name.hasError('required')) {
+                  <small class="ff-field-error">Champ obligatoire</small>
+                }
+              </label>
+
+              <label>
+                <span class="ff-field-label">Rôle</span>
+                <select formControlName="role" class="ff-control">
+                  @for (role of roleOptions; track role) {
+                    <option [value]="role">{{ role }}</option>
+                  }
+                </select>
+              </label>
+
+              <div class="ff-inline-actions">
+                <button type="submit" class="ff-btn ff-btn-primary">Créer le contact</button>
+                <button type="button" class="ff-btn ff-btn-secondary" (click)="closeCreatePanel()">
+                  Annuler
+                </button>
+              </div>
+            </form>
+          </article>
+        }
 
         <div class="ff-app-panel ff-app-stack">
           <input
@@ -74,13 +151,30 @@ import { AdminUser, RolesAdminService, UserRole } from '@features/roles/services
 })
 export class ContactPage {
   private readonly api = inject(RolesAdminService);
+  private readonly auth = inject(AuthSessionService);
+  private readonly fb = inject(FormBuilder);
   private readonly destroyRef = inject(DestroyRef);
 
+  readonly roleOptions = ROLE_OPTIONS;
   readonly isLoading = signal(true);
   readonly pageMessage = signal<string | null>(null);
   readonly users = signal<AdminUser[]>([]);
+  readonly currentUser = signal<MeResponse | null>(null);
+  readonly createPanelOpen = signal(false);
   readonly searchControl = new FormControl('', { nonNullable: true });
   readonly selectedRole = signal<'all' | UserRole>('all');
+  readonly createForm = this.fb.nonNullable.group({
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', [Validators.required, Validators.minLength(8)]],
+    first_name: ['', Validators.required],
+    last_name: ['', Validators.required],
+    role: this.fb.nonNullable.control<UserRole>('manager', Validators.required),
+  });
+
+  readonly canManageContacts = computed(() => {
+    const role = this.currentUser()?.role;
+    return role === 'admin' || role === 'director';
+  });
 
   readonly roleFilters = computed(() =>
     Array.from(new Set(this.users().map((user) => user.role))).sort(),
@@ -107,6 +201,10 @@ export class ContactPage {
   });
 
   constructor() {
+    this.auth
+      .loadMeOnce()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((me) => this.currentUser.set(me));
     this.loadContacts();
   }
 
@@ -114,6 +212,43 @@ export class ContactPage {
     const target = event.target;
     if (!(target instanceof HTMLSelectElement)) return;
     this.selectedRole.set(target.value as 'all' | UserRole);
+  }
+
+  closeCreatePanel(): void {
+    this.createPanelOpen.set(false);
+    this.createForm.reset({
+      email: '',
+      password: '',
+      first_name: '',
+      last_name: '',
+      role: 'manager',
+    });
+  }
+
+  createContact(): void {
+    if (!this.canManageContacts()) {
+      this.pageMessage.set('Action réservée aux administrateurs et à la direction.');
+      return;
+    }
+
+    if (this.createForm.invalid) {
+      this.createForm.markAllAsTouched();
+      return;
+    }
+
+    this.api
+      .createUser(this.createForm.getRawValue())
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (created) => {
+          this.users.set([created, ...this.users()]);
+          this.pageMessage.set('Contact créé.');
+          this.closeCreatePanel();
+        },
+        error: () => {
+          this.pageMessage.set('Impossible de créer le contact.');
+        },
+      });
   }
 
   private loadContacts(): void {

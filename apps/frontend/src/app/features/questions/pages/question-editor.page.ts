@@ -19,6 +19,7 @@ interface SkillQuestionUpsertDto {
   explanation: string;
   rubric: Rubric;
   is_mandatory: boolean;
+  is_eliminatory: boolean;
   points: number;
   difficulty: Difficulty;
   order: number;
@@ -33,9 +34,11 @@ const createDefaultFormValue = () => ({
   explanation: '',
   rubric: createDefaultRubric(),
   choice_options_text: '',
+  correct_answers_text: '',
   rating_min: 0,
   rating_max: 10,
   is_mandatory: false,
+  is_eliminatory: false,
   points: 10,
   difficulty: 'intermediate' as Difficulty,
   order: 0,
@@ -64,6 +67,21 @@ function rubricOptions(rubric: unknown): string[] {
     .map((option) => (typeof option === 'string' ? option : ''))
     .map((option) => option.trim())
     .filter(Boolean);
+}
+
+function rubricCorrectAnswers(rubric: unknown): string[] {
+  if (!isRecord(rubric)) return [];
+  const answers = rubric['correct_answers'] ?? rubric['correct_answer'] ?? rubric['answer'];
+  if (Array.isArray(answers)) {
+    return answers
+      .map((answer) => (typeof answer === 'string' ? answer : ''))
+      .map((answer) => answer.trim())
+      .filter(Boolean);
+  }
+  if (typeof answers === 'string') {
+    return parseChoiceOptions(answers);
+  }
+  return [];
 }
 
 function rubricNumber(rubric: unknown, key: string, fallback: number): number {
@@ -142,10 +160,12 @@ export class QuestionEditorPageComponent implements OnInit {
     explanation: this.fb.nonNullable.control(''),
     rubric: this.fb.nonNullable.control<Rubric>(createDefaultRubric()),
     choice_options_text: this.fb.nonNullable.control(''),
+    correct_answers_text: this.fb.nonNullable.control(''),
     rating_min: this.fb.nonNullable.control(0, [Validators.min(0)]),
     rating_max: this.fb.nonNullable.control(10, [Validators.min(1)]),
 
     is_mandatory: this.fb.nonNullable.control(false),
+    is_eliminatory: this.fb.nonNullable.control(false),
 
     points: this.fb.nonNullable.control(10, [Validators.required, Validators.min(1), Validators.max(1000)]),
     difficulty: this.fb.nonNullable.control<Difficulty>('intermediate', [Validators.required]),
@@ -153,6 +173,8 @@ export class QuestionEditorPageComponent implements OnInit {
   });
 
   readonly textCount = computed(() => this.form.controls.text.value.length);
+  readonly choiceOptionDrafts = computed(() => parseChoiceOptions(this.form.controls.choice_options_text.value));
+  readonly correctAnswerDrafts = computed(() => parseChoiceOptions(this.form.controls.correct_answers_text.value));
 
   ngOnInit(): void {
     const poolId = this.route.snapshot.paramMap.get('poolId');
@@ -186,6 +208,29 @@ export class QuestionEditorPageComponent implements OnInit {
 
   setFormat(fmt: QuestionFormat): void {
     this.form.controls.format.setValue(fmt);
+    if (fmt === 'true_false') {
+      this.form.controls.correct_answers_text.setValue(this.form.controls.correct_answers_text.value || 'Vrai');
+    }
+    if (fmt === 'yes_no') {
+      this.form.controls.correct_answers_text.setValue(this.form.controls.correct_answers_text.value || 'Oui');
+    }
+  }
+
+  setCorrectAnswer(value: string): void {
+    this.form.controls.correct_answers_text.setValue(value);
+    this.form.controls.explanation.setValue(value);
+  }
+
+  toggleCorrectAnswer(value: string): void {
+    const current = new Set(this.correctAnswerDrafts());
+    if (current.has(value)) {
+      current.delete(value);
+    } else {
+      current.add(value);
+    }
+    const next = Array.from(current).join('\n');
+    this.form.controls.correct_answers_text.setValue(next);
+    this.form.controls.explanation.setValue(next);
   }
 
   save(): void {
@@ -230,10 +275,12 @@ export class QuestionEditorPageComponent implements OnInit {
       explanation: row.explanation ?? '',
       rubric: (row.rubric && typeof row.rubric === 'object' ? row.rubric : createDefaultRubric()) as Rubric,
       choice_options_text: rubricOptions(row.rubric).join('\n'),
+      correct_answers_text: rubricCorrectAnswers(row.rubric).join('\n') || (row.explanation ?? ''),
       rating_min: rubricNumber(row.rubric, 'min', 0),
       rating_max: rubricNumber(row.rubric, 'max', row.points ?? 10),
 
       is_mandatory: !!row.is_mandatory,
+      is_eliminatory: !!row.is_eliminatory,
 
       points: typeof row.points === 'number' ? row.points : 10,
       difficulty: isDifficulty(row.difficulty) ? row.difficulty : 'intermediate',
@@ -243,14 +290,16 @@ export class QuestionEditorPageComponent implements OnInit {
 
   private toDto(): SkillQuestionUpsertDto {
     const format = this.form.controls.format.value;
+    const rubric = this.rubricForFormat(format);
     return {
       format,
       title: this.form.controls.title.value.trim(),
       text: this.form.controls.text.value.trim(),
       explanation: this.form.controls.explanation.value.trim(),
-      rubric: this.rubricForFormat(format),
+      rubric,
 
       is_mandatory: this.form.controls.is_mandatory.value,
+      is_eliminatory: this.form.controls.is_eliminatory.value,
 
       points: format === 'rating' ? this.form.controls.rating_max.value : this.form.controls.points.value,
       difficulty: this.form.controls.difficulty.value,
@@ -263,7 +312,19 @@ export class QuestionEditorPageComponent implements OnInit {
 
     if (format === 'mcq') {
       const options = parseChoiceOptions(this.form.controls.choice_options_text.value);
-      return options.length > 0 ? { options } : current;
+      const correctAnswers =
+        parseChoiceOptions(this.form.controls.correct_answers_text.value).length > 0
+          ? parseChoiceOptions(this.form.controls.correct_answers_text.value)
+          : parseChoiceOptions(this.form.controls.explanation.value);
+      if (correctAnswers.length > 0) {
+        this.form.controls.explanation.setValue(correctAnswers.join('\n'));
+      }
+      if (options.length > 0) {
+        return correctAnswers.length > 0
+          ? { options, correct_answers: correctAnswers }
+          : { options };
+      }
+      return current;
     }
 
     if (format === 'free_text') {
@@ -271,7 +332,10 @@ export class QuestionEditorPageComponent implements OnInit {
     }
 
     if (format === 'yes_no' || format === 'true_false') {
-      return { options: ['Oui', 'Non'] };
+      const options = format === 'true_false' ? ['Vrai', 'Faux'] : ['Oui', 'Non'];
+      const correctAnswers = parseChoiceOptions(this.form.controls.correct_answers_text.value);
+      this.form.controls.explanation.setValue(correctAnswers[0] ?? '');
+      return correctAnswers.length > 0 ? { options, correct_answers: correctAnswers } : { options };
     }
 
     if (format === 'rating') {
@@ -280,6 +344,10 @@ export class QuestionEditorPageComponent implements OnInit {
         min: this.form.controls.rating_min.value,
         max: this.form.controls.rating_max.value,
       };
+    }
+
+    if (format === 'practical') {
+      return { scoring: 'manual', criteria: [] };
     }
 
     return current;

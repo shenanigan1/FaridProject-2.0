@@ -27,3 +27,7 @@ class IsCandidate(HasAnyRole):
 
 class IsAdmin(HasAnyRole):
     allowed_roles = {UserRoles.ADMIN}
+
+
+class IsAdminOrDirector(HasAnyRole):
+    allowed_roles = {UserRoles.ADMIN, UserRoles.DIRECTOR}

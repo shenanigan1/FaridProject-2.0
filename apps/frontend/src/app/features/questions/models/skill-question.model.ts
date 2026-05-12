@@ -47,6 +47,7 @@ export interface SkillQuestion {
 
   // Meta/scoring
   is_mandatory: boolean;
+  is_eliminatory: boolean;
   points: number;
   difficulty: Difficulty;
 
@@ -73,6 +74,7 @@ export interface SkillQuestionDto {
   rubric: PracticalRubric;
 
   is_mandatory: boolean;
+  is_eliminatory: boolean;
   points: number;
   difficulty: Difficulty;
 
