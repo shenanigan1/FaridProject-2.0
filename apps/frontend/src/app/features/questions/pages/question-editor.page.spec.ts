@@ -255,6 +255,7 @@ describe('QuestionEditorPageComponent', () => {
       explanation: '',
       rubric: { options: ['Gilet', 'Sandales'] },
       is_mandatory: true,
+      is_eliminatory: false,
       points: 10,
       difficulty: 'intermediate',
       order: 0,
@@ -294,7 +295,33 @@ describe('QuestionEditorPageComponent', () => {
     expect(dto).toEqual(jasmine.objectContaining({
       format: 'mcq',
       explanation: 'Casque',
-      rubric: { options: ['Gilet', 'Casque', 'Gants'] },
+      rubric: {
+        options: ['Gilet', 'Casque', 'Gants'],
+        correct_answers: ['Casque'],
+      },
+    }));
+  });
+
+  it('should save eliminatory questions and multiple correct QCM answers', () => {
+    const { component, storeMock } = setup({ poolId: 'p1', questionId: null });
+
+    component.form.controls.format.setValue('mcq');
+    component.form.controls.title.setValue('Controle EPI');
+    component.form.controls.text.setValue('Quels EPI sont obligatoires ?');
+    component.form.controls.choice_options_text.setValue('Gilet\nCasque\nSandales');
+    component.form.controls.correct_answers_text.setValue('Gilet\nCasque');
+    component.form.controls.is_eliminatory.setValue(true);
+
+    component.save();
+
+    const [, dto] = storeMock.createInPool.calls.mostRecent().args;
+    expect(dto).toEqual(jasmine.objectContaining({
+      is_eliminatory: true,
+      explanation: 'Gilet\nCasque',
+      rubric: {
+        options: ['Gilet', 'Casque', 'Sandales'],
+        correct_answers: ['Gilet', 'Casque'],
+      },
     }));
   });
 
@@ -311,6 +338,7 @@ describe('QuestionEditorPageComponent', () => {
       explanation: '',
       rubric: { scoring: 'rating', min: 1, max: 5 },
       is_mandatory: false,
+      is_eliminatory: false,
       points: 5,
       difficulty: 'easy',
       order: 0,
@@ -377,6 +405,7 @@ describe('QuestionEditorPageComponent', () => {
       explanation: 'Exp',
       rubric: {},
       is_mandatory: true,
+      is_eliminatory: false,
       points: 10,
       difficulty: 'easy',
       order: 2,
@@ -425,6 +454,7 @@ describe('QuestionEditorPageComponent', () => {
       explanation: '',
       rubric: { scoring: 'manual' },
       is_mandatory: false,
+      is_eliminatory: false,
       points: 20,
       difficulty: 'intermediate',
       order: 0,
@@ -462,8 +492,9 @@ describe('QuestionEditorPageComponent', () => {
       title: 'Title',
       text: 'Some text',
       explanation: '',
-      rubric: {},
+      rubric: { scoring: 'manual', criteria: [] },
       is_mandatory: false,
+      is_eliminatory: false,
       points: 5,
       difficulty: 'intermediate',
       order: 0,

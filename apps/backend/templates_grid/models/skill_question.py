@@ -36,6 +36,7 @@ class SkillQuestion(models.Model):
     explanation = models.TextField(blank=True, default="")
 
     is_mandatory = models.BooleanField(default=False)
+    is_eliminatory = models.BooleanField(default=False)
     points = models.PositiveIntegerField(default=10)
     difficulty = models.CharField(
         max_length=20,

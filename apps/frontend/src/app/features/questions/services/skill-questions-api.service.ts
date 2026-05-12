@@ -6,7 +6,7 @@ import { SkillQuestionDto } from 'src/app/features/questions/models/skill-questi
 
 export type CreateSkillQuestionDto = Partial<Pick<
   SkillQuestionDto,
-  'format' | 'title' | 'text' | 'explanation' | 'rubric' | 'is_mandatory' | 'points' | 'difficulty' | 'order' | 'pool'
+  'format' | 'title' | 'text' | 'explanation' | 'rubric' | 'is_mandatory' | 'is_eliminatory' | 'points' | 'difficulty' | 'order' | 'pool'
 >>;
 
 export type UpdateSkillQuestionDto = CreateSkillQuestionDto;

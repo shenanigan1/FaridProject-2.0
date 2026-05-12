@@ -103,15 +103,47 @@
               </div>
 
               <div class="ff-field-block">
-                <label for="question-explanation">Bonne reponse</label>
+                <span class="ff-field-label">Bonne reponse(s)</span>
+                @if (choiceOptionDrafts().length > 0) {
+                  <div class="ff-chip-row">
+                    @for (option of choiceOptionDrafts(); track option) {
+                      <label class="ff-chip-toggle">
+                        <input
+                          type="checkbox"
+                          [checked]="correctAnswerDrafts().includes(option)"
+                          (change)="toggleCorrectAnswer(option)"
+                        />
+                        <span>{{ option }}</span>
+                      </label>
+                    }
+                  </div>
+                }
                 <textarea
                   id="question-explanation"
                   rows="3"
-                  formControlName="explanation"
+                  formControlName="correct_answers_text"
                   class="ff-control"
-                  placeholder="Saisir la ou les bonnes reponses attendues"
+                  placeholder="Une bonne reponse par ligne"
                 ></textarea>
-                <p class="ff-row-meta">Ce champ est stocke dans explanation pour servir de correction RH/Admin.</p>
+                <p class="ff-row-meta">Ces valeurs sont stockees comme correction et synchronisees dans explanation.</p>
+              </div>
+            }
+
+            @if (form.controls.format.value === 'yes_no' || form.controls.format.value === 'true_false') {
+              <div class="ff-field-block">
+                <span class="ff-field-label">Bonne reponse</span>
+                <div class="ff-segmented" role="group" aria-label="Bonne reponse">
+                  @for (option of form.controls.format.value === 'true_false' ? ['Vrai', 'Faux'] : ['Oui', 'Non']; track option) {
+                    <button
+                      type="button"
+                      class="ff-segmented__item"
+                      [attr.aria-pressed]="correctAnswerDrafts().includes(option)"
+                      (click)="setCorrectAnswer(option)"
+                    >
+                      {{ option }}
+                    </button>
+                  }
+                </div>
               </div>
             }
 
@@ -158,7 +190,15 @@
               <input id="question-mandatory" type="checkbox" formControlName="is_mandatory" class="ff-checkbox" />
               <span>
                 <strong class="ff-row-title">Mandatory</strong>
-                <small class="ff-row-meta">Always included when selected from a pool rule.</small>
+              <small class="ff-row-meta">Always included when selected from a pool rule.</small>
+              </span>
+            </label>
+
+            <label class="ff-data-card ff-inline-actions" for="question-eliminatory">
+              <input id="question-eliminatory" type="checkbox" formControlName="is_eliminatory" class="ff-checkbox" />
+              <span>
+                <strong class="ff-row-title">Eliminatoire</strong>
+                <small class="ff-row-meta">Une note a 0 sur cette question invalide le test, meme si le score global est bon.</small>
               </span>
             </label>
 

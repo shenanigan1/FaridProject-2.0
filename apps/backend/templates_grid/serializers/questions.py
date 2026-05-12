@@ -15,6 +15,7 @@ class SkillQuestionSerializer(serializers.ModelSerializer):
             "explanation",
             "rubric",
             "is_mandatory",
+            "is_eliminatory",
             "points",
             "difficulty",
             "order",

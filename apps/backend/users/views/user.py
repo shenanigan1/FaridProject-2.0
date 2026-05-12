@@ -6,13 +6,20 @@ from rest_framework.permissions import IsAuthenticated
 
 from users.models import User
 from users.serializers import UserSerializer
-from users.permissions import IsAdmin
+from users.permissions import IsAdminOrDirector, IsHrAdminOrDirector
 
 
 class UserViewSet(ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [IsAuthenticated, IsAdmin]
+
+    def get_permissions(self):
+        role_permission = (
+            IsHrAdminOrDirector
+            if self.action in {"list", "retrieve"}
+            else IsAdminOrDirector
+        )
+        return [IsAuthenticated(), role_permission()]
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)

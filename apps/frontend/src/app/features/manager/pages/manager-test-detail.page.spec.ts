@@ -14,7 +14,9 @@ const baseQuestion: ManagerQuestionnaireQuestion = {
   text: 'Texte',
   explanation: '',
   is_mandatory: true,
+  is_eliminatory: false,
   points: 5,
+  max_score: 5,
   difficulty: 'intermediate',
   rubric: {},
   candidate_answer: '',
@@ -149,6 +151,34 @@ describe('ManagerTestDetailPage', () => {
 
     expect(component.questionnaire()!.questions[0].candidate_answer).toBe('Permis CE');
     expect(component.questionnaire()!.sections[0].questions[0].candidate_answer).toBe('Permis CE');
+  });
+
+  it('auto-scores multiple-choice answers while still allowing evaluator override', () => {
+    component.questionnaire.set(questionnaireWithQuestion({
+      ...baseQuestion,
+      format: 'mcq',
+      points: 10,
+      max_score: 10,
+      explanation: 'Gilet\nCasque',
+      rubric: {
+        options: ['Gilet', 'Casque', 'Sandales'],
+        correct_answers: ['Gilet', 'Casque'],
+      },
+    }));
+
+    component.toggleChoice(7, 'Gilet');
+
+    expect(component.questionnaire()!.questions[0].candidate_answer).toBe('["Gilet"]');
+    expect(component.questionnaire()!.questions[0].score).toBe(5);
+
+    component.toggleChoice(7, 'Casque');
+
+    expect(component.questionnaire()!.questions[0].candidate_answer).toBe('["Gilet","Casque"]');
+    expect(component.questionnaire()!.questions[0].score).toBe(10);
+
+    component.updateScore(7, '8');
+
+    expect(component.questionnaire()!.questions[0].score).toBe(8);
   });
 
   it('blocks validation when a mandatory answer is missing', () => {

@@ -51,6 +51,34 @@ function optionLabel(value: unknown): string {
   return stringifyRubricValue(value['label'] ?? value['text'] ?? value['value'] ?? value['answer']);
 }
 
+function splitAnswers(raw: string): string[] {
+  const trimmed = raw.trim();
+  if (!trimmed) {
+    return [];
+  }
+
+  try {
+    const parsed = JSON.parse(trimmed) as unknown;
+    if (Array.isArray(parsed)) {
+      return parsed.map((item) => optionLabel(item)).filter(Boolean);
+    }
+    if (typeof parsed === 'string' || typeof parsed === 'number' || typeof parsed === 'boolean') {
+      return [String(parsed)];
+    }
+  } catch {
+    // Plain text answers are split below.
+  }
+
+  return trimmed
+    .split(/[\n;,|]+/)
+    .map((entry) => entry.trim())
+    .filter(Boolean);
+}
+
+function normalizeAnswer(value: string): string {
+  return value.trim().toLocaleLowerCase();
+}
+
 @Component({
   standalone: true,
   selector: 'app-manager-test-detail-page',
@@ -83,7 +111,14 @@ export class ManagerTestDetailPage {
     this.questions().reduce((sum, question) => sum + (question.score ?? 0), 0),
   );
   readonly maxScore = computed(
-    () => this.questions().reduce((sum, question) => sum + question.points, 0),
+    () => this.questions().reduce((sum, question) => sum + this.questionMaxScore(question), 0),
+  );
+  readonly normalizedScore = computed(() => {
+    const max = this.maxScore();
+    return max === 0 ? 0 : Math.round((this.totalScore() / max) * 100);
+  });
+  readonly hasEliminatoryFailure = computed(() =>
+    this.questions().some((question) => question.is_eliminatory && question.score !== null && question.score <= 0),
   );
 
   private readonly evaluationId = Number(this.route.snapshot.paramMap.get('id'));
@@ -116,7 +151,14 @@ export class ManagerTestDetailPage {
   }
 
   updateAnswer(questionId: number, field: 'candidate_answer' | 'manager_comment', value: string): void {
-    this.patchQuestion(questionId, (question) => ({ ...question, [field]: value }));
+    this.patchQuestion(questionId, (question) => {
+      const nextQuestion = { ...question, [field]: value };
+      if (field !== 'candidate_answer') {
+        return nextQuestion;
+      }
+      const autoScore = this.autoScore(nextQuestion);
+      return autoScore === null ? nextQuestion : { ...nextQuestion, score: autoScore };
+    });
   }
 
   updateScore(questionId: number, value: string): void {
@@ -128,13 +170,34 @@ export class ManagerTestDetailPage {
       if (!Number.isFinite(score)) {
         return { ...question, score: null };
       }
-      const boundedScore = Math.min(Math.max(Math.round(score), 0), question.points);
+      const boundedScore = Math.min(Math.max(Math.round(score), 0), this.questionMaxScore(question));
       return { ...question, score: boundedScore };
     });
   }
 
   setChoice(questionId: number, value: string): void {
-    this.updateAnswer(questionId, 'candidate_answer', value);
+    this.patchQuestion(questionId, (question) => {
+      const nextQuestion = { ...question, candidate_answer: value };
+      return { ...nextQuestion, score: this.autoScore(nextQuestion) ?? nextQuestion.score };
+    });
+  }
+
+  toggleChoice(questionId: number, value: string): void {
+    this.patchQuestion(questionId, (question) => {
+      const current = new Set(splitAnswers(question.candidate_answer));
+      if (current.has(value)) {
+        current.delete(value);
+      } else {
+        current.add(value);
+      }
+      const candidateAnswer = JSON.stringify(Array.from(current));
+      const nextQuestion = { ...question, candidate_answer: candidateAnswer };
+      return { ...nextQuestion, score: this.autoScore(nextQuestion) ?? nextQuestion.score };
+    });
+  }
+
+  isChoiceSelected(question: ManagerQuestionnaireQuestion, value: string): boolean {
+    return splitAnswers(question.candidate_answer).includes(value);
   }
 
   saveQuestionnaire(completeSections = false): void {
@@ -238,6 +301,10 @@ export class ManagerTestDetailPage {
     return labels[format] ?? format;
   }
 
+  questionMaxScore(question: ManagerQuestionnaireQuestion): number {
+    return question.max_score ?? question.points;
+  }
+
   difficultyLabel(difficulty: string): string {
     const labels: Record<string, string> = {
       easy: 'Facile',
@@ -315,6 +382,72 @@ export class ManagerTestDetailPage {
     return [rubric['options'], rubric['choices'], rubric['answers']];
   }
 
+  private correctAnswers(question: ManagerQuestionnaireQuestion): string[] {
+    const rubric = question.rubric;
+    if (isRecord(rubric)) {
+      const candidates = [rubric['correct_answers'], rubric['correct_answer'], rubric['answer']];
+      for (const candidate of candidates) {
+        if (Array.isArray(candidate)) {
+          const answers = candidate.map((entry) => optionLabel(entry)).filter(Boolean);
+          if (answers.length > 0) {
+            return answers;
+          }
+        }
+        if (typeof candidate === 'string') {
+          const answers = splitAnswers(candidate);
+          if (answers.length > 0) {
+            return answers;
+          }
+        }
+      }
+    }
+    return splitAnswers(question.explanation);
+  }
+
+  private autoScore(question: ManagerQuestionnaireQuestion): number | null {
+    if (question.format === 'mcq') {
+      const selected = new Set(splitAnswers(question.candidate_answer).map(normalizeAnswer));
+      const correct = new Set(this.correctAnswers(question).map(normalizeAnswer));
+      if (correct.size === 0) {
+        return null;
+      }
+      let correctHits = 0;
+      selected.forEach((answer) => {
+        if (correct.has(answer)) {
+          correctHits += 1;
+        }
+      });
+      const wrongHits = Array.from(selected).filter((answer) => !correct.has(answer)).length;
+      const ratio = Math.max(correctHits - wrongHits, 0) / correct.size;
+      return Math.round(this.questionMaxScore(question) * ratio);
+    }
+
+    if (question.format === 'true_false' || question.format === 'yes_no') {
+      const selected = splitAnswers(question.candidate_answer).map(normalizeAnswer);
+      const correct = this.correctAnswers(question).map(normalizeAnswer);
+      if (selected.length === 0 || correct.length === 0) {
+        return null;
+      }
+      return selected.some((answer) => correct.includes(answer)) ? this.questionMaxScore(question) : 0;
+    }
+
+    if (question.format === 'rating') {
+      const value = Number(question.candidate_answer);
+      if (!Number.isFinite(value)) {
+        return null;
+      }
+      const min = this.rubricNumber(question.rubric, 'min', 0);
+      const max = this.rubricNumber(question.rubric, 'max', this.questionMaxScore(question));
+      if (max <= min) {
+        return Math.min(Math.max(Math.round(value), 0), this.questionMaxScore(question));
+      }
+      const ratio = (value - min) / (max - min);
+      return Math.min(Math.max(Math.round(this.questionMaxScore(question) * ratio), 0), this.questionMaxScore(question));
+    }
+
+    return null;
+  }
+
   private rubricNumber(rubric: ManagerQuestionRubric, key: string, fallback: number): number {
     if (!isRecord(rubric)) {
       return fallback;
@@ -334,7 +467,7 @@ export class ManagerTestDetailPage {
     const invalidScore = questionnaire.sections
       .flatMap((section) => section.questions)
       .find(
-        (question) => question.score !== null && (question.score < 0 || question.score > question.points),
+        (question) => question.score !== null && (question.score < 0 || question.score > this.questionMaxScore(question)),
       );
     if (invalidScore) {
       return `Score invalide : ${invalidScore.title || invalidScore.text}`;

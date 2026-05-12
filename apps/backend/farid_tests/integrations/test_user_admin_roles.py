@@ -31,14 +31,77 @@ def test_users_admin_can_create_user_and_set_role(api_client):
     assert created.is_active is True
 
 
-def test_users_non_admin_cannot_access_admin_user_management(api_client):
+def test_users_hr_can_list_contacts(api_client):
     hr = UserFactory.create(role=UserRoles.HR, is_staff=True)
     api_client.force_authenticate(user=hr)
     url = reverse("users-list")
 
     res = api_client.get(url)
 
-    assert res.status_code == 403
+    assert res.status_code == 200
+
+
+def test_users_hr_cannot_create_or_update_contacts(api_client):
+    hr = UserFactory.create(role=UserRoles.HR, is_staff=True)
+    target = UserFactory.create(role=UserRoles.MANAGER)
+    api_client.force_authenticate(user=hr)
+
+    create_res = api_client.post(
+        reverse("users-list"),
+        {
+            "email": "blocked@example.com",
+            "password": "Passw0rd!23",
+            "first_name": "Blocked",
+            "last_name": "User",
+            "role": UserRoles.MANAGER,
+        },
+        format="json",
+    )
+    update_res = api_client.patch(
+        reverse("users-detail", args=[target.id]),
+        {"role": UserRoles.DIRECTOR},
+        format="json",
+    )
+
+    assert create_res.status_code == 403
+    assert update_res.status_code == 403
+    target.refresh_from_db()
+    assert target.role == UserRoles.MANAGER
+
+
+def test_users_director_can_create_and_update_contacts(api_client):
+    director = UserFactory.create(role=UserRoles.DIRECTOR, is_staff=True)
+    target = UserFactory.create(role=UserRoles.MANAGER)
+    api_client.force_authenticate(user=director)
+
+    create_res = api_client.post(
+        reverse("users-list"),
+        {
+            "email": "director-created@example.com",
+            "password": "Passw0rd!23",
+            "first_name": "Director",
+            "last_name": "Created",
+            "role": UserRoles.EMPLOYEE,
+            "is_active": True,
+        },
+        format="json",
+    )
+    update_res = api_client.patch(
+        reverse("users-detail", args=[target.id]),
+        {
+            "first_name": "Updated",
+            "last_name": "Manager",
+            "role": UserRoles.DRIVER,
+        },
+        format="json",
+    )
+
+    assert create_res.status_code == 201
+    assert update_res.status_code == 200
+    target.refresh_from_db()
+    assert target.first_name == "Updated"
+    assert target.last_name == "Manager"
+    assert target.role == UserRoles.DRIVER
 
 
 def test_users_admin_can_activate_and_deactivate_user(api_client):

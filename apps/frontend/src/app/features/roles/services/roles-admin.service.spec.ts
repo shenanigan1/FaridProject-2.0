@@ -54,5 +54,35 @@ describe('RolesAdminService', () => {
     expect(activateReq.request.method).toBe('POST');
     activateReq.flush({ status: 'user activated' });
   });
+
+  it('updates contact information and role', () => {
+    service
+      .updateUser(7, {
+        email: 'updated@example.com',
+        first_name: 'Updated',
+        last_name: 'User',
+        role: 'director',
+      })
+      .subscribe((user) => {
+        expect(user.role).toBe('director');
+      });
+
+    const req = httpMock.expectOne('/api/users/7/');
+    expect(req.request.method).toBe('PATCH');
+    expect(req.request.body).toEqual({
+      email: 'updated@example.com',
+      first_name: 'Updated',
+      last_name: 'User',
+      role: 'director',
+    });
+    req.flush({
+      id: 7,
+      email: 'updated@example.com',
+      first_name: 'Updated',
+      last_name: 'User',
+      role: 'director',
+      is_active: true,
+    });
+  });
 });
 

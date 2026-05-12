@@ -7,6 +7,7 @@ from .evaluation import LaunchEvaluationSerializer as LaunchEvaluationSerializer
 from .evaluation import SubjectEvaluationSerializer as SubjectEvaluationSerializer
 from .evaluation import StartEvaluationSerializer as StartEvaluationSerializer
 from .evaluation import build_questionnaire_payload as build_questionnaire_payload
+from .evaluation import score_answer_for_question as score_answer_for_question
 
 __all__ = [
     "SkillAnswerSerializer",
@@ -16,4 +17,5 @@ __all__ = [
     "SubjectEvaluationSerializer",
     "StartEvaluationSerializer",
     "build_questionnaire_payload",
+    "score_answer_for_question",
 ]
