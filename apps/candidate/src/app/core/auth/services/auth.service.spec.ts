@@ -7,7 +7,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { environment } from '@env/environment';
 import { TokenStorageService } from '@core/auth/services/token-storage.service';
-import { AuthService } from './auth.service';
+import { AuthService, AuthenticatedCandidate } from './auth.service';
 
 describe('AuthService (candidate)', () => {
   let service: AuthService;
@@ -27,6 +27,7 @@ describe('AuthService (candidate)', () => {
       'getRefreshToken',
       'clear',
       'isAuthenticated',
+      'getAccessToken',
     ]);
     tokenStorageSpy.isAuthenticated.and.returnValue(false);
 
@@ -192,6 +193,35 @@ describe('AuthService (candidate)', () => {
     expect(tokenStorageSpy.saveTokens).toHaveBeenCalledWith('restored-access', 'next-refresh');
     expect(candidateId).toBe(51);
     expect(service.getAuthenticatedCandidate()?.email).toBe('restore@example.com');
+  });
+
+  it('restoreSession clears stale local session when refresh token is expired', () => {
+    tokenStorageSpy.getRefreshToken.and.returnValue('expired-refresh-token');
+    service.saveAuthenticatedCandidate({
+      candidateId: 60,
+      email: 'expired@example.com',
+      firstName: 'Expired',
+      lastName: 'User',
+      phone: '',
+    });
+
+    let restored: AuthenticatedCandidate | null | undefined;
+    service.restoreSession().subscribe((candidate) => {
+      restored = candidate;
+    });
+
+    const refreshRequest = httpMock.expectOne(refreshUrl);
+    refreshRequest.flush(
+      {
+        detail: 'Token is blacklisted or expired',
+        code: 'token_not_valid',
+      },
+      { status: 401, statusText: 'Unauthorized' },
+    );
+
+    expect(restored).toBeNull();
+    expect(tokenStorageSpy.clear).toHaveBeenCalled();
+    expect(service.getAuthenticatedCandidate()).toBeNull();
   });
 
   it('logout clears local candidate state and sends bearer refresh token to backend', () => {
