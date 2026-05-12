@@ -43,7 +43,10 @@ export class App {
   });
 
   constructor() {
-    this.authService.restoreSession().subscribe();
+    const hadStoredSession = this.authService.hasStoredSession();
+    this.authService.restoreSession().subscribe((candidate) => {
+      this.authModalOpen = hadStoredSession && !candidate;
+    });
   }
 
   onProfileClicked(): void {

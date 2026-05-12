@@ -27,9 +27,11 @@ describe('App', () => {
       'saveAuthenticatedCandidate',
       'logout',
       'restoreSession',
+      'hasStoredSession',
     ]);
 
     authServiceSpy.isAuthenticated.and.returnValue(false);
+    authServiceSpy.hasStoredSession.and.returnValue(false);
     authServiceSpy.getAuthenticatedCandidate.and.returnValue(null);
     authServiceSpy.restoreSession.and.returnValue(of(null));
 
@@ -70,6 +72,16 @@ describe('App', () => {
 
     expect(fixture.componentInstance.authModalOpen).toBeTrue();
     expect(fixture.componentInstance.profileModalOpen).toBeFalse();
+  });
+
+  it('opens auth modal when a stored session cannot be restored', () => {
+    authServiceSpy.hasStoredSession.and.returnValue(true);
+    authServiceSpy.restoreSession.and.returnValue(of(null));
+
+    const fixture = TestBed.createComponent(App);
+    fixture.detectChanges();
+
+    expect(fixture.componentInstance.authModalOpen).toBeTrue();
   });
 
   it('opens profile modal with prefilled values when user is authenticated', () => {
