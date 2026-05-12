@@ -126,7 +126,7 @@ CORS_ALLOWED_ORIGINS = os.getenv(
     "CORS_ALLOWED_ORIGINS",
     "http://localhost:4200,http://127.0.0.1:4200",
 ).split(",")
-CORS_ALLOW_CREDENTIALS = os.getenv("CORS_ALLOW_CREDENTIALS", "True").lower() == "true"
+CORS_ALLOW_CREDENTIALS = os.getenv("CORS_ALLOW_CREDENTIALS", "False").lower() == "true"
 CSRF_TRUSTED_ORIGINS = [
     origin
     for origin in os.getenv("CSRF_TRUSTED_ORIGINS", "").split(",")

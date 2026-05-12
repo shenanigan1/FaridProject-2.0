@@ -71,6 +71,14 @@ export class AuthService {
     return this.tokenStorage.isAuthenticated();
   }
 
+  hasStoredSession(): boolean {
+    return (
+      !!this.tokenStorage.getAccessToken() ||
+      !!this.tokenStorage.getRefreshToken() ||
+      !!this.getAuthenticatedCandidate()
+    );
+  }
+
   signIn(payload: SignInPayload): Observable<AuthenticatedCandidate> {
     return this.http
       .post<LoginResponseDto>(`${this.authBaseUrl}/login/`, {
@@ -144,8 +152,7 @@ export class AuthService {
 
   logout(): void {
     const refreshToken = this.tokenStorage.getRefreshToken();
-    this.tokenStorage.clear();
-    localStorage.removeItem(this.candidateProfileKey);
+    this.clearLocalSession();
     this.http
       .post<void>(`${this.authBaseUrl}/logout/`, refreshToken ? { refresh: refreshToken } : {})
       .subscribe({ error: () => void 0 });
@@ -168,6 +175,7 @@ export class AuthService {
 
     const refreshToken = this.tokenStorage.getRefreshToken();
     if (!refreshToken) {
+      this.clearLocalSession();
       return of(null);
     }
 
@@ -176,10 +184,15 @@ export class AuthService {
       switchMap(() => this.resolveCandidateProfile()),
       tap((candidate) => this.saveAuthenticatedCandidate(candidate)),
       catchError(() => {
-        this.logout();
+        this.clearLocalSession();
         return of(null);
       }),
     );
+  }
+
+  private clearLocalSession(): void {
+    this.tokenStorage.clear();
+    localStorage.removeItem(this.candidateProfileKey);
   }
 
   private resolveCandidateProfile(): Observable<AuthenticatedCandidate> {
