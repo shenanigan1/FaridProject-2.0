@@ -359,14 +359,29 @@ describe('TestTemplateEditorPage', () => {
     expect(component.apiError()).toBe('Nope.');
   });
 
-  it('save() should block incomplete workflow before calling API', () => {
+  it('save() should show a clear French error when required template fields are missing', () => {
     const { component, apiMock } = setup({ routeId: null });
 
-    component.form.controls.name.setValue('Incomplete Template');
+    component.form.controls.name.setValue('');
     component.save();
 
     expect(apiMock.create).not.toHaveBeenCalled();
-    expect(component.apiError()).toContain('Complete the workflow');
+    expect(component.apiError()).toBe('Champ obligatoire');
+  });
+
+  it('save() should explain that every section needs at least one pool before calling API', () => {
+    const { component, apiMock } = setup({ routeId: null });
+
+    component.form.controls.name.setValue('Template sans pool');
+    component.form.controls.duration_minutes.setValue(45);
+    component.form.controls.min_pass_score.setValue(80);
+    component.addSection();
+    component.updateSectionTitle(component.sections()[0].id, 'Conduite');
+    component.updateSectionWeight(component.sections()[0].id, 100);
+    component.save();
+
+    expect(apiMock.create).not.toHaveBeenCalled();
+    expect(component.apiError()).toBe('Chaque section doit contenir au moins un pool de questions.');
   });
 
   it('completion() should be between 0 and 100 and increase when form is filled + weights sum to 100', () => {

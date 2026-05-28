@@ -23,6 +23,7 @@ export class TestAssessmentPage {
   readonly isLoading = signal(true);
   readonly error = signal<string | null>(null);
   readonly message = signal<string | null>(null);
+  readonly selectedSectionId = signal<number | null>(null);
 
   constructor() {
     this.load();
@@ -40,6 +41,24 @@ export class TestAssessmentPage {
         next: () => this.message.set('Resultats valides.'),
         error: () => this.message.set('Impossible de valider les resultats.'),
       });
+  }
+
+  rejectCandidate(): void {
+    if (!Number.isInteger(this.evaluationId) || this.evaluationId <= 0) {
+      return;
+    }
+
+    this.bff
+      .rejectAssessment(this.evaluationId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => this.message.set('Candidat refuse.'),
+        error: () => this.message.set('Impossible de refuser le candidat.'),
+      });
+  }
+
+  selectSection(sectionId: number): void {
+    this.selectedSectionId.update((current) => current === sectionId ? null : sectionId);
   }
 
   private load(): void {

@@ -11,18 +11,18 @@ import { APP_ICONS } from '@shared/icons/app-icons';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section class="ff-app-screen">
-      <article class="ff-app-container ff-app-panel ff-app-stack" style="max-width: 32rem">
-        <div class="ff-icon-btn" style="margin-inline: auto; color: #fbbf24">
-          <svg [lucideIcon]="icons.warning" style="width: 1.5rem; height: 1.5rem"></svg>
+      <article class="ff-app-container ff-app-container--modal ff-app-panel ff-app-stack">
+        <div class="ff-icon-btn ff-icon-btn--center ff-icon-btn--warning">
+          <svg [lucideIcon]="icons.warning" class="ff-icon-inline ff-icon-inline--lg"></svg>
         </div>
 
-        <h1 class="ff-section-title" style="text-align: center">{{ title() }}</h1>
-        <p class="ff-app-subtitle" style="text-align: center">{{ description() }}</p>
+        <h1 class="ff-section-title ff-text-center">{{ title() }}</h1>
+        <p class="ff-app-subtitle ff-text-center">{{ description() }}</p>
 
         <div class="ff-empty">Error: {{ errorCode() }} - {{ errorMessage() }}</div>
 
         <a routerLink="/login" class="ff-btn ff-btn-primary">
-          <svg [lucideIcon]="icons.back" style="width: 1rem; height: 1rem"></svg>
+          <svg [lucideIcon]="icons.back" class="ff-icon-inline"></svg>
           Back to login
         </a>
       </article>

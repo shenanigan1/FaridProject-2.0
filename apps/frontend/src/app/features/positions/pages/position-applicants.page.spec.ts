@@ -26,6 +26,8 @@ describe('PositionApplicantsPage', () => {
       appliedAt: '2026-04-08T10:00:00Z',
       ongoingTestsCount: 2,
       ongoingTestIds: [10, 11],
+      completedTestsCount: 1,
+      completedTestIds: [12],
     },
     {
       applicationId: 2,
@@ -37,6 +39,8 @@ describe('PositionApplicantsPage', () => {
       appliedAt: '2026-04-08T09:00:00Z',
       ongoingTestsCount: 0,
       ongoingTestIds: [],
+      completedTestsCount: 0,
+      completedTestIds: [],
     },
   ];
 
@@ -125,5 +129,14 @@ describe('PositionApplicantsPage', () => {
     expect(routerSpy.navigate).toHaveBeenCalledOnceWith(['/tests/relaunch', 8], {
       queryParams: { applicationId: 2 },
     });
+  });
+
+  it('renders completed tests as a green link to the filtered tests page', () => {
+    const link = (fixture.nativeElement as HTMLElement).querySelector(
+      'a.ff-status-pill--success',
+    ) as HTMLAnchorElement | null;
+
+    expect(link?.textContent).toContain('Tests effectues: 1');
+    expect(link?.tagName).toBe('A');
   });
 });

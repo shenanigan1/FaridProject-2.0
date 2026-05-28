@@ -24,13 +24,15 @@ describe('PositionApplicantsService', () => {
     httpMock.verify();
   });
 
-  it('maps applicants for a position with candidate details and ongoing tests count', () => {
+  it('maps applicants for a position with candidate details and test counts', () => {
     let names: string[] = [];
     let ongoingTestsCount = 0;
+    let completedTestsCount = 0;
 
     service.listByPosition(9).subscribe((applicants) => {
       names = applicants.map((applicant) => applicant.fullName);
       ongoingTestsCount = applicants[0]?.ongoingTestsCount ?? 0;
+      completedTestsCount = applicants[0]?.completedTestsCount ?? 0;
     });
 
     const applicationsRequest = httpMock.expectOne('/api/jobapplications/');
@@ -72,10 +74,17 @@ describe('PositionApplicantsService', () => {
         status: 'in_progress',
         updated_at: '2026-04-08T11:00:00Z',
       },
+      {
+        id: 701,
+        application: 1,
+        status: 'completed',
+        updated_at: '2026-04-08T12:00:00Z',
+      },
     ]);
 
     expect(names).toEqual(['Jane Doe']);
     expect(ongoingTestsCount).toBe(1);
+    expect(completedTestsCount).toBe(1);
   });
 
   it('lists in-progress tests for all positions', () => {

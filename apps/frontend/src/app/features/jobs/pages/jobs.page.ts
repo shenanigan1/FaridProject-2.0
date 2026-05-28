@@ -33,6 +33,7 @@ interface JobOfferVm {
   location: string | null;
   contractType: string;
   department: string;
+  applicantsCount: number;
   applicants: string;
   status: 'active' | 'draft';
   dto: PositionDto;
@@ -289,6 +290,14 @@ export class JobsPage {
     return offer.id;
   }
 
+  activeCount(offers: JobOfferVm[]): number {
+    return offers.filter((offer) => offer.status === 'active').length;
+  }
+
+  applicantsTotal(offers: JobOfferVm[]): number {
+    return offers.reduce((total, offer) => total + offer.applicantsCount, 0);
+  }
+
   private toJobOffer(
     position: PositionDto,
     applicationCounts: Record<number, number>,
@@ -304,7 +313,8 @@ export class JobsPage {
       location: position.location?.trim() || null,
       contractType: position.contract_type,
       department: position.department,
-      applicants: `${applicantsCount} Applicants`,
+      applicantsCount,
+      applicants: `${applicantsCount} candidature${applicantsCount > 1 ? 's' : ''}`,
       status: getJobStatus(position),
       dto: position,
     };

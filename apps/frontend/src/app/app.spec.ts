@@ -6,6 +6,7 @@ import { BehaviorSubject, of } from 'rxjs';
 
 import { App } from './app';
 import { AuthSessionService } from './core/auth/services/auth-session.service';
+import { SessionExpiredService } from './core/auth/services/session-expired.service';
 import { MeResponse } from './core/auth/models/auth.models';
 
 @Component({ standalone: true, template: '' })
@@ -19,6 +20,7 @@ describe('App', () => {
     meSubject = new BehaviorSubject<MeResponse | null>(null);
     authMock = jasmine.createSpyObj<AuthSessionService>('AuthSessionService', [
       'loadMeOnce',
+      'clearMe',
       'logout',
     ], {
       me$: meSubject.asObservable(),
@@ -63,10 +65,11 @@ describe('App', () => {
     app.me.set({ role: 'admin' });
 
     expect(app.menuItems().map((item) => item.route)).toEqual([
-      '/dashboard',
+      '/admin',
       '/contact',
       '/tests',
       '/jobs',
+      '/roles',
     ]);
   });
 
@@ -75,7 +78,7 @@ describe('App', () => {
     const app = fixture.componentInstance;
     fixture.detectChanges();
 
-    expect(app.menuItems().map((item) => item.route)).toEqual(['/dashboard']);
+    expect(app.menuItems().map((item) => item.route)).toEqual([]);
 
     meSubject.next({
       id: 7,
@@ -88,10 +91,38 @@ describe('App', () => {
 
     expect(app.userFullName()).toBe('Admin Ready');
     expect(app.menuItems().map((item) => item.route)).toEqual([
-      '/dashboard',
+      '/admin',
       '/contact',
       '/tests',
       '/jobs',
+      '/roles',
     ]);
+  });
+
+  it('uses role-specific shell titles for dedicated dashboards', () => {
+    const fixture = TestBed.createComponent(App);
+    const app = fixture.componentInstance;
+
+    app.currentUrl.set('/admin');
+    expect(app.chromeTitle()).toBe('ADMIN_COMMAND');
+
+    app.currentUrl.set('/direction');
+    expect(app.chromeTitle()).toBe('DIRECTION_CORE');
+
+    app.currentUrl.set('/employee');
+    expect(app.chromeTitle()).toBe('EMPLOYEE_PORTAL');
+  });
+
+  it('clears shell permissions and redirects to login when the session expires', () => {
+    const fixture = TestBed.createComponent(App);
+    const router = TestBed.inject(Router);
+    const sessionExpired = TestBed.inject(SessionExpiredService);
+    spyOn(router, 'navigateByUrl').and.resolveTo(true);
+
+    sessionExpired.notify('Session expirée, reconnectez-vous.');
+    fixture.detectChanges();
+
+    expect(authMock.clearMe).toHaveBeenCalledTimes(1);
+    expect(router.navigateByUrl).toHaveBeenCalledWith('/login?session=expired');
   });
 });

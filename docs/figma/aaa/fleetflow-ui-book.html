@@ -1,0 +1,1139 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FleetFlow UI Book - Design System MVP</title>
+    <style>
+      :root {
+        --ff-bg: #0d1219;
+        --ff-bg-grid: #151d2a;
+        --ff-header: #030816;
+        --ff-surface: #1a2029;
+        --ff-surface-raised: #222a36;
+        --ff-surface-soft: #111823;
+        --ff-border: #8ea0bb;
+        --ff-border-soft: #516075;
+        --ff-text: #fbfdff;
+        --ff-muted: #dbe6f8;
+        --ff-subtle: #b9c8df;
+        --ff-primary: #003f8c;
+        --ff-primary-2: #0755b0;
+        --ff-success: #064e3b;
+        --ff-warning: #7c2d12;
+        --ff-danger: #7f1d1d;
+        --ff-info: #123b7a;
+        --ff-focus: #bfdbfe;
+        --ff-radius-sm: 10px;
+        --ff-radius-md: 16px;
+        --ff-radius-lg: 24px;
+        --ff-shadow: 0 22px 70px rgba(0, 0, 0, 0.38);
+        color-scheme: dark;
+        font-family:
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        background: var(--ff-bg);
+      }
+
+      body {
+        margin: 0;
+        min-width: 1800px;
+        color: var(--ff-text);
+        background:
+          linear-gradient(rgba(142, 160, 187, 0.05) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(142, 160, 187, 0.05) 1px, transparent 1px),
+          radial-gradient(circle at 20% 0%, rgba(7, 85, 176, 0.2), transparent 26%),
+          var(--ff-bg);
+        background-size: 48px 48px, 48px 48px, auto, auto;
+      }
+
+      button,
+      input,
+      select,
+      textarea {
+        font: inherit;
+      }
+
+      button:focus-visible,
+      input:focus-visible,
+      select:focus-visible,
+      textarea:focus-visible,
+      a:focus-visible {
+        outline: 3px solid var(--ff-focus);
+        outline-offset: 3px;
+      }
+
+      .book {
+        width: 1800px;
+        padding: 64px;
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: 1fr 420px;
+        gap: 40px;
+        align-items: stretch;
+        margin-bottom: 40px;
+      }
+
+      .hero-copy,
+      .status-panel,
+      .section,
+      .component,
+      .code-card {
+        border: 1px solid var(--ff-border-soft);
+        background: rgba(26, 32, 41, 0.92);
+        box-shadow: var(--ff-shadow);
+      }
+
+      .hero-copy {
+        padding: 42px;
+        border-radius: 34px;
+      }
+
+      .status-panel {
+        border-radius: 34px;
+        padding: 28px;
+      }
+
+      .kicker {
+        display: inline-flex;
+        align-items: center;
+        min-height: 34px;
+        padding: 0 14px;
+        border: 1px solid var(--ff-border);
+        border-radius: 999px;
+        background: var(--ff-header);
+        color: var(--ff-text);
+        font-size: 13px;
+        font-weight: 900;
+        text-transform: uppercase;
+      }
+
+      h1,
+      h2,
+      h3,
+      h4,
+      p,
+      ul {
+        margin: 0;
+      }
+
+      h1 {
+        margin-top: 18px;
+        font-size: 64px;
+        line-height: 1;
+        letter-spacing: 0;
+        color: #fbfdff;
+      }
+
+      .lead {
+        margin-top: 22px;
+        max-width: 980px;
+        color: #dbe6f8;
+        font-size: 22px;
+        line-height: 1.45;
+      }
+
+      .book :is(h2, h3, p, li, span, strong, label, button, input, select, textarea) {
+        color: #fbfdff;
+      }
+
+      .book :is(.lead, .meta, .list, .field label, .section-head p, .component > p, .data-card p, .card-title + p) {
+        color: #dbe6f8;
+      }
+
+      .section {
+        margin-top: 30px;
+        padding: 28px;
+        border-radius: 30px;
+      }
+
+      .section-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+        gap: 24px;
+        margin-bottom: 22px;
+      }
+
+      .section-head h2 {
+        font-size: 34px;
+        line-height: 1.1;
+      }
+
+      .section-head p {
+        max-width: 760px;
+        color: var(--ff-muted);
+        font-size: 17px;
+        line-height: 1.45;
+      }
+
+      .grid-2 {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 22px;
+      }
+
+      .grid-3 {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 22px;
+      }
+
+      .grid-4 {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      .component {
+        min-height: 180px;
+        padding: 22px;
+        border-radius: 24px;
+      }
+
+      .component h3 {
+        font-size: 22px;
+        margin-bottom: 14px;
+      }
+
+      .card-title {
+        display: block;
+        font-size: 22px;
+        font-weight: 850;
+        line-height: 1.2;
+      }
+
+      .component > p {
+        color: var(--ff-muted);
+        line-height: 1.45;
+        margin-bottom: 18px;
+      }
+
+      .swatch {
+        min-height: 126px;
+        border: 1px solid var(--ff-border-soft);
+        border-radius: 18px;
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        justify-content: end;
+        gap: 4px;
+      }
+
+      .swatch strong {
+        font-size: 18px;
+      }
+
+      .swatch span {
+        color: var(--ff-muted);
+        font-weight: 800;
+      }
+
+      .type-scale {
+        display: grid;
+        gap: 14px;
+      }
+
+      .type-row {
+        display: grid;
+        grid-template-columns: 210px 1fr 180px;
+        gap: 20px;
+        align-items: baseline;
+        padding: 14px;
+        border: 1px solid var(--ff-border-soft);
+        border-radius: 14px;
+        background: var(--ff-surface-soft);
+      }
+
+      .type-row span:first-child,
+      .meta {
+        color: var(--ff-muted);
+        font-weight: 800;
+      }
+
+      .display {
+        font-size: 46px;
+        font-weight: 900;
+        line-height: 1.02;
+      }
+
+      .headline {
+        font-size: 30px;
+        font-weight: 850;
+      }
+
+      .title {
+        font-size: 21px;
+        font-weight: 800;
+      }
+
+      .body {
+        font-size: 16px;
+        line-height: 1.45;
+      }
+
+      .label {
+        font-size: 12px;
+        font-weight: 900;
+        text-transform: uppercase;
+      }
+
+      .stack {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        align-items: center;
+      }
+
+      .btn {
+        min-height: 48px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        border: 1px solid var(--ff-focus);
+        border-radius: 14px;
+        padding: 0 22px;
+        color: var(--ff-text);
+        background: var(--ff-primary);
+        font-weight: 900;
+        cursor: default;
+      }
+
+      .btn.secondary {
+        background: transparent;
+        border-color: var(--ff-border);
+      }
+
+      .btn.success {
+        background: var(--ff-success);
+        border-color: #a7f3d0;
+      }
+
+      .btn.warning {
+        background: var(--ff-warning);
+        border-color: #fed7aa;
+      }
+
+      .btn.danger {
+        background: var(--ff-danger);
+        border-color: #fecaca;
+      }
+
+      .btn.disabled {
+        color: #f8fbff;
+        background: #283242;
+        border-color: #6b7890;
+        opacity: 0.72;
+      }
+
+      .chip {
+        min-height: 34px;
+        display: inline-flex;
+        align-items: center;
+        padding: 0 14px;
+        border: 1px solid var(--ff-border);
+        border-radius: 999px;
+        background: var(--ff-surface-soft);
+        color: var(--ff-text);
+        font-size: 13px;
+        font-weight: 850;
+      }
+
+      .chip.active {
+        background: var(--ff-primary);
+        border-color: var(--ff-focus);
+      }
+
+      .chip.success {
+        background: var(--ff-success);
+        border-color: #a7f3d0;
+      }
+
+      .chip.warning {
+        background: var(--ff-warning);
+        border-color: #fed7aa;
+      }
+
+      .chip.danger {
+        background: var(--ff-danger);
+        border-color: #fecaca;
+      }
+
+      .field {
+        display: grid;
+        gap: 8px;
+        min-width: 260px;
+      }
+
+      .field label {
+        color: var(--ff-muted);
+        font-size: 13px;
+        font-weight: 900;
+        text-transform: uppercase;
+      }
+
+      .control {
+        min-height: 52px;
+        width: 100%;
+        border: 1px solid var(--ff-border);
+        border-radius: 14px;
+        background: #050914;
+        color: var(--ff-text);
+        padding: 0 16px;
+      }
+
+      textarea.control {
+        min-height: 112px;
+        padding: 14px 16px;
+        resize: none;
+      }
+
+      .error {
+        color: #fecaca;
+        font-size: 13px;
+        font-weight: 850;
+      }
+
+      .tabs {
+        display: inline-grid;
+        grid-auto-flow: column;
+        gap: 4px;
+        padding: 4px;
+        border: 1px solid var(--ff-border-soft);
+        border-radius: 18px;
+        background: var(--ff-surface-soft);
+      }
+
+      .tab {
+        min-height: 42px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 22px;
+        border-radius: 14px;
+        color: var(--ff-muted);
+        font-weight: 900;
+      }
+
+      .tab.active {
+        color: white;
+        background: var(--ff-primary);
+      }
+
+      .data-card {
+        border: 1px solid var(--ff-border);
+        border-radius: 20px;
+        padding: 20px;
+        background: var(--ff-surface);
+      }
+
+      .data-card .top {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        align-items: start;
+      }
+
+      .data-card .card-title {
+        font-size: 23px;
+      }
+
+      .data-card p {
+        margin-top: 7px;
+        color: var(--ff-muted);
+        line-height: 1.35;
+      }
+
+      .progress {
+        height: 10px;
+        margin-top: 18px;
+        border-radius: 999px;
+        background: #384252;
+        overflow: hidden;
+      }
+
+      .progress > span {
+        display: block;
+        height: 100%;
+        background: #70a7ff;
+      }
+
+      .score {
+        display: grid;
+        place-items: center;
+        width: 116px;
+        height: 116px;
+        border: 5px solid #a7f3d0;
+        border-radius: 28px;
+        background: #111823;
+      }
+
+      .score strong {
+        font-size: 32px;
+      }
+
+      .score span {
+        color: var(--ff-muted);
+        font-weight: 800;
+      }
+
+      .question {
+        display: grid;
+        gap: 14px;
+        border: 1px solid var(--ff-border);
+        border-radius: 20px;
+        padding: 20px;
+        background: var(--ff-surface);
+      }
+
+      .question-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+      }
+
+      .choices {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .choice {
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 14px;
+        border: 1px solid var(--ff-border-soft);
+        border-radius: 12px;
+        background: var(--ff-surface-soft);
+      }
+
+      .choice.correct {
+        border-color: #a7f3d0;
+        background: var(--ff-success);
+      }
+
+      .shell {
+        width: 390px;
+        height: 680px;
+        display: flex;
+        flex-direction: column;
+        border: 1px solid var(--ff-border);
+        border-radius: 26px;
+        overflow: hidden;
+        background: var(--ff-bg);
+      }
+
+      .appbar {
+        min-height: 72px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 18px;
+        border-bottom: 1px solid var(--ff-border-soft);
+        background: var(--ff-header);
+      }
+
+      .appbar strong {
+        font-size: 22px;
+      }
+
+      .shell-body {
+        flex: 1;
+        display: grid;
+        gap: 14px;
+        align-content: start;
+        padding: 18px;
+      }
+
+      .bottom-nav {
+        min-height: 78px;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+        padding: 10px 12px;
+        border-top: 1px solid var(--ff-border-soft);
+        background: var(--ff-header);
+      }
+
+      .bottom-nav span {
+        display: grid;
+        place-items: center;
+        border-radius: 14px;
+        color: var(--ff-muted);
+        font-size: 13px;
+        font-weight: 850;
+      }
+
+      .bottom-nav .active {
+        background: var(--ff-primary);
+        color: white;
+      }
+
+      .modal-preview {
+        width: 470px;
+        border: 1px solid var(--ff-border);
+        border-radius: 28px;
+        background: var(--ff-surface);
+        padding: 24px;
+      }
+
+      .sheet-preview {
+        width: 470px;
+        min-height: 360px;
+        display: grid;
+        align-content: start;
+        gap: 16px;
+        border: 1px solid var(--ff-border);
+        border-radius: 30px 30px 12px 12px;
+        background: var(--ff-surface);
+        padding: 22px;
+      }
+
+      .grabber {
+        width: 70px;
+        height: 6px;
+        border-radius: 999px;
+        background: var(--ff-border);
+        justify-self: center;
+        margin-bottom: 8px;
+      }
+
+      pre {
+        margin: 0;
+        white-space: pre-wrap;
+        color: #e0f2fe;
+        font-size: 14px;
+        line-height: 1.5;
+      }
+
+      code {
+        font-family: "JetBrains Mono", "Cascadia Code", Consolas, monospace;
+      }
+
+      .code-card {
+        border-radius: 24px;
+        padding: 22px;
+        background: #050914;
+      }
+
+      .code-card h3 {
+        margin-bottom: 14px;
+      }
+
+      .dos-donts {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+      }
+
+      .list {
+        display: grid;
+        gap: 10px;
+        color: var(--ff-muted);
+        line-height: 1.45;
+        padding-left: 20px;
+      }
+    </style>
+  <style id="fleetflow-aaa-overrides">
+  :root { color-scheme: dark; }
+  html, body { background: #10141b !important; color: #fbfdff !important; }
+  body, body * { text-shadow: none !important; }
+  body :is(h1,h2,h3,h4,h5,h6,p,span,label,small,div,li,dt,dd,td,th,strong,em,a,button) {
+    color: #fbfdff !important;
+  }
+  body :is(.text-outline,.text-on-surface-variant,.text-slate-400,.text-gray-400,.text-neutral-400,.text-zinc-400),
+  body [class*="text-outline"],
+  body [class*="text-on-surface-variant"],
+  body [class*="text-gray"],
+  body [class*="text-slate"],
+  body [class*="text-zinc"],
+  body [class*="text-neutral"] {
+    color: #f8fbff !important;
+  }
+  body :is(header,main,footer,section,article,nav,form),
+  body [class*="bg-background"],
+  body [class*="bg-surface"],
+  body [class*="bg-[#1C2027]"],
+  body [class*="bg-[#030816]"] {
+    border-color: #7f8da3 !important;
+  }
+  body [class*="bg-background"] {
+    background-color: #10141b !important;
+  }
+  body :is(input,select,textarea) {
+    background: #050914 !important;
+    color: #ffffff !important;
+    border: 1px solid #dbeafe !important;
+  }
+  body :is(input,textarea)::placeholder { color: #f1f5f9 !important; opacity: 1 !important; }
+  body button,
+  body a[role="button"],
+  body [class*="bg-primary"],
+  body [class*="bg-secondary-container"],
+  body [class*="bg-[#1683F7]"],
+  body [class*="bg-[#1683f7]"],
+  body [class*="bg-blue"] {
+    background-color: #003f8c !important;
+    border-color: #bfdbfe !important;
+    color: #ffffff !important;
+  }
+  body [class*="bg-green"],
+  body [class*="bg-emerald"] {
+    background-color: #064e3b !important;
+    color: #ffffff !important;
+    border-color: #a7f3d0 !important;
+  }
+  body [class*="bg-orange"],
+  body [class*="bg-amber"],
+  body [class*="bg-yellow"],
+  body [class*="bg-tertiary"] {
+    background-color: #5f2109 !important;
+    color: #ffffff !important;
+    border-color: #fed7aa !important;
+  }
+  body [class*="bg-red"],
+  body [class*="bg-rose"],
+  body [class*="bg-error"],
+  body [class*="bg-danger"] {
+    background-color: #7f1d1d !important;
+    color: #ffffff !important;
+    border-color: #fecaca !important;
+  }
+  body [class*="bg-success"] {
+    background-color: #064e3b !important;
+    color: #ffffff !important;
+    border-color: #a7f3d0 !important;
+  }
+  body [class*="text-tertiary"],
+  body [class*="text-error"],
+  body [class*="text-danger"],
+  body [class*="text-success"] {
+    color: #ffffff !important;
+  }
+  body .material-symbols-outlined {
+    color: #ffffff !important;
+    background-color: #0b1220 !important;
+    border-radius: 999px !important;
+  }
+  body :is(a,button,input,select,textarea,[tabindex]):focus-visible {
+    outline: 3px solid #bfdbfe !important;
+    outline-offset: 3px !important;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      scroll-behavior: auto !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>
+</head>
+  <body>
+    <main class="book">
+      <header class="hero">
+        <section class="hero-copy">
+          <span class="kicker">FleetFlow UI Book / maître d’œuvre</span>
+          <h1>Design system MVP pour construire l’app sans dérive</h1>
+          <p class="lead">
+            Ce book définit les tokens, composants, variantes, états et snippets de base. Il sert de
+            contrat visuel pour `libs/shared`, les écrans admin/RH/manager et l’app candidat.
+          </p>
+        </section>
+        <aside class="status-panel" aria-label="Statut du book UI">
+          <div class="stack">
+            <span class="chip active">AAA target</span>
+            <span class="chip success">Mobile-first</span>
+            <span class="chip warning">Prod MVP</span>
+          </div>
+          <div style="height: 26px"></div>
+          <div class="data-card">
+            <div class="top">
+              <div>
+                <strong class="card-title">Source de vérité</strong>
+                <p>Tout nouveau composant doit exister ici avant d’être copié dans une page.</p>
+              </div>
+              <div class="score"><strong>AA+</strong><span>min</span></div>
+            </div>
+          </div>
+        </aside>
+      </header>
+
+      <section class="section" aria-labelledby="tokens-title">
+        <div class="section-head">
+          <div>
+            <h2 id="tokens-title">01. Tokens visuels</h2>
+            <p>Palette volontairement plus contrastée que Figma brut pour rester lisible en prod.</p>
+          </div>
+          <span class="kicker">CSS variables</span>
+        </div>
+        <div class="grid-4">
+          <div class="swatch" style="background: var(--ff-bg)"><strong>Background</strong><span>#0D1219</span></div>
+          <div class="swatch" style="background: var(--ff-header)"><strong>Header</strong><span>#030816</span></div>
+          <div class="swatch" style="background: var(--ff-surface)"><strong>Surface</strong><span>#1A2029</span></div>
+          <div class="swatch" style="background: var(--ff-surface-raised)"><strong>Raised</strong><span>#222A36</span></div>
+          <div class="swatch" style="background: var(--ff-primary)"><strong>Primary</strong><span>#003F8C</span></div>
+          <div class="swatch" style="background: var(--ff-success)"><strong>Success</strong><span>#064E3B</span></div>
+          <div class="swatch" style="background: var(--ff-warning)"><strong>Warning</strong><span>#7C2D12</span></div>
+          <div class="swatch" style="background: var(--ff-danger)"><strong>Danger</strong><span>#7F1D1D</span></div>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="type-title">
+        <div class="section-head">
+          <div>
+            <h2 id="type-title">02. Typographie</h2>
+            <p>Hiérarchie compacte, sans letter-spacing négatif. Les labels peuvent être uppercase mais restent courts.</p>
+          </div>
+        </div>
+        <div class="type-scale">
+          <div class="type-row"><span>Display / page</span><strong class="display">System Core</strong><span class="meta">46 / 1.02 / 900</span></div>
+          <div class="type-row"><span>Headline</span><strong class="headline">Validation Queue</strong><span class="meta">30 / 1.15 / 850</span></div>
+          <div class="type-row"><span>Title</span><strong class="title">Conduite de Nuit</strong><span class="meta">21 / 1.2 / 800</span></div>
+          <div class="type-row"><span>Body</span><span class="body">Le manager remplit uniquement les sections assignées.</span><span class="meta">16 / 1.45 / 400</span></div>
+          <div class="type-row"><span>Label</span><span class="label">Champ obligatoire</span><span class="meta">12 / 1 / 900</span></div>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="controls-title">
+        <div class="section-head">
+          <div>
+            <h2 id="controls-title">03. Contrôles et états</h2>
+            <p>Boutons, chips, tabs, champs et erreurs. Un état visuel doit toujours avoir un texte explicite.</p>
+          </div>
+        </div>
+        <div class="grid-3">
+          <article class="component">
+            <h2>Boutons</h2>
+            <p>Hauteur min 48px, focus visible, texte précis.</p>
+            <div class="stack">
+              <button class="btn" type="button" aria-label="Valider">Valider</button>
+              <button class="btn secondary" type="button">Voir détails</button>
+              <button class="btn success" type="button">Créer</button>
+              <button class="btn warning" type="button" aria-label="Relancer">Relancer</button>
+              <button class="btn danger" type="button" aria-label="Refuser">Refuser</button>
+              <button class="btn disabled" type="button" disabled>Bloqué</button>
+            </div>
+          </article>
+          <article class="component">
+            <h2>Chips / statuts</h2>
+            <p>Couleur + texte. Jamais uniquement la couleur.</p>
+            <div class="stack">
+              <span class="chip active">Tous</span>
+              <span class="chip success">Validé</span>
+              <span class="chip warning">Sous revue</span>
+              <span class="chip danger">Rejeté</span>
+              <span class="chip">Brouillon</span>
+            </div>
+          </article>
+          <article class="component">
+            <h2>Tabs</h2>
+            <p>Utilisées pour `Tests / Templates`, `Applicants / Details / Settings`.</p>
+            <div class="tabs" role="tablist" aria-label="Tabs exemple">
+              <span class="tab active">Tests</span>
+              <span class="tab">Templates</span>
+              <span class="tab">Pools</span>
+            </div>
+          </article>
+          <article class="component">
+            <h2>Input</h2>
+            <p>Label programmatique + message d’erreur lié.</p>
+            <div class="field">
+              <label for="book-email">Email address</label>
+              <input class="control" id="book-email" value="name@fleetflow.com" / aria-label="book-email">
+              <p class="error">Champ obligatoire</p>
+            </div>
+          </article>
+          <article class="component">
+            <h2>Select</h2>
+            <p>Pour manager, rôle, terminal, statut.</p>
+            <div class="field">
+              <label for="book-manager">Manager référent</label>
+              <select class="control" id="book-manager" aria-label="book-manager">
+                <option>Marc Thorne - Senior Evaluator</option>
+              </select>
+            </div>
+          </article>
+          <article class="component">
+            <h2>Textarea</h2>
+            <p>Commentaires manager / feedback global.</p>
+            <div class="field">
+              <label for="book-comment">Commentaire</label>
+              <textarea class="control" id="book-comment" aria-label="Zone de texte">Réponse claire, score auto conservé.</textarea>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="business-title">
+        <div class="section-head">
+          <div>
+            <h2 id="business-title">04. Composants métier</h2>
+            <p>Les composants qui structurent le workflow tests/jobs. À créer en shared avant de composer les pages.</p>
+          </div>
+        </div>
+        <div class="grid-3">
+          <article class="component">
+            <h2>EvaluationCard</h2>
+            <div class="data-card">
+              <div class="top">
+                <div>
+                  <strong class="card-title">Amina Al-Fayed</strong>
+                  <p>Hazmat Driver · Safety Protocol A</p>
+                </div>
+                <span class="chip warning">Sous revue</span>
+              </div>
+              <div class="progress"><span style="width: 80%"></span></div>
+              <p class="meta" style="margin-top: 12px">4/5 sections terminées</p>
+            </div>
+          </article>
+          <article class="component">
+            <h2>TemplateCard</h2>
+            <div class="data-card">
+              <div class="top">
+                <div>
+                  <strong class="card-title">Sécurité Hazmat</strong>
+                  <p>Procédures matières dangereuses et urgence.</p>
+                </div>
+                <span class="chip warning">Difficile</span>
+              </div>
+              <p class="meta" style="margin-top: 18px">100 pts · 45 min · 3 sections</p>
+            </div>
+          </article>
+          <article class="component">
+            <h2>QuestionBlock</h2>
+            <div class="question">
+              <div class="question-head">
+                <div><span class="label">Question 01</span><strong class="card-title">Protocol de freinage?</strong></div>
+                <span class="chip danger">Éliminatoire</span>
+              </div>
+              <div class="choices">
+                <div class="choice correct">Réponse A <span>Correct</span></div>
+                <div class="choice">Réponse B <span>0 pt</span></div>
+              </div>
+            </div>
+          </article>
+          <article class="component">
+            <h2>ScorePanel</h2>
+            <div class="data-card">
+              <div class="top">
+                <div class="score"><strong>88</strong><span>/100</span></div>
+                <div>
+                  <strong class="card-title">Passed</strong>
+                  <p>Score auto avec override manager tracé.</p>
+                </div>
+              </div>
+            </div>
+          </article>
+          <article class="component">
+            <h2>DecisionBar</h2>
+            <p>Sticky bottom sur détail test, jamais de boutons ambigus.</p>
+            <div class="stack">
+              <button class="btn danger" type="button" aria-label="Refuser">Refuser</button>
+              <button class="btn warning" type="button">Re-test</button>
+              <button class="btn success" type="button" aria-label="Valider">Valider</button>
+            </div>
+          </article>
+          <article class="component">
+            <h2>Empty/Error State</h2>
+            <div class="data-card">
+              <strong class="card-title">Aucun test trouvé</strong>
+              <p>Modifiez les filtres ou lancez une évaluation depuis une candidature.</p>
+              <div style="height: 14px"></div>
+              <button class="btn secondary" type="button">Réinitialiser filtres</button>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="shell-title">
+        <div class="section-head">
+          <div>
+            <h2 id="shell-title">05. App shell et navigation par rôle</h2>
+            <p>Le shell évite les menus incohérents. La navigation est générée par `buildAppNavigation(role)`.</p>
+          </div>
+        </div>
+        <div class="grid-3">
+          <article class="component">
+            <h2>Admin / Direction</h2>
+            <div class="shell">
+              <div class="appbar"><strong>Admin Command</strong><span class="chip active">AP</span></div>
+              <div class="shell-body">
+                <div class="data-card"><strong class="card-title">Tests à valider</strong><p>Décisions rapides et auditables.</p></div>
+                <div class="data-card"><strong class="card-title">Jobs actifs</strong><p>Pipeline, candidats, templates.</p></div>
+              </div>
+              <div class="bottom-nav"><span class="active">Home</span><span>Contacts</span><span>Tests</span><span>Jobs</span></div>
+            </div>
+          </article>
+          <article class="component">
+            <h2>Manager</h2>
+            <div class="shell">
+              <div class="appbar"><strong>Manager</strong><span class="chip active">MT</span></div>
+              <div class="shell-body">
+                <div class="data-card"><strong class="card-title">Tests du jour</strong><p>Sections assignées uniquement.</p></div>
+                <div class="data-card"><strong class="card-title">Historique</strong><p>Tests soumis et retours RH.</p></div>
+              </div>
+              <div class="bottom-nav"><span class="active">Home</span><span>Jobs</span><span>Tests</span><span>Profil</span></div>
+            </div>
+          </article>
+          <article class="component">
+            <h2>Candidat</h2>
+            <div class="shell">
+              <div class="appbar"><strong>DriverRecruit</strong><span class="chip active">JD</span></div>
+              <div class="shell-body">
+                <div class="data-card"><strong class="card-title">Offres publiques</strong><p>Visible sans login.</p></div>
+                <div class="data-card"><strong class="card-title">Mes candidatures</strong><p>Login requis et session claire.</p></div>
+              </div>
+              <div class="bottom-nav"><span>Offres</span><span class="active">Candidatures</span><span>Tests</span><span>Profil</span></div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="overlays-title">
+        <div class="section-head">
+          <div>
+            <h2 id="overlays-title">06. Overlays</h2>
+            <p>Modales et sheets doivent avoir `role=dialog`, focus trap, fermeture Escape et retour focus.</p>
+          </div>
+        </div>
+        <div class="grid-3">
+          <article class="component">
+            <h2>Bottom Sheet / Ajouter pool</h2>
+            <div class="sheet-preview">
+              <div class="grabber"></div>
+              <strong class="card-title">Ajouter un Pool</strong>
+              <input class="control" aria-label="Filtrer les pools" value="Sécurité" />
+              <div class="data-card"><div class="row"><strong>Sécurité Routière</strong><span class="chip active">Ajouter</span></div></div>
+              <button class="btn" type="button">Créer un nouveau Pool</button>
+            </div>
+          </article>
+          <article class="component">
+            <h2>Modal / Confirmation</h2>
+            <div class="modal-preview" role="dialog" aria-modal="true" aria-label="Confirmation">
+              <strong class="card-title">Refuser le candidat?</strong>
+              <p style="color: var(--ff-muted); margin-top: 10px">Cette action notifiera le candidat et clôturera le test.</p>
+              <div style="height: 18px"></div>
+              <div class="actions"><button class="btn secondary" type="button" aria-label="Annuler">Annuler</button><button class="btn danger" type="button" aria-label="Refuser">Refuser</button></div>
+            </div>
+          </article>
+          <article class="component">
+            <h2>Toast / Feedback</h2>
+            <div class="data-card">
+              <div class="row"><strong>Évaluation validée</strong><span class="chip success">Succès</span></div>
+              <p>Le candidat a été notifié. Le dossier est verrouillé.</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="code-title">
+        <div class="section-head">
+          <div>
+            <h2 id="code-title">07. Snippets de base</h2>
+            <p>Base minimale à reprendre dans `libs/shared`. Le code final doit être Angular, mais la structure reste simple.</p>
+          </div>
+        </div>
+        <div class="grid-3">
+          <article class="code-card">
+            <h2>Button API</h2>
+            <pre><code>&lt;ff-button
+  variant="primary"
+  size="md"
+  [loading]="saving"
+  (clicked)="save()"&gt;
+  Valider
+&lt;/ff-button&gt;</code></pre>
+          </article>
+          <article class="code-card">
+            <h2>Form Field API</h2>
+            <pre><code>&lt;ff-field
+  label="Email"
+  error="Champ obligatoire"&gt;
+  &lt;input ffInput type="email" /&gt;
+&lt;/ff-field&gt;</code></pre>
+          </article>
+          <article class="code-card">
+            <h2>Navigation Matrix</h2>
+            <pre><code>buildAppNavigation(role) =&gt; [
+  { label: 'Home', route: '/admin' },
+  { label: 'Contacts', route: '/contacts' },
+  { label: 'Tests', route: '/tests' },
+]</code></pre>
+          </article>
+          <article class="code-card">
+            <h2>SCSS Tokens</h2>
+            <pre><code>:root {
+  --ff-bg: #0d1219;
+  --ff-surface: #1a2029;
+  --ff-primary: #003f8c;
+  --ff-danger: #7f1d1d;
+}</code></pre>
+          </article>
+          <article class="code-card">
+            <h2>Evaluation Card</h2>
+            <pre><code>&lt;ff-evaluation-card
+  [evaluation]="item"
+  (open)="openAssessment(item.id)"
+  (reject)="reject(item.id)"
+  (retest)="requestRetest(item.id)" /&gt;</code></pre>
+          </article>
+          <article class="code-card">
+            <h2>Question Block</h2>
+            <pre><code>&lt;ff-question-block
+  [question]="question"
+  [answer]="answer"
+  [readonly]="isAdminReview"
+  (scoreChange)="overrideScore($event)" /&gt;</code></pre>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="rules-title">
+        <div class="section-head">
+          <div>
+            <h2 id="rules-title">08. Règles maître d’œuvre</h2>
+            <p>Ces règles évitent le retour des anciens écrans et de la duplication CSS/HTML.</p>
+          </div>
+        </div>
+        <div class="dos-donts">
+          <article class="component">
+            <h2>À faire</h2>
+            <ul class="list">
+              <li>Créer une primitive shared avant de répéter un motif trois fois.</li>
+              <li>Chaque action métier a son bouton, son état et son message.</li>
+              <li>Les pages consomment API ou affichent un empty state.</li>
+              <li>Les composants complexes sont testés en isolation.</li>
+            </ul>
+          </article>
+          <article class="component">
+            <h2>À éviter</h2>
+            <ul class="list">
+              <li>Copier/coller des couleurs hors tokens.</li>
+              <li>Créer des boutons qui font la même action.</li>
+              <li>Afficher des placeholders métier dans une page finale.</li>
+              <li>Créer des cards imbriquées sans vraie raison fonctionnelle.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

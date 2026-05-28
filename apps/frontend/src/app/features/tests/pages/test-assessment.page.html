@@ -1,64 +1,168 @@
-<section class="test-flow">
-  <header class="test-flow__appbar">
-    <a routerLink="/tests" class="test-flow__icon-btn" aria-label="Retour">&#8592;</a>
-    <h1>Test Assessment</h1>
-    <span class="test-flow__icon-btn" aria-hidden="true">&#8942;</span>
+<section class="ff-workflow-screen">
+  <header class="ff-page-bar">
+    <a routerLink="/tests" class="ff-page-bar__action" aria-label="Retour">&#8592;</a>
+    <h1 class="ff-page-bar__title">Test Assessment</h1>
+    <span class="ff-page-bar__action" aria-hidden="true">&#8942;</span>
   </header>
 
-  <div class="test-flow__shell">
+  <div class="ff-workflow-shell">
     @if (isLoading()) {
-      <p class="test-flow__empty">Chargement de l'evaluation...</p>
+      <p class="ff-empty">Chargement de l'evaluation...</p>
     } @else if (error()) {
-      <p class="test-flow__alert">{{ error() }}</p>
+      <p class="ff-alert ff-alert-error">{{ error() }}</p>
     } @else if (assessment(); as item) {
-      <section class="test-flow__score">
-        <p class="test-flow__kicker">Score global</p>
-        <strong>{{ item.score }}</strong>
-        <span>/ {{ item.maxScore }}</span>
-        <p class="test-flow__status">{{ item.status }}</p>
+      <section class="ff-score-panel ff-score-panel--split">
+        <div>
+          <p class="ff-app-kicker">Score global</p>
+          <strong class="ff-score-panel__value">{{ item.score }}</strong>
+          <span class="ff-row-meta">/ {{ item.maxScore }}</span>
+        </div>
+        <p class="ff-status-pill">{{ item.status }}</p>
       </section>
 
-      <section class="test-flow__hero" style="margin-top: 1rem">
-        <p class="test-flow__kicker">{{ item.templateName }}</p>
-        <h2>{{ item.candidateName }}</h2>
+      <section class="ff-workflow-hero ff-u-mt-lg">
+        <p class="ff-app-kicker">{{ item.templateName }}</p>
+        <h2 class="ff-workflow-hero__title">{{ item.candidateName }}</h2>
         @if (item.positionTitle) {
-          <p class="test-flow__meta">{{ item.positionTitle }}</p>
+          <p class="ff-row-meta">{{ item.positionTitle }}</p>
         }
       </section>
 
-      <div class="test-flow__stack">
-        @for (module of item.modules; track module.sectionId) {
-          <article class="test-flow__card">
-            <div class="test-flow__metric-row">
-              <h3 class="test-flow__title">{{ module.title }}</h3>
-              <strong>{{ module.score }}%</strong>
-            </div>
-            <div class="test-flow__progress" aria-hidden="true">
-              <span [style.width.%]="module.score"></span>
-            </div>
-          </article>
+      <div class="ff-section-stack">
+        @for (section of item.sections; track section.sectionId) {
+          <section class="ff-section-accordion" [attr.data-testid]="'assessment-section-panel-' + section.sectionId">
+            <button
+              type="button"
+              class="ff-section-accordion__button"
+              [class.ff-section-accordion__button--active]="selectedSectionId() === section.sectionId"
+              [attr.aria-expanded]="selectedSectionId() === section.sectionId"
+              [attr.data-testid]="'assessment-section-' + section.sectionId"
+              (click)="selectSection(section.sectionId)"
+            >
+              <div>
+                <div class="ff-inline-actions">
+                  <span class="ff-section-accordion__chevron" aria-hidden="true">›</span>
+                  <h3 class="ff-row-title ff-row-title--lg">{{ section.title }}</h3>
+                </div>
+                <div class="ff-progress ff-u-mt-sm" aria-hidden="true">
+                  <span [style.width.%]="section.score"></span>
+                </div>
+              </div>
+              <strong class="ff-score-panel__value">{{ section.score }}%</strong>
+            </button>
+
+            @if (selectedSectionId() === section.sectionId) {
+              <div
+                class="ff-section-accordion__body"
+                aria-live="polite"
+                [attr.data-testid]="'assessment-section-detail-' + section.sectionId"
+              >
+                <div class="ff-metric-row">
+                  <div>
+                    <p class="ff-app-kicker">Reponses et commentaires</p>
+                    <h3 class="ff-row-title ff-row-title--lg">{{ section.title }}</h3>
+                    @if (section.description) {
+                      <p class="ff-row-meta">{{ section.description }}</p>
+                    }
+                  </div>
+                  <strong class="ff-row-title ff-row-title--lg">{{ section.score }}%</strong>
+                </div>
+
+                <div class="ff-detail-grid">
+                  <p class="ff-detail-item">
+                    <span class="ff-detail-label">Manager</span>
+                    <strong class="ff-detail-value">{{ section.assignedToFullName || 'Non assigne' }}</strong>
+                  </p>
+                  <p class="ff-detail-item ff-detail-item--wide">
+                    <span class="ff-detail-label">Commentaire section</span>
+                    <strong class="ff-detail-value">{{ section.managerComment || 'Aucun commentaire.' }}</strong>
+                  </p>
+                  <p class="ff-detail-item">
+                    <span class="ff-detail-label">Etat section</span>
+                    <strong class="ff-detail-value">{{ section.completedAt ? 'Completee' : 'En cours' }}</strong>
+                  </p>
+                </div>
+
+                <div class="ff-list">
+                  @for (question of section.questions; track question.questionId) {
+                    <article class="ff-question-card">
+                      <div class="ff-question-card__header">
+                        <div>
+                          <p class="ff-app-kicker">{{ question.format || 'Question' }}</p>
+                          <h4 class="ff-row-title">{{ question.title }}</h4>
+                        </div>
+                        <strong>{{ question.score ?? '-' }} / {{ question.maxScore }}</strong>
+                      </div>
+                      @if (question.text) {
+                        <p class="ff-row-meta">{{ question.text }}</p>
+                      }
+                      <dl class="ff-answer-grid">
+                        <div class="ff-detail-item">
+                          <dt class="ff-detail-label">Reponse candidat</dt>
+                          <dd class="ff-detail-value">{{ question.candidateAnswer || 'Non renseignee' }}</dd>
+                        </div>
+                        <div class="ff-detail-item">
+                          <dt class="ff-detail-label">Bonne reponse</dt>
+                          <dd class="ff-detail-value">{{ question.correctAnswer || 'Non definie' }}</dd>
+                        </div>
+                        <div class="ff-detail-item">
+                          <dt class="ff-detail-label">Commentaire manager</dt>
+                          <dd class="ff-detail-value">{{ question.managerComment || 'Aucun commentaire.' }}</dd>
+                        </div>
+                      </dl>
+                      @if (question.isEliminatory || question.isMandatory) {
+                        <div class="ff-inline-actions">
+                          @if (question.isMandatory) {
+                            <span class="ff-status-pill">Obligatoire</span>
+                          }
+                          @if (question.isEliminatory) {
+                            <span class="ff-status-pill ff-status-pill--danger">Eliminatoire</span>
+                          }
+                        </div>
+                      }
+                    </article>
+                  } @empty {
+                    <p class="ff-empty">Aucune question en base pour cette section.</p>
+                  }
+                </div>
+              </div>
+            }
+          </section>
         }
 
-        <section class="test-flow__card">
-          <p class="test-flow__kicker">Evaluator Feedback</p>
-          <p class="test-flow__meta">{{ item.feedback || 'Aucun commentaire evaluateur en base.' }}</p>
+        <section class="ff-data-card" data-testid="assessment-global-feedback">
+          <p class="ff-app-kicker">Commentaire global</p>
+          <p class="ff-row-meta">{{ item.feedback || 'Aucun commentaire evaluateur en base.' }}</p>
           @if (item.evaluatorName) {
-            <p class="test-flow__title">{{ item.evaluatorName }}</p>
+            <p class="ff-row-title ff-u-mt-sm">{{ item.evaluatorName }}</p>
           }
         </section>
       </div>
 
       @if (message()) {
-        <p class="test-flow__empty">{{ message() }}</p>
+        <p class="ff-empty">{{ message() }}</p>
       }
 
-      <div class="test-flow__actions">
-        <button type="button" class="test-flow__btn test-flow__btn--primary" (click)="validateResults()">
-          Validate Results
+      <div class="ff-actions-grid">
+        <button type="button" class="ff-btn ff-btn-primary" (click)="validateResults()">
+          Valider
         </button>
-        <a class="test-flow__btn" [routerLink]="['/tests/relaunch', item.evaluationId]">
-          Request Re-test
-        </a>
+        @if (item.applicationId) {
+          <a
+            class="ff-btn ff-btn-secondary"
+            [routerLink]="['/tests/relaunch', item.candidateId]"
+            [queryParams]="{ applicationId: item.applicationId }"
+          >
+            Relancer un test
+          </a>
+        } @else {
+          <button type="button" class="ff-btn ff-btn-disabled" disabled>
+            Relance indisponible
+          </button>
+        }
+        <button type="button" class="ff-btn ff-btn-danger" (click)="rejectCandidate()">
+          Refuser le candidat
+        </button>
       </div>
     }
   </div>

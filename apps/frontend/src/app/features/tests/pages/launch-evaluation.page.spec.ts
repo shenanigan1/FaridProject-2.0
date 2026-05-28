@@ -47,6 +47,12 @@ describe('LaunchEvaluationPage', () => {
   });
 
   it('blocks launch until every section has a manager', () => {
+    const host = fixture.nativeElement as HTMLElement;
+
+    expect(host.querySelector('.ff-page-bar')).not.toBeNull();
+    expect(host.querySelector('.ff-workflow-hero')).not.toBeNull();
+    expect(host.querySelector('.ff-decision-bar')).not.toBeNull();
+
     component.launch();
 
     expect(bff.launchEvaluation).not.toHaveBeenCalled();

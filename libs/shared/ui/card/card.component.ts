@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
-type UiCardVariant = 'default' | 'form';
+type UiCardVariant = 'default' | 'elevated' | 'form' | 'data' | 'question';
+type UiCardTone = 'neutral' | 'primary' | 'success' | 'warning' | 'danger' | 'info' | 'orange';
 
 @Component({
   standalone: true,
@@ -14,12 +15,29 @@ type UiCardVariant = 'default' | 'form';
 })
 export class UiCardComponent {
   @Input() variant: UiCardVariant = 'form';
+  @Input() tone: UiCardTone = 'neutral';
 
   get classes(): string {
-    // Keep styling centralized; variants let you reuse it outside auth/forms later.
-    if (this.variant === 'default') {
-      return 'rounded-2xl border border-slate-800 bg-slate-900 p-5';
-    }
-    return 'rounded-2xl bg-slate-900/60 border border-slate-800 p-5 shadow-[0_10px_30px_-18px_rgba(0,0,0,0.8)]';
+    const variantClass: Record<UiCardVariant, string> = {
+      default: 'ff-card',
+      elevated: 'ff-card-elevated',
+      form: 'ff-card',
+      data: 'ff-data-card',
+      question: 'ff-question-card',
+    };
+
+    const toneClass: Record<UiCardTone, string> = {
+      neutral: '',
+      primary: 'ff-accent-marker',
+      success: 'ff-accent-marker ff-accent-success',
+      warning: 'ff-accent-marker ff-accent-warning',
+      danger: 'ff-accent-marker ff-accent-danger',
+      info: 'ff-accent-marker ff-accent-info',
+      orange: 'ff-accent-marker ff-accent-orange',
+    };
+
+    return [variantClass[this.variant], toneClass[this.tone], this.variant === 'form' ? 'p-5' : '']
+      .filter(Boolean)
+      .join(' ');
   }
 }

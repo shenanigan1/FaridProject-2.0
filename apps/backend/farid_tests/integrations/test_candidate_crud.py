@@ -279,6 +279,55 @@ def test_candidate_me_returns_authenticated_candidate(api_client):
     assert response.data["user"]["email"] == candidate.user.email
 
 
+def test_candidate_me_allows_candidate_to_update_own_profile(api_client):
+    candidate = CandidateFactory.create(
+        email="self-edit@example.com",
+        first_name="Old",
+        last_name="Name",
+        phone="+330000000",
+    )
+    api_client.force_authenticate(user=candidate.user)
+
+    url = reverse("candidates-me")
+    response = api_client.patch(
+        url,
+        {
+            "user": {
+                "first_name": "Farid",
+                "last_name": "Candidat",
+                "email": "farid.candidat@example.com",
+                "phone": "+33611111111",
+            }
+        },
+        format="json",
+    )
+
+    assert response.status_code == 200
+    candidate.user.refresh_from_db()
+    assert candidate.user.first_name == "Farid"
+    assert candidate.user.last_name == "Candidat"
+    assert candidate.user.email == "farid.candidat@example.com"
+    assert candidate.user.phone == "+33611111111"
+
+
+def test_candidate_me_patch_forbidden_for_non_candidate(api_client):
+    hr_user = UserFactory.create(
+        email="hr.patch.me@example.com",
+        password="Secret123",
+        role=UserRoles.HR,
+    )
+    api_client.force_authenticate(user=hr_user)
+
+    url = reverse("candidates-me")
+    response = api_client.patch(
+        url,
+        {"user": {"first_name": "Nope"}},
+        format="json",
+    )
+
+    assert response.status_code == 403
+
+
 def test_candidate_me_forbidden_for_non_candidate(api_client):
     hr_user = UserFactory.create(
         email="hr.me@example.com",

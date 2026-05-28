@@ -75,5 +75,13 @@ describe('RolesAdminPage', () => {
 
     expect(apiSpy.updateUserRole).toHaveBeenCalledWith(1, 'hr');
   });
+
+  it('routes the back action to the admin dashboard', () => {
+    const backLink = (fixture.nativeElement as HTMLElement).querySelector<HTMLAnchorElement>(
+      '[data-testid="roles-back-link"]',
+    );
+
+    expect(backLink?.getAttribute('href')).toBe('/admin');
+  });
 });
 

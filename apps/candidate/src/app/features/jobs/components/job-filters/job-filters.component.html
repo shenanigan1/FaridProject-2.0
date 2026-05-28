@@ -1,68 +1,59 @@
-<form
-  [formGroup]="form"
-  (ngSubmit)="submit()"
-  class="rounded-2xl border border-slate-800 bg-slate-900 p-4 shadow-lg shadow-black/20"
->
-  <div class="flex flex-col gap-3 lg:flex-row lg:items-center">
-    <div class="flex-1">
-      <label for="search" class="sr-only">Search jobs</label>
-      <input
-        id="search"
-        type="text"
-        formControlName="search"
-        placeholder="Search job titles or keywords"
-        class="w-full rounded-xl border border-slate-800 bg-slate-950 px-4 py-3 text-sm text-white placeholder:text-slate-500 focus:border-blue-500 focus:outline-none"
+<form [formGroup]="form" (ngSubmit)="submit()" class="ff-toolbar-panel">
+  <label class="ff-search-box" for="search">
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path
+        fill="currentColor"
+        d="m21 19.6-5.3-5.3a7.4 7.4 0 1 0-1.4 1.4L19.6 21 21 19.6ZM4 10a6 6 0 1 1 12 0 6 6 0 0 1-12 0Z"
       />
-    </div>
+    </svg>
+    <input
+      id="search"
+      type="text"
+      formControlName="search"
+      placeholder="Rechercher un poste ou une ville..."
+    />
+  </label>
 
-    <div class="grid grid-cols-1 gap-3 sm:grid-cols-3 lg:w-auto">
-      <select
-        formControlName="location"
-        class="rounded-xl border border-slate-800 bg-slate-950 px-4 py-3 text-sm text-slate-200 focus:border-blue-500 focus:outline-none"
-      >
-        <option value="">Location</option>
+  <section class="ff-form-grid ff-form-grid--two" aria-label="Filtres offres">
+    <label class="ff-field-block">
+      <span>Location</span>
+      <select formControlName="location" class="ff-control">
+        <option value="">Toutes les villes</option>
         <option value="chicago">Chicago</option>
         <option value="dallas">Dallas</option>
         <option value="phoenix">Phoenix</option>
       </select>
+    </label>
 
-      <select
-        formControlName="employmentType"
-        class="rounded-xl border border-slate-800 bg-slate-950 px-4 py-3 text-sm text-slate-200 focus:border-blue-500 focus:outline-none"
-      >
-        <option value="">Job type</option>
+    <label class="ff-field-block">
+      <span>Type</span>
+      <select formControlName="employmentType" class="ff-control">
+        <option value="">Tous les contrats</option>
         <option value="full-time">Full-time</option>
         <option value="part-time">Part-time</option>
         <option value="contract">Contract</option>
       </select>
+    </label>
 
-      <select
-        formControlName="priority"
-        class="rounded-xl border border-slate-800 bg-slate-950 px-4 py-3 text-sm text-slate-200 focus:border-blue-500 focus:outline-none"
-      >
-        <option value="">Priority</option>
+    <label class="ff-field-block">
+      <span>Priorite</span>
+      <select formControlName="priority" class="ff-control">
+        <option value="">Toutes les priorites</option>
         <option value="urgent">Urgent</option>
         <option value="high">High</option>
         <option value="medium">Medium</option>
         <option value="low">Low</option>
       </select>
-    </div>
+    </label>
+  </section>
 
-    <div class="flex gap-3 lg:ml-auto">
-      <button
-        type="button"
-        (click)="reset()"
-        class="rounded-xl border border-slate-700 px-4 py-3 text-sm font-medium text-slate-300 transition hover:border-slate-600 hover:text-white"
-      >
-        Reset
-      </button>
+  <footer class="ff-inline-actions ff-u-end">
+    <button type="button" (click)="reset()" class="ff-btn ff-btn-secondary">
+      Reset
+    </button>
 
-      <button
-        type="submit"
-        class="rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-blue-500"
-      >
-        Search
-      </button>
-    </div>
-  </div>
+    <button type="submit" class="ff-btn ff-btn-primary">
+      Search
+    </button>
+  </footer>
 </form>

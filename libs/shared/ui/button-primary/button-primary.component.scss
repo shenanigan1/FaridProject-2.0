@@ -10,10 +10,10 @@
   gap: 0.625rem;
   width: auto;
   min-width: 0;
-  min-height: 3.5rem;
-  padding: 0.875rem 1.25rem;
-  border: 0;
-  border-radius: 1rem;
+  min-height: 3rem;
+  padding: 0.75rem 1.15rem;
+  border: 1px solid rgba(160, 199, 255, 0.36);
+  border-radius: var(--ff-radius-control);
   font-size: 0.95rem;
   font-weight: 700;
   line-height: 1;
@@ -35,13 +35,15 @@
 }
 
 .ff-btn-primary {
-  color: #ffffff;
-  background-color: var(--ff-color-primary-500);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+  color: #06101f;
+  background:
+    linear-gradient(180deg, #63a3ff, #2388f6 54%, #1476df);
+  box-shadow: var(--ff-shadow-primary), var(--ff-shadow-inset);
 }
 
 .ff-btn-primary:hover:not(:disabled) {
-  background-color: var(--ff-color-primary-400);
+  background:
+    linear-gradient(180deg, #76b0ff, #3292ff 54%, #197de8);
 }
 
 .ff-btn-primary:active:not(:disabled) {

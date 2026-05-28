@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>FleetFlow Template Builder</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface-container-highest": "#31353c",
+            "surface-variant": "#31353c",
+            "on-tertiary": "#532200",
+            "inverse-surface": "#e0e2ec",
+            "secondary-container": "#0064d3",
+            "primary-container": "#3a90ff",
+            "on-tertiary-fixed-variant": "#763300",
+            "inverse-primary": "#005db6",
+            "primary": "#a9c7ff",
+            "on-primary-fixed": "#001b3d",
+            "on-primary": "#003063",
+            "tertiary-fixed-dim": "#ffb68e",
+            "inverse-on-surface": "#2d3038",
+            "surface-tint": "#a9c7ff",
+            "outline": "#3b4352",
+            "on-secondary-fixed": "#001a41",
+            "surface-bright": "#030816",
+            "on-secondary-fixed-variant": "#004493",
+            "secondary-fixed": "#d8e2ff",
+            "on-surface": "#f8fafc",
+            "on-secondary-container": "#e0e8ff",
+            "surface-container-high": "#272a31",
+            "on-error": "#690005",
+            "on-surface-variant": "#94a3b8",
+            "surface-container": "#1c2027",
+            "error": "#ef4444",
+            "secondary": "#adc6ff",
+            "primary-fixed-dim": "#a9c7ff",
+            "tertiary-container": "#e76e13",
+            "surface": "#10131a",
+            "surface-container-lowest": "#0b0e15",
+            "background": "#10131a",
+            "outline-variant": "#414754",
+            "tertiary": "#ffb68e",
+            "success": "#22c55e",
+            "on-tertiary-fixed": "#331200",
+            "surface-container-low": "#181c23",
+            "on-secondary": "#002e69",
+            "surface-dim": "#10131a",
+            "surface-bg": "#10141b",
+            "primary-fixed": "#d6e3ff",
+            "error-container": "#93000a",
+            "on-background": "#e0e2ec",
+            "tertiary-fixed": "#ffdbc9",
+            "on-primary-container": "#002957",
+            "on-error-container": "#ffdad6",
+            "warning": "#f59e0b",
+            "secondary-fixed-dim": "#adc6ff",
+            "on-tertiary-container": "#491d00",
+            "on-primary-fixed-variant": "#00468b"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "unit": "8px",
+            "gutter": "24px",
+            "container-max": "1440px",
+            "margin": "32px",
+            "base": "4px"
+          },
+          "fontFamily": {
+            "display-lg": ["Inter"],
+            "headline-lg": ["Inter"],
+            "title-lg": ["Inter"],
+            "body-md": ["Inter"],
+            "title-md": ["Inter"],
+            "body-lg": ["Inter"],
+            "label-sm": ["Inter"],
+            "headline-md": ["Inter"],
+            "headline-lg-mobile": ["Inter"],
+            "label-lg": ["Inter"],
+            "label-md": ["Inter"]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      background-color: #10141b;
+      color: #f8fafc;
+      font-family: 'Inter', sans-serif;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    input[type="range"]::-webkit-slider-runnable-track {
+      background: #3b4352;
+      height: 4px;
+      border-radius: 2px;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      height: 16px;
+      width: 16px;
+      border-radius: 50%;
+      background: #1683f7;
+      margin-top: -6px;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  <style id="fleetflow-aaa-overrides">
+  :root { color-scheme: dark; }
+  html, body { background: #10141b !important; color: #fbfdff !important; }
+  body, body * { text-shadow: none !important; }
+  body :is(h1,h2,h3,h4,h5,h6,p,span,label,small,div,li,dt,dd,td,th,strong,em,a,button) {
+    color: #fbfdff !important;
+  }
+  body :is(.text-outline,.text-on-surface-variant,.text-slate-400,.text-gray-400,.text-neutral-400,.text-zinc-400),
+  body [class*="text-outline"],
+  body [class*="text-on-surface-variant"],
+  body [class*="text-gray"],
+  body [class*="text-slate"],
+  body [class*="text-zinc"],
+  body [class*="text-neutral"] {
+    color: #f8fbff !important;
+  }
+  body :is(header,main,footer,section,article,nav,form),
+  body [class*="bg-background"],
+  body [class*="bg-surface"],
+  body [class*="bg-[#1C2027]"],
+  body [class*="bg-[#030816]"] {
+    border-color: #7f8da3 !important;
+  }
+  body [class*="bg-background"] {
+    background-color: #10141b !important;
+  }
+  body :is(input,select,textarea) {
+    background: #050914 !important;
+    color: #ffffff !important;
+    border: 1px solid #dbeafe !important;
+  }
+  body :is(input,textarea)::placeholder { color: #f1f5f9 !important; opacity: 1 !important; }
+  body button,
+  body a[role="button"],
+  body [class*="bg-primary"],
+  body [class*="bg-secondary-container"],
+  body [class*="bg-[#1683F7]"],
+  body [class*="bg-[#1683f7]"],
+  body [class*="bg-blue"] {
+    background-color: #003f8c !important;
+    border-color: #bfdbfe !important;
+    color: #ffffff !important;
+  }
+  body [class*="bg-green"],
+  body [class*="bg-emerald"] {
+    background-color: #064e3b !important;
+    color: #ffffff !important;
+    border-color: #a7f3d0 !important;
+  }
+  body [class*="bg-orange"],
+  body [class*="bg-amber"],
+  body [class*="bg-yellow"],
+  body [class*="bg-tertiary"] {
+    background-color: #5f2109 !important;
+    color: #ffffff !important;
+    border-color: #fed7aa !important;
+  }
+  body [class*="bg-red"],
+  body [class*="bg-rose"],
+  body [class*="bg-error"],
+  body [class*="bg-danger"] {
+    background-color: #7f1d1d !important;
+    color: #ffffff !important;
+    border-color: #fecaca !important;
+  }
+  body [class*="bg-success"] {
+    background-color: #064e3b !important;
+    color: #ffffff !important;
+    border-color: #a7f3d0 !important;
+  }
+  body [class*="text-tertiary"],
+  body [class*="text-error"],
+  body [class*="text-danger"],
+  body [class*="text-success"] {
+    color: #ffffff !important;
+  }
+  body .material-symbols-outlined {
+    color: #ffffff !important;
+    background-color: #0b1220 !important;
+    border-radius: 999px !important;
+  }
+  body :is(a,button,input,select,textarea,[tabindex]):focus-visible {
+    outline: 3px solid #bfdbfe !important;
+    outline-offset: 3px !important;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      scroll-behavior: auto !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>
+</head>
+<body class="bg-surface-bg text-on-surface">
+<!-- TopAppBar -->
+<header class="fixed top-0 z-50 flex justify-between items-center w-full px-margin py-unit bg-surface text-primary border-b border-outline">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined cursor-pointer" data-icon="arrow_back" aria-hidden="true">arrow_back</span>
+<h1 class="font-headline-md text-headline-md font-bold text-on-surface">Edit Template</h1>
+</div>
+<div class="w-8 h-8 rounded-full bg-surface-container-highest flex items-center justify-center border border-outline">
+<span class="material-symbols-outlined text-sm" data-icon="person" aria-hidden="true">person</span>
+</div>
+</header>
+<main class="pt-20 pb-24 px-4 md:px-margin max-w-container-max mx-auto">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Left Column: Basic Info & Pools -->
+<div class="lg:col-span-4 space-y-gutter">
+<!-- Basic Info Section -->
+<section class="bg-surface-container border border-outline p-6 rounded-lg">
+<div class="flex justify-between items-center mb-4 pb-2 border-b border-outline">
+<h2 class="font-title-lg text-title-lg">Basic Info</h2>
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="info" aria-hidden="true">info</span>
+</div>
+<div class="space-y-4">
+<div>
+<label class="font-label-lg text-label-lg text-on-surface-variant block mb-1">Test Title</label>
+<div class="font-body-lg text-body-lg text-on-surface">Class A Safety Evaluation</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div>
+<label class="font-label-lg text-label-lg text-on-surface-variant block mb-1">Duration</label>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="schedule" aria-hidden="true">schedule</span>
+<span class="font-body-md text-body-md">45m</span>
+</div>
+</div>
+<div>
+<label class="font-label-lg text-label-lg text-on-surface-variant block mb-1">Difficulty</label>
+<div class="bg-secondary-container/20 text-secondary px-2 py-0.5 rounded text-xs font-bold inline-block">MEDIUM</div>
+</div>
+</div>
+<div>
+<label class="font-label-lg text-label-lg text-on-surface-variant block mb-1">Passing Score</label>
+<div class="flex items-center gap-2">
+<div class="flex-1 h-2 bg-outline rounded-full overflow-hidden">
+<div class="w-[80%] h-full bg-success"></div>
+</div>
+<span class="font-label-md text-label-md">80%</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Question Pools Section -->
+<section class="space-y-4">
+<h2 class="font-title-lg text-title-lg px-2">Question Pools</h2>
+<!-- Pool Item 1 -->
+<div class="bg-surface-container border border-outline p-4 rounded-lg flex items-center justify-between group hover:bg-surface-container-high transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-surface-container-highest rounded flex items-center justify-center border border-outline">
+<span class="material-symbols-outlined text-primary" data-icon="warning" aria-hidden="true">warning</span>
+</div>
+<div>
+<h2 class="font-title-md text-title-md">Hazardous Materials</h2>
+<p class="font-label-md text-label-md text-on-surface-variant">12 Questions</p>
+</div>
+</div>
+<button class="bg-transparent border border-outline px-3 py-1 rounded text-xs font-bold hover:bg-primary hover:text-on-primary transition-colors uppercase">Edit Pool</button>
+</div>
+<!-- Pool Item 2 -->
+<div class="bg-surface-container border border-outline p-4 rounded-lg flex items-center justify-between group hover:bg-surface-container-high transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-surface-container-highest rounded flex items-center justify-center border border-outline">
+<span class="material-symbols-outlined text-primary" data-icon="local_shipping" aria-hidden="true">local_shipping</span>
+</div>
+<div>
+<h2 class="font-title-md text-title-md">Vehicle Inspection</h2>
+<p class="font-label-md text-label-md text-on-surface-variant">8 Questions</p>
+</div>
+</div>
+<button class="bg-transparent border border-outline px-3 py-1 rounded text-xs font-bold hover:bg-primary hover:text-on-primary transition-colors uppercase">Edit Pool</button>
+</div>
+<!-- Add Pool Button -->
+<button class="w-full py-4 border-2 border-dashed border-outline rounded-lg flex flex-col items-center justify-center gap-2 text-on-surface-variant hover:border-primary hover:text-primary transition-all">
+<span class="material-symbols-outlined text-3xl" data-icon="add_circle" aria-hidden="true">add_circle</span>
+<span class="font-label-lg text-label-lg">Add Question Pool</span>
+</button>
+</section>
+</div>
+<!-- Right Column: Question Editor (Active) -->
+<div class="lg:col-span-8">
+<section class="bg-surface-container border border-outline rounded-lg overflow-hidden flex flex-col h-full">
+<!-- Editor Header -->
+<div class="p-6 border-b border-outline bg-surface-container-high flex justify-between items-center">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" data-icon="edit_note" aria-hidden="true">edit_note</span>
+<h2 class="font-title-lg text-title-lg">Question Editor</h2>
+</div>
+<div class="flex gap-2">
+<button class="bg-error text-on-error px-4 py-2 rounded text-sm font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="delete" aria-hidden="true">delete</span> Delete
+              </button>
+<button class="bg-[#1683f7] text-white px-6 py-2 rounded text-sm font-bold">Save Changes</button>
+</div>
+</div>
+<!-- Editor Body -->
+<div class="p-6 space-y-8 flex-1">
+<!-- Type Selector -->
+<div class="flex items-center justify-between bg-surface-container-lowest p-4 rounded-lg border border-outline">
+<div>
+<span class="font-label-md text-label-md text-on-surface-variant uppercase block">Question Type</span>
+<span class="font-title-md text-title-md">Multiple Choice</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="expand_more" aria-hidden="true">expand_more</span>
+</div>
+<!-- Question Prompt -->
+<div>
+<label class="font-label-lg text-label-lg text-on-surface-variant block mb-3">Question Prompt</label>
+<textarea class="w-full bg-surface-bright border border-outline rounded p-4 font-body-lg text-body-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none min-h-[100px] resize-none" aria-label="Zone de texte">Which placard is required for Class 3 Flammable Liquids?</textarea>
+</div>
+<!-- Options Grid -->
+<div class="space-y-3">
+<label class="font-label-lg text-label-lg text-on-surface-variant block">Answer Options</label>
+<!-- Option A -->
+<div class="flex items-center gap-4 bg-surface-container-high p-4 rounded border border-outline">
+<input checked="" class="w-5 h-5 text-primary bg-surface-bright border-outline focus:ring-primary" name="correct_answer" type="radio"/ aria-label="correct_answer">
+<span class="font-bold text-primary">A</span>
+<input class="flex-1 bg-transparent border-none outline-none font-body-md" type="text" value="Red with Flame Icon"/ aria-label="Champ de saisie">
+<span class="material-symbols-outlined text-success" data-icon="check_circle" data-weight="fill" style="font-variation-settings: 'FILL' 1;" aria-hidden="true">check_circle</span>
+</div>
+<!-- Option B -->
+<div class="flex items-center gap-4 bg-surface-container p-4 rounded border border-outline opacity-70">
+<input class="w-5 h-5 text-primary bg-surface-bright border-outline focus:ring-primary" name="correct_answer" type="radio"/ aria-label="correct_answer">
+<span class="font-bold text-on-surface-variant">B</span>
+<input class="flex-1 bg-transparent border-none outline-none font-body-md" type="text" value="Yellow with Oxygen Symbol"/ aria-label="Champ de saisie">
+</div>
+<!-- Option C -->
+<div class="flex items-center gap-4 bg-surface-container p-4 rounded border border-outline opacity-70">
+<input class="w-5 h-5 text-primary bg-surface-bright border-outline focus:ring-primary" name="correct_answer" type="radio"/ aria-label="correct_answer">
+<span class="font-bold text-on-surface-variant">C</span>
+<input class="flex-1 bg-transparent border-none outline-none font-body-md" type="text" value="Blue with Water-Reactive Symbol"/ aria-label="Champ de saisie">
+</div>
+<!-- Option D -->
+<div class="flex items-center gap-4 bg-surface-container p-4 rounded border border-outline opacity-70">
+<input class="w-5 h-5 text-primary bg-surface-bright border-outline focus:ring-primary" name="correct_answer" type="radio"/ aria-label="correct_answer">
+<span class="font-bold text-on-surface-variant">D</span>
+<input class="flex-1 bg-transparent border-none outline-none font-body-md" type="text" value="Orange with Explosion Star"/ aria-label="Champ de saisie">
+</div>
+</div>
+<!-- Settings Split -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+<!-- Toggles & Sliders -->
+<div class="space-y-6">
+<div class="flex items-center justify-between p-4 rounded bg-surface-container-high border border-outline">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-error" data-icon="emergency" aria-hidden="true">emergency</span>
+<div>
+<span class="font-title-md text-title-md block">Eliminatory</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Failure here ends test immediately</span>
+</div>
+</div>
+<div class="w-12 h-6 bg-secondary-container rounded-full relative cursor-pointer">
+<div class="absolute right-1 top-1 w-4 h-4 bg-white rounded-full"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between mb-2">
+<label class="font-label-lg text-label-lg text-on-surface-variant">Max Points</label>
+<span class="font-bold text-primary">10 / 100</span>
+</div>
+<input class="w-full accent-primary" max="100" min="0" type="range" value="10"/ aria-label="Champ de saisie">
+</div>
+</div>
+<!-- Manager Comment -->
+<div>
+<label class="font-label-lg text-label-lg text-on-surface-variant block mb-2">Manager Internal Comment</label>
+<textarea class="w-full bg-surface-bright border border-outline rounded p-3 font-body-md text-body-md focus:ring-2 focus:ring-primary outline-none h-[120px] resize-none" placeholder="Add private notes for recruitment staff..." aria-label="Zone de texte"></textarea>
+</div>
+</div>
+</div>
+</section>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-16 bg-surface-container border-t border-outline">
+<div class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:text-on-surface transition-colors cursor-pointer">
+<span class="material-symbols-outlined" data-icon="dashboard" aria-hidden="true">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:text-on-surface transition-colors cursor-pointer">
+<span class="material-symbols-outlined" data-icon="group" aria-hidden="true">group</span>
+<span class="font-label-md text-label-md">Personnel</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:text-on-surface transition-colors cursor-pointer">
+<span class="material-symbols-outlined" data-icon="work" aria-hidden="true">work</span>
+<span class="font-label-md text-label-md">Jobs</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-4 py-1 scale-95 transition-transform cursor-pointer">
+<span class="material-symbols-outlined" data-icon="quiz" aria-hidden="true">quiz</span>
+<span class="font-label-md text-label-md">Tests</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:text-on-surface transition-colors cursor-pointer">
+<span class="material-symbols-outlined" data-icon="settings" aria-hidden="true">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</div>
+</nav>
+</body></html>

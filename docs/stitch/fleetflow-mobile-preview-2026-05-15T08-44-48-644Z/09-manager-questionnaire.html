@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Manager Evaluation - Logistics Recruitment</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-surface-variant": "#94a3b8",
+                    "surface-container-low": "#181c23",
+                    "tertiary-container": "#e76e13",
+                    "primary-fixed-dim": "#a9c7ff",
+                    "warning": "#ff9800",
+                    "tertiary": "#ffb68e",
+                    "on-primary-fixed": "#001b3d",
+                    "on-tertiary": "#532200",
+                    "on-background": "#e0e2ec",
+                    "inverse-on-surface": "#2d3038",
+                    "on-tertiary-fixed": "#331200",
+                    "background": "#10131a",
+                    "surface-container-high": "#242a34",
+                    "on-secondary": "#002e69",
+                    "tertiary-fixed": "#ffdbc9",
+                    "on-surface": "#e0e2ec",
+                    "surface-dim": "#10131a",
+                    "error-container": "#93000a",
+                    "surface-container-lowest": "#0b0e15",
+                    "surface-tint": "#a9c7ff",
+                    "on-secondary-fixed-variant": "#004493",
+                    "on-primary-fixed-variant": "#00468b",
+                    "outline-variant": "#414754",
+                    "on-primary-container": "#002957",
+                    "primary": "#a9c7ff",
+                    "on-primary": "#003063",
+                    "secondary-fixed": "#d8e2ff",
+                    "on-secondary-fixed": "#001a41",
+                    "primary-container": "#3a90ff",
+                    "on-error": "#690005",
+                    "on-secondary-container": "#e0e8ff",
+                    "secondary-fixed-dim": "#adc6ff",
+                    "outline": "#3b4352",
+                    "surface-container": "#1c2027",
+                    "tertiary-fixed-dim": "#ffb68e",
+                    "inverse-primary": "#005db6",
+                    "success": "#4caf50",
+                    "on-tertiary-container": "#491d00",
+                    "primary-fixed": "#d6e3ff",
+                    "error": "#ff4d4d",
+                    "inverse-surface": "#e0e2ec",
+                    "on-tertiary-fixed-variant": "#763300",
+                    "on-error-container": "#ffdad6",
+                    "surface-bright": "#363941",
+                    "secondary": "#adc6ff",
+                    "surface-variant": "#31353c",
+                    "surface-container-highest": "#31353c",
+                    "surface": "#10141b",
+                    "secondary-container": "#0064d3"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "margin-sm": "16px",
+                    "gutter": "16px",
+                    "margin-lg": "32px",
+                    "margin-md": "24px",
+                    "unit": "4px",
+                    "container-max": "1440px"
+            },
+            "fontFamily": {
+                    "body-lg": ["Inter"],
+                    "display": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "label-md": ["Inter"],
+                    "title-lg": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "body-md": ["Inter"]
+            },
+            "fontSize": {
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "display": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "headline-lg": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "title-lg": ["18px", {"lineHeight": "24px", "fontWeight": "500"}],
+                    "label-sm": ["11px", {"lineHeight": "14px", "fontWeight": "600"}],
+                    "body-sm": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #10131a;
+            color: #e0e2ec;
+            font-family: 'Inter', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #10131a;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #3b4352;
+            border-radius: 2px;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="bg-surface-container border-b border-outline flex justify-between items-center w-full px-margin-sm h-16 sticky top-0 z-50">
+<div class="flex items-center gap-4">
+<button class="hover:bg-surface-variant transition-colors p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">arrow_back</span>
+</button>
+<h1 class="text-headline-md font-headline-md text-on-surface">Logistics Recruitment</h1>
+</div>
+<div class="flex items-center">
+<span class="material-symbols-outlined text-on-surface-variant text-[40px]">account_circle</span>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-grow w-full max-w-container-max mx-auto px-4 md:px-margin-lg py-6 mb-32">
+<!-- Candidate Header Card -->
+<section class="mb-8 bg-surface-container border border-outline p-6 rounded-lg flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+<div class="flex items-center gap-5">
+<div class="w-16 h-16 rounded-full bg-primary-container flex items-center justify-center overflow-hidden border-2 border-primary">
+<img alt="Amina Al-Fayed" class="w-full h-full object-cover" data-alt="A professional close-up portrait of a female professional with a confident expression, set against a blurred industrial logistics background. The lighting is crisp and cinematic, emphasizing a modern corporate aesthetic with cool tones. The style is high-definition photography with a focus on professional reliability and technical expertise in a dark mode UI context." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbBeKDTjMDoo2vqFjcwfkywjQEljhEU_5ief2RpuLYNHr19MFOUxDAGhedKYC4TOF3qDDuulXvfPvzGIHYNIea6KsPBCG5usSfTnvrQDrmnX7TNKfkgPjl5gMe0NwwG_eHHGo0exSPipHSd2hEkrHdXnj7-BEqdJ3ptlJy2iANzMLqNJShJGcTpJ5qdqhF9gzFsK8nsZd5qYrW7FNsUGdyG3Hhibyt_M3i2JoiPkBgXrmy2Mvr2UOXOjC7rSs9_dbXWBrMWjgBISA"/>
+</div>
+<div>
+<h2 class="text-headline-lg font-headline-lg text-primary">Amina Al-Fayed</h2>
+<p class="text-body-md font-body-md text-on-surface-variant">Role: <span class="text-on-surface font-medium">Class A Chauffeur</span></p>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-label-md font-label-md text-on-surface-variant uppercase tracking-wider mb-1">Current Evaluation Score</span>
+<div class="flex items-baseline gap-1">
+<span class="text-display font-display text-primary">78</span>
+<span class="text-title-lg font-title-lg text-on-surface-variant">/ 100</span>
+</div>
+<div class="w-32 h-2 bg-surface-variant rounded-full mt-2 overflow-hidden">
+<div class="h-full bg-primary" style="width: 78%;"></div>
+</div>
+</div>
+</section>
+<!-- Form Section: Safety & Compliance -->
+<section class="bg-surface-container-low border border-outline rounded-xl overflow-hidden shadow-2xl">
+<div class="bg-surface-container border-b border-outline px-6 py-4 flex items-center gap-3">
+<span class="material-symbols-outlined text-tertiary">security</span>
+<h3 class="text-title-lg font-title-lg">Safety &amp; Compliance <span class="text-body-sm font-body-sm text-on-surface-variant ml-2">(Assigned to you)</span></h3>
+</div>
+<div class="p-6 space-y-8">
+<!-- Question 1: Rating -->
+<div class="space-y-3">
+<label class="text-body-lg font-body-lg text-on-surface block">1. Overall driving safety awareness</label>
+<div class="flex gap-2">
+<button class="text-primary hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+</button>
+<button class="text-primary hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+</button>
+<button class="text-primary hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+</button>
+<button class="text-primary hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+</button>
+<button class="text-on-surface-variant hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">star</span>
+</button>
+</div>
+</div>
+<!-- Question 2: Toggle -->
+<div class="flex items-center justify-between p-4 bg-surface-container rounded-lg border border-outline-variant">
+<label class="text-body-md font-body-md text-on-surface">2. Follows pre-trip inspection protocol</label>
+<button class="relative inline-flex h-6 w-11 items-center rounded-full bg-primary transition-colors">
+<span class="translate-x-6 inline-block h-4 w-4 transform rounded-full bg-on-primary transition-transform"></span>
+</button>
+</div>
+<!-- Question 3: QCM (Asymmetric Layout) -->
+<div class="space-y-4">
+<label class="text-body-lg font-body-lg text-on-surface block">3. Hazardous materials handling knowledge</label>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+<button class="px-4 py-3 bg-surface-container-high border border-outline rounded-lg text-label-md font-label-md text-on-surface hover:border-primary transition-all text-center">None</button>
+<button class="px-4 py-3 bg-surface-container-high border border-outline rounded-lg text-label-md font-label-md text-on-surface hover:border-primary transition-all text-center">Basic</button>
+<button class="px-4 py-3 bg-primary-container border border-primary rounded-lg text-label-md font-label-md text-on-primary-container transition-all text-center ring-1 ring-primary ring-offset-2 ring-offset-background">Proficient</button>
+<button class="px-4 py-3 bg-surface-container-high border border-outline rounded-lg text-label-md font-label-md text-on-surface hover:border-primary transition-all text-center">Expert</button>
+</div>
+</div>
+<!-- Question 4: Free Text + Score -->
+<div class="space-y-3">
+<div class="flex justify-between items-end">
+<label class="text-body-lg font-body-lg text-error">4. Specific observations on backing maneuvers *</label>
+<div class="flex flex-col items-end">
+<span class="text-label-sm font-label-sm text-on-surface-variant mb-1">Maneuver Score</span>
+<input class="w-16 bg-surface-container-high border border-outline rounded px-2 py-1 text-center font-bold text-primary focus:ring-1 focus:ring-primary focus:outline-none" max="10" min="0" type="number" value="8"/>
+</div>
+</div>
+<textarea class="w-full bg-surface-container-high border border-error rounded-lg p-4 text-body-md font-body-md min-h-[120px] focus:ring-1 focus:ring-error focus:outline-none placeholder-on-surface-variant/30" placeholder="Enter detailed observations..."></textarea>
+<p class="text-error text-label-sm font-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">error</span>
+                        Champ obligatoire
+                    </p>
+</div>
+<!-- Global Observations -->
+<div class="pt-6 border-t border-outline">
+<label class="text-body-lg font-body-lg text-on-surface-variant block mb-3">Global section observations</label>
+<div class="bg-surface-container-high border border-outline rounded-lg p-1 focus-within:border-primary transition-colors">
+<textarea class="w-full bg-transparent border-none p-4 text-body-md font-body-md min-h-[100px] focus:ring-0 focus:outline-none" placeholder="Provide a summary of the candidate's safety performance..."></textarea>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Sticky Bottom Actions -->
+<footer class="fixed bottom-0 left-0 w-full bg-surface-container-lowest border-t border-outline px-margin-sm md:px-margin-lg h-24 flex items-center justify-between z-50">
+<div class="hidden md:flex flex-col">
+<span class="text-label-sm font-label-sm text-on-surface-variant uppercase">Current Status</span>
+<span class="text-body-md font-bold text-success flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">check_circle</span> Draft Saved 2m ago
+            </span>
+</div>
+<div class="flex gap-4 w-full md:w-auto">
+<button class="flex-1 md:flex-none h-12 px-8 border border-outline rounded text-on-surface font-label-md font-label-md hover:bg-surface-variant transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">save</span>
+                Save Draft
+            </button>
+<button class="flex-1 md:flex-none h-12 px-8 bg-primary rounded text-on-primary font-label-md font-label-md hover:opacity-90 transition-opacity flex items-center justify-center gap-2 shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">send</span>
+                Submit Evaluation
+            </button>
+</div>
+</footer>
+<!-- Bottom Navigation (Mobile Only Shell) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-20 px-2 pb-safe bg-surface-container-highest border-t border-outline hidden">
+<div class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-label-sm font-label-sm">Dashboard</span>
+</div>
+<div class="flex flex-col items-center justify-center text-primary font-bold">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">group</span>
+<span class="text-label-sm font-label-sm">Personnel</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">work</span>
+<span class="text-label-sm font-label-sm">Jobs</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">quiz</span>
+<span class="text-label-sm font-label-sm">Tests</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-label-sm font-label-sm">Settings</span>
+</div>
+</nav>
+</body></html>

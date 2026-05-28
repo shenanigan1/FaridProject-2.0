@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { EMPTY, Observable, forkJoin, expand, map, reduce } from 'rxjs';
 
-export type AdminTestStatus = 'in_progress' | 'completed' | 'validated' | string;
+export type AdminTestStatus = 'in_progress' | 'completed' | 'validated' | 'rejected' | string;
 export type AdminTemplateDifficulty = 'easy' | 'medium' | 'hard' | string;
 
 interface Paginated<T> {
@@ -12,6 +12,7 @@ interface Paginated<T> {
 
 interface EvaluationDto {
   id: number;
+  subject: number;
   application: number | null;
   status: AdminTestStatus;
   template_name?: string;
@@ -52,7 +53,20 @@ interface TemplateSectionDto {
 
 interface QuestionnaireQuestionDto {
   question_id: number;
+  section_id?: number;
+  section_title?: string;
+  format?: string;
+  title?: string;
+  text?: string;
+  explanation?: string;
+  is_mandatory?: boolean;
+  is_eliminatory?: boolean;
   points: number;
+  max_score?: number;
+  difficulty?: string;
+  rubric?: unknown;
+  candidate_answer?: string;
+  manager_comment?: string;
   score: number | null;
 }
 
@@ -78,10 +92,13 @@ interface QuestionnaireDto {
 
 export interface AdminValidationQueueItem {
   evaluationId: number;
+  candidateId: number;
+  applicationId: number | null;
   candidateName: string;
   candidateEmail: string;
   templateName: string;
   positionTitle: string;
+  managerName: string;
   status: AdminTestStatus;
   statusLabel: string;
   receivedAt: string;
@@ -131,8 +148,36 @@ export interface AdminAssessmentModule {
   maxScore: number;
 }
 
+export interface AdminAssessmentQuestion {
+  questionId: number;
+  title: string;
+  text: string;
+  format: string;
+  candidateAnswer: string;
+  correctAnswer: string;
+  managerComment: string;
+  score: number | null;
+  maxScore: number;
+  isMandatory: boolean;
+  isEliminatory: boolean;
+}
+
+export interface AdminAssessmentSection {
+  sectionId: number;
+  title: string;
+  description: string;
+  score: number;
+  maxScore: number;
+  assignedToFullName: string;
+  managerComment: string;
+  completedAt: string | null;
+  questions: AdminAssessmentQuestion[];
+}
+
 export interface AdminAssessment {
   evaluationId: number;
+  candidateId: number;
+  applicationId: number | null;
   candidateName: string;
   templateName: string;
   positionTitle: string;
@@ -142,6 +187,7 @@ export interface AdminAssessment {
   feedback: string;
   evaluatorName: string;
   modules: AdminAssessmentModule[];
+  sections: AdminAssessmentSection[];
 }
 
 export interface LaunchEvaluationResult {
@@ -153,6 +199,47 @@ export interface LaunchEvaluationResult {
 function isPaginatedPayload<T>(value: unknown): value is Paginated<T> {
   return typeof value === 'object' && value !== null && !Array.isArray(value)
     && Array.isArray((value as Paginated<T>).results);
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function stringifyAnswer(value: unknown): string {
+  if (value === null || value === undefined || value === '') return '';
+  if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
+    return String(value);
+  }
+  if (Array.isArray(value)) {
+    return value.map((item) => stringifyAnswer(item)).filter(Boolean).join(', ');
+  }
+  if (isRecord(value)) {
+    return stringifyAnswer(value['label'] ?? value['text'] ?? value['value'] ?? value['answer']);
+  }
+  return '';
+}
+
+function splitAnswers(raw: unknown): string[] {
+  if (raw === null || raw === undefined || raw === '') return [];
+  if (Array.isArray(raw)) {
+    return raw.map((item) => stringifyAnswer(item)).filter(Boolean);
+  }
+  if (typeof raw !== 'string') {
+    return [String(raw)];
+  }
+
+  const trimmed = raw.trim();
+  if (!trimmed) return [];
+
+  try {
+    const parsed = JSON.parse(trimmed) as unknown;
+    if (Array.isArray(parsed)) return splitAnswers(parsed);
+    if (parsed !== null && parsed !== undefined && typeof parsed !== 'object') return [String(parsed)];
+  } catch {
+    // Plain text answers are split below.
+  }
+
+  return trimmed.split(/[\n;,|]+/).map((entry) => entry.trim()).filter(Boolean);
 }
 
 @Injectable({ providedIn: 'root' })
@@ -173,7 +260,6 @@ export class TestsAdminBffService {
     return this.fetchAll<EvaluationDto>('/api/evaluations/').pipe(
       map((evaluations) =>
         evaluations
-          .filter((evaluation) => evaluation.status !== 'completed' && evaluation.status !== 'validated')
           .map((evaluation) => this.toTestListItem(evaluation))
           .sort((left, right) => right.receivedAt.localeCompare(left.receivedAt)),
       ),
@@ -228,6 +314,12 @@ export class TestsAdminBffService {
       .pipe(map(() => ({ ok: true as const })));
   }
 
+  rejectAssessment(evaluationId: number): Observable<{ ok: true }> {
+    return this.http
+      .patch<EvaluationDto>(`/api/evaluations/${evaluationId}/`, { status: 'rejected' })
+      .pipe(map(() => ({ ok: true as const })));
+  }
+
   private fetchAll<T>(url: string): Observable<T[]> {
     return this.http.get<T[] | Paginated<T>>(url).pipe(
       expand((payload) => {
@@ -245,16 +337,20 @@ export class TestsAdminBffService {
     if (status === 'in_progress') return 'En cours';
     if (status === 'completed') return 'Score sous revue';
     if (status === 'validated') return 'Valide';
+    if (status === 'rejected') return 'Refuse';
     return status;
   }
 
   private toQueueItem(evaluation: EvaluationDto): AdminValidationQueueItem {
     return {
       evaluationId: evaluation.id,
+      candidateId: evaluation.subject,
+      applicationId: evaluation.application,
       candidateName: evaluation.subject_full_name || evaluation.subject_email || 'Non renseigne',
       candidateEmail: evaluation.subject_email ?? '',
       templateName: evaluation.template_name || 'Non renseigne',
       positionTitle: evaluation.position_title ?? '',
+      managerName: evaluation.assigned_to_full_name ?? '',
       status: evaluation.status,
       statusLabel: this.statusLabel(evaluation.status),
       receivedAt: evaluation.updated_at ?? evaluation.created_at ?? '',
@@ -309,14 +405,19 @@ export class TestsAdminBffService {
   }
 
   private toAssessment(evaluation: EvaluationDto, questionnaire: QuestionnaireDto): AdminAssessment {
-    const modules = questionnaire.sections.map((section) => {
+    const sections = questionnaire.sections.map((section) => {
       const maxScore = section.questions.reduce((sum, question) => sum + question.points, 0);
       const score = section.questions.reduce((sum, question) => sum + (question.score ?? 0), 0);
       return {
         sectionId: section.section_id,
         title: section.title,
+        description: section.description ?? '',
         score: maxScore === 0 ? 0 : Math.round((score / maxScore) * 100),
         maxScore: 100,
+        assignedToFullName: section.assigned_to_full_name ?? '',
+        managerComment: section.manager_comment ?? '',
+        completedAt: section.completed_at,
+        questions: section.questions.map((question) => this.toAssessmentQuestion(question)),
       };
     });
     const maxRaw = questionnaire.questions.reduce((sum, question) => sum + question.points, 0);
@@ -324,6 +425,8 @@ export class TestsAdminBffService {
 
     return {
       evaluationId: evaluation.id,
+      candidateId: evaluation.subject,
+      applicationId: evaluation.application,
       candidateName: evaluation.subject_full_name || evaluation.subject_email || 'Non renseigne',
       templateName: evaluation.template_name || questionnaire.template_name,
       positionTitle: evaluation.position_title ?? '',
@@ -338,7 +441,51 @@ export class TestsAdminBffService {
         questionnaire.sections.map((section) => section.assigned_to_full_name).find(Boolean) ||
         evaluation.assigned_to_full_name ||
         '',
-      modules,
+      modules: sections.map((section) => ({
+        sectionId: section.sectionId,
+        title: section.title,
+        score: section.score,
+        maxScore: section.maxScore,
+      })),
+      sections,
     };
+  }
+
+  private toAssessmentQuestion(question: QuestionnaireQuestionDto): AdminAssessmentQuestion {
+    const maxScore = question.max_score ?? question.points;
+    return {
+      questionId: question.question_id,
+      title: question.title?.trim() || question.text?.trim() || `Question ${question.question_id}`,
+      text: question.text ?? '',
+      format: question.format ?? '',
+      candidateAnswer: this.formatAnswer(question.candidate_answer),
+      correctAnswer: this.correctAnswer(question),
+      managerComment: question.manager_comment ?? '',
+      score: question.score,
+      maxScore,
+      isMandatory: question.is_mandatory ?? false,
+      isEliminatory: question.is_eliminatory ?? false,
+    };
+  }
+
+  private correctAnswer(question: QuestionnaireQuestionDto): string {
+    const rubric = isRecord(question.rubric) ? question.rubric : {};
+    const candidates = [
+      rubric['correct_answers'],
+      rubric['correct_answer'],
+      rubric['answer'],
+      question.explanation,
+    ];
+    for (const candidate of candidates) {
+      const answers = splitAnswers(candidate);
+      if (answers.length > 0) {
+        return answers.join(', ');
+      }
+    }
+    return '';
+  }
+
+  private formatAnswer(value: unknown): string {
+    return splitAnswers(value).join(', ');
   }
 }

@@ -1,0 +1,64 @@
+@layer utilities {
+  .ff-u-mt-sm {
+    margin-top: var(--ff-space-sm);
+  }
+
+  .ff-u-mt-md {
+    margin-top: var(--ff-space-md);
+  }
+
+  .ff-u-mt-lg {
+    margin-top: var(--ff-space-lg);
+  }
+
+  .ff-u-mt-xl {
+    margin-top: var(--ff-space-xl);
+  }
+
+  .ff-u-between {
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+
+  .ff-u-end {
+    justify-content: flex-end;
+  }
+
+  .ff-u-block {
+    display: block;
+  }
+
+  .ff-u-full {
+    width: 100%;
+  }
+
+  .ff-u-text-left {
+    text-align: left;
+  }
+
+  .ff-u-min-0 {
+    min-width: 0;
+  }
+
+  .ff-u-max-form {
+    max-width: 48rem;
+  }
+
+  .ff-u-select-sm {
+    max-width: 12rem;
+  }
+
+  .ff-u-mb-md {
+    margin-bottom: var(--ff-space-md);
+  }
+
+  .ff-u-divided-top {
+    border-top: 1px solid var(--ff-color-border-soft);
+    margin-top: var(--ff-space-md);
+    padding-top: var(--ff-space-md);
+  }
+
+  .ff-u-pre-wrap {
+    white-space: pre-wrap;
+  }
+}

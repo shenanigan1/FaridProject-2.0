@@ -1,5 +1,5 @@
 <section class="ff-app-screen">
-  <div class="ff-app-container ff-app-stack" style="max-width: 48rem">
+  <div class="ff-app-container ff-app-stack ff-u-max-form">
     <header class="ff-app-header">
       <div>
         <p class="ff-app-kicker">QUESTION POOL</p>
@@ -61,7 +61,7 @@
       @if (pool(); as p) {
         @if (tab() === 'questions') {
           <section class="ff-app-panel ff-app-stack">
-            <header class="ff-inline-actions" style="justify-content: space-between">
+      <header class="ff-inline-actions ff-u-between">
               <div>
                 <p class="ff-app-kicker">QUESTIONS</p>
                 <h2 class="ff-section-title">Pool questions</h2>
@@ -77,7 +77,7 @@
 
         @if (tab() === 'settings') {
           <section class="ff-app-panel ff-app-stack">
-            <header class="ff-inline-actions" style="align-items: flex-start; justify-content: space-between">
+          <header class="ff-inline-actions ff-u-between">
               <div>
                 <p class="ff-app-kicker">SETTINGS</p>
                 <h2 class="ff-section-title">Pool settings</h2>

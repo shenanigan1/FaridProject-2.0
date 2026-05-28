@@ -58,4 +58,30 @@ describe('RelaunchTestPage', () => {
 
     expect(router.navigate).toHaveBeenCalledWith(['/tests/launch', 12, 5]);
   });
+
+  it('uses the shared UI-book relaunch layout without inline card styles', () => {
+    const host = fixture.nativeElement as HTMLElement;
+    const card = host.querySelector<HTMLButtonElement>('[data-testid="relaunch-template-5"]');
+    const sticky = host.querySelector<HTMLElement>('[data-testid="relaunch-selection-bar"]');
+
+    expect(host.querySelector('.ff-page-bar')).not.toBeNull();
+    expect(host.querySelector('.ff-workflow-hero')).not.toBeNull();
+    expect(host.querySelector('.ff-filter-stack')).not.toBeNull();
+    expect(host.querySelector('.ff-module-grid')).not.toBeNull();
+    expect(card).not.toBeNull();
+    expect(card?.classList.contains('ff-module-card')).toBeTrue();
+    expect(card?.getAttribute('style') ?? '').not.toContain('text-align');
+    expect(sticky?.classList.contains('ff-decision-bar')).toBeTrue();
+  });
+
+  it('filters modules by difficulty chip', () => {
+    const host = fixture.nativeElement as HTMLElement;
+
+    expect(host.textContent ?? '').toContain('Conduite de Nuit');
+    host.querySelector<HTMLButtonElement>('[data-testid="relaunch-filter-hard"]')?.click();
+    fixture.detectChanges();
+
+    expect(host.textContent ?? '').not.toContain('Conduite de Nuit');
+    expect(host.textContent ?? '').toContain('Aucun module de test en base.');
+  });
 });

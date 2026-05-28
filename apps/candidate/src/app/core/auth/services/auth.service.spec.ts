@@ -224,6 +224,20 @@ describe('AuthService (candidate)', () => {
     expect(service.getAuthenticatedCandidate()).toBeNull();
   });
 
+  it('keeps the candidate session resumable when access token expired but refresh token exists', () => {
+    tokenStorageSpy.isAuthenticated.and.returnValue(false);
+    tokenStorageSpy.getRefreshToken.and.returnValue('refresh-token');
+    service.saveAuthenticatedCandidate({
+      candidateId: 72,
+      email: 'resume@example.com',
+      firstName: 'Resume',
+      lastName: 'User',
+      phone: '',
+    });
+
+    expect(service.isAuthenticated()).toBeTrue();
+  });
+
   it('logout clears local candidate state and sends bearer refresh token to backend', () => {
     tokenStorageSpy.getRefreshToken.and.returnValue('refresh-token');
     service.saveAuthenticatedCandidate({
@@ -244,5 +258,50 @@ describe('AuthService (candidate)', () => {
 
     expect(tokenStorageSpy.clear).toHaveBeenCalled();
     expect(service.getAuthenticatedCandidate()).toBeNull();
+  });
+
+  it('updates the authenticated candidate profile through /candidates/me/ and refreshes local state', () => {
+    service.saveAuthenticatedCandidate({
+      candidateId: 44,
+      email: 'old@example.com',
+      firstName: 'Old',
+      lastName: 'Name',
+      phone: '',
+    });
+
+    let updatedEmail = '';
+    service
+      .updateProfile({
+        firstName: 'Farid',
+        lastName: 'Candidat',
+        email: 'farid@example.com',
+        phone: '+33611111111',
+      })
+      .subscribe((candidate) => {
+        updatedEmail = candidate.email;
+      });
+
+    const request = httpMock.expectOne(candidateMeUrl);
+    expect(request.request.method).toBe('PATCH');
+    expect(request.request.body).toEqual({
+      user: {
+        first_name: 'Farid',
+        last_name: 'Candidat',
+        email: 'farid@example.com',
+        phone: '+33611111111',
+      },
+    });
+    request.flush({
+      id: 44,
+      user: {
+        email: 'farid@example.com',
+        first_name: 'Farid',
+        last_name: 'Candidat',
+        phone: '+33611111111',
+      },
+    });
+
+    expect(updatedEmail).toBe('farid@example.com');
+    expect(service.getAuthenticatedCandidate()?.firstName).toBe('Farid');
   });
 });

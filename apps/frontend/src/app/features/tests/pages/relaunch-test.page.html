@@ -1,19 +1,19 @@
-<section class="test-flow">
-  <header class="test-flow__appbar">
-    <a routerLink="/tests" class="test-flow__icon-btn" aria-label="Retour">&#8592;</a>
-    <h1>Relancer un test</h1>
-    <span></span>
+<section class="ff-workflow-screen">
+  <header class="ff-page-bar">
+    <a routerLink="/tests" class="ff-page-bar__action" aria-label="Retour">&#8592;</a>
+    <h1 class="ff-page-bar__title">Relancer un test</h1>
+    <span class="ff-page-bar__spacer" aria-hidden="true"></span>
   </header>
 
-  <div class="test-flow__shell">
-    <section class="test-flow__hero" style="border: 0; box-shadow: none; padding-inline: 0">
-      <h2>Selectionner un module de re-test</h2>
-      <p class="test-flow__meta">
+  <div class="ff-workflow-shell ff-workflow-shell--narrow">
+    <section class="ff-workflow-hero">
+      <h2 class="ff-workflow-hero__title">Selectionner un module de re-test</h2>
+      <p class="ff-row-meta">
         Choisissez le module specifique pour evaluer les competences du conducteur.
       </p>
     </section>
 
-    <label class="test-flow__search">
+    <label class="ff-search-box ff-filter-stack">
       <input
         type="search"
         [formControl]="searchControl"
@@ -22,38 +22,97 @@
       />
     </label>
 
+    <div class="ff-chip-row" aria-label="Filtrer par difficulte">
+      <button
+        type="button"
+        class="ff-chip"
+        [class.ff-chip--active]="difficultyFilter() === 'all'"
+        data-testid="relaunch-filter-all"
+        (click)="setDifficultyFilter('all')"
+      >
+        Tous
+      </button>
+      <button
+        type="button"
+        class="ff-chip"
+        [class.ff-chip--active]="difficultyFilter() === 'easy'"
+        data-testid="relaunch-filter-easy"
+        (click)="setDifficultyFilter('easy')"
+      >
+        Facile
+      </button>
+      <button
+        type="button"
+        class="ff-chip"
+        [class.ff-chip--active]="difficultyFilter() === 'medium'"
+        data-testid="relaunch-filter-medium"
+        (click)="setDifficultyFilter('medium')"
+      >
+        Moyen
+      </button>
+      <button
+        type="button"
+        class="ff-chip"
+        [class.ff-chip--active]="difficultyFilter() === 'hard'"
+        data-testid="relaunch-filter-hard"
+        (click)="setDifficultyFilter('hard')"
+      >
+        Difficile
+      </button>
+    </div>
+
     @if (error()) {
-      <p class="test-flow__alert">{{ error() }}</p>
+      <p class="ff-alert ff-alert-error">{{ error() }}</p>
     }
 
-    <div class="test-flow__stack">
+    <div class="ff-module-grid">
       @for (template of filteredTemplates(); track template.id) {
         <button
           type="button"
-          class="test-flow__card"
-          style="text-align: left"
-          [style.border-color]="selectedTemplateId() === template.id ? 'var(--ff-color-primary-400)' : null"
+          class="ff-module-card"
+          [class.ff-module-card--selected]="selectedTemplateId() === template.id"
+          [attr.aria-pressed]="selectedTemplateId() === template.id"
+          [attr.data-testid]="'relaunch-template-' + template.id"
           (click)="selectTemplate(template.id)"
         >
-          <span class="test-flow__status">{{ template.difficulty }}</span>
-          <h2 class="test-flow__title" style="margin-top: 1rem">{{ template.name }}</h2>
-          <p class="test-flow__meta">{{ template.durationMinutes }} min &bull; {{ template.pointsTotal }} pts</p>
-          <p class="test-flow__meta">{{ template.description }}</p>
+          <div class="ff-module-card__head">
+            <span class="ff-status-pill">{{ template.difficulty }}</span>
+            @if (selectedTemplateId() === template.id) {
+              <span class="ff-selected-mark" aria-hidden="true">✓</span>
+            }
+          </div>
+          <h2 class="ff-row-title ff-row-title--lg">{{ template.name }}</h2>
+          <p class="ff-row-meta">{{ template.durationMinutes }} min · {{ template.pointsTotal }} pts</p>
+          @if (template.description) {
+            <p class="ff-row-meta">{{ template.description }}</p>
+          }
         </button>
       }
 
       @if (filteredTemplates().length === 0) {
-        <p class="test-flow__empty">Aucun module de test en base.</p>
+        <p class="ff-empty">Aucun module de test en base.</p>
       }
     </div>
   </div>
 
-  <div class="test-flow__sticky">
+  <div class="ff-decision-bar" data-testid="relaunch-selection-bar">
     @if (selectedTemplate(); as selected) {
-      <p class="test-flow__kicker">Selection active</p>
-      <p class="test-flow__title">{{ selected.name }} &bull; {{ selected.durationMinutes }} min</p>
+      <div>
+        <p class="ff-app-kicker">Selection active</p>
+        <p class="ff-row-title">{{ selected.name }} · {{ selected.durationMinutes }} min</p>
+      </div>
+    } @else {
+      <div>
+        <p class="ff-app-kicker">Selection active</p>
+        <p class="ff-row-title">Choisissez un module visible</p>
+      </div>
     }
-    <button type="button" class="test-flow__btn test-flow__btn--primary" style="width: 100%" (click)="confirmSelection()">
+    <button
+      type="button"
+      class="ff-btn ff-btn-primary"
+      [disabled]="!selectedTemplate()"
+      (click)="confirmSelection()"
+    >
       Lancer le nouveau test
     </button>
   </div>

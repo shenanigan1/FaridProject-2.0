@@ -2,6 +2,13 @@
   display: block;
 }
 
+.ff-status-pill--success {
+  border-color: rgba(52, 211, 153, 0.45);
+  background: rgba(5, 150, 105, 0.22);
+  color: #8ff0c7;
+  text-decoration: none;
+}
+
 .launch-panel {
   margin-top: 1rem;
   border: 1px solid var(--ff-color-border);

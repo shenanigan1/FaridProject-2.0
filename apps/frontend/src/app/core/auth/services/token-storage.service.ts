@@ -9,14 +9,18 @@ export class TokenStorageService {
 
   saveTokens(access: string, refresh?: string, rememberMe = false): void {
     this.accessToken = access;
-    const targetStorage = rememberMe ? localStorage : sessionStorage;
-    const otherStorage = rememberMe ? sessionStorage : localStorage;
 
-    this.clearStorage(otherStorage);
-    targetStorage.setItem(this.REMEMBER_KEY, String(rememberMe));
-    targetStorage.setItem(this.ACCESS_KEY, access);
+    localStorage.removeItem(this.ACCESS_KEY);
+    sessionStorage.setItem(this.REMEMBER_KEY, String(rememberMe));
+    sessionStorage.setItem(this.ACCESS_KEY, access);
+
     if (refresh) {
-      targetStorage.setItem(this.REFRESH_KEY, refresh);
+      const refreshStorage = rememberMe ? localStorage : sessionStorage;
+      const otherRefreshStorage = rememberMe ? sessionStorage : localStorage;
+      otherRefreshStorage.removeItem(this.REFRESH_KEY);
+      otherRefreshStorage.removeItem(this.REMEMBER_KEY);
+      refreshStorage.setItem(this.REMEMBER_KEY, String(rememberMe));
+      refreshStorage.setItem(this.REFRESH_KEY, refresh);
     }
   }
 
@@ -44,7 +48,7 @@ export class TokenStorageService {
   }
 
   private read(key: string): string | null {
-    return localStorage.getItem(key) ?? sessionStorage.getItem(key);
+    return sessionStorage.getItem(key) ?? localStorage.getItem(key);
   }
 
   private clearStorage(storage: Storage): void {

@@ -77,6 +77,16 @@ describe('ContactPage', () => {
     expect(text).toContain('Create Contact');
   });
 
+  it('opens user creation in a real dialog instead of an inline panel', () => {
+    component.createPanelOpen.set(true);
+    fixture.detectChanges();
+
+    const dialog = (fixture.nativeElement as HTMLElement).querySelector('[role="dialog"]');
+
+    expect(dialog).not.toBeNull();
+    expect(dialog?.textContent).toContain('Creer un acces utilisateur');
+  });
+
   it('hides creation for HR users', () => {
     sessionSpy.loadMeOnce.and.returnValue(
       of({

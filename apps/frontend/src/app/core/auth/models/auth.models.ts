@@ -4,6 +4,7 @@ export type AllowedRole =
   | 'director'
   | 'manager'
   | 'employee'
+  | 'driver'
   | 'candidate';
 
 export interface LoginRequest {
@@ -16,6 +17,7 @@ export interface MeResponse {
   email: string;
   first_name: string;
   last_name: string;
+  phone?: string;
   role: AllowedRole | null;
 }
 

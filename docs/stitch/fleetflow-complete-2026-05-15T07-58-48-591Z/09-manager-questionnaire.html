@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Driver Evaluation | FleetFlow</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed-dim": "#a9c7ff",
+                        "tertiary-container": "#e76e13",
+                        "surface-container-low": "#181c23",
+                        "on-surface-variant": "#c1c6d6",
+                        "outline": "#8b919f",
+                        "tertiary-fixed-dim": "#ffb68e",
+                        "on-primary-fixed": "#001b3d",
+                        "tertiary": "#ffb68e",
+                        "on-tertiary": "#532200",
+                        "inverse-on-surface": "#2d3038",
+                        "on-background": "#e0e2ec",
+                        "on-tertiary-fixed": "#331200",
+                        "background": "#10131a",
+                        "inverse-primary": "#005db6",
+                        "primary-fixed": "#d6e3ff",
+                        "surface-container-high": "#272a31",
+                        "on-secondary": "#002e69",
+                        "on-tertiary-container": "#491d00",
+                        "tertiary-fixed": "#ffdbc9",
+                        "error-container": "#93000a",
+                        "surface-container-lowest": "#0b0e15",
+                        "surface-tint": "#a9c7ff",
+                        "surface-dim": "#10131a",
+                        "outline-variant": "#414754",
+                        "error": "#ffb4ab",
+                        "on-primary-fixed-variant": "#00468b",
+                        "on-secondary-fixed-variant": "#004493",
+                        "surface-container": "#1c2027",
+                        "on-primary-container": "#002957",
+                        "primary": "#a9c7ff",
+                        "inverse-surface": "#e0e2ec",
+                        "on-error-container": "#ffdad6",
+                        "on-tertiary-fixed-variant": "#763300",
+                        "secondary": "#adc6ff",
+                        "on-primary": "#003063",
+                        "on-surface": "#e0e2ec",
+                        "secondary-fixed": "#d8e2ff",
+                        "on-secondary-fixed": "#001a41",
+                        "surface-variant": "#31353c",
+                        "primary-container": "#3a90ff",
+                        "surface-container-highest": "#31353c",
+                        "on-error": "#690005",
+                        "secondary-container": "#0064d3",
+                        "surface": "#10131a",
+                        "on-secondary-container": "#e0e8ff",
+                        "surface-bright": "#363941",
+                        "secondary-fixed-dim": "#adc6ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "md": "16px",
+                        "lg": "24px",
+                        "base": "8px",
+                        "sm": "8px",
+                        "max-width": "1440px",
+                        "gutter": "16px",
+                        "margin-mobile": "16px",
+                        "xs": "4px",
+                        "xl": "32px",
+                        "margin-desktop": "32px"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "headline-xl": ["Inter"],
+                        "label-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["11px", {"lineHeight": "14px", "fontWeight": "500"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "headline-xl": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { background-color: #10131a; color: #e0e2ec; font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #10131a; }
+        ::-webkit-scrollbar-thumb { background: #3b4352; border-radius: 10px; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="flex flex-col min-h-screen">
+<!-- Top Navigation Anchor -->
+<nav class="bg-surface-container border-b border-outline-variant flex items-center justify-between px-md w-full h-16 sticky top-0 z-50">
+<div class="flex items-center gap-4">
+<button class="hover:bg-surface-variant/50 transition-colors duration-200 active:opacity-70 p-2 rounded-full">
+<span class="material-symbols-outlined text-on-surface">arrow_back</span>
+</button>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">Driver Evaluation</h1>
+</div>
+<div class="flex items-center gap-2">
+<button class="hover:bg-surface-variant/50 transition-colors duration-200 active:opacity-70 p-2 rounded-full">
+<span class="material-symbols-outlined text-on-surface">more_vert</span>
+</button>
+</div>
+</nav>
+<main class="flex-grow w-full max-w-4xl mx-auto px-margin-mobile md:px-margin-desktop py-lg space-y-lg pb-32">
+<!-- Candidate Header Card -->
+<header class="bg-surface-container rounded-xl border border-outline-variant p-md flex flex-col md:flex-row md:items-center justify-between gap-md">
+<div class="flex items-center gap-md">
+<div class="w-16 h-16 rounded-full bg-secondary-container flex items-center justify-center border-2 border-outline-variant overflow-hidden">
+<img alt="Marcus Reed" class="w-full h-full object-cover" data-alt="A professional headshot of a middle-aged male driver with a confident and friendly expression, wearing a navy blue industrial uniform. He is positioned against a clean, softly lit studio background that reflects a modern, professional recruitment setting. The lighting is crisp and high-contrast, emphasizing reliability and professional experience in the logistics industry." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwsyQLWr0HNXCScn6w_7A9Hkjt7I1Q5OEEeW3EJyOcp_J9RU6lcfFhxYhEi-Tsr_qQ9QqDIAMcZ0R69qQhXnWJ2hxsQmNc2iiA8-Sn8b72qwyBxEF41H5NZxljtpQjc13ycnSLhmncWekOUHSIx9RTvojAtJiQMA5v5OjjfA-BRe7r5l8RdqK-nQDhFtdxoHdvpwoufCkwVS74u17Tx7gtFuRHKB-aeB2SFS-Mjf-4bZW-EdgO_TYxTD-ejpWNMoSRNJicXCAO_Ga3"/>
+</div>
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Marcus Reed</h2>
+<p class="font-label-md text-label-md text-on-surface-variant">ID: FF-2245-UK • Logistics Professional</p>
+</div>
+</div>
+<div class="flex items-center md:items-end flex-col bg-surface-container-high rounded-lg p-md border border-outline-variant">
+<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-widest">Aggregate Score</span>
+<span class="font-headline-xl text-headline-xl text-primary">62%</span>
+</div>
+</header>
+<!-- Assigned Sections -->
+<section class="space-y-sm">
+<h3 class="font-label-md text-label-md text-on-surface-variant px-1 uppercase">Sections assigned to you</h3>
+<div class="flex flex-wrap gap-2">
+<span class="bg-primary-container/20 text-primary border border-primary/30 px-3 py-1 rounded-full font-label-md text-label-md flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">verified</span> Operational Safety
+                </span>
+<span class="bg-tertiary-container/20 text-tertiary border border-tertiary/30 px-3 py-1 rounded-full font-label-md text-label-md flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">route</span> Route Planning
+                </span>
+</div>
+</section>
+<!-- Questionnaire Form -->
+<form class="space-y-lg">
+<!-- Section 1: Soft Skills -->
+<div class="bg-surface-container border border-outline-variant rounded-xl p-md space-y-lg">
+<div class="border-l-4 border-primary pl-4 py-1">
+<h4 class="font-headline-md text-headline-md text-on-surface">Professionalism &amp; Communication</h4>
+</div>
+<!-- Q1: Star Rating -->
+<div class="space-y-md">
+<div class="flex justify-between items-start">
+<label class="font-body-lg text-body-lg text-on-surface">Overall driver professionalism &amp; punctuality during assessment</label>
+<button class="text-primary hover:text-primary-fixed-dim flex items-center gap-1 font-label-md text-label-md transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">add_comment</span> Add Comment
+                        </button>
+</div>
+<div class="flex gap-2">
+<span class="material-symbols-outlined text-primary text-[32px] cursor-pointer" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary text-[32px] cursor-pointer" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary text-[32px] cursor-pointer" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-outline text-[32px] cursor-pointer">star</span>
+<span class="material-symbols-outlined text-outline text-[32px] cursor-pointer">star</span>
+</div>
+</div>
+<div class="h-px bg-outline-variant"></div>
+<!-- Q2: Yes/No -->
+<div class="space-y-md">
+<div class="flex justify-between items-start">
+<div>
+<label class="font-body-lg text-body-lg text-on-surface">Proper PPE usage observed?</label>
+<span class="block text-error text-label-sm font-label-sm mt-1">Champ obligatoire</span>
+</div>
+<button class="text-primary hover:text-primary-fixed-dim flex items-center gap-1 font-label-md text-label-md transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">add_comment</span> Add Comment
+                        </button>
+</div>
+<div class="flex gap-4">
+<label class="flex-1">
+<input class="hidden peer" name="ppe" type="radio"/>
+<div class="border border-outline-variant peer-checked:border-primary peer-checked:bg-primary/10 rounded-lg p-3 text-center transition-all cursor-pointer font-label-md text-label-md text-on-surface-variant peer-checked:text-primary">
+                                YES
+                            </div>
+</label>
+<label class="flex-1">
+<input class="hidden peer" name="ppe" type="radio"/>
+<div class="border border-outline-variant border-error/50 peer-checked:border-primary peer-checked:bg-primary/10 rounded-lg p-3 text-center transition-all cursor-pointer font-label-md text-label-md text-on-surface-variant peer-checked:text-primary bg-error/5">
+                                NO
+                            </div>
+</label>
+</div>
+</div>
+</div>
+<!-- Section 2: Technical -->
+<div class="bg-surface-container border border-outline-variant rounded-xl p-md space-y-lg">
+<div class="border-l-4 border-tertiary pl-4 py-1">
+<h4 class="font-headline-md text-headline-md text-on-surface">Technical Assessment</h4>
+</div>
+<!-- Q3: True/False -->
+<div class="space-y-md">
+<div class="flex justify-between items-start">
+<label class="font-body-lg text-body-lg text-on-surface">Followed standard pre-trip inspection protocol.</label>
+<button class="text-primary hover:text-primary-fixed-dim flex items-center gap-1 font-label-md text-label-md transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">add_comment</span> Add Comment
+                        </button>
+</div>
+<div class="flex gap-4">
+<label class="flex items-center gap-2 cursor-pointer group">
+<input class="w-5 h-5 bg-surface-container-lowest border-outline-variant text-primary focus:ring-primary" name="inspection" type="radio"/>
+<span class="font-body-md text-body-md text-on-surface group-hover:text-primary transition-colors">True</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer group">
+<input class="w-5 h-5 bg-surface-container-lowest border-outline-variant text-primary focus:ring-primary" name="inspection" type="radio"/>
+<span class="font-body-md text-body-md text-on-surface group-hover:text-primary transition-colors">False</span>
+</label>
+</div>
+</div>
+<div class="h-px bg-outline-variant"></div>
+<!-- Q4: Multiple Choice (QCM) -->
+<div class="space-y-md">
+<div class="flex justify-between items-start">
+<label class="font-body-lg text-body-lg text-on-surface">Parking Maneuver Accuracy</label>
+<button class="text-primary hover:text-primary-fixed-dim flex items-center gap-1 font-label-md text-label-md transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">add_comment</span> Add Comment
+                        </button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+<label class="relative">
+<input class="hidden peer" name="parking" type="radio"/>
+<div class="border border-outline-variant rounded-lg p-md cursor-pointer transition-all peer-checked:border-primary peer-checked:bg-primary/10 group">
+<p class="font-label-md text-label-md text-on-surface-variant peer-checked:text-primary">Exceptional</p>
+</div>
+</label>
+<label class="relative">
+<input class="hidden peer" name="parking" type="radio"/>
+<div class="border border-outline-variant rounded-lg p-md cursor-pointer transition-all peer-checked:border-primary peer-checked:bg-primary/10">
+<p class="font-label-md text-label-md text-on-surface-variant peer-checked:text-primary">Standard</p>
+</div>
+</label>
+<label class="relative">
+<input class="hidden peer" name="parking" type="radio"/>
+<div class="border border-outline-variant rounded-lg p-md cursor-pointer transition-all peer-checked:border-primary peer-checked:bg-primary/10">
+<p class="font-label-md text-label-md text-on-surface-variant peer-checked:text-primary">Requires Training</p>
+</div>
+</label>
+<label class="relative">
+<input class="hidden peer" name="parking" type="radio"/>
+<div class="border border-outline-variant rounded-lg p-md cursor-pointer transition-all peer-checked:border-primary peer-checked:bg-primary/10">
+<p class="font-label-md text-label-md text-on-surface-variant peer-checked:text-primary">Failed</p>
+</div>
+</label>
+</div>
+</div>
+<div class="h-px bg-outline-variant"></div>
+<!-- Q5: Free Text with Manual Score -->
+<div class="space-y-md">
+<div class="flex justify-between items-start">
+<label class="font-body-lg text-body-lg text-on-surface">Specific Technical Observations</label>
+<div class="flex items-center gap-2 bg-surface-container-lowest border border-outline-variant rounded px-2 py-1">
+<span class="font-label-md text-label-md text-on-surface-variant">SCORE:</span>
+<input class="w-12 bg-transparent border-none text-primary font-bold focus:ring-0 p-0 text-center" max="20" placeholder="0" type="number"/>
+<span class="font-label-md text-label-md text-on-surface-variant">/ 20</span>
+</div>
+</div>
+<textarea class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg focus:border-primary focus:ring-1 focus:ring-primary text-on-surface placeholder:text-on-surface-variant/50 p-md transition-all" placeholder="Describe specific maneuvers, technical handling, and equipment awareness..." rows="3"></textarea>
+</div>
+<div class="bg-surface-container-high/50 p-md rounded-lg border border-dashed border-outline-variant">
+<label class="font-label-md text-label-md text-on-surface-variant uppercase mb-2 block">Section-level additional comments</label>
+<input class="w-full bg-transparent border-b border-outline-variant focus:border-primary focus:ring-0 text-body-md py-1 transition-all" placeholder="Summary notes for Technical Assessment..." type="text"/>
+</div>
+</div>
+<!-- Global Observations -->
+<div class="space-y-sm">
+<label class="font-label-md text-label-md text-on-surface-variant uppercase px-1">Global Observations &amp; Recommendations</label>
+<div class="bg-surface-container border border-outline-variant rounded-xl p-md">
+<textarea class="w-full bg-transparent border-none focus:ring-0 text-body-md text-on-surface placeholder:text-on-surface-variant/30 resize-none" placeholder="Provide a holistic view of the candidate's performance, cultural fit, and long-term potential..." rows="4"></textarea>
+</div>
+</div>
+</form>
+</main>
+<!-- Bottom Actions Sticky Shell -->
+<footer class="fixed bottom-0 left-0 w-full bg-surface-container border-t border-outline-variant z-50 p-md">
+<div class="max-w-4xl mx-auto flex items-center justify-between gap-md">
+<button class="flex-1 py-3 border border-outline-variant text-on-surface font-label-md text-label-md rounded-xl hover:bg-surface-variant/50 transition-all duration-200 active:scale-95 uppercase tracking-widest">
+                Save Draft
+            </button>
+<button class="flex-[2] py-3 bg-[#1683f7] text-white font-label-md text-label-md font-bold rounded-xl shadow-lg shadow-primary/20 hover:opacity-90 transition-all duration-200 active:scale-95 uppercase tracking-widest">
+                Submit Evaluation
+            </button>
+</div>
+</footer>
+<!-- Mobile Bottom Navigation (Hidden on Large screens) -->
+<div class="md:hidden">
+<!-- Replaced by sticky actions footer for this task as requested by 'Actions' requirements -->
+</div>
+</body></html>

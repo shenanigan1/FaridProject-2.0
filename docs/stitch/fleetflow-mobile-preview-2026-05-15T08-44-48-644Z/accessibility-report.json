@@ -1,0 +1,1354 @@
+{
+  "generatedAt": "2026-05-15T09:06:27.754Z",
+  "standard": "WCAG2AAA",
+  "directory": "A:\\enzo2\\M1\\Employment\\FaridProject-2.0\\docs\\stitch\\fleetflow-mobile-preview-2026-05-15T08-44-48-644Z",
+  "screenCount": 12,
+  "totalIssues": 173,
+  "totalErrors": 173,
+  "totalWarnings": 0,
+  "results": [
+    {
+      "file": "01-login.html",
+      "documentTitle": "",
+      "pageUrl": "file:///A:/enzo2/M1/Employment/FaridProject-2.0/docs/stitch/fleetflow-mobile-preview-2026-05-15T08-44-48-644Z/01-login.html",
+      "issueCount": 3,
+      "errorCount": 3,
+      "warningCount": 0,
+      "noticeCount": 0,
+      "issues": [
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle2.Guideline2_4.2_4_2.H25.1.NoTitleEl",
+          "message": "A title should be provided for the document, using a non-empty title element in the head section.",
+          "selector": "html > head",
+          "context": "<head>\n<meta charset=\"utf-8\">\n<meta c...</head>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 3.73:1. Recommendation:  change background to #0056b3.",
+          "selector": "html > body > div > main > div:nth-child(1) > form > button",
+          "context": "<button class=\"w-full bg-[#1683F7] text-white py-3 rounded font-label-md text-label-md uppercase tracking-wider hover:brightness-110 active:scale-[0.98] transition-all flex items-center justify-center gap-2 mt-4 shadow-lg shadow-[#1683F7]/10\" type=\"s..."
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 3.73:1. Recommendation:  change background to #0056b3.",
+          "selector": "html > body > div > main > div:nth-child(1) > form > button > span",
+          "context": "<span class=\"material-symbols-outlined text-[18px]\" data-icon=\"login\">login</span>"
+        }
+      ]
+    },
+    {
+      "file": "02-admin-dashboard.html",
+      "documentTitle": "",
+      "pageUrl": "file:///A:/enzo2/M1/Employment/FaridProject-2.0/docs/stitch/fleetflow-mobile-preview-2026-05-15T08-44-48-644Z/02-admin-dashboard.html",
+      "issueCount": 7,
+      "errorCount": 7,
+      "warningCount": 0,
+      "noticeCount": 0,
+      "issues": [
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle2.Guideline2_4.2_4_2.H25.1.NoTitleEl",
+          "message": "A title should be provided for the document, using a non-empty title element in the head section.",
+          "selector": "html > head",
+          "context": "<head>\n<meta charset=\"utf-8\">\n<meta c...</head>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 4.34:1. Recommendation:  change text colour to #fffdfd.",
+          "selector": "html > body > main > div:nth-child(3) > section:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div > div:nth-child(2) > p > span",
+          "context": "<span class=\"text-error\">92% Match</span>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 4.56:1. Recommendation:  change background to #00499b.",
+          "selector": "html > body > main > div:nth-child(3) > section:nth-child(1) > div:nth-child(2) > div:nth-child(1) > button",
+          "context": "<button class=\"bg-secondary-container text-on-secondary-container px-3 py-1.5 rounded-lg font-label-md text-label-md hover:brightness-110 active:scale-95 transition-all\">Review</button>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 4.56:1. Recommendation:  change background to #00499b.",
+          "selector": "html > body > main > div:nth-child(3) > section:nth-child(1) > div:nth-child(2) > div:nth-child(2) > button",
+          "context": "<button class=\"bg-secondary-container text-on-secondary-container px-3 py-1.5 rounded-lg font-label-md text-label-md hover:brightness-110 active:scale-95 transition-all\">Review</button>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 4.55:1. Recommendation:  change background to #fefeff.",
+          "selector": "html > body > main > div:nth-child(4) > button:nth-child(1)",
+          "context": "<button class=\"flex items-center justify-center gap-2 bg-primary-container text-on-primary-container font-label-lg text-label-lg py-3 rounded-lg hover:brightness-110 transition-all\">\n<span class=\"material-symbols-...</button>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 4.55:1. Recommendation:  change background to #fefeff.",
+          "selector": "html > body > main > div:nth-child(4) > button:nth-child(1) > span",
+          "context": "<span class=\"material-symbols-outlined text-[20px]\" data-icon=\"add_circle\">add_circle</span>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 4.56:1. Recommendation:  change background to #00499b.",
+          "selector": "html > body > nav > div:nth-child(1) > span:nth-child(2)",
+          "context": "<span class=\"font-label-sm text-label-sm\">Dashboard</span>"
+        }
+      ]
+    },
+    {
+      "file": "03-contacts-directory.html",
+      "documentTitle": "",
+      "pageUrl": "file:///A:/enzo2/M1/Employment/FaridProject-2.0/docs/stitch/fleetflow-mobile-preview-2026-05-15T08-44-48-644Z/03-contacts-directory.html",
+      "issueCount": 30,
+      "errorCount": 30,
+      "warningCount": 0,
+      "noticeCount": 0,
+      "issues": [
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle2.Guideline2_4.2_4_2.H25.1.NoTitleEl",
+          "message": "A title should be provided for the document, using a non-empty title element in the head section.",
+          "selector": "html > head",
+          "context": "<head>\n<meta charset=\"utf-8\">\n<meta c...</head>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle3.Guideline3_1.3_1_1.H57.2",
+          "message": "The html element should have a lang or xml:lang attribute which describes the language of the document.",
+          "selector": "html",
+          "context": "<html class=\"dark\"><head>\n<meta charset=\"utf-8\">\n<...</html>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle4.Guideline4_1.4_1_2.H91.InputText.Name",
+          "message": "This textinput element does not have a name available to an accessibility API. Valid names are: label element, title , aria-label , aria-labelledby .",
+          "selector": "html > body > main > section:nth-child(1) > div:nth-child(1) > input",
+          "context": "<input class=\"w-full bg-surface-container border border-outline-variant rounded-lg py-sm pl-10 pr-md text-body-md focus:border-primary-container focus:ring-0 text-on-surface\" placeholder=\"Search personnel...\" type=\"text\">"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_3.1_3_1.F68",
+          "message": "This form field should be labelled in some way. Use the label element (either with a \"for\" attribute or wrapped around the form field), or \"title\", \"aria-label\" or \"aria-labelledby\" attributes as appropriate.",
+          "selector": "html > body > main > section:nth-child(1) > div:nth-child(1) > input",
+          "context": "<input class=\"w-full bg-surface-container border border-outline-variant rounded-lg py-sm pl-10 pr-md text-body-md focus:border-primary-container focus:ring-0 text-on-surface\" placeholder=\"Search personnel...\" type=\"text\">"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 4.55:1. Recommendation:  change background to #fefeff.",
+          "selector": "html > body > main > section:nth-child(1) > div:nth-child(2) > button:nth-child(1)",
+          "context": "<button class=\"px-md py-xs bg-primary-container text-on-primary-container rounded-full font-label-md text-label-md whitespace-nowrap\">All</button>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 4.55:1. Recommendation:  change background to #fffefd.",
+          "selector": "html > body > main > section:nth-child(2) > div:nth-child(1) > div:nth-child(1)",
+          "context": "<div class=\"w-10 h-10 rounded-full bg-tertiary-container flex items-center justify-center text-on-tertiary-container font-bold\">AA</div>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_3.1_3_1_AAA.G141",
+          "message": "The heading structure is not logically nested. This h3 element should be an h2 to be properly nested.",
+          "selector": "html > body > main > section:nth-child(2) > div:nth-child(1) > div:nth-child(2) > h3",
+          "context": "<h3 class=\"font-headline-md text-body-lg text-on-surface truncate\">Amina Al-Fayed</h3>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > section:nth-child(2) > div:nth-child(1) > div:nth-child(3) > span:nth-child(1)",
+          "context": "<span class=\"px-xs py-[2px] bg-green-900/30 text-green-400 rounded-sm text-[10px] font-bold uppercase tracking-wider\">Active</span>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 3.9:1. Recommendation:  change text colour to #fff.",
+          "selector": "html > body > main > section:nth-child(2) > div:nth-child(1) > div:nth-child(3) > span:nth-child(2)",
+          "context": "<span class=\"font-label-sm text-label-sm text-outline\">Chicago</span>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 4.56:1. Recommendation:  change background to #00499b.",
+          "selector": "html > body > main > section:nth-child(2) > div:nth-child(2) > div:nth-child(1)",
+          "context": "<div class=\"w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container font-bold\">JW</div>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > section:nth-child(2) > div:nth-child(2) > div:nth-child(3) > span:nth-child(1)",
+          "context": "<span class=\"px-xs py-[2px] bg-primary-container/20 text-primary-container rounded-sm text-[10px] font-bold uppercase tracking-wider\">Pending</span>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 5.17:1. Recommendation:  change text colour to #fff.",
+          "selector": "html > body > main > section:nth-child(2) > div:nth-child(2) > div:nth-child(3) > span:nth-child(2)",
+          "context": "<span class=\"font-label-sm text-label-sm text-outline\">5y Exp</span>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 3.9:1. Recommendation:  change text colour to #fff.",
+          "selector": "html > body > main > section:nth-child(2) > div:nth-child(3) > div:nth-child(1)",
+          "context": "<div class=\"w-10 h-10 rounded-full bg-surface-container-highest border border-outline-variant flex items-center justify-center text-outline font-bold\">RK</div>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > section:nth-child(2) > div:nth-child(3) > div:nth-child(3) > span:nth-child(1)",
+          "context": "<span class=\"px-xs py-[2px] bg-green-900/30 text-green-400 rounded-sm text-[10px] font-bold uppercase tracking-wider\">Active</span>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 5.17:1. Recommendation:  change text colour to #fff.",
+          "selector": "html > body > main > section:nth-child(2) > div:nth-child(3) > div:nth-child(3) > span:nth-child(2)",
+          "context": "<span class=\"font-label-sm text-label-sm text-outline\">Detroit</span>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 4.55:1. Recommendation:  change background to #fffefd.",
+          "selector": "html > body > main > section:nth-child(2) > div:nth-child(4) > div:nth-child(1)",
+          "context": "<div class=\"w-10 h-10 rounded-full bg-tertiary-container flex items-center justify-center text-on-tertiary-container font-bold\">LH</div>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > section:nth-child(2) > div:nth-child(4) > div:nth-child(3) > span:nth-child(1)",
+          "context": "<span class=\"px-xs py-[2px] bg-tertiary-container/20 text-tertiary-container rounded-sm text-[10px] font-bold uppercase tracking-wider\">Interviewing</span>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 5.17:1. Recommendation:  change text colour to #fff.",
+          "selector": "html > body > main > section:nth-child(2) > div:nth-child(4) > div:nth-child(3) > span:nth-child(2)",
+          "context": "<span class=\"font-label-sm text-label-sm text-outline\">Austin</span>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 5.15:1. Recommendation:  change text colour to #fcfeff.",
+          "selector": "html > body > div > div > div:nth-child(2) > div > div:nth-child(2) > p",
+          "context": "<p class=\"font-body-md text-body-md text-primary-container\">Class A Chauffeur • Senior</p>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 4.52:1. Recommendation:  change text colour to #fdfeff.",
+          "selector": "html > body > div > div > div:nth-child(3) > div:nth-child(1) > button:nth-child(1)",
+          "context": "<button class=\"flex items-center justify-center gap-xs py-md bg-surface-container-high border border-outline-variant rounded-lg text-primary-container font-label-md\">\n<span class=\"material-symbols-...</button>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 4.52:1. Recommendation:  change text colour to #fdfeff.",
+          "selector": "html > body > div > div > div:nth-child(3) > div:nth-child(1) > button:nth-child(1) > span",
+          "context": "<span class=\"material-symbols-outlined text-sm\" data-icon=\"call\">call</span>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 4.52:1. Recommendation:  change text colour to #fdfeff.",
+          "selector": "html > body > div > div > div:nth-child(3) > div:nth-child(1) > button:nth-child(2)",
+          "context": "<button class=\"flex items-center justify-center gap-xs py-md bg-surface-container-high border border-outline-variant rounded-lg text-primary-container font-label-md\">\n<span class=\"material-symbols-...</button>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 4.52:1. Recommendation:  change text colour to #fdfeff.",
+          "selector": "html > body > div > div > div:nth-child(3) > div:nth-child(1) > button:nth-child(2) > span",
+          "context": "<span class=\"material-symbols-outlined text-sm\" data-icon=\"message\">message</span>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 5.17:1. Recommendation:  change text colour to #fff.",
+          "selector": "html > body > div > div > div:nth-child(3) > div:nth-child(2) > div:nth-child(1) > span:nth-child(1)",
+          "context": "<span class=\"font-label-sm text-label-sm text-outline uppercase tracking-widest\">Email</span>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 5.17:1. Recommendation:  change text colour to #fff.",
+          "selector": "html > body > div > div > div:nth-child(3) > div:nth-child(2) > div:nth-child(2) > span",
+          "context": "<span class=\"font-label-sm text-label-sm text-outline uppercase tracking-widest\">Credentials</span>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 5.17:1. Recommendation:  change text colour to #fff.",
+          "selector": "html > body > div > div > div:nth-child(3) > div:nth-child(3) > span",
+          "context": "<span class=\"font-label-sm text-label-sm text-outline uppercase tracking-widest\">Recent Activity</span>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 5.17:1. Recommendation:  change text colour to #fff.",
+          "selector": "html > body > div > div > div:nth-child(3) > div:nth-child(3) > div > div:nth-child(1) > div:nth-child(2) > p:nth-child(2)",
+          "context": "<p class=\"font-label-sm text-label-sm text-outline\">2 hours ago • Chicago Hub</p>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 5.17:1. Recommendation:  change text colour to #fff.",
+          "selector": "html > body > div > div > div:nth-child(3) > div:nth-child(3) > div > div:nth-child(2) > div:nth-child(2) > p:nth-child(2)",
+          "context": "<p class=\"font-label-sm text-label-sm text-outline\">Yesterday • 14:30</p>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 4.56:1. Recommendation:  change background to #00499b.",
+          "selector": "html > body > div > div > div:nth-child(3) > button",
+          "context": "<button class=\"w-full py-md bg-secondary-container text-on-secondary-container rounded-lg font-bold text-body-md flex items-center justify-center gap-sm\">\n<span class=\"material-symbols-...</button>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 6.08:1. Recommendation:  change text colour to #fafcff.",
+          "selector": "html > body > nav > a:nth-child(2) > span:nth-child(2)",
+          "context": "<span class=\"font-label-sm text-label-sm\">Personnel</span>"
+        }
+      ]
+    },
+    {
+      "file": "04-tests-validation.html",
+      "documentTitle": "FleetFlow Admin - Tests",
+      "pageUrl": "file:///A:/enzo2/M1/Employment/FaridProject-2.0/docs/stitch/fleetflow-mobile-preview-2026-05-15T08-44-48-644Z/04-tests-validation.html",
+      "issueCount": 15,
+      "errorCount": 15,
+      "warningCount": 0,
+      "noticeCount": 0,
+      "issues": [
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G18.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of 4.38:1. Recommendation:  change background to #191d24.",
+          "selector": "html > body > header > div:nth-child(1) > button > span",
+          "context": "<span class=\"material-symbols-outlined\" data-icon=\"menu\">menu</span>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G18.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of 4.38:1. Recommendation:  change background to #191d24.",
+          "selector": "html > body > header > div:nth-child(1) > h1",
+          "context": "<h1 class=\"font-headline-md text-headline-md font-bold text-primary\">FleetFlow Admin</h1>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 4.56:1. Recommendation:  change background to #00499b.",
+          "selector": "html > body > header > div:nth-child(2) > div",
+          "context": "<div class=\"w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container font-label-md text-label-md\">\n                AP\n           ...</div>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 4.98:1. Recommendation:  change text colour to #fbfdff.",
+          "selector": "html > body > main > div:nth-child(2) > button:nth-child(1)",
+          "context": "<button class=\"pb-stack-sm border-b-2 border-primary text-primary font-label-md text-label-md\">Tests</button>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle4.Guideline4_1.4_1_2.H91.InputText.Name",
+          "message": "This textinput element does not have a name available to an accessibility API. Valid names are: label element, title , aria-label , aria-labelledby .",
+          "selector": "html > body > main > div:nth-child(3) > div > input",
+          "context": "<input class=\"w-full h-11 bg-surface-container-lowest border border-outline rounded-lg pl-10 pr-4 text-body-md font-body-md focus:border-primary focus:ring-0\" placeholder=\"Search tests...\" type=\"text\">"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_3.1_3_1.F68",
+          "message": "This form field should be labelled in some way. Use the label element (either with a \"for\" attribute or wrapped around the form field), or \"title\", \"aria-label\" or \"aria-labelledby\" attributes as appropriate.",
+          "selector": "html > body > main > div:nth-child(3) > div > input",
+          "context": "<input class=\"w-full h-11 bg-surface-container-lowest border border-outline rounded-lg pl-10 pr-4 text-body-md font-body-md focus:border-primary focus:ring-0\" placeholder=\"Search tests...\" type=\"text\">"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > span",
+          "context": "<span class=\"px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-orange-500/20 text-orange-400 border border-orange-500/30\">Completed</span>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 3.73:1. Recommendation:  change background to #0056b3.",
+          "selector": "html > body > main > div:nth-child(4) > div:nth-child(1) > div:nth-child(3) > button:nth-child(1)",
+          "context": "<button class=\"flex-grow h-11 bg-primary text-on-primary font-label-md text-label-md rounded-lg active:scale-[0.98] transition-transform\">Validate</button>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > div:nth-child(4) > div:nth-child(2) > div:nth-child(1) > span",
+          "context": "<span class=\"px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-primary/20 text-primary border border-primary/30\">In Progress</span>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 3.73:1. Recommendation:  change background to #0056b3.",
+          "selector": "html > body > main > div:nth-child(4) > div:nth-child(2) > button",
+          "context": "<button class=\"w-full h-11 bg-primary text-on-primary font-label-md text-label-md rounded-lg active:scale-[0.98] transition-transform\">View Dossier</button>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > div:nth-child(4) > div:nth-child(3) > div:nth-child(1) > span",
+          "context": "<span class=\"px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-error/20 text-error border border-error/30\">Rejected</span>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 3.73:1. Recommendation:  change background to #0056b3.",
+          "selector": "html > body > main > div:nth-child(4) > div:nth-child(3) > button",
+          "context": "<button class=\"w-full h-11 bg-primary text-on-primary font-label-md text-label-md rounded-lg active:scale-[0.98] transition-transform\">Relaunch</button>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > div:nth-child(4) > div:nth-child(4) > div:nth-child(1) > span",
+          "context": "<span class=\"px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-400 border border-emerald-500/30\">Validated</span>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 3.73:1. Recommendation:  change background to #0056b3.",
+          "selector": "html > body > main > div:nth-child(4) > div:nth-child(4) > button",
+          "context": "<button class=\"w-full h-11 bg-primary text-on-primary font-label-md text-label-md rounded-lg active:scale-[0.98] transition-transform\">View Dossier</button>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 4.56:1. Recommendation:  change background to #00499b.",
+          "selector": "html > body > nav > div:nth-child(4) > span:nth-child(2)",
+          "context": "<span class=\"font-label-md text-label-md\">Tests</span>"
+        }
+      ]
+    },
+    {
+      "file": "05-template-pool-question-editor.html",
+      "documentTitle": "FleetFlow Template Builder",
+      "pageUrl": "file:///A:/enzo2/M1/Employment/FaridProject-2.0/docs/stitch/fleetflow-mobile-preview-2026-05-15T08-44-48-644Z/05-template-pool-question-editor.html",
+      "issueCount": 45,
+      "errorCount": 45,
+      "warningCount": 0,
+      "noticeCount": 0,
+      "issues": [
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 6.37:1. Recommendation:  change background to #13171e.",
+          "selector": "html > body > main > div > div:nth-child(1) > section:nth-child(1) > div:nth-child(2) > div:nth-child(1) > label",
+          "context": "<label class=\"font-label-lg text-label-lg text-on-surface-variant block mb-1\">Test Title</label>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 6.37:1. Recommendation:  change background to #13171e.",
+          "selector": "html > body > main > div > div:nth-child(1) > section:nth-child(1) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > label",
+          "context": "<label class=\"font-label-lg text-label-lg text-on-surface-variant block mb-1\">Duration</label>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 6.37:1. Recommendation:  change background to #13171e.",
+          "selector": "html > body > main > div > div:nth-child(1) > section:nth-child(1) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > label",
+          "context": "<label class=\"font-label-lg text-label-lg text-on-surface-variant block mb-1\">Difficulty</label>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > div > div:nth-child(1) > section:nth-child(1) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div",
+          "context": "<div class=\"bg-secondary-container/20 text-secondary px-2 py-0.5 rounded text-xs font-bold inline-block\">MEDIUM</div>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 6.37:1. Recommendation:  change background to #13171e.",
+          "selector": "html > body > main > div > div:nth-child(1) > section:nth-child(1) > div:nth-child(2) > div:nth-child(3) > label",
+          "context": "<label class=\"font-label-lg text-label-lg text-on-surface-variant block mb-1\">Passing Score</label>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 6.37:1. Recommendation:  change background to #13171e.",
+          "selector": "html > body > main > div > div:nth-child(1) > section:nth-child(2) > div:nth-child(2) > div > div:nth-child(2) > p",
+          "context": "<p class=\"font-label-md text-label-md text-on-surface-variant\">12 Questions</p>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 6.37:1. Recommendation:  change background to #13171e.",
+          "selector": "html > body > main > div > div:nth-child(1) > section:nth-child(2) > div:nth-child(3) > div > div:nth-child(2) > p",
+          "context": "<p class=\"font-label-md text-label-md text-on-surface-variant\">8 Questions</p>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 3.48:1. Recommendation:  change background to #ffa6a6.",
+          "selector": "html > body > main > div > div:nth-child(2) > section > div:nth-child(1) > div:nth-child(2) > button:nth-child(1)",
+          "context": "<button class=\"bg-error text-on-error px-4 py-2 rounded text-sm font-bold flex items-center gap-2\">\n<span class=\"material-symbols-...</button>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 3.48:1. Recommendation:  change background to #ffa6a6.",
+          "selector": "html > body > main > div > div:nth-child(2) > section > div:nth-child(1) > div:nth-child(2) > button:nth-child(1) > span",
+          "context": "<span class=\"material-symbols-outlined text-sm\" data-icon=\"delete\">delete</span>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 3.73:1. Recommendation:  change background to #0056b3.",
+          "selector": "html > body > main > div > div:nth-child(2) > section > div:nth-child(1) > div:nth-child(2) > button:nth-child(2)",
+          "context": "<button class=\"bg-[#1683f7] text-white px-6 py-2 rounded text-sm font-bold\">Save Changes</button>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 6.37:1. Recommendation:  change background to #13171e.",
+          "selector": "html > body > main > div > div:nth-child(2) > section > div:nth-child(2) > div:nth-child(2) > label",
+          "context": "<label class=\"font-label-lg text-label-lg text-on-surface-variant block mb-3\">Question Prompt</label>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle4.Guideline4_1.4_1_2.H91.Textarea.Name",
+          "message": "This textarea element does not have a name available to an accessibility API. Valid names are: label element, title , aria-label , aria-labelledby .",
+          "selector": "html > body > main > div > div:nth-child(2) > section > div:nth-child(2) > div:nth-child(2) > textarea",
+          "context": "<textarea class=\"w-full bg-surface-bright border border-outline rounded p-4 font-body-lg text-body-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none min-h-[100px] resize-none\">Which placard is required for C...</textarea>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_3.1_3_1.F68",
+          "message": "This form field should be labelled in some way. Use the label element (either with a \"for\" attribute or wrapped around the form field), or \"title\", \"aria-label\" or \"aria-labelledby\" attributes as appropriate.",
+          "selector": "html > body > main > div > div:nth-child(2) > section > div:nth-child(2) > div:nth-child(2) > textarea",
+          "context": "<textarea class=\"w-full bg-surface-bright border border-outline rounded p-4 font-body-lg text-body-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none min-h-[100px] resize-none\">Which placard is required for C...</textarea>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 6.37:1. Recommendation:  change background to #13171e.",
+          "selector": "html > body > main > div > div:nth-child(2) > section > div:nth-child(2) > div:nth-child(3) > label",
+          "context": "<label class=\"font-label-lg text-label-lg text-on-surface-variant block\">Answer Options</label>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle4.Guideline4_1.4_1_2.H91.InputRadio.Name",
+          "message": "This radioinput element does not have a name available to an accessibility API. Valid names are: label element, title , aria-label , aria-labelledby .",
+          "selector": "html > body > main > div > div:nth-child(2) > section > div:nth-child(2) > div:nth-child(3) > div:nth-child(2) > input:nth-child(1)",
+          "context": "<input checked=\"\" class=\"w-5 h-5 text-primary bg-surface-bright border-outline focus:ring-primary\" name=\"correct_answer\" type=\"radio\">"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_3.1_3_1.F68",
+          "message": "This form field should be labelled in some way. Use the label element (either with a \"for\" attribute or wrapped around the form field), or \"title\", \"aria-label\" or \"aria-labelledby\" attributes as appropriate.",
+          "selector": "html > body > main > div > div:nth-child(2) > section > div:nth-child(2) > div:nth-child(3) > div:nth-child(2) > input:nth-child(1)",
+          "context": "<input checked=\"\" class=\"w-5 h-5 text-primary bg-surface-bright border-outline focus:ring-primary\" name=\"correct_answer\" type=\"radio\">"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle4.Guideline4_1.4_1_2.H91.InputText.Name",
+          "message": "This textinput element does not have a name available to an accessibility API. Valid names are: label element, title , aria-label , aria-labelledby .",
+          "selector": "html > body > main > div > div:nth-child(2) > section > div:nth-child(2) > div:nth-child(3) > div:nth-child(2) > input:nth-child(3)",
+          "context": "<input class=\"flex-1 bg-transparent border-none outline-none font-body-md\" type=\"text\" value=\"Red with Flame Icon\">"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_3.1_3_1.F68",
+          "message": "This form field should be labelled in some way. Use the label element (either with a \"for\" attribute or wrapped around the form field), or \"title\", \"aria-label\" or \"aria-labelledby\" attributes as appropriate.",
+          "selector": "html > body > main > div > div:nth-child(2) > section > div:nth-child(2) > div:nth-child(3) > div:nth-child(2) > input:nth-child(3)",
+          "context": "<input class=\"flex-1 bg-transparent border-none outline-none font-body-md\" type=\"text\" value=\"Red with Flame Icon\">"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle4.Guideline4_1.4_1_2.H91.InputRadio.Name",
+          "message": "This radioinput element does not have a name available to an accessibility API. Valid names are: label element, title , aria-label , aria-labelledby .",
+          "selector": "html > body > main > div > div:nth-child(2) > section > div:nth-child(2) > div:nth-child(3) > div:nth-child(3) > input:nth-child(1)",
+          "context": "<input class=\"w-5 h-5 text-primary bg-surface-bright border-outline focus:ring-primary\" name=\"correct_answer\" type=\"radio\">"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_3.1_3_1.F68",
+          "message": "This form field should be labelled in some way. Use the label element (either with a \"for\" attribute or wrapped around the form field), or \"title\", \"aria-label\" or \"aria-labelledby\" attributes as appropriate.",
+          "selector": "html > body > main > div > div:nth-child(2) > section > div:nth-child(2) > div:nth-child(3) > div:nth-child(3) > input:nth-child(1)",
+          "context": "<input class=\"w-5 h-5 text-primary bg-surface-bright border-outline focus:ring-primary\" name=\"correct_answer\" type=\"radio\">"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 6.37:1. Recommendation:  change background to #13171e.",
+          "selector": "html > body > main > div > div:nth-child(2) > section > div:nth-child(2) > div:nth-child(3) > div:nth-child(3) > span",
+          "context": "<span class=\"font-bold text-on-surface-variant\">B</span>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle4.Guideline4_1.4_1_2.H91.InputText.Name",
+          "message": "This textinput element does not have a name available to an accessibility API. Valid names are: label element, title , aria-label , aria-labelledby .",
+          "selector": "html > body > main > div > div:nth-child(2) > section > div:nth-child(2) > div:nth-child(3) > div:nth-child(3) > input:nth-child(3)",
+          "context": "<input class=\"flex-1 bg-transparent border-none outline-none font-body-md\" type=\"text\" value=\"Yellow with Oxygen Symbol\">"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_3.1_3_1.F68",
+          "message": "This form field should be labelled in some way. Use the label element (either with a \"for\" attribute or wrapped around the form field), or \"title\", \"aria-label\" or \"aria-labelledby\" attributes as appropriate.",
+          "selector": "html > body > main > div > div:nth-child(2) > section > div:nth-child(2) > div:nth-child(3) > div:nth-child(3) > input:nth-child(3)",
+          "context": "<input class=\"flex-1 bg-transparent border-none outline-none font-body-md\" type=\"text\" value=\"Yellow with Oxygen Symbol\">"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle4.Guideline4_1.4_1_2.H91.InputRadio.Name",
+          "message": "This radioinput element does not have a name available to an accessibility API. Valid names are: label element, title , aria-label , aria-labelledby .",
+          "selector": "html > body > main > div > div:nth-child(2) > section > div:nth-child(2) > div:nth-child(3) > div:nth-child(4) > input:nth-child(1)",
+          "context": "<input class=\"w-5 h-5 text-primary bg-surface-bright border-outline focus:ring-primary\" name=\"correct_answer\" type=\"radio\">"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_3.1_3_1.F68",
+          "message": "This form field should be labelled in some way. Use the label element (either with a \"for\" attribute or wrapped around the form field), or \"title\", \"aria-label\" or \"aria-labelledby\" attributes as appropriate.",
+          "selector": "html > body > main > div > div:nth-child(2) > section > div:nth-child(2) > div:nth-child(3) > div:nth-child(4) > input:nth-child(1)",
+          "context": "<input class=\"w-5 h-5 text-primary bg-surface-bright border-outline focus:ring-primary\" name=\"correct_answer\" type=\"radio\">"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 6.37:1. Recommendation:  change background to #13171e.",
+          "selector": "html > body > main > div > div:nth-child(2) > section > div:nth-child(2) > div:nth-child(3) > div:nth-child(4) > span",
+          "context": "<span class=\"font-bold text-on-surface-variant\">C</span>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle4.Guideline4_1.4_1_2.H91.InputText.Name",
+          "message": "This textinput element does not have a name available to an accessibility API. Valid names are: label element, title , aria-label , aria-labelledby .",
+          "selector": "html > body > main > div > div:nth-child(2) > section > div:nth-child(2) > div:nth-child(3) > div:nth-child(4) > input:nth-child(3)",
+          "context": "<input class=\"flex-1 bg-transparent border-none outline-none font-body-md\" type=\"text\" value=\"Blue with Water-Reactive Symbol\">"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_3.1_3_1.F68",
+          "message": "This form field should be labelled in some way. Use the label element (either with a \"for\" attribute or wrapped around the form field), or \"title\", \"aria-label\" or \"aria-labelledby\" attributes as appropriate.",
+          "selector": "html > body > main > div > div:nth-child(2) > section > div:nth-child(2) > div:nth-child(3) > div:nth-child(4) > input:nth-child(3)",
+          "context": "<input class=\"flex-1 bg-transparent border-none outline-none font-body-md\" type=\"text\" value=\"Blue with Water-Reactive Symbol\">"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle4.Guideline4_1.4_1_2.H91.InputRadio.Name",
+          "message": "This radioinput element does not have a name available to an accessibility API. Valid names are: label element, title , aria-label , aria-labelledby .",
+          "selector": "html > body > main > div > div:nth-child(2) > section > div:nth-child(2) > div:nth-child(3) > div:nth-child(5) > input:nth-child(1)",
+          "context": "<input class=\"w-5 h-5 text-primary bg-surface-bright border-outline focus:ring-primary\" name=\"correct_answer\" type=\"radio\">"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_3.1_3_1.F68",
+          "message": "This form field should be labelled in some way. Use the label element (either with a \"for\" attribute or wrapped around the form field), or \"title\", \"aria-label\" or \"aria-labelledby\" attributes as appropriate.",
+          "selector": "html > body > main > div > div:nth-child(2) > section > div:nth-child(2) > div:nth-child(3) > div:nth-child(5) > input:nth-child(1)",
+          "context": "<input class=\"w-5 h-5 text-primary bg-surface-bright border-outline focus:ring-primary\" name=\"correct_answer\" type=\"radio\">"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 6.37:1. Recommendation:  change background to #13171e.",
+          "selector": "html > body > main > div > div:nth-child(2) > section > div:nth-child(2) > div:nth-child(3) > div:nth-child(5) > span",
+          "context": "<span class=\"font-bold text-on-surface-variant\">D</span>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle4.Guideline4_1.4_1_2.H91.InputText.Name",
+          "message": "This textinput element does not have a name available to an accessibility API. Valid names are: label element, title , aria-label , aria-labelledby .",
+          "selector": "html > body > main > div > div:nth-child(2) > section > div:nth-child(2) > div:nth-child(3) > div:nth-child(5) > input:nth-child(3)",
+          "context": "<input class=\"flex-1 bg-transparent border-none outline-none font-body-md\" type=\"text\" value=\"Orange with Explosion Star\">"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_3.1_3_1.F68",
+          "message": "This form field should be labelled in some way. Use the label element (either with a \"for\" attribute or wrapped around the form field), or \"title\", \"aria-label\" or \"aria-labelledby\" attributes as appropriate.",
+          "selector": "html > body > main > div > div:nth-child(2) > section > div:nth-child(2) > div:nth-child(3) > div:nth-child(5) > input:nth-child(3)",
+          "context": "<input class=\"flex-1 bg-transparent border-none outline-none font-body-md\" type=\"text\" value=\"Orange with Explosion Star\">"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G18.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of 3.82:1. Recommendation:  change background to #191c23.",
+          "selector": "html > body > main > div > div:nth-child(2) > section > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > span",
+          "context": "<span class=\"material-symbols-outlined text-error\" data-icon=\"emergency\">emergency</span>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 5.6:1. Recommendation:  change background to #13161d.",
+          "selector": "html > body > main > div > div:nth-child(2) > section > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div > span:nth-child(2)",
+          "context": "<span class=\"font-label-sm text-label-sm text-on-surface-variant\">Failure here ends test immediat...</span>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 6.37:1. Recommendation:  change background to #13171e.",
+          "selector": "html > body > main > div > div:nth-child(2) > section > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(2) > div > label",
+          "context": "<label class=\"font-label-lg text-label-lg text-on-surface-variant\">Max Points</label>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle4.Guideline4_1.4_1_2.H91.InputRange.Name",
+          "message": "This rangeinput element does not have a name available to an accessibility API. Valid names are: label element, title , aria-label , aria-labelledby .",
+          "selector": "html > body > main > div > div:nth-child(2) > section > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(2) > input",
+          "context": "<input class=\"w-full accent-primary\" max=\"100\" min=\"0\" type=\"range\" value=\"10\">"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 6.37:1. Recommendation:  change background to #13171e.",
+          "selector": "html > body > main > div > div:nth-child(2) > section > div:nth-child(2) > div:nth-child(4) > div:nth-child(2) > label",
+          "context": "<label class=\"font-label-lg text-label-lg text-on-surface-variant block mb-2\">Manager Internal Comment</label>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle4.Guideline4_1.4_1_2.H91.Textarea.Name",
+          "message": "This textarea element does not have a name available to an accessibility API. Valid names are: label element, title , aria-label , aria-labelledby .",
+          "selector": "html > body > main > div > div:nth-child(2) > section > div:nth-child(2) > div:nth-child(4) > div:nth-child(2) > textarea",
+          "context": "<textarea class=\"w-full bg-surface-bright border border-outline rounded p-3 font-body-md text-body-md focus:ring-2 focus:ring-primary outline-none h-[120px] resize-none\" placeholder=\"Add private notes for recruitment staff...\"></textarea>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_3.1_3_1.F68",
+          "message": "This form field should be labelled in some way. Use the label element (either with a \"for\" attribute or wrapped around the form field), or \"title\", \"aria-label\" or \"aria-labelledby\" attributes as appropriate.",
+          "selector": "html > body > main > div > div:nth-child(2) > section > div:nth-child(2) > div:nth-child(4) > div:nth-child(2) > textarea",
+          "context": "<textarea class=\"w-full bg-surface-bright border border-outline rounded p-3 font-body-md text-body-md focus:ring-2 focus:ring-primary outline-none h-[120px] resize-none\" placeholder=\"Add private notes for recruitment staff...\"></textarea>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 6.37:1. Recommendation:  change background to #13171e.",
+          "selector": "html > body > nav > div:nth-child(1) > span:nth-child(2)",
+          "context": "<span class=\"font-label-md text-label-md\">Dashboard</span>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 6.37:1. Recommendation:  change background to #13171e.",
+          "selector": "html > body > nav > div:nth-child(2) > span:nth-child(2)",
+          "context": "<span class=\"font-label-md text-label-md\">Personnel</span>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 6.37:1. Recommendation:  change background to #13171e.",
+          "selector": "html > body > nav > div:nth-child(3) > span:nth-child(2)",
+          "context": "<span class=\"font-label-md text-label-md\">Jobs</span>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 4.56:1. Recommendation:  change background to #00499b.",
+          "selector": "html > body > nav > div:nth-child(4) > span:nth-child(2)",
+          "context": "<span class=\"font-label-md text-label-md\">Tests</span>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 6.37:1. Recommendation:  change background to #13171e.",
+          "selector": "html > body > nav > div:nth-child(5) > span:nth-child(2)",
+          "context": "<span class=\"font-label-md text-label-md\">Settings</span>"
+        }
+      ]
+    },
+    {
+      "file": "06-jobs-applicants.html",
+      "documentTitle": "FleetFlow Jobs Management",
+      "pageUrl": "file:///A:/enzo2/M1/Employment/FaridProject-2.0/docs/stitch/fleetflow-mobile-preview-2026-05-15T08-44-48-644Z/06-jobs-applicants.html",
+      "issueCount": 9,
+      "errorCount": 9,
+      "warningCount": 0,
+      "noticeCount": 0,
+      "issues": [
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle4.Guideline4_1.4_1_2.H91.InputText.Name",
+          "message": "This textinput element does not have a name available to an accessibility API. Valid names are: label element, title , aria-label , aria-labelledby .",
+          "selector": "html > body > main > section:nth-child(1) > div:nth-child(1) > input",
+          "context": "<input class=\"w-full bg-surface-container-lowest border border-outline-variant rounded-xl py-2 pl-10 pr-4 text-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none placeholder:text-outline transition-all\" placehol..."
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_3.1_3_1.F68",
+          "message": "This form field should be labelled in some way. Use the label element (either with a \"for\" attribute or wrapped around the form field), or \"title\", \"aria-label\" or \"aria-labelledby\" attributes as appropriate.",
+          "selector": "html > body > main > section:nth-child(1) > div:nth-child(1) > input",
+          "context": "<input class=\"w-full bg-surface-container-lowest border border-outline-variant rounded-xl py-2 pl-10 pr-4 text-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none placeholder:text-outline transition-all\" placehol..."
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 4.56:1. Recommendation:  change background to #00499b.",
+          "selector": "html > body > main > section:nth-child(2) > div:nth-child(1) > span",
+          "context": "<span class=\"bg-secondary-container text-on-secondary-container px-sm py-0.5 rounded text-label-sm font-bold\">HIRING</span>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 5.88:1. Recommendation:  change text colour to #feffff.",
+          "selector": "html > body > main > div > h3",
+          "context": "<h3 class=\"text-label-md text-outline uppercase tracking-widest px-xs\">Top Candidates</h3>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 4.56:1. Recommendation:  change background to #00499b.",
+          "selector": "html > body > main > div > div:nth-child(2) > div:nth-child(2) > button:nth-child(1)",
+          "context": "<button class=\"flex-1 bg-secondary-container text-on-secondary-container py-2 rounded-lg text-label-md font-bold hover:opacity-90 active:scale-95 transition-all\">Launch Test</button>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 4.55:1. Recommendation:  change background to #fffefd.",
+          "selector": "html > body > main > div > div:nth-child(3) > div:nth-child(2) > button:nth-child(1)",
+          "context": "<button class=\"w-full bg-tertiary-container text-on-tertiary-container py-2 rounded-lg text-label-md font-bold flex items-center justify-center gap-sm cursor-default\">\n<span class=\"material-symbols-...</button>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 4.55:1. Recommendation:  change background to #fffefd.",
+          "selector": "html > body > main > div > div:nth-child(3) > div:nth-child(2) > button:nth-child(1) > span",
+          "context": "<span class=\"material-symbols-outlined text-[18px]\" data-icon=\"check_circle\">check_circle</span>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G18.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of 3.27:1. Recommendation:  change background to #0050aa.",
+          "selector": "html > body > nav > button:nth-child(1) > span:nth-child(1)",
+          "context": "<span class=\"material-symbols-outlined\" data-icon=\"work\" style=\"font-variation-settings: 'FILL' 1;\">work</span>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 3.27:1. Recommendation:  change background to #003571.",
+          "selector": "html > body > nav > button:nth-child(1) > span:nth-child(2)",
+          "context": "<span class=\"text-label-sm font-label-sm\">Jobs</span>"
+        }
+      ]
+    },
+    {
+      "file": "07-launch-evaluation.html",
+      "documentTitle": "",
+      "pageUrl": "file:///A:/enzo2/M1/Employment/FaridProject-2.0/docs/stitch/fleetflow-mobile-preview-2026-05-15T08-44-48-644Z/07-launch-evaluation.html",
+      "issueCount": 12,
+      "errorCount": 12,
+      "warningCount": 0,
+      "noticeCount": 0,
+      "issues": [
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle2.Guideline2_4.2_4_2.H25.1.NoTitleEl",
+          "message": "A title should be provided for the document, using a non-empty title element in the head section.",
+          "selector": "html > head",
+          "context": "<head>\n<meta charset=\"utf-8\">\n<meta c...</head>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 5.17:1. Recommendation:  change text colour to #fff.",
+          "selector": "html > body > div > main > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > label",
+          "context": "<label class=\"font-label-bold text-label-bold text-outline\">MANAGER RÉFÉRENT</label>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle4.Guideline4_1.4_1_2.H91.Select.Name",
+          "message": "This select element does not have a name available to an accessibility API. Valid names are: label element, title , aria-label , aria-labelledby .",
+          "selector": "html > body > div > main > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div > select",
+          "context": "<select class=\"w-full bg-surface-container-lowest border border-outline-variant text-on-surface rounded p-3 pr-10 appearance-none focus:border-primary-container outline-none font-body-md text-body-md\">\n<option disabled=\"\" selected=\"...</select>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_3.1_3_1.F68",
+          "message": "This form field should be labelled in some way. Use the label element (either with a \"for\" attribute or wrapped around the form field), or \"title\", \"aria-label\" or \"aria-labelledby\" attributes as appropriate.",
+          "selector": "html > body > div > main > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div > select",
+          "context": "<select class=\"w-full bg-surface-container-lowest border border-outline-variant text-on-surface rounded p-3 pr-10 appearance-none focus:border-primary-container outline-none font-body-md text-body-md\">\n<option disabled=\"\" selected=\"...</select>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 5.17:1. Recommendation:  change text colour to #fff.",
+          "selector": "html > body > div > main > div:nth-child(3) > div:nth-child(2) > div:nth-child(2) > label",
+          "context": "<label class=\"font-label-bold text-label-bold text-outline\">MANAGER RÉFÉRENT</label>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle4.Guideline4_1.4_1_2.H91.Select.Name",
+          "message": "This select element does not have a name available to an accessibility API. Valid names are: label element, title , aria-label , aria-labelledby .",
+          "selector": "html > body > div > main > div:nth-child(3) > div:nth-child(2) > div:nth-child(2) > div > select",
+          "context": "<select class=\"w-full bg-surface-container-lowest border border-outline-variant text-on-surface rounded p-3 pr-10 appearance-none focus:border-primary-container outline-none font-body-md text-body-md\">\n<option disabled=\"\" selected=\"...</select>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_3.1_3_1.F68",
+          "message": "This form field should be labelled in some way. Use the label element (either with a \"for\" attribute or wrapped around the form field), or \"title\", \"aria-label\" or \"aria-labelledby\" attributes as appropriate.",
+          "selector": "html > body > div > main > div:nth-child(3) > div:nth-child(2) > div:nth-child(2) > div > select",
+          "context": "<select class=\"w-full bg-surface-container-lowest border border-outline-variant text-on-surface rounded p-3 pr-10 appearance-none focus:border-primary-container outline-none font-body-md text-body-md\">\n<option disabled=\"\" selected=\"...</select>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 5.17:1. Recommendation:  change text colour to #fff.",
+          "selector": "html > body > div > main > div:nth-child(3) > div:nth-child(3) > div:nth-child(2) > label",
+          "context": "<label class=\"font-label-bold text-label-bold text-outline\">MANAGER RÉFÉRENT</label>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle4.Guideline4_1.4_1_2.H91.Select.Name",
+          "message": "This select element does not have a name available to an accessibility API. Valid names are: label element, title , aria-label , aria-labelledby .",
+          "selector": "html > body > div > main > div:nth-child(3) > div:nth-child(3) > div:nth-child(2) > div > select",
+          "context": "<select class=\"w-full bg-surface-container-lowest border border-outline-variant text-on-surface rounded p-3 pr-10 appearance-none focus:border-primary-container outline-none font-body-md text-body-md\">\n<option disabled=\"\" selected=\"...</select>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_3.1_3_1.F68",
+          "message": "This form field should be labelled in some way. Use the label element (either with a \"for\" attribute or wrapped around the form field), or \"title\", \"aria-label\" or \"aria-labelledby\" attributes as appropriate.",
+          "selector": "html > body > div > main > div:nth-child(3) > div:nth-child(3) > div:nth-child(2) > div > select",
+          "context": "<select class=\"w-full bg-surface-container-lowest border border-outline-variant text-on-surface rounded p-3 pr-10 appearance-none focus:border-primary-container outline-none font-body-md text-body-md\">\n<option disabled=\"\" selected=\"...</select>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > div > div > p",
+          "context": "<p class=\"text-center font-body-sm text-body-sm text-on-surface-variant mt-2 italic\">\n                Sélectionnez t...</p>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 4.56:1. Recommendation:  change background to #00499b.",
+          "selector": "html > body > div > nav > div:nth-child(3) > span:nth-child(2)",
+          "context": "<span class=\"font-label-bold text-label-bold\">Tests</span>"
+        }
+      ]
+    },
+    {
+      "file": "08-manager-dashboard.html",
+      "documentTitle": "Manager Dashboard - DriverRecruit",
+      "pageUrl": "file:///A:/enzo2/M1/Employment/FaridProject-2.0/docs/stitch/fleetflow-mobile-preview-2026-05-15T08-44-48-644Z/08-manager-dashboard.html",
+      "issueCount": 6,
+      "errorCount": 6,
+      "warningCount": 0,
+      "noticeCount": 0,
+      "issues": [
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 4.55:1. Recommendation:  change background to #fffefd.",
+          "selector": "html > body > main > section:nth-child(2) > div > div > h3",
+          "context": "<h3 class=\"font-label-lg text-label-lg font-bold\">Critical Compliance Alerts</h3>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 4.55:1. Recommendation:  change background to #fffefd.",
+          "selector": "html > body > main > section:nth-child(2) > div > div > ul > li:nth-child(1)",
+          "context": "<li class=\"font-body-sm text-body-sm\">• 2 Pending Medical Clearances</li>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 4.55:1. Recommendation:  change background to #fffefd.",
+          "selector": "html > body > main > section:nth-child(2) > div > div > ul > li:nth-child(2)",
+          "context": "<li class=\"font-body-sm text-body-sm\">• CDL Expiring: 1 Driver (Marcu...</li>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > section:nth-child(4) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > span",
+          "context": "<span class=\"bg-secondary-container/20 text-secondary px-sm py-xs rounded font-label-md text-label-md\">85% Progress</span>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > section:nth-child(4) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > span",
+          "context": "<span class=\"bg-error-container/20 text-error px-sm py-xs rounded font-label-md text-label-md\">Awaiting Submission</span>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 4.56:1. Recommendation:  change background to #00499b.",
+          "selector": "html > body > nav > a:nth-child(1) > span:nth-child(2)",
+          "context": "<span class=\"font-label-md text-label-md\">Home</span>"
+        }
+      ]
+    },
+    {
+      "file": "09-manager-questionnaire.html",
+      "documentTitle": "Manager Evaluation - Logistics Recruitment",
+      "pageUrl": "file:///A:/enzo2/M1/Employment/FaridProject-2.0/docs/stitch/fleetflow-mobile-preview-2026-05-15T08-44-48-644Z/09-manager-questionnaire.html",
+      "issueCount": 16,
+      "errorCount": 16,
+      "warningCount": 0,
+      "noticeCount": 0,
+      "issues": [
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 6.37:1. Recommendation:  change background to #13171e.",
+          "selector": "html > body > main > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > p",
+          "context": "<p class=\"text-body-md font-body-md text-on-surface-variant\">Role: <span class=\"text-on-surf...</p>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 6.37:1. Recommendation:  change background to #13171e.",
+          "selector": "html > body > main > section:nth-child(1) > div:nth-child(2) > span",
+          "context": "<span class=\"text-label-md font-label-md text-on-surface-variant uppercase tracking-wider mb-1\">Current Evaluation Score</span>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 6.37:1. Recommendation:  change background to #13171e.",
+          "selector": "html > body > main > section:nth-child(1) > div:nth-child(2) > div:nth-child(2) > span:nth-child(2)",
+          "context": "<span class=\"text-title-lg font-title-lg text-on-surface-variant\">/ 100</span>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 6.37:1. Recommendation:  change background to #13171e.",
+          "selector": "html > body > main > section:nth-child(2) > div:nth-child(1) > h3 > span",
+          "context": "<span class=\"text-body-sm font-body-sm text-on-surface-variant ml-2\">(Assigned to you)</span>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle4.Guideline4_1.4_1_2.H91.Button.Name",
+          "message": "This button element does not have a name available to an accessibility API. Valid names are: title , element content, aria-label , aria-labelledby .",
+          "selector": "html > body > main > section:nth-child(2) > div:nth-child(2) > div:nth-child(2) > button",
+          "context": "<button class=\"relative inline-flex h-6 w-11 items-center rounded-full bg-primary transition-colors\">\n<span class=\"translate-x-6 inl...</button>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 4.55:1. Recommendation:  change background to #fefeff.",
+          "selector": "html > body > main > section:nth-child(2) > div:nth-child(2) > div:nth-child(3) > div > button:nth-child(3)",
+          "context": "<button class=\"px-4 py-3 bg-primary-container border border-primary rounded-lg text-label-md font-label-md text-on-primary-container transition-all text-center ring-1 ring-primary ring-offset-2 ring-offset-background\">Proficient</button>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 5.22:1. Recommendation:  change text colour to #fffcfc.",
+          "selector": "html > body > main > section:nth-child(2) > div:nth-child(2) > div:nth-child(4) > div > label",
+          "context": "<label class=\"text-body-lg font-body-lg text-error\">4. Specific observations on bac...</label>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 6.66:1. Recommendation:  change background to #13171e.",
+          "selector": "html > body > main > section:nth-child(2) > div:nth-child(2) > div:nth-child(4) > div > div > span",
+          "context": "<span class=\"text-label-sm font-label-sm text-on-surface-variant mb-1\">Maneuver Score</span>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle4.Guideline4_1.4_1_2.H91.InputNumber.Name",
+          "message": "This numberinput element does not have a name available to an accessibility API. Valid names are: label element, title , aria-label , aria-labelledby .",
+          "selector": "html > body > main > section:nth-child(2) > div:nth-child(2) > div:nth-child(4) > div > div > input",
+          "context": "<input class=\"w-16 bg-surface-container-high border border-outline rounded px-2 py-1 text-center font-bold text-primary focus:ring-1 focus:ring-primary focus:outline-none\" max=\"10\" min=\"0\" type=\"number\" value=\"8\">"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle4.Guideline4_1.4_1_2.H91.Textarea.Name",
+          "message": "This textarea element does not have a name available to an accessibility API. Valid names are: label element, title , aria-label , aria-labelledby .",
+          "selector": "html > body > main > section:nth-child(2) > div:nth-child(2) > div:nth-child(4) > textarea",
+          "context": "<textarea class=\"w-full bg-surface-container-high border border-error rounded-lg p-4 text-body-md font-body-md min-h-[120px] focus:ring-1 focus:ring-error focus:outline-none placeholder-on-surface-variant/30\" placeholder=\"Enter detailed observations...."
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_3.1_3_1.F68",
+          "message": "This form field should be labelled in some way. Use the label element (either with a \"for\" attribute or wrapped around the form field), or \"title\", \"aria-label\" or \"aria-labelledby\" attributes as appropriate.",
+          "selector": "html > body > main > section:nth-child(2) > div:nth-child(2) > div:nth-child(4) > textarea",
+          "context": "<textarea class=\"w-full bg-surface-container-high border border-error rounded-lg p-4 text-body-md font-body-md min-h-[120px] focus:ring-1 focus:ring-error focus:outline-none placeholder-on-surface-variant/30\" placeholder=\"Enter detailed observations...."
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 5.22:1. Recommendation:  change text colour to #fffcfc.",
+          "selector": "html > body > main > section:nth-child(2) > div:nth-child(2) > div:nth-child(4) > p",
+          "context": "<p class=\"text-error text-label-sm font-label-sm flex items-center gap-1\">\n<span class=\"material-symbols-...</p>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 5.22:1. Recommendation:  change text colour to #fffcfc.",
+          "selector": "html > body > main > section:nth-child(2) > div:nth-child(2) > div:nth-child(4) > p > span",
+          "context": "<span class=\"material-symbols-outlined text-[14px]\">error</span>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 6.66:1. Recommendation:  change background to #13171e.",
+          "selector": "html > body > main > section:nth-child(2) > div:nth-child(2) > div:nth-child(5) > label",
+          "context": "<label class=\"text-body-lg font-body-lg text-on-surface-variant block mb-3\">Global section observations</label>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle4.Guideline4_1.4_1_2.H91.Textarea.Name",
+          "message": "This textarea element does not have a name available to an accessibility API. Valid names are: label element, title , aria-label , aria-labelledby .",
+          "selector": "html > body > main > section:nth-child(2) > div:nth-child(2) > div:nth-child(5) > div > textarea",
+          "context": "<textarea class=\"w-full bg-transparent border-none p-4 text-body-md font-body-md min-h-[100px] focus:ring-0 focus:outline-none\" placeholder=\"Provide a summary of the candidate's safety performance...\"></textarea>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_3.1_3_1.F68",
+          "message": "This form field should be labelled in some way. Use the label element (either with a \"for\" attribute or wrapped around the form field), or \"title\", \"aria-label\" or \"aria-labelledby\" attributes as appropriate.",
+          "selector": "html > body > main > section:nth-child(2) > div:nth-child(2) > div:nth-child(5) > div > textarea",
+          "context": "<textarea class=\"w-full bg-transparent border-none p-4 text-body-md font-body-md min-h-[100px] focus:ring-0 focus:outline-none\" placeholder=\"Provide a summary of the candidate's safety performance...\"></textarea>"
+        }
+      ]
+    },
+    {
+      "file": "10-candidate-public-jobs.html",
+      "documentTitle": "",
+      "pageUrl": "file:///A:/enzo2/M1/Employment/FaridProject-2.0/docs/stitch/fleetflow-mobile-preview-2026-05-15T08-44-48-644Z/10-candidate-public-jobs.html",
+      "issueCount": 9,
+      "errorCount": 9,
+      "warningCount": 0,
+      "noticeCount": 0,
+      "issues": [
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle2.Guideline2_4.2_4_2.H25.1.NoTitleEl",
+          "message": "A title should be provided for the document, using a non-empty title element in the head section.",
+          "selector": "html > head",
+          "context": "<head>\n<meta charset=\"utf-8\">\n<meta c...</head>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle4.Guideline4_1.4_1_2.H91.InputText.Name",
+          "message": "This textinput element does not have a name available to an accessibility API. Valid names are: label element, title , aria-label , aria-labelledby .",
+          "selector": "html > body > div > main > section > div:nth-child(1) > input",
+          "context": "<input class=\"w-full bg-surface-container border border-outline-variant text-on-surface rounded-lg pl-10 pr-4 py-3 focus:outline-none focus:border-secondary transition-colors font-body-md text-body-md\" placeholder=\"Poste, ville, entreprise...\" type=\"..."
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_3.1_3_1.F68",
+          "message": "This form field should be labelled in some way. Use the label element (either with a \"for\" attribute or wrapped around the form field), or \"title\", \"aria-label\" or \"aria-labelledby\" attributes as appropriate.",
+          "selector": "html > body > div > main > section > div:nth-child(1) > input",
+          "context": "<input class=\"w-full bg-surface-container border border-outline-variant text-on-surface rounded-lg pl-10 pr-4 py-3 focus:outline-none focus:border-secondary transition-colors font-body-md text-body-md\" placeholder=\"Poste, ville, entreprise...\" type=\"..."
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 4.56:1. Recommendation:  change background to #00499b.",
+          "selector": "html > body > div > main > section > div:nth-child(2) > button:nth-child(1)",
+          "context": "<button class=\"flex-shrink-0 bg-secondary-container text-on-secondary-container px-3 py-1.5 rounded-full font-label-md text-label-md\">CDI</button>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > div > main > div > article:nth-child(1) > div:nth-child(1) > div > span",
+          "context": "<span class=\"text-tertiary font-label-caps text-label-caps\">Nouveau</span>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 3.73:1. Recommendation:  change background to #0056b3.",
+          "selector": "html > body > div > main > div > article:nth-child(1) > button",
+          "context": "<button class=\"w-full bg-[#1683f7] text-white py-3 rounded-lg font-headline-sm text-headline-sm hover:opacity-90 transition-opacity\">\n                        Voir d...</button>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 3.73:1. Recommendation:  change background to #0056b3.",
+          "selector": "html > body > div > main > div > article:nth-child(2) > button",
+          "context": "<button class=\"w-full bg-[#1683f7] text-white py-3 rounded-lg font-headline-sm text-headline-sm hover:opacity-90 transition-opacity\">\n                        Voir d...</button>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 3.73:1. Recommendation:  change background to #0056b3.",
+          "selector": "html > body > div > main > div > article:nth-child(3) > button",
+          "context": "<button class=\"w-full bg-[#1683f7] text-white py-3 rounded-lg font-headline-sm text-headline-sm hover:opacity-90 transition-opacity\">\n                        Voir d...</button>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 4.56:1. Recommendation:  change background to #00499b.",
+          "selector": "html > body > div > nav > a:nth-child(1) > span:nth-child(2)",
+          "context": "<span class=\"text-label-md font-label-md\">Offres</span>"
+        }
+      ]
+    },
+    {
+      "file": "11-candidate-applications-tests.html",
+      "documentTitle": "",
+      "pageUrl": "file:///A:/enzo2/M1/Employment/FaridProject-2.0/docs/stitch/fleetflow-mobile-preview-2026-05-15T08-44-48-644Z/11-candidate-applications-tests.html",
+      "issueCount": 6,
+      "errorCount": 6,
+      "warningCount": 0,
+      "noticeCount": 0,
+      "issues": [
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle2.Guideline2_4.2_4_2.H25.1.NoTitleEl",
+          "message": "A title should be provided for the document, using a non-empty title element in the head section.",
+          "selector": "html > head",
+          "context": "<head>\n<meta charset=\"utf-8\">\n<meta c...</head>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > section:nth-child(2) > div:nth-child(2) > div > div:nth-child(1) > span",
+          "context": "<span class=\"bg-primary-container/20 text-primary-container text-[10px] font-bold px-2 py-0.5 rounded border border-primary-container/30 uppercase\">Test en cours</span>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > section:nth-child(2) > div:nth-child(3) > div > div:nth-child(1) > span",
+          "context": "<span class=\"bg-secondary-container/20 text-secondary text-[10px] font-bold px-2 py-0.5 rounded border border-secondary-container/30 uppercase\">Entretien</span>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > section:nth-child(2) > div:nth-child(4) > div > div:nth-child(1) > span",
+          "context": "<span class=\"bg-error-container/20 text-error text-[10px] font-bold px-2 py-0.5 rounded border border-error-container/30 uppercase\">Rejeté</span>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > section:nth-child(3) > div > div:nth-child(2) > div > span",
+          "context": "<span class=\"bg-primary/10 text-primary text-[10px] font-bold px-2 py-0.5 rounded border border-primary/20 uppercase\">À faire</span>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 4.56:1. Recommendation:  change background to #00499b.",
+          "selector": "html > body > nav > a:nth-child(1) > span:nth-child(2)",
+          "context": "<span class=\"font-label-md text-label-md\">Home</span>"
+        }
+      ]
+    },
+    {
+      "file": "12-test-assessment-detail.html",
+      "documentTitle": "Assessment Detail - FleetFlow",
+      "pageUrl": "file:///A:/enzo2/M1/Employment/FaridProject-2.0/docs/stitch/fleetflow-mobile-preview-2026-05-15T08-44-48-644Z/12-test-assessment-detail.html",
+      "issueCount": 15,
+      "errorCount": 15,
+      "warningCount": 0,
+      "noticeCount": 0,
+      "issues": [
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 6.76:1. Recommendation:  change background to #33363e.",
+          "selector": "html > body > header > div > div:nth-child(1) > span",
+          "context": "<span class=\"font-headline-md text-headline-md font-bold text-primary tracking-tight\">FleetFlow</span>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > span",
+          "context": "<span class=\"bg-success/10 text-success border border-success/20 px-3 py-1 rounded-full font-label-lg text-label-lg\">Passed</span>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > div > section:nth-child(1) > button > div > span:nth-child(3)",
+          "context": "<span class=\"font-label-md text-label-md bg-primary/10 text-primary px-2 py-0.5 rounded border border-primary/20 ml-2\">Score: 36/40</span>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > div > section:nth-child(1) > div > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div > span:nth-child(2)",
+          "context": "<span class=\"font-label-md text-label-md bg-danger/10 text-danger border border-danger/30 px-2 py-0.5 rounded uppercase font-bold tracking-tight\">Eliminatory</span>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_3.1_3_1_AAA.G141",
+          "message": "The heading structure is not logically nested. This h3 element should be an h2 to be properly nested.",
+          "selector": "html > body > main > div > section:nth-child(1) > div > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h3",
+          "context": "<h3 class=\"font-title-md text-title-md text-on-surface\">Protocol for brake failure on 1...</h3>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 5.88:1. Recommendation:  change background to #090d14.",
+          "selector": "html > body > main > div > section:nth-child(1) > div > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div > span:nth-child(2)",
+          "context": "<span class=\"block font-title-md text-title-md text-success\">10/10</span>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle4.Guideline4_1.4_1_2.H91.InputText.Name",
+          "message": "This textinput element does not have a name available to an accessibility API. Valid names are: label element, title , aria-label , aria-labelledby .",
+          "selector": "html > body > main > div > section:nth-child(1) > div > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > input",
+          "context": "<input class=\"w-full bg-surface-container border border-outline rounded-lg px-4 py-2 text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all\" type=\"text\" value=\"Response shows excellent presence of mind and te..."
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_3.1_3_1.F68",
+          "message": "This form field should be labelled in some way. Use the label element (either with a \"for\" attribute or wrapped around the form field), or \"title\", \"aria-label\" or \"aria-labelledby\" attributes as appropriate.",
+          "selector": "html > body > main > div > section:nth-child(1) > div > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > input",
+          "context": "<input class=\"w-full bg-surface-container border border-outline rounded-lg px-4 py-2 text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all\" type=\"text\" value=\"Response shows excellent presence of mind and te..."
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle4.Guideline4_1.4_1_2.H91.InputNumber.Name",
+          "message": "This numberinput element does not have a name available to an accessibility API. Valid names are: label element, title , aria-label , aria-labelledby .",
+          "selector": "html > body > main > div > section:nth-child(1) > div > div:nth-child(1) > div:nth-child(3) > div:nth-child(2) > input",
+          "context": "<input class=\"w-16 bg-surface-container border border-outline rounded-lg text-center py-1 font-title-md\" type=\"number\" value=\"10\">"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle4.Guideline4_1.4_1_2.H91.Textarea.Name",
+          "message": "This textarea element does not have a name available to an accessibility API. Valid names are: label element, title , aria-label , aria-labelledby .",
+          "selector": "html > body > main > section:nth-child(3) > textarea",
+          "context": "<textarea class=\"w-full bg-surface-container-low border border-outline rounded-xl p-4 text-on-surface placeholder-on-surface-variant focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all resize-none\" placeholder=\"Enter over..."
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_3.1_3_1.F68",
+          "message": "This form field should be labelled in some way. Use the label element (either with a \"for\" attribute or wrapped around the form field), or \"title\", \"aria-label\" or \"aria-labelledby\" attributes as appropriate.",
+          "selector": "html > body > main > section:nth-child(3) > textarea",
+          "context": "<textarea class=\"w-full bg-surface-container-low border border-outline rounded-xl p-4 text-on-surface placeholder-on-surface-variant focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all resize-none\" placeholder=\"Enter over..."
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 5.88:1. Recommendation:  change background to #090d14.",
+          "selector": "html > body > main > section:nth-child(3) > div > div > span:nth-child(1)",
+          "context": "<span class=\"material-symbols-outlined text-[18px]\" data-weight=\"fill\">check_circle</span>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 5.88:1. Recommendation:  change background to #090d14.",
+          "selector": "html > body > main > section:nth-child(3) > div > div > span:nth-child(2)",
+          "context": "<span class=\"font-label-lg text-label-lg uppercase tracking-wider\">Digitally Verified</span>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 4.44:1. Recommendation:  change text colour to #fffdfc.",
+          "selector": "html > body > footer > div > div:nth-child(2) > button:nth-child(1)",
+          "context": "<button class=\"flex-1 md:flex-none px-6 py-2 rounded-lg border border-danger text-danger hover:bg-danger/5 transition-colors font-title-md text-title-md\">Reject Candidate</button>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of 4.56:1. Recommendation:  change background to #00499b.",
+          "selector": "html > body > nav > a:nth-child(4) > span:nth-child(2)",
+          "context": "<span class=\"font-label-md text-label-md font-bold\">Tests</span>"
+        }
+      ]
+    }
+  ]
+}

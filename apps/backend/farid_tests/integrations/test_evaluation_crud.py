@@ -133,6 +133,30 @@ def test_update_evaluation_status(api_client):
     assert ev.status == "completed"
 
 
+def test_reject_evaluation_also_rejects_application(api_client):
+    _authenticate_as_hr(api_client)
+    application = JobApplicationFactory.create()
+    template_version = TemplateVersionFactory.create(
+        template=TemplateFactory.create(), version=1
+    )
+    ev = Evaluation.objects.create(
+        subject=application.candidate.user,
+        application=application,
+        position=application.position,
+        template_version=template_version,
+        status="completed",
+    )
+
+    url = reverse(f"{BASENAME}-detail", args=[ev.id])
+    res = api_client.patch(url, {"status": "rejected"}, format="json")
+
+    assert res.status_code in (200, 202)
+    ev.refresh_from_db()
+    application.refresh_from_db()
+    assert ev.status == "rejected"
+    assert application.status == "rejected"
+
+
 def test_manager_only_lists_assigned_evaluations(api_client):
     manager = UserFactory.create(
         email="manager@example.com", password="Passw0rd!", role=UserRoles.MANAGER

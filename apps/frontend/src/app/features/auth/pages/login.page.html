@@ -30,10 +30,13 @@
               type="email"
               autocomplete="email"
               placeholder="name@fleetflow.com"
+              aria-required="true"
+              [attr.aria-invalid]="emailError() ? 'true' : 'false'"
+              [attr.aria-describedby]="emailError() ? 'login-email-error' : null"
             />
           </span>
           @if (emailError()) {
-            <small>{{ emailError() }}</small>
+            <small id="login-email-error">{{ emailError() }}</small>
           }
         </label>
 
@@ -50,10 +53,13 @@
               type="password"
               autocomplete="current-password"
               placeholder="Password"
+              aria-required="true"
+              [attr.aria-invalid]="passwordError() ? 'true' : 'false'"
+              [attr.aria-describedby]="passwordError() ? 'login-password-error' : null"
             />
           </span>
           @if (passwordError()) {
-            <small>{{ passwordError() }}</small>
+            <small id="login-password-error">{{ passwordError() }}</small>
           }
         </label>
 

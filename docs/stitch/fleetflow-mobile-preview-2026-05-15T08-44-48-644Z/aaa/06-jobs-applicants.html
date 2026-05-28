@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>FleetFlow Jobs Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-fixed": "#ffdbc9",
+                        "surface-container-highest": "#31353c",
+                        "surface-container-lowest": "#0b0e15",
+                        "on-surface-variant": "#c1c6d6",
+                        "on-surface": "#e0e2ec",
+                        "surface-dim": "#10131a",
+                        "error": "#ffb4ab",
+                        "surface-variant": "#31353c",
+                        "on-secondary": "#002e69",
+                        "outline": "#8b919f",
+                        "secondary": "#adc6ff",
+                        "surface-bright": "#363941",
+                        "surface-container": "#1c2027",
+                        "on-primary": "#003063",
+                        "primary": "#a9c7ff",
+                        "surface": "#10131a",
+                        "primary-fixed": "#d6e3ff",
+                        "on-tertiary": "#532200",
+                        "on-error": "#690005",
+                        "surface-container-high": "#272a31",
+                        "on-background": "#e0e2ec",
+                        "secondary-fixed": "#d8e2ff",
+                        "secondary-container": "#0064d3",
+                        "on-tertiary-fixed-variant": "#763300",
+                        "inverse-primary": "#005db6",
+                        "on-tertiary-container": "#491d00",
+                        "outline-variant": "#414754",
+                        "on-secondary-fixed-variant": "#004493",
+                        "on-primary-fixed": "#001b3d",
+                        "inverse-on-surface": "#2d3038",
+                        "on-primary-fixed-variant": "#00468b",
+                        "on-secondary-fixed": "#001a41",
+                        "surface-container-low": "#181c23",
+                        "on-error-container": "#ffdad6",
+                        "primary-fixed-dim": "#a9c7ff",
+                        "on-secondary-container": "#e0e8ff",
+                        "surface-tint": "#a9c7ff",
+                        "primary-container": "#3a90ff",
+                        "inverse-surface": "#e0e2ec",
+                        "tertiary": "#ffb68e",
+                        "on-tertiary-fixed": "#331200",
+                        "tertiary-container": "#e76e13",
+                        "error-container": "#93000a",
+                        "secondary-fixed-dim": "#adc6ff",
+                        "tertiary-fixed-dim": "#ffb68e",
+                        "on-primary-container": "#002957",
+                        "background": "#10131a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "sm": "8px",
+                        "lg": "24px",
+                        "container-margin-mobile": "16px",
+                        "gutter": "16px",
+                        "container-margin-desktop": "40px",
+                        "unit": "4px",
+                        "xl": "32px",
+                        "xs": "4px",
+                        "md": "16px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-md": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "label-sm": ["11px", {"lineHeight": "1", "fontWeight": "500"}],
+                        "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "headline-md": ["20px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "body-md": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: #10131a;
+            font-family: 'Inter', sans-serif;
+            color: #e0e2ec;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #10131a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #3b4352;
+            border-radius: 2px;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  <style id="fleetflow-aaa-overrides">
+  :root { color-scheme: dark; }
+  html, body { background: #10141b !important; color: #fbfdff !important; }
+  body, body * { text-shadow: none !important; }
+  body :is(h1,h2,h3,h4,h5,h6,p,span,label,small,div,li,dt,dd,td,th,strong,em,a,button) {
+    color: #fbfdff !important;
+  }
+  body :is(.text-outline,.text-on-surface-variant,.text-slate-400,.text-gray-400,.text-neutral-400,.text-zinc-400),
+  body [class*="text-outline"],
+  body [class*="text-on-surface-variant"],
+  body [class*="text-gray"],
+  body [class*="text-slate"],
+  body [class*="text-zinc"],
+  body [class*="text-neutral"] {
+    color: #f8fbff !important;
+  }
+  body :is(header,main,footer,section,article,nav,form),
+  body [class*="bg-background"],
+  body [class*="bg-surface"],
+  body [class*="bg-[#1C2027]"],
+  body [class*="bg-[#030816]"] {
+    border-color: #7f8da3 !important;
+  }
+  body [class*="bg-background"] {
+    background-color: #10141b !important;
+  }
+  body :is(input,select,textarea) {
+    background: #050914 !important;
+    color: #ffffff !important;
+    border: 1px solid #dbeafe !important;
+  }
+  body :is(input,textarea)::placeholder { color: #f1f5f9 !important; opacity: 1 !important; }
+  body button,
+  body a[role="button"],
+  body [class*="bg-primary"],
+  body [class*="bg-secondary-container"],
+  body [class*="bg-[#1683F7]"],
+  body [class*="bg-[#1683f7]"],
+  body [class*="bg-blue"] {
+    background-color: #003f8c !important;
+    border-color: #bfdbfe !important;
+    color: #ffffff !important;
+  }
+  body [class*="bg-green"],
+  body [class*="bg-emerald"] {
+    background-color: #064e3b !important;
+    color: #ffffff !important;
+    border-color: #a7f3d0 !important;
+  }
+  body [class*="bg-orange"],
+  body [class*="bg-amber"],
+  body [class*="bg-yellow"],
+  body [class*="bg-tertiary"] {
+    background-color: #5f2109 !important;
+    color: #ffffff !important;
+    border-color: #fed7aa !important;
+  }
+  body [class*="bg-red"],
+  body [class*="bg-rose"],
+  body [class*="bg-error"],
+  body [class*="bg-danger"] {
+    background-color: #7f1d1d !important;
+    color: #ffffff !important;
+    border-color: #fecaca !important;
+  }
+  body [class*="bg-success"] {
+    background-color: #064e3b !important;
+    color: #ffffff !important;
+    border-color: #a7f3d0 !important;
+  }
+  body [class*="text-tertiary"],
+  body [class*="text-error"],
+  body [class*="text-danger"],
+  body [class*="text-success"] {
+    color: #ffffff !important;
+  }
+  body .material-symbols-outlined {
+    color: #ffffff !important;
+    background-color: #0b1220 !important;
+    border-radius: 999px !important;
+  }
+  body :is(a,button,input,select,textarea,[tabindex]):focus-visible {
+    outline: 3px solid #bfdbfe !important;
+    outline-offset: 3px !important;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      scroll-behavior: auto !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>
+</head>
+<body class="bg-background text-on-background flex flex-col min-h-screen max-w-[390px] mx-auto overflow-x-hidden">
+<!-- Top App Bar -->
+<header class="fixed top-0 w-full z-50 bg-surface text-primary border-b border-outline-variant flex justify-between items-center h-14 px-container-margin-mobile w-full max-w-[390px]">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary" data-icon="local_shipping" aria-hidden="true">local_shipping</span>
+<h1 class="text-headline-md font-headline-md font-bold text-primary">FleetFlow Jobs</h1>
+</div>
+<div class="flex items-center gap-sm">
+<button class="hover:bg-surface-container-high transition-colors p-sm rounded-full" aria-label="account circle">
+<span class="material-symbols-outlined" data-icon="account_circle" aria-hidden="true">account_circle</span>
+</button>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 mt-14 mb-16 px-container-margin-mobile py-md">
+<!-- Search and Filters Section -->
+<section class="space-y-md mb-lg">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]" data-icon="search" aria-hidden="true">search</span>
+<input class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl py-2 pl-10 pr-4 text-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none placeholder:text-outline transition-all" placeholder="Search jobs or candidates" type="text"/ aria-label="Search jobs or candidates">
+</div>
+<div class="flex gap-sm overflow-x-auto pb-1 no-scrollbar">
+<button class="px-md py-1 bg-primary text-on-primary rounded-full text-label-md transition-all active:scale-95 whitespace-nowrap" aria-label="All">All</button>
+<button class="px-md py-1 border border-outline-variant text-on-surface-variant rounded-full text-label-md hover:bg-surface-container transition-all active:scale-95 whitespace-nowrap" aria-label="Active">Active</button>
+<button class="px-md py-1 border border-outline-variant text-on-surface-variant rounded-full text-label-md hover:bg-surface-container transition-all active:scale-95 whitespace-nowrap" aria-label="Draft">Draft</button>
+<button class="px-md py-1 border border-outline-variant text-on-surface-variant rounded-full text-label-md hover:bg-surface-container transition-all active:scale-95 whitespace-nowrap" aria-label="Closed">Closed</button>
+</div>
+</section>
+<!-- Selected Job Detail Summary -->
+<section class="bg-surface-container border border-outline-variant rounded-xl p-md mb-lg">
+<div class="flex justify-between items-start mb-sm">
+<div>
+<span class="text-label-sm text-primary uppercase tracking-wider mb-xs block">Active Recruitment</span>
+<h2 class="text-headline-md font-headline-md text-on-surface">Class A Chauffeur</h2>
+</div>
+<span class="bg-secondary-container text-on-secondary-container px-sm py-0.5 rounded text-label-sm font-bold">HIRING</span>
+</div>
+<div class="flex items-center gap-sm text-on-surface-variant mb-md">
+<span class="material-symbols-outlined text-[16px]" data-icon="location_on" aria-hidden="true">location_on</span>
+<span class="text-body-md">Chicago, IL</span>
+<span class="mx-xs">•</span>
+<span class="text-body-md">24 Applicants</span>
+</div>
+<!-- Tabs Navigation -->
+<div class="flex border-b border-outline-variant">
+<button class="flex-1 py-sm text-label-md text-primary border-b-2 border-primary font-bold" aria-label="Applicants">Applicants</button>
+<button class="flex-1 py-sm text-label-md text-on-surface-variant hover:text-on-surface transition-colors" aria-label="Details">Details</button>
+<button class="flex-1 py-sm text-label-md text-on-surface-variant hover:text-on-surface transition-colors" aria-label="Settings">Settings</button>
+</div>
+</section>
+<!-- Applicant List -->
+<div class="space-y-md">
+<h2 class="text-label-md text-outline uppercase tracking-widest px-xs">Top Candidates</h2>
+<!-- Applicant Card 1 -->
+<div class="bg-surface-container border border-outline-variant rounded-xl p-md">
+<div class="flex items-center gap-md mb-md">
+<div class="w-12 h-12 rounded-full overflow-hidden bg-surface-container-high border border-outline-variant flex items-center justify-center">
+<img alt="Candidate profile" class="w-full h-full object-cover" data-alt="A professional headshot of a middle-aged male job candidate in a clean business-casual outfit, set against a neutral gray background. The lighting is crisp and corporate, highlighting facial features clearly for a modern recruitment dashboard environment. The overall aesthetic is minimalist and high-contrast." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCDQYL8-xfwOJpjbdah7FhikA-5rtcyjvxcXd9eCK-vjUPb_kKGfCC1b2mQozBds6D-npvyGznjicQHNzoUbGbmlOGkmpPKuIp-Y8bCEYoVGA5zqwbR81xaWONVHQnSrwy0nO4x9DwW9hSB7uY6aYlzb17P5cKW5iBz6l5LF6TsuC1imdZpzdkOzJjoun4Gq2ljoOuv_QXZargDSXFDdsQUSjflh2mY5BzaPE-wb3ji0UplhUx7ZPUJ3osmhdKezJc-gfDC9w69dtM"/>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-center">
+<h2 class="text-body-lg font-bold text-on-surface">Marcus Thorne</h2>
+<span class="text-primary text-headline-md font-bold">88%</span>
+</div>
+<div class="flex items-center gap-xs mt-xs">
+<div class="w-2 h-2 rounded-full bg-secondary"></div>
+<span class="text-label-sm text-on-surface-variant">Pending Review</span>
+</div>
+</div>
+</div>
+<div class="flex gap-sm">
+<button class="flex-1 bg-secondary-container text-on-secondary-container py-2 rounded-lg text-label-md font-bold hover:opacity-90 active:scale-95 transition-all">Launch Test</button>
+<button class="flex-1 border border-outline-variant text-on-surface py-2 rounded-lg text-label-md hover:bg-surface-container-high active:scale-95 transition-all">View Profile</button>
+</div>
+</div>
+<!-- Applicant Card 2 (Completed State) -->
+<div class="bg-surface-container border border-outline-variant rounded-xl p-md">
+<div class="flex items-center gap-md mb-md">
+<div class="w-12 h-12 rounded-full overflow-hidden bg-surface-container-high border border-outline-variant flex items-center justify-center">
+<img alt="Candidate profile" class="w-full h-full object-cover" data-alt="A sharp, professional headshot of a woman in modern business attire looking directly into the camera. The background is a soft-focus office interior with clean lines. The lighting is natural and even, reflecting a high-quality professional recruitment platform aesthetic with deep tones and high clarity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAOR3RdpJAz3jElC-jIjGjAPq6Cgvfy0vQSwAfKTJYOU4zOXYgZTpHaprZReH85dDhnbQn0Ngy3H3O8puyAvyQvOiad8LZ0uoH2hyEYiLg6uG5GQC925chgnAP7ZErml8EpkTCElVFEJjCwi83gMAwG_XtP9GLqDszi364IudvsL_TPy962hNUcMu_t9dIp4lqI62Nz4-YBtn6Y39fpKQImeumd4TNuLYWsQYpHT8jZzODB3IbrwiuQQebE8rhm9wqMWzt5LpgJtDE"/>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-center">
+<h2 class="text-body-lg font-bold text-on-surface">Elena Rodriguez</h2>
+<span class="text-tertiary text-headline-md font-bold">94%</span>
+</div>
+<div class="flex items-center gap-xs mt-xs">
+<div class="w-2 h-2 rounded-full bg-tertiary"></div>
+<span class="text-label-sm text-on-surface-variant">Testing Complete</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-sm">
+<button class="w-full bg-tertiary-container text-on-tertiary-container py-2 rounded-lg text-label-md font-bold flex items-center justify-center gap-sm cursor-default">
+<span class="material-symbols-outlined text-[18px]" data-icon="check_circle" aria-hidden="true">check_circle</span>
+                        Tests Completed
+                    </button>
+<button class="w-full border border-outline-variant text-on-surface py-2 rounded-lg text-label-md hover:bg-surface-container-high active:scale-95 transition-all">View Profile</button>
+</div>
+</div>
+<!-- Applicant Card 3 (Disabled State) -->
+<div class="bg-surface-container border border-outline-variant rounded-xl p-md opacity-80">
+<div class="flex items-center gap-md mb-md">
+<div class="w-12 h-12 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container font-bold text-headline-md">
+                        JD
+                    </div>
+<div class="flex-1">
+<div class="flex justify-between items-center">
+<h2 class="text-body-lg font-bold text-on-surface">John Doe</h2>
+<span class="text-outline text-headline-md font-bold">--%</span>
+</div>
+<div class="flex items-center gap-xs mt-xs">
+<div class="w-2 h-2 rounded-full bg-outline"></div>
+<span class="text-label-sm text-on-surface-variant">Test in Progress...</span>
+</div>
+</div>
+</div>
+<div class="flex gap-sm">
+<button class="flex-1 bg-surface-variant text-outline py-2 rounded-lg text-label-md font-bold cursor-not-allowed" disabled="">Test in Progress</button>
+<button class="flex-1 border border-outline-variant text-on-surface py-2 rounded-lg text-label-md hover:bg-surface-container-high active:scale-95 transition-all">View Profile</button>
+</div>
+</div>
+<!-- Empty State Illustration Placeholder (Only shown if list is empty, here for demo) -->
+<div class="hidden flex flex-col items-center justify-center py-xl text-center">
+<span class="material-symbols-outlined text-[64px] text-outline-variant mb-md" data-icon="search_off" aria-hidden="true">search_off</span>
+<h2 class="text-headline-md text-on-surface mb-xs">No jobs found</h2>
+<p class="text-body-md text-on-surface-variant">Try adjusting your filters or search keywords.</p>
+<button class="mt-lg text-primary text-label-md font-bold hover:underline">Clear all filters</button>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 w-full z-50 bg-surface-container border-t border-outline-variant flex justify-around items-center h-16 w-full px-2 max-w-[390px]">
+<button class="flex flex-col items-center justify-center text-primary bg-secondary-container rounded-xl px-3 py-1 scale-90 duration-75">
+<span class="material-symbols-outlined" data-icon="work" style="font-variation-settings: 'FILL' 1;" aria-hidden="true">work</span>
+<span class="text-label-sm font-label-sm">Jobs</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-highest transition-colors px-3 py-1 rounded-xl">
+<span class="material-symbols-outlined" data-icon="group" aria-hidden="true">group</span>
+<span class="text-label-sm font-label-sm">Candidates</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-highest transition-colors px-3 py-1 rounded-xl">
+<span class="material-symbols-outlined" data-icon="fact_check" aria-hidden="true">fact_check</span>
+<span class="text-label-sm font-label-sm">Tests</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-highest transition-colors px-3 py-1 rounded-xl">
+<span class="material-symbols-outlined" data-icon="settings" aria-hidden="true">settings</span>
+<span class="text-label-sm font-label-sm">Settings</span>
+</button>
+</nav>
+</body></html>

@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Assessment Detail - FleetFlow</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-secondary-fixed": "#001a41",
+            "secondary-fixed-dim": "#adc6ff",
+            "surface-tint": "#a9c7ff",
+            "success": "#4caf50",
+            "surface-container-high": "#242a34",
+            "on-secondary": "#002e69",
+            "on-surface-variant": "#c1c6d6",
+            "on-tertiary-fixed-variant": "#763300",
+            "primary-fixed-dim": "#a9c7ff",
+            "on-primary-fixed": "#001b3d",
+            "outline": "#3b4352",
+            "error-container": "#93000a",
+            "primary-container": "#3a90ff",
+            "on-primary-fixed-variant": "#00468b",
+            "outline-variant": "#414754",
+            "primary-fixed": "#d6e3ff",
+            "surface-bright": "#363941",
+            "on-secondary-container": "#e0e8ff",
+            "error": "#ffb4ab",
+            "on-primary-container": "#002957",
+            "danger": "#f44336",
+            "on-background": "#e0e2ec",
+            "surface-container-low": "#181c23",
+            "tertiary-fixed": "#ffdbc9",
+            "primary": "#a9c7ff",
+            "surface-container": "#1c2027",
+            "on-tertiary-container": "#491d00",
+            "on-error": "#690005",
+            "on-tertiary-fixed": "#331200",
+            "tertiary-fixed-dim": "#ffb68e",
+            "secondary": "#adc6ff",
+            "surface-container-lowest": "#0b0e15",
+            "secondary-fixed": "#d8e2ff",
+            "surface-dim": "#10131a",
+            "tertiary-container": "#e76e13",
+            "surface-container-highest": "#31353c",
+            "surface-variant": "#31353c",
+            "inverse-on-surface": "#2d3038",
+            "on-surface": "#e0e2ec",
+            "tertiary": "#ffb68e",
+            "on-error-container": "#ffdad6",
+            "on-tertiary": "#532200",
+            "inverse-surface": "#e0e2ec",
+            "background": "#10131a",
+            "secondary-container": "#0064d3",
+            "surface": "#10141b",
+            "inverse-primary": "#005db6",
+            "warning": "#ff9800",
+            "on-secondary-fixed-variant": "#004493",
+            "on-primary": "#003063"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "margin-lg": "40px",
+            "margin-sm": "16px",
+            "unit": "4px",
+            "container-max": "1440px",
+            "gutter": "16px",
+            "margin-md": "24px"
+          },
+          "fontFamily": {
+            "headline-lg": ["Inter"],
+            "headline-md": ["Inter"],
+            "headline-sm": ["Inter"],
+            "title-lg": ["Inter"],
+            "title-md": ["Inter"],
+            "label-lg": ["Inter"],
+            "label-md": ["Inter"],
+            "body-lg": ["Inter"],
+            "body-md": ["Inter"]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #10141b; }
+    ::-webkit-scrollbar-thumb { background: #3b4352; border-radius: 3px; }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  <style id="fleetflow-aaa-overrides">
+  :root { color-scheme: dark; }
+  html, body { background: #10141b !important; color: #fbfdff !important; }
+  body, body * { text-shadow: none !important; }
+  body :is(h1,h2,h3,h4,h5,h6,p,span,label,small,div,li,dt,dd,td,th,strong,em,a,button) {
+    color: #fbfdff !important;
+  }
+  body :is(.text-outline,.text-on-surface-variant,.text-slate-400,.text-gray-400,.text-neutral-400,.text-zinc-400),
+  body [class*="text-outline"],
+  body [class*="text-on-surface-variant"],
+  body [class*="text-gray"],
+  body [class*="text-slate"],
+  body [class*="text-zinc"],
+  body [class*="text-neutral"] {
+    color: #f8fbff !important;
+  }
+  body :is(header,main,footer,section,article,nav,form),
+  body [class*="bg-background"],
+  body [class*="bg-surface"],
+  body [class*="bg-[#1C2027]"],
+  body [class*="bg-[#030816]"] {
+    border-color: #7f8da3 !important;
+  }
+  body [class*="bg-background"] {
+    background-color: #10141b !important;
+  }
+  body :is(input,select,textarea) {
+    background: #050914 !important;
+    color: #ffffff !important;
+    border: 1px solid #dbeafe !important;
+  }
+  body :is(input,textarea)::placeholder { color: #f1f5f9 !important; opacity: 1 !important; }
+  body button,
+  body a[role="button"],
+  body [class*="bg-primary"],
+  body [class*="bg-secondary-container"],
+  body [class*="bg-[#1683F7]"],
+  body [class*="bg-[#1683f7]"],
+  body [class*="bg-blue"] {
+    background-color: #003f8c !important;
+    border-color: #bfdbfe !important;
+    color: #ffffff !important;
+  }
+  body [class*="bg-green"],
+  body [class*="bg-emerald"] {
+    background-color: #064e3b !important;
+    color: #ffffff !important;
+    border-color: #a7f3d0 !important;
+  }
+  body [class*="bg-orange"],
+  body [class*="bg-amber"],
+  body [class*="bg-yellow"],
+  body [class*="bg-tertiary"] {
+    background-color: #5f2109 !important;
+    color: #ffffff !important;
+    border-color: #fed7aa !important;
+  }
+  body [class*="bg-red"],
+  body [class*="bg-rose"],
+  body [class*="bg-error"],
+  body [class*="bg-danger"] {
+    background-color: #7f1d1d !important;
+    color: #ffffff !important;
+    border-color: #fecaca !important;
+  }
+  body [class*="bg-success"] {
+    background-color: #064e3b !important;
+    color: #ffffff !important;
+    border-color: #a7f3d0 !important;
+  }
+  body [class*="text-tertiary"],
+  body [class*="text-error"],
+  body [class*="text-danger"],
+  body [class*="text-success"] {
+    color: #ffffff !important;
+  }
+  body .material-symbols-outlined {
+    color: #ffffff !important;
+    background-color: #0b1220 !important;
+    border-radius: 999px !important;
+  }
+  body :is(a,button,input,select,textarea,[tabindex]):focus-visible {
+    outline: 3px solid #bfdbfe !important;
+    outline-offset: 3px !important;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      scroll-behavior: auto !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 right-0 z-50 bg-surface-bright border-b border-outline">
+<div class="flex items-center justify-between px-margin-md h-16 w-full max-w-container-max mx-auto">
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-on-surface-variant p-2 hover:bg-surface-container-high rounded-full transition-colors" aria-label="Retour">arrow_back</button>
+<span class="font-headline-md text-headline-md font-bold text-primary tracking-tight">FleetFlow</span>
+</div>
+<div class="flex items-center gap-margin-sm">
+<span class="material-symbols-outlined text-on-surface-variant p-2 hover:bg-surface-container-high rounded-full transition-colors" data-icon="notifications" aria-hidden="true">notifications</span>
+<div class="w-10 h-10 rounded-full overflow-hidden border border-outline">
+<img alt="User Profile Avatar" data-alt="A professional headshot of a senior logistics manager in a modern office. The lighting is crisp and cool, emphasizing a systematic and professional corporate atmosphere. The individual is wearing a dark navy suit, and the background is a blurred high-end SaaS dashboard on a monitor. The overall aesthetic is clean, sharp, and business-focused." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKWeQMxT68J5R0xa5qNrB_77ujtv1eRKTSNbZfq05hp_FVrOYvPUYzYMpXOfbJTATFwMuXn2gDHNqES1yIm533CnR98t-nxUiOC0MWnxrPYR4tUCUUAFzWx22Iya1upHs8aSdPscsvlPB0lWDKVPjb95CAE_DucYK_skDZL-rvw4Gkoq4P4dzv8Zbk-TAxUR6lItu3tCHumLPyYHDQCS8t3vo0jJj0hM9ZzWipcs6Z7eCfmN52Jr0k4Y2y8TQQ1gQN6CMKSAhpX8w"/>
+</div>
+</div>
+</div>
+</header>
+<main class="pt-24 px-margin-sm md:px-margin-md max-w-container-max mx-auto space-y-6">
+<!-- Top Summary Card -->
+<section class="bg-surface-container border border-outline rounded-xl p-6 flex flex-col md:flex-row items-center justify-between gap-6">
+<div class="flex items-center gap-6">
+<div class="relative w-24 h-24 flex items-center justify-center rounded-full border-4 border-success/30">
+<div class="text-center">
+<span class="block font-headline-lg text-headline-lg text-primary">88</span>
+<span class="block font-label-md text-label-md text-on-surface-variant">/ 100</span>
+</div>
+<svg class="absolute inset-0 w-full h-full -rotate-90">
+<circle class="text-success" cx="48" cy="48" fill="transparent" r="44" stroke="currentColor" stroke-dasharray="276" stroke-dashoffset="33" stroke-width="4"></circle>
+</svg>
+</div>
+<div>
+<div class="flex items-center gap-3 mb-1">
+<h1 class="font-headline-sm text-headline-sm text-on-surface">Amina Al-Fayed</h1>
+<span class="bg-success/10 text-success border border-success/20 px-3 py-1 rounded-full font-label-lg text-label-lg">Passed</span>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Class A Chauffeur</p>
+<div class="flex gap-4 mt-2">
+<span class="flex items-center gap-1 text-on-surface-variant font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px]" aria-hidden="true">assignment</span> Senior Driver Evaluation
+            </span>
+<span class="flex items-center gap-1 text-on-surface-variant font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px]" aria-hidden="true">calendar_today</span> Oct 24, 2023
+            </span>
+</div>
+</div>
+</div>
+<div class="hidden md:flex flex-col items-end gap-2">
+<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Evaluator</span>
+<div class="flex items-center gap-2">
+<div class="text-right">
+<p class="font-title-md text-title-md text-on-surface">Marcus Thorne</p>
+<p class="font-label-md text-label-md text-on-surface-variant">Fleet Operations Director</p>
+</div>
+<img alt="Evaluator Avatar" class="w-10 h-10 rounded-lg border border-outline" data-alt="A focused close-up of a professional male evaluator in a sleek dark mode corporate office setting. He is wearing a minimalist dark polo shirt. The lighting is dramatic and precise, highlighting professional competence. The background is a clean, dark industrial design with subtle metallic accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBnC_AIGeIbD4VTcXbNW3xYGB_uJIAPrwXS2IkVPxmcHJMvXVAawZfdIJBsE3iBVNdTsUidfbAQt6bUvDn7ZcakATPPrSm2ZMc4CX0DSyJ-MdrkvDCSIUllmq7OQOAnlZWdw2fhKmqD--uMItW8jJGgLx_H1BdSlQpAO_wXykpA1eesBEknSW01_V_PMisa6aChMwWguxdYtxuqhFB_zIx_s3Jd7fJXh36gvK2Yb9YEtwMq_2Q3NxC2E5GTn80ZLyJa1p1P0JlDxro"/>
+</div>
+</div>
+</section>
+<!-- Accordion Sections -->
+<div class="space-y-3">
+<!-- Opened Section: Safety & Compliance -->
+<section class="bg-surface-container border border-outline rounded-xl overflow-hidden">
+<button class="w-full flex items-center justify-between px-6 py-4 bg-surface-container-high transition-colors">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" data-weight="fill" aria-hidden="true">verified_user</span>
+<span class="font-title-lg text-title-lg text-on-surface">Safety &amp; Compliance</span>
+<span class="font-label-md text-label-md bg-primary/10 text-primary px-2 py-0.5 rounded border border-primary/20 ml-2">Score: 36/40</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant" aria-hidden="true">expand_less</span>
+</button>
+<div class="p-6 space-y-8">
+<!-- Question 1 -->
+<div class="space-y-4">
+<div class="flex justify-between items-start gap-4">
+<div class="flex-1">
+<div class="flex items-center gap-2 mb-2">
+<span class="font-label-md text-label-md text-on-surface-variant">QUESTION 01</span>
+<span class="font-label-md text-label-md bg-danger/10 text-danger border border-danger/30 px-2 py-0.5 rounded uppercase font-bold tracking-tight">Eliminatory</span>
+</div>
+<h2 class="font-title-md text-title-md text-on-surface">Protocol for brake failure on 12% grade descent?</h2>
+</div>
+<div class="flex items-center gap-3">
+<div class="text-right">
+<span class="block font-label-md text-label-md text-on-surface-variant">Points</span>
+<span class="block font-title-md text-title-md text-success">10/10</span>
+</div>
+<button class="p-2 hover:bg-surface-container-high rounded-lg text-on-surface-variant transition-colors" aria-label="edit note">
+<span class="material-symbols-outlined" aria-hidden="true">edit_note</span>
+</button>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="p-4 rounded-lg bg-surface-container-low border border-outline">
+<span class="block font-label-md text-label-md text-on-surface-variant mb-2">Candidate Response</span>
+<p class="text-on-surface font-body-md italic">"Immediately engage secondary retarders, downshift sequentially while maintaining air pressure, and steer towards runaway ramp if visible."</p>
+</div>
+<div class="p-4 rounded-lg bg-surface-container-low border border-primary/20 border-dashed">
+<span class="block font-label-md text-label-md text-primary mb-2">Correct Standard</span>
+<p class="text-on-surface font-body-md">Engine braking activation, sequential gear reduction, emergency hazard signaling, and utilization of topographic safety assets.</p>
+</div>
+</div>
+<div class="flex flex-col md:flex-row gap-4 items-end">
+<div class="flex-1 w-full">
+<label class="block font-label-md text-label-md text-on-surface-variant mb-2 ml-1">Manager Comments</label>
+<input class="w-full bg-surface-container border border-outline rounded-lg px-4 py-2 text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" type="text" value="Response shows excellent presence of mind and technical accuracy."/ aria-label="Champ de saisie">
+</div>
+<div class="flex items-center gap-4 bg-surface-container-low border border-outline p-2 rounded-lg">
+<div class="flex items-center gap-2 px-2">
+<label class="font-label-md text-label-md text-on-surface-variant">Override</label>
+<div class="w-10 h-5 bg-outline rounded-full relative cursor-pointer">
+<div class="absolute left-1 top-1 w-3 h-3 bg-on-surface-variant rounded-full"></div>
+</div>
+</div>
+<input class="w-16 bg-surface-container border border-outline rounded-lg text-center py-1 font-title-md" type="number" value="10"/ aria-label="Champ de saisie">
+</div>
+</div>
+</div>
+<hr class="border-outline"/>
+<!-- Question 2 -->
+<div class="space-y-4 opacity-80">
+<div class="flex justify-between items-start gap-4">
+<div class="flex-1">
+<span class="block font-label-md text-label-md text-on-surface-variant mb-2">QUESTION 02</span>
+<h2 class="font-title-md text-title-md text-on-surface">Standard Pre-Trip Inspection duration?</h2>
+</div>
+<div class="text-right">
+<span class="block font-label-md text-label-md text-on-surface-variant">Points</span>
+<span class="block font-title-md text-title-md text-warning">8/10</span>
+</div>
+</div>
+<div class="p-4 rounded-lg bg-surface-container-low border border-outline">
+<p class="text-on-surface font-body-md">Candidate mentioned 15 minutes. Regulation requires minimum 15-minute log but detailed inspection often exceeds this for double-trailer configurations.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Closed Section: Technical Maneuvers -->
+<section class="bg-surface-container border border-outline rounded-xl overflow-hidden">
+<button class="w-full flex items-center justify-between px-6 py-4 hover:bg-surface-container-high transition-colors">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant" aria-hidden="true">precision_manufacturing</span>
+<span class="font-title-lg text-title-lg text-on-surface">Technical Maneuvers</span>
+<span class="font-label-md text-label-md bg-surface-container-highest text-on-surface-variant px-2 py-0.5 rounded border border-outline ml-2">Score: 28/30</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant" aria-hidden="true">expand_more</span>
+</button>
+</section>
+<!-- Closed Section: Regulatory Knowledge -->
+<section class="bg-surface-container border border-outline rounded-xl overflow-hidden">
+<button class="w-full flex items-center justify-between px-6 py-4 hover:bg-surface-container-high transition-colors">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant" aria-hidden="true">gavel</span>
+<span class="font-title-lg text-title-lg text-on-surface">Regulatory Knowledge</span>
+<span class="font-label-md text-label-md bg-surface-container-highest text-on-surface-variant px-2 py-0.5 rounded border border-outline ml-2">Score: 24/30</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant" aria-hidden="true">expand_more</span>
+</button>
+</section>
+</div>
+<!-- Global Evaluator Feedback -->
+<section class="bg-surface-container border border-outline rounded-xl p-6">
+<h2 class="font-title-lg text-title-lg text-on-surface mb-4">Global Evaluator Feedback</h2>
+<textarea class="w-full bg-surface-container-low border border-outline rounded-xl p-4 text-on-surface placeholder-on-surface-variant focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all resize-none" placeholder="Enter overall performance assessment and hiring recommendations..." rows="4" aria-label="Zone de texte">Amina demonstrates superior technical proficiency and a calm demeanor under simulated stress scenarios. Her understanding of compliance is above the standard for the Chauffeur A role. Highly recommend for the Senior Logistics route.</textarea>
+<div class="flex items-center gap-4 mt-4">
+<span class="font-label-md text-label-md text-on-surface-variant">Signature Status:</span>
+<div class="flex items-center gap-2 text-success">
+<span class="material-symbols-outlined text-[18px]" data-weight="fill" aria-hidden="true">check_circle</span>
+<span class="font-label-lg text-label-lg uppercase tracking-wider">Digitally Verified</span>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Persistent Actions -->
+<footer class="fixed bottom-0 left-0 right-0 bg-surface-container border-t border-outline z-[60] pb-16 md:pb-4">
+<div class="max-w-container-max mx-auto px-margin-md py-4 flex flex-col md:flex-row items-center justify-between gap-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant" aria-hidden="true">info</span>
+<p class="font-label-md text-label-md text-on-surface-variant">Final decision will be logged and notification sent to Candidate.</p>
+</div>
+<div class="flex items-center gap-3 w-full md:w-auto">
+<button class="flex-1 md:flex-none px-6 py-2 rounded-lg border border-danger text-danger hover:bg-danger/5 transition-colors font-title-md text-title-md">Reject Candidate</button>
+<button class="flex-1 md:flex-none px-6 py-2 rounded-lg border border-outline text-on-surface hover:bg-surface-container-high transition-colors font-title-md text-title-md">Request Retest</button>
+<button class="flex-1 md:flex-none px-10 py-2 rounded-lg bg-primary text-on-primary hover:opacity-90 transition-all font-title-md text-title-md active:scale-95 shadow-lg shadow-primary/10" aria-label="Validate">Validate</button>
+</div>
+</div>
+</footer>
+<!-- BottomNavBar (Shared Shell) -->
+<nav class="fixed bottom-0 w-full flex justify-around items-center py-2 px-margin-sm bg-surface-container border-t border-outline z-50">
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard" aria-hidden="true">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="group" aria-hidden="true">group</span>
+<span class="font-label-md text-label-md">Personnel</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="work" aria-hidden="true">work</span>
+<span class="font-label-md text-label-md">Jobs</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-xl px-4 py-1 scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="quiz" aria-hidden="true">quiz</span>
+<span class="font-label-md text-label-md font-bold">Tests</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="settings" aria-hidden="true">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</nav>
+</body></html>

@@ -1,4 +1,6 @@
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.permissions import IsAuthenticated
+from users.permissions import IsHrAdminOrDirector
 
 from templates_grid.models.template import Template
 from templates_grid.models.template_section import TemplateSection
@@ -12,6 +14,11 @@ from templates_grid.serializers import (
 
 class TemplateViewSet(ModelViewSet):
     queryset = Template.objects.all()
+
+    def get_permissions(self):
+        if self.action in ["create", "update", "partial_update", "destroy"]:
+            return [IsAuthenticated(), IsHrAdminOrDirector()]
+        return [IsAuthenticated()]
 
     def get_serializer_class(self):
         # list can stay lightweight
@@ -40,3 +47,8 @@ class TemplateSectionViewSet(ModelViewSet):
         .order_by("template_id", "order", "id")
     )
     serializer_class = TemplateSectionSerializer
+
+    def get_permissions(self):
+        if self.action in ["create", "update", "partial_update", "destroy"]:
+            return [IsAuthenticated(), IsHrAdminOrDirector()]
+        return [IsAuthenticated()]

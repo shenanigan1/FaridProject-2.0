@@ -34,7 +34,7 @@ export class UiButtonSecondaryComponent {
     return [
       'ff-btn',
       'ff-btn-secondary',
-      this.fullWidth ? 'w-full' : '',
+      this.fullWidth ? 'ff-btn-full' : '',
       this.isDisabled ? 'ff-btn-disabled' : '',
     ]
       .filter(Boolean)

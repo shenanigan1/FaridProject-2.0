@@ -78,11 +78,18 @@ describe('JobsPage', () => {
     const fixture = TestBed.createComponent(JobsPage);
     fixture.detectChanges();
 
+    const shell = fixture.debugElement.query(By.css('.ff-workflow-hero'));
+    const toolbar = fixture.debugElement.query(By.css('.ff-toolbar-panel'));
+    const stats = fixture.debugElement.queryAll(By.css('.ff-stat-mini'));
     const search = fixture.debugElement.query(By.css('input[type="search"]'))
       .nativeElement as HTMLInputElement;
     const filters = fixture.debugElement.queryAll(By.css('.ff-jobs-filter'));
 
+    expect(shell).withContext('jobs page should use the shared UI Book hero').not.toBeNull();
+    expect(toolbar).withContext('jobs filters should live in the shared toolbar panel').not.toBeNull();
+    expect(stats.length).withContext('jobs page should expose compact KPI stats').toBeGreaterThanOrEqual(3);
     expect(search.getAttribute('aria-label')).toBe('Search job offers');
+    expect(search.getAttribute('placeholder')).toBe('Rechercher une offre, une ville, une equipe...');
     expect(filters.length).toBe(3);
     expect(api.loadWorkspace).toHaveBeenCalledTimes(1);
   });
@@ -95,7 +102,8 @@ describe('JobsPage', () => {
 
     expect(text).toContain('Senior CDL-A Driver');
     expect(text).toContain('Local Delivery Driver');
-    expect(text).toContain('12 Applicants');
+    expect(text).toContain('12 candidatures');
+    expect(fixture.debugElement.queryAll(By.css('.ff-card-grid .ff-data-card')).length).toBe(2);
   });
 
   it('filters jobs by search text', () => {

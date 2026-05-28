@@ -1,0 +1,1168 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FleetFlow - UI Book Kinetic</title>
+    <style>
+      :root {
+        color-scheme: dark;
+
+        --ff-color-background: #10141b;
+        --ff-color-background-deep: #070b12;
+        --ff-color-header: #030816;
+        --ff-color-border: #3b4352;
+        --ff-color-border-soft: rgba(151, 164, 188, 0.22);
+        --ff-color-border-strong: rgba(142, 188, 255, 0.62);
+
+        --ff-color-primary-50: #eef5ff;
+        --ff-color-primary-100: #cfe0ff;
+        --ff-color-primary-300: #8ebcff;
+        --ff-color-primary-500: #4a8eff;
+        --ff-color-primary-600: #1683f7;
+        --ff-color-primary-700: #005ec4;
+        --ff-color-primary-900: #09234a;
+
+        --ff-color-surface: #1c2027;
+        --ff-color-surface-raised: #242a34;
+        --ff-color-surface-deep: #111722;
+        --ff-color-surface-muted: #202631;
+        --ff-color-surface-soft: #151a22;
+
+        --ff-color-text: #f7f9ff;
+        --ff-color-text-muted: #d7deef;
+        --ff-color-text-subtle: #aeb8ca;
+        --ff-color-text-disabled: #778398;
+
+        --ff-color-success: #4ade80;
+        --ff-color-success-bg: rgba(34, 197, 94, 0.16);
+        --ff-color-warning: #ffb86b;
+        --ff-color-warning-bg: rgba(255, 184, 107, 0.16);
+        --ff-color-error: #ff8a8a;
+        --ff-color-error-bg: rgba(255, 92, 122, 0.14);
+        --ff-color-info: #7dd3fc;
+        --ff-color-info-bg: rgba(125, 211, 252, 0.14);
+        --ff-color-orange: #ff8a1f;
+
+        --ff-font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        --ff-radius-xs: 7px;
+        --ff-radius-sm: 10px;
+        --ff-radius-control: 12px;
+        --ff-radius-card: 15px;
+        --ff-radius-panel: 18px;
+        --ff-radius-xl: 24px;
+        --ff-radius-pill: 999px;
+
+        --ff-shadow-soft: 0 14px 34px rgba(0, 0, 0, 0.24);
+        --ff-shadow-panel: 0 22px 54px rgba(0, 0, 0, 0.32);
+        --ff-focus-ring: 0 0 0 3px rgba(142, 188, 255, 0.46);
+
+        --page-max: 1420px;
+        --sidebar-width: 286px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        min-height: 100vh;
+        margin: 0;
+        background:
+          radial-gradient(circle at 18% 8%, rgba(22, 131, 247, 0.16), transparent 30rem),
+          radial-gradient(circle at 88% 18%, rgba(255, 138, 31, 0.08), transparent 24rem),
+          linear-gradient(145deg, var(--ff-color-background-deep), var(--ff-color-background));
+        color: var(--ff-color-text);
+        font-family: var(--ff-font-family);
+        line-height: 1.45;
+      }
+
+      a {
+        color: inherit;
+      }
+
+      button,
+      input,
+      select,
+      textarea {
+        font: inherit;
+      }
+
+      :focus-visible {
+        outline: none;
+        box-shadow: var(--ff-focus-ring);
+      }
+
+      .book-shell {
+        display: grid;
+        grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+        min-height: 100vh;
+      }
+
+      .book-sidebar {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        overflow: auto;
+        border-right: 1px solid var(--ff-color-border-soft);
+        background: rgba(3, 8, 22, 0.92);
+        padding: 24px 18px;
+      }
+
+      .brand-lockup {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 28px;
+      }
+
+      .brand-mark {
+        display: grid;
+        width: 44px;
+        height: 44px;
+        place-items: center;
+        border: 1px solid rgba(142, 188, 255, 0.48);
+        border-radius: 14px;
+        background: linear-gradient(145deg, var(--ff-color-primary-600), var(--ff-color-primary-700));
+        box-shadow: 0 14px 28px rgba(22, 131, 247, 0.22);
+      }
+
+      .brand-title {
+        margin: 0;
+        color: var(--ff-color-primary-500);
+        font-size: 1.05rem;
+        font-weight: 900;
+        line-height: 1;
+      }
+
+      .brand-subtitle {
+        margin: 4px 0 0;
+        color: var(--ff-color-text-subtle);
+        font-size: 0.72rem;
+        font-weight: 800;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+
+      .nav-list {
+        display: grid;
+        gap: 6px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .nav-list a {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 42px;
+        padding: 10px 12px;
+        border-radius: var(--ff-radius-control);
+        color: var(--ff-color-text-muted);
+        text-decoration: none;
+      }
+
+      .nav-list a:hover,
+      .nav-list a:focus-visible {
+        background: rgba(74, 142, 255, 0.12);
+        color: var(--ff-color-text);
+      }
+
+      .nav-index {
+        color: var(--ff-color-primary-300);
+        font-size: 0.74rem;
+        font-weight: 900;
+      }
+
+      .book-main {
+        min-width: 0;
+        padding: 28px clamp(18px, 4vw, 56px) 72px;
+      }
+
+      .hero {
+        max-width: var(--page-max);
+        margin: 0 auto 26px;
+        border: 1px solid rgba(142, 188, 255, 0.22);
+        border-radius: var(--ff-radius-xl);
+        background:
+          linear-gradient(135deg, rgba(74, 142, 255, 0.17), transparent 45%),
+          linear-gradient(180deg, rgba(36, 42, 52, 0.95), rgba(17, 23, 34, 0.96));
+        box-shadow: var(--ff-shadow-panel);
+        padding: clamp(24px, 4vw, 44px);
+      }
+
+      .eyebrow {
+        margin: 0 0 10px;
+        color: var(--ff-color-primary-300);
+        font-size: 0.75rem;
+        font-weight: 900;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin-top: 0;
+      }
+
+      h1 {
+        max-width: 860px;
+        margin-bottom: 14px;
+        font-size: clamp(2rem, 5vw, 4.2rem);
+        font-weight: 950;
+        line-height: 0.96;
+        text-shadow: 0 2px 0 rgba(0, 0, 0, 0.34);
+      }
+
+      .lead {
+        max-width: 880px;
+        margin-bottom: 22px;
+        color: var(--ff-color-text-muted);
+        font-size: clamp(1rem, 1.8vw, 1.22rem);
+      }
+
+      .hero-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 28px;
+      }
+
+      .metric {
+        min-height: 116px;
+        border: 1px solid var(--ff-color-border-soft);
+        border-radius: var(--ff-radius-card);
+        background: rgba(17, 23, 34, 0.72);
+        padding: 16px;
+      }
+
+      .metric strong {
+        display: block;
+        margin-bottom: 4px;
+        font-size: 1.9rem;
+        font-weight: 950;
+      }
+
+      .metric span {
+        color: var(--ff-color-text-subtle);
+        font-size: 0.88rem;
+      }
+
+      .section {
+        max-width: var(--page-max);
+        margin: 0 auto 24px;
+        border: 1px solid var(--ff-color-border-soft);
+        border-radius: var(--ff-radius-panel);
+        background: rgba(17, 23, 34, 0.82);
+        box-shadow: var(--ff-shadow-soft);
+        padding: clamp(18px, 3vw, 28px);
+      }
+
+      .section-header {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 18px;
+        margin-bottom: 18px;
+      }
+
+      .section h2 {
+        margin-bottom: 4px;
+        font-size: clamp(1.35rem, 2vw, 2rem);
+        line-height: 1.05;
+      }
+
+      .section-note {
+        max-width: 760px;
+        margin-bottom: 0;
+        color: var(--ff-color-text-subtle);
+      }
+
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        min-height: 30px;
+        padding: 6px 10px;
+        border: 1px solid rgba(142, 188, 255, 0.28);
+        border-radius: var(--ff-radius-pill);
+        background: rgba(74, 142, 255, 0.12);
+        color: var(--ff-color-primary-100);
+        font-size: 0.74rem;
+        font-weight: 900;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+      }
+
+      .grid {
+        display: grid;
+        gap: 14px;
+      }
+
+      .grid.two {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .grid.three {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .grid.four {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .swatch {
+        overflow: hidden;
+        min-height: 148px;
+        border: 1px solid var(--ff-color-border-soft);
+        border-radius: var(--ff-radius-card);
+        background: var(--ff-color-surface);
+      }
+
+      .swatch-color {
+        min-height: 70px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .swatch-body {
+        padding: 13px 14px 14px;
+      }
+
+      .swatch code,
+      .code-card code,
+      .spec-list code {
+        color: var(--ff-color-primary-100);
+        font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+        font-size: 0.82rem;
+      }
+
+      .swatch strong {
+        display: block;
+        margin-bottom: 3px;
+      }
+
+      .muted {
+        color: var(--ff-color-text-subtle);
+      }
+
+      .component-card {
+        border: 1px solid var(--ff-color-border-soft);
+        border-radius: var(--ff-radius-card);
+        background: linear-gradient(180deg, rgba(36, 42, 52, 0.92), rgba(28, 32, 39, 0.94));
+        padding: 18px;
+      }
+
+      .component-card h3 {
+        margin-bottom: 8px;
+        font-size: 1.05rem;
+      }
+
+      .component-card p {
+        color: var(--ff-color-text-subtle);
+      }
+
+      .button-row,
+      .chip-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 44px;
+        padding: 0 18px;
+        border: 1px solid transparent;
+        border-radius: var(--ff-radius-control);
+        font-weight: 900;
+        text-decoration: none;
+      }
+
+      .btn.primary {
+        background: linear-gradient(180deg, var(--ff-color-primary-500), var(--ff-color-primary-600));
+        color: #04101f;
+      }
+
+      .btn.secondary {
+        border-color: var(--ff-color-border);
+        background: rgba(17, 23, 34, 0.72);
+        color: var(--ff-color-text);
+      }
+
+      .btn.danger {
+        background: #bf0b1f;
+        color: #fff;
+      }
+
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        min-height: 34px;
+        padding: 0 13px;
+        border: 1px solid var(--ff-color-border);
+        border-radius: var(--ff-radius-pill);
+        background: rgba(32, 38, 49, 0.82);
+        color: var(--ff-color-text-muted);
+        font-size: 0.88rem;
+        font-weight: 800;
+      }
+
+      .chip.active {
+        border-color: var(--ff-color-primary-500);
+        background: rgba(74, 142, 255, 0.18);
+        color: var(--ff-color-primary-100);
+      }
+
+      .status {
+        display: inline-flex;
+        align-items: center;
+        min-height: 28px;
+        padding: 0 10px;
+        border-radius: var(--ff-radius-pill);
+        font-size: 0.74rem;
+        font-weight: 950;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      .status.success {
+        border: 1px solid rgba(74, 222, 128, 0.34);
+        background: var(--ff-color-success-bg);
+        color: var(--ff-color-success);
+      }
+
+      .status.warning {
+        border: 1px solid rgba(255, 184, 107, 0.34);
+        background: var(--ff-color-warning-bg);
+        color: var(--ff-color-warning);
+      }
+
+      .status.error {
+        border: 1px solid rgba(255, 138, 138, 0.4);
+        background: var(--ff-color-error-bg);
+        color: var(--ff-color-error);
+      }
+
+      .field-stack {
+        display: grid;
+        gap: 12px;
+      }
+
+      .field label {
+        display: block;
+        margin-bottom: 7px;
+        color: var(--ff-color-text-muted);
+        font-size: 0.78rem;
+        font-weight: 900;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      .control {
+        width: 100%;
+        min-height: 48px;
+        border: 1px solid var(--ff-color-border);
+        border-radius: var(--ff-radius-control);
+        background: rgba(17, 23, 34, 0.82);
+        color: var(--ff-color-text);
+        padding: 12px 14px;
+      }
+
+      .field-error {
+        margin-top: 6px;
+        color: var(--ff-color-error);
+        font-size: 0.86rem;
+        font-weight: 800;
+      }
+
+      .list {
+        display: grid;
+        gap: 10px;
+      }
+
+      .row {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        gap: 14px;
+        align-items: center;
+        min-height: 74px;
+        border: 1px solid var(--ff-color-border-soft);
+        border-radius: var(--ff-radius-card);
+        background: rgba(21, 26, 34, 0.78);
+        padding: 12px 14px;
+      }
+
+      .avatar {
+        display: grid;
+        width: 44px;
+        height: 44px;
+        place-items: center;
+        border: 1px solid rgba(142, 188, 255, 0.38);
+        border-radius: 14px;
+        background: var(--ff-color-primary-900);
+        color: var(--ff-color-primary-100);
+        font-weight: 950;
+      }
+
+      .progress {
+        overflow: hidden;
+        height: 9px;
+        border-radius: var(--ff-radius-pill);
+        background: rgba(167, 178, 199, 0.17);
+      }
+
+      .progress span {
+        display: block;
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(90deg, var(--ff-color-primary-300), var(--ff-color-primary-600));
+      }
+
+      .layout-demo {
+        display: grid;
+        grid-template-columns: 220px 1fr;
+        overflow: hidden;
+        min-height: 360px;
+        border: 1px solid var(--ff-color-border);
+        border-radius: var(--ff-radius-panel);
+        background: var(--ff-color-background-deep);
+      }
+
+      .layout-nav {
+        border-right: 1px solid var(--ff-color-border-soft);
+        background: var(--ff-color-header);
+        padding: 16px;
+      }
+
+      .layout-content {
+        display: grid;
+        grid-template-rows: auto 1fr;
+        min-width: 0;
+      }
+
+      .layout-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 64px;
+        border-bottom: 1px solid var(--ff-color-border-soft);
+        padding: 0 18px;
+      }
+
+      .layout-grid {
+        display: grid;
+        grid-template-columns: 1.4fr 0.9fr;
+        gap: 14px;
+        padding: 18px;
+      }
+
+      .phone {
+        width: min(100%, 390px);
+        overflow: hidden;
+        border: 1px solid var(--ff-color-border);
+        border-radius: 30px;
+        background: var(--ff-color-background);
+        box-shadow: var(--ff-shadow-panel);
+      }
+
+      .phone-bar {
+        min-height: 62px;
+        border-bottom: 1px solid var(--ff-color-border-soft);
+        background: var(--ff-color-header);
+        padding: 16px 18px;
+        font-weight: 950;
+      }
+
+      .phone-body {
+        display: grid;
+        gap: 12px;
+        padding: 16px;
+      }
+
+      .bottom-nav {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 6px;
+        border-top: 1px solid var(--ff-color-border-soft);
+        background: var(--ff-color-header);
+        padding: 10px;
+      }
+
+      .bottom-nav span {
+        display: grid;
+        min-height: 54px;
+        place-items: center;
+        border-radius: 16px;
+        color: var(--ff-color-text-subtle);
+        font-size: 0.8rem;
+        font-weight: 800;
+      }
+
+      .bottom-nav .active {
+        background: rgba(22, 131, 247, 0.18);
+        color: var(--ff-color-primary-300);
+      }
+
+      .code-card {
+        overflow: auto;
+        border: 1px solid var(--ff-color-border-soft);
+        border-radius: var(--ff-radius-card);
+        background: #080d15;
+        padding: 16px;
+      }
+
+      pre {
+        margin: 0;
+        white-space: pre-wrap;
+      }
+
+      .spec-list {
+        display: grid;
+        gap: 10px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .spec-list li {
+        border-left: 3px solid var(--ff-color-primary-500);
+        border-radius: 0 var(--ff-radius-sm) var(--ff-radius-sm) 0;
+        background: rgba(74, 142, 255, 0.08);
+        padding: 10px 12px;
+      }
+
+      .do-dont {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .dont {
+        border-color: rgba(255, 138, 138, 0.35);
+      }
+
+      .dont .eyebrow {
+        color: var(--ff-color-error);
+      }
+
+      .footer {
+        max-width: var(--page-max);
+        margin: 36px auto 0;
+        color: var(--ff-color-text-subtle);
+        text-align: center;
+      }
+
+      @media (max-width: 1120px) {
+        .book-shell {
+          grid-template-columns: 1fr;
+        }
+
+        .book-sidebar {
+          position: relative;
+          height: auto;
+          border-right: 0;
+          border-bottom: 1px solid var(--ff-color-border-soft);
+        }
+
+        .nav-list {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .hero-grid,
+        .grid.four,
+        .grid.three {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 760px) {
+        .book-main {
+          padding-inline: 14px;
+        }
+
+        .hero,
+        .section {
+          border-radius: 18px;
+        }
+
+        .section-header,
+        .do-dont {
+          display: grid;
+        }
+
+        .grid.two,
+        .grid.three,
+        .grid.four,
+        .hero-grid,
+        .layout-demo,
+        .layout-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .nav-list {
+          grid-template-columns: 1fr;
+        }
+
+        .row {
+          grid-template-columns: auto 1fr;
+        }
+
+        .row > :last-child {
+          grid-column: 1 / -1;
+          justify-self: start;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="book-shell">
+      <aside class="book-sidebar" aria-label="Sommaire UI Book">
+        <div class="brand-lockup">
+          <div class="brand-mark" aria-hidden="true">FF</div>
+          <div>
+            <p class="brand-title">FleetFlow</p>
+            <p class="brand-subtitle">UI Book</p>
+          </div>
+        </div>
+        <nav>
+          <ol class="nav-list">
+            <li><a href="#charte">Charte <span class="nav-index">01</span></a></li>
+            <li><a href="#couleurs">Couleurs <span class="nav-index">02</span></a></li>
+            <li><a href="#layout">Layout <span class="nav-index">03</span></a></li>
+            <li><a href="#composants">Composants <span class="nav-index">04</span></a></li>
+            <li><a href="#formulaires">Formulaires <span class="nav-index">05</span></a></li>
+            <li><a href="#workflows">Workflows <span class="nav-index">06</span></a></li>
+            <li><a href="#accessibilite">RGAA <span class="nav-index">07</span></a></li>
+            <li><a href="#code">Code shared <span class="nav-index">08</span></a></li>
+          </ol>
+        </nav>
+      </aside>
+
+      <main class="book-main">
+        <header class="hero">
+          <p class="eyebrow">FleetFlow / Kinetic command</p>
+          <h1>UI Book maître pour un SaaS RH transport sombre, dense et accessible.</h1>
+          <p class="lead">
+            Ce document aligne la charte graphique sur l'application actuelle tout en renforçant la lisibilité, la sobriété
+            desktop et la cohérence mobile-first. Il sert de référence pour tout nouvel écran, composant ou refactor UI.
+          </p>
+          <div class="button-row">
+            <a class="btn primary" href="#code">Utiliser les composants shared</a>
+            <a class="btn secondary" href="#accessibilite">Voir les règles RGAA</a>
+          </div>
+          <div class="hero-grid" aria-label="Principes clés">
+            <div class="metric">
+              <strong>AA+</strong>
+              <span>Contraste, focus visible, erreurs explicites.</span>
+            </div>
+            <div class="metric">
+              <strong>12-18</strong>
+              <span>Rayons principaux, sobres et professionnels.</span>
+            </div>
+            <div class="metric">
+              <strong>4</strong>
+              <span>Entrées max visibles dans la navigation métier.</span>
+            </div>
+            <div class="metric">
+              <strong>0</strong>
+              <span>Placeholder métier dans les écrans finaux.</span>
+            </div>
+          </div>
+        </header>
+
+        <section id="charte" class="section">
+          <div class="section-header">
+            <div>
+              <p class="eyebrow">01 - Charte graphique</p>
+              <h2>Direction visuelle</h2>
+              <p class="section-note">
+                FleetFlow doit ressembler à une application de bureau logistique : structurée, fiable, rapide à scanner,
+                avec une identité sombre et bleue sans tomber dans le marketing décoratif.
+              </p>
+            </div>
+            <span class="tag">Source: app actuelle</span>
+          </div>
+          <div class="grid three">
+            <article class="component-card">
+              <h3>Personnalité</h3>
+              <p>
+                Interface opérationnelle B2B : robuste, calme, précise. Les effets visuels servent la hiérarchie, pas la
+                décoration.
+              </p>
+            </article>
+            <article class="component-card">
+              <h3>Hiérarchie</h3>
+              <p>
+                Titres lourds, labels uppercase courts, actions bleues franches. Les contenus longs restent en texte
+                normal pour éviter la fatigue visuelle.
+              </p>
+            </article>
+            <article class="component-card">
+              <h3>Sobriété</h3>
+              <p>
+                Ombres réduites, gradients discrets, cartes nettes. Les barres colorées sont réservées aux statuts ou
+                priorités fortes.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section id="couleurs" class="section">
+          <div class="section-header">
+            <div>
+              <p class="eyebrow">02 - Tokens couleur</p>
+              <h2>Palette FleetFlow</h2>
+              <p class="section-note">
+                Les pages doivent consommer les variables <code>--ff-*</code> depuis <code>libs/shared/styles</code>.
+                Toute couleur page-spécifique doit être justifiée par un statut métier.
+              </p>
+            </div>
+            <span class="tag">Dark only</span>
+          </div>
+          <div class="grid four">
+            <article class="swatch">
+              <div class="swatch-color" style="background:#10141b"></div>
+              <div class="swatch-body"><strong>Background</strong><code>#10141b</code><p class="muted">Fond global.</p></div>
+            </article>
+            <article class="swatch">
+              <div class="swatch-color" style="background:#030816"></div>
+              <div class="swatch-body"><strong>Header</strong><code>#030816</code><p class="muted">App bars et nav.</p></div>
+            </article>
+            <article class="swatch">
+              <div class="swatch-color" style="background:#1c2027"></div>
+              <div class="swatch-body"><strong>Surface</strong><code>#1c2027</code><p class="muted">Cards standard.</p></div>
+            </article>
+            <article class="swatch">
+              <div class="swatch-color" style="background:#242a34"></div>
+              <div class="swatch-body"><strong>Raised</strong><code>#242a34</code><p class="muted">Panneaux actifs.</p></div>
+            </article>
+            <article class="swatch">
+              <div class="swatch-color" style="background:#1683f7"></div>
+              <div class="swatch-body"><strong>Primary</strong><code>#1683f7</code><p class="muted">Action principale.</p></div>
+            </article>
+            <article class="swatch">
+              <div class="swatch-color" style="background:#4a8eff"></div>
+              <div class="swatch-body"><strong>Primary soft</strong><code>#4a8eff</code><p class="muted">Hover, focus, FAB.</p></div>
+            </article>
+            <article class="swatch">
+              <div class="swatch-color" style="background:#ffb86b"></div>
+              <div class="swatch-body"><strong>Warning</strong><code>#ffb86b</code><p class="muted">Attention non bloquante.</p></div>
+            </article>
+            <article class="swatch">
+              <div class="swatch-color" style="background:#ff8a8a"></div>
+              <div class="swatch-body"><strong>Error</strong><code>#ff8a8a</code><p class="muted">Erreurs et refus.</p></div>
+            </article>
+          </div>
+        </section>
+
+        <section id="layout" class="section">
+          <div class="section-header">
+            <div>
+              <p class="eyebrow">03 - Layout</p>
+              <h2>Mobile-first, desktop app</h2>
+              <p class="section-note">
+                On conçoit d'abord une colonne claire de 390px, puis on agrandit en mode desktop avec sidebar, panneaux
+                côte à côte et listes scrollables. On évite les cartes étirées sur toute la largeur sans contenu.
+              </p>
+            </div>
+          </div>
+          <div class="grid two">
+            <div class="phone" aria-label="Exemple mobile">
+              <div class="phone-bar">Tests Manager</div>
+              <div class="phone-body">
+                <div class="control">Rechercher un test...</div>
+                <div class="component-card">
+                  <span class="status warning">Urgent</span>
+                  <h3 style="margin-top:14px">Évaluation conduite</h3>
+                  <p>Jean Dupont - 3 sections assignées</p>
+                  <div class="progress"><span style="width:66%"></span></div>
+                </div>
+                <div class="component-card">
+                  <h3>Historique</h3>
+                  <p>Dernières évaluations passées par le manager.</p>
+                </div>
+              </div>
+              <div class="bottom-nav"><span class="active">Home</span><span>Jobs</span><span>Tests</span><span>Profil</span></div>
+            </div>
+            <div class="layout-demo" aria-label="Exemple desktop">
+              <aside class="layout-nav">
+                <p class="brand-title">ADMIN_COMMAND</p>
+                <div class="nav-list" style="margin-top:18px">
+                  <a href="#layout">Dashboard</a>
+                  <a href="#layout">Contacts</a>
+                  <a href="#layout">Tests</a>
+                  <a href="#layout">Jobs</a>
+                </div>
+              </aside>
+              <div class="layout-content">
+                <div class="layout-bar"><strong>System Core</strong><span class="tag">Live API</span></div>
+                <div class="layout-grid">
+                  <div class="grid">
+                    <div class="component-card"><h3>Pipeline global</h3><strong style="font-size:2rem">1 284</strong></div>
+                    <div class="component-card"><h3>Validation queue</h3><p>5 éléments visibles maximum par volet.</p></div>
+                  </div>
+                  <div class="component-card"><h3>Test ops</h3><p>Liste dense, scroll interne si nécessaire.</p></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="composants" class="section">
+          <div class="section-header">
+            <div>
+              <p class="eyebrow">04 - Composants</p>
+              <h2>Bibliothèque UI</h2>
+              <p class="section-note">
+                Les variantes ci-dessous couvrent les besoins MVP. Toute nouvelle page doit les réutiliser avant de créer
+                du CSS local.
+              </p>
+            </div>
+          </div>
+          <div class="grid two">
+            <article class="component-card">
+              <h3>Boutons</h3>
+              <p>Hauteur minimale 44px, texte court, icône seulement si elle clarifie l'action.</p>
+              <div class="button-row">
+                <button class="btn primary" type="button">Valider</button>
+                <button class="btn secondary" type="button">Voir détails</button>
+                <button class="btn danger" type="button">Refuser</button>
+              </div>
+            </article>
+            <article class="component-card">
+              <h3>Chips et statuts</h3>
+              <p>Les chips filtrent. Les status pills informent; elles ne remplacent jamais un message texte.</p>
+              <div class="chip-row">
+                <span class="chip active">Tous</span>
+                <span class="chip">Conduite</span>
+                <span class="chip">Sécurité</span>
+                <span class="status success">Validé</span>
+                <span class="status warning">Sous revue</span>
+                <span class="status error">Refusé</span>
+              </div>
+            </article>
+            <article class="component-card">
+              <h3>Liste métier</h3>
+              <div class="list">
+                <div class="row">
+                  <span class="avatar">JD</span>
+                  <div><strong>Jean Dupont</strong><br /><span class="muted">Conduite de nuit - 66%</span></div>
+                  <span class="status warning">En cours</span>
+                </div>
+                <div class="row">
+                  <span class="avatar">SM</span>
+                  <div><strong>Sarah Miller</strong><br /><span class="muted">Sécurité Hazmat - 100%</span></div>
+                  <span class="status success">Complet</span>
+                </div>
+              </div>
+            </article>
+            <article class="component-card">
+              <h3>Progression</h3>
+              <p>Score visible en texte et en barre. Ne jamais communiquer un état uniquement par couleur.</p>
+              <div class="progress" aria-hidden="true"><span style="width:78%"></span></div>
+              <p style="margin:10px 0 0"><strong>78%</strong> - 3 / 4 sections terminées</p>
+            </article>
+          </div>
+        </section>
+
+        <section id="formulaires" class="section">
+          <div class="section-header">
+            <div>
+              <p class="eyebrow">05 - Formulaires</p>
+              <h2>Lisibles, validés, explicites</h2>
+              <p class="section-note">
+                Les erreurs API sont traduites côté UI. Un champ requis affiche toujours "Champ obligatoire" près du champ
+                et dans le résumé d'erreur si le formulaire est complexe.
+              </p>
+            </div>
+          </div>
+          <div class="grid two">
+            <div class="component-card">
+              <div class="field-stack">
+                <div class="field">
+                  <label for="template-name">Nom du template</label>
+                  <input id="template-name" class="control" value="Évaluation Chauffeur CDL-A" />
+                </div>
+                <div class="field">
+                  <label for="difficulty">Difficulté</label>
+                  <select id="difficulty" class="control">
+                    <option>Moyen</option>
+                    <option>Avancé</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="comment">Commentaire manager</label>
+                  <textarea id="comment" class="control" rows="4" placeholder="Saisir une observation utile..."></textarea>
+                  <div class="field-error">Champ obligatoire</div>
+                </div>
+              </div>
+            </div>
+            <div class="component-card">
+              <h3>Questions et scoring</h3>
+              <ul class="spec-list">
+                <li><strong>Libre</strong> : réponse texte, score manuel sur 10, bonne réponse indicative possible.</li>
+                <li><strong>Oui / Non</strong> : bonne réponse obligatoire, score auto 0 ou 10, override autorisé.</li>
+                <li><strong>QCM</strong> : plusieurs choix, une ou plusieurs bonnes réponses, score proportionnel sur 10.</li>
+                <li><strong>Note</strong> : échelle configurable, normalisée ensuite dans le total sur 100.</li>
+                <li><strong>Éliminatoire</strong> : échec explicite si la réponse ou le score ne respecte pas le seuil.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section id="workflows" class="section">
+          <div class="section-header">
+            <div>
+              <p class="eyebrow">06 - Workflows MVP</p>
+              <h2>Écrans à respecter</h2>
+              <p class="section-note">
+                Les parcours restent découpés en écrans clairs : listes, détails, édition, lancement, validation. Les
+                actions critiques ne doivent pas être cachées dans des menus ambigus.
+              </p>
+            </div>
+          </div>
+          <div class="grid three">
+            <article class="component-card">
+              <h3>Admin / RH / Direction</h3>
+              <p>Dashboard, contacts, jobs, tests, templates, pools, réponses et validations.</p>
+              <span class="tag">Global scope</span>
+            </article>
+            <article class="component-card">
+              <h3>Manager</h3>
+              <p>Dashboard, tests assignés, formulaire par section, historique, sauvegarde brouillon et soumission.</p>
+              <span class="tag">Assigned only</span>
+            </article>
+            <article class="component-card">
+              <h3>Candidat</h3>
+              <p>Offres publiques sans login, apply protégé, candidatures, tests assignés et profil.</p>
+              <span class="tag">Self scope</span>
+            </article>
+          </div>
+          <div class="grid two" style="margin-top:14px">
+            <article class="component-card">
+              <h3>Détail test admin</h3>
+              <p>
+                Sections empilées en accordéon. Un clic ouvre les réponses, scores, commentaires et bonnes réponses; un
+                second clic referme. Le feedback global arrive sous la dernière section.
+              </p>
+            </article>
+            <article class="component-card">
+              <h3>Relancer un test</h3>
+              <p>
+                Bandeau titre compact, espace clair avant recherche, filtres visibles, cards respirées, barre d'action
+                collée au bas de viewport sans masquer le dernier élément.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section id="accessibilite" class="section">
+          <div class="section-header">
+            <div>
+              <p class="eyebrow">07 - RGAA AA renforcé</p>
+              <h2>Règles non négociables</h2>
+              <p class="section-note">
+                L'accessibilité est intégrée au design system : pas une passe cosmétique à la fin.
+              </p>
+            </div>
+          </div>
+          <div class="grid two">
+            <article class="component-card">
+              <h3>À faire</h3>
+              <ul class="spec-list">
+                <li>Utiliser de vrais <code>&lt;button&gt;</code>, <code>&lt;a&gt;</code>, <code>&lt;label&gt;</code>.</li>
+                <li>Relier chaque erreur au champ avec <code>aria-describedby</code>.</li>
+                <li>Garder un focus visible sur tous les contrôles.</li>
+                <li>Tester clavier : Tab, Shift+Tab, Enter, Escape sur modales.</li>
+                <li>Limiter les listes visibles à 5 éléments puis scroll interne clair.</li>
+              </ul>
+            </article>
+            <article class="component-card dont">
+              <p class="eyebrow">À éviter</p>
+              <ul class="spec-list">
+                <li>Texte gris trop faible sur surfaces sombres.</li>
+                <li>Actions uniquement en icône sans libellé accessible.</li>
+                <li>Styles inline ou handlers inline incompatibles CSP.</li>
+                <li>Cartes trop grandes qui étirent l'app desktop.</li>
+                <li>Scroll bloqué par une bottom nav ou une action bar.</li>
+              </ul>
+            </article>
+          </div>
+        </section>
+
+        <section id="code" class="section">
+          <div class="section-header">
+            <div>
+              <p class="eyebrow">08 - Code shared</p>
+              <h2>Contrats à réutiliser</h2>
+              <p class="section-note">
+                Les noms ci-dessous doivent rester les fondations des pages. Quand un écran a besoin d'une variante,
+                l'ajout se fait dans shared avant la page.
+              </p>
+            </div>
+          </div>
+          <div class="grid two">
+            <div class="code-card">
+              <pre><code>&lt;main class="ff-app-screen"&gt;
+  &lt;section class="ff-app-container"&gt;
+    &lt;header class="ff-page-bar"&gt;
+      &lt;button class="ff-icon-button" type="button"&gt;Retour&lt;/button&gt;
+      &lt;h1&gt;Tests&lt;/h1&gt;
+    &lt;/header&gt;
+
+    &lt;article class="ff-app-panel"&gt;
+      &lt;h2 class="ff-section-title"&gt;Validation queue&lt;/h2&gt;
+    &lt;/article&gt;
+  &lt;/section&gt;
+&lt;/main&gt;</code></pre>
+            </div>
+            <div class="code-card">
+              <pre><code>.ff-btn-primary
+.ff-btn-secondary
+.ff-btn-danger
+.ff-control
+.ff-field-error
+.ff-status-pill
+.ff-data-card
+.ff-kpi-card
+.ff-bottom-sheet
+.ff-section-accordion
+.ff-decision-bar</code></pre>
+            </div>
+          </div>
+          <div class="do-dont" style="margin-top:14px">
+            <article class="component-card">
+              <p class="eyebrow">Décision</p>
+              <p>
+                Une page peut composer des blocs, mais ne doit pas redéfinir les tokens, les boutons, les champs, les
+                cartes ou les layouts principaux.
+              </p>
+            </article>
+            <article class="component-card">
+              <p class="eyebrow">Évolution</p>
+              <p>
+                Si un composant devient répété dans deux pages, il remonte dans <code>libs/shared</code> avec variante,
+                état loading, état empty et état error.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <footer class="footer">
+          <p>FleetFlow UI Book Kinetic - mis à jour le 28 mai 2026.</p>
+        </footer>
+      </main>
+    </div>
+  </body>
+</html>

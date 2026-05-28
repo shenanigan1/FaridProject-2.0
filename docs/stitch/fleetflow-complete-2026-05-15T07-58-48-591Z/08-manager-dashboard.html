@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DriverRecruit Manager Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #10131a;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-primary-fixed-variant": "#00468b",
+                      "on-background": "#e0e2ec",
+                      "on-secondary-fixed-variant": "#004493",
+                      "surface-container-lowest": "#0b0e15",
+                      "on-primary": "#003063",
+                      "on-primary-container": "#002957",
+                      "on-tertiary-fixed": "#331200",
+                      "secondary": "#adc6ff",
+                      "primary-container": "#3a90ff",
+                      "primary-fixed": "#d6e3ff",
+                      "error-container": "#93000a",
+                      "surface-variant": "#31353c",
+                      "background": "#10131a",
+                      "on-tertiary-fixed-variant": "#763300",
+                      "on-secondary-container": "#e0e8ff",
+                      "secondary-container": "#0064d3",
+                      "surface-container-high": "#272a31",
+                      "on-secondary": "#002e69",
+                      "tertiary-container": "#e76e13",
+                      "inverse-surface": "#e0e2ec",
+                      "surface-tint": "#a9c7ff",
+                      "on-secondary-fixed": "#001a41",
+                      "secondary-fixed": "#d8e2ff",
+                      "outline": "#8b919f",
+                      "inverse-on-surface": "#2d3038",
+                      "outline-variant": "#414754",
+                      "on-tertiary": "#532200",
+                      "tertiary": "#ffb68e",
+                      "surface-dim": "#10131a",
+                      "surface-container-low": "#181c23",
+                      "primary": "#a9c7ff",
+                      "surface-container": "#1c2027",
+                      "surface": "#10131a",
+                      "primary-fixed-dim": "#a9c7ff",
+                      "inverse-primary": "#005db6",
+                      "on-surface": "#e0e2ec",
+                      "tertiary-fixed": "#ffdbc9",
+                      "on-tertiary-container": "#491d00",
+                      "on-error": "#690005",
+                      "on-surface-variant": "#c1c6d6",
+                      "error": "#ffb4ab",
+                      "on-error-container": "#ffdad6",
+                      "tertiary-fixed-dim": "#ffb68e",
+                      "surface-bright": "#363941",
+                      "surface-container-highest": "#31353c",
+                      "on-primary-fixed": "#001b3d",
+                      "secondary-fixed-dim": "#adc6ff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "md": "16px",
+                      "container-max": "1280px",
+                      "xs": "4px",
+                      "base": "4px",
+                      "sm": "8px",
+                      "gutter": "16px",
+                      "margin-mobile": "16px",
+                      "lg": "24px",
+                      "xl": "32px",
+                      "margin-desktop": "32px"
+              },
+              "fontFamily": {
+                      "headline-md": ["Inter"],
+                      "headline-sm": ["Inter"],
+                      "headline-lg-mobile": ["Inter"],
+                      "body-lg": ["Inter"],
+                      "body-md": ["Inter"],
+                      "label-sm": ["Inter"],
+                      "body-sm": ["Inter"],
+                      "label-md": ["Inter"],
+                      "headline-lg": ["Inter"]
+              },
+              "fontSize": {
+                      "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "0px", "fontWeight": "600"}],
+                      "headline-sm": ["20px", {"lineHeight": "28px", "letterSpacing": "0px", "fontWeight": "600"}],
+                      "headline-lg-mobile": ["24px", {"lineHeight": "32px", "letterSpacing": "0px", "fontWeight": "700"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "letterSpacing": "0px", "fontWeight": "400"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "letterSpacing": "0px", "fontWeight": "400"}],
+                      "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.04em", "fontWeight": "600"}],
+                      "body-sm": ["14px", {"lineHeight": "20px", "letterSpacing": "0px", "fontWeight": "400"}],
+                      "label-md": ["14px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "0px", "fontWeight": "700"}]
+              }
+            },
+          },
+        }
+      </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen pb-24">
+<!-- TopAppBar Shell -->
+<header class="w-full top-0 sticky bg-background border-b border-outline-variant z-50 flex items-center justify-between px-md py-sm">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-primary" data-icon="menu">menu</span>
+<h1 class="font-headline-sm text-headline-sm font-bold text-primary">DriverRecruit</h1>
+</div>
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="notifications">notifications</span>
+<div class="w-8 h-8 rounded-full border border-outline-variant overflow-hidden">
+<img alt="Profile" class="w-full h-full object-cover" data-alt="Professional headshot of a recruitment manager in a sleek, modern corporate office. The lighting is crisp and cool, highlighting high-end tech surroundings and a professional atmosphere. The image uses a palette of deep navy, slate greys, and bright white accents to maintain a modern recruitment agency aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_GUsAbvztRIe-A7XltXJzfZTT_4ckcReZJWeB3RV3Wrom9YHi8ej2lv2TgO7dysL8yvZgrovmH7xpxiTBtYI4thJAX6-IhZRnDjUdI21t1qmL1ZzHyGJb1p71J5TkbQ5S4BJJozubWwLxNwGovvzINMhWUysHeCODgRTw1kmRWjutUTzfzOCbCwI31sz6xYaWsSA9vb-VlLrxx2iKgx1LQKZan8-ms6YRsBC5zGoOnQ-hj1uNVt9kdcPW-NvEMi_vlyGU2TTHZT_i"/>
+</div>
+</div>
+</header>
+<main class="px-md py-lg space-y-xl max-w-md mx-auto">
+<!-- Greeting -->
+<section>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-background">Good morning, Marcus</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-xs">Here is your recruitment overview for today.</p>
+</section>
+<!-- Section 1: Critical Alerts -->
+<section class="space-y-sm">
+<h3 class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Critical Alerts</h3>
+<div class="space-y-sm">
+<div class="bg-surface-container border border-outline-variant p-md flex items-center gap-md">
+<div class="w-2 h-full absolute left-0 bg-error rounded-r-lg"></div>
+<span class="material-symbols-outlined text-error" data-icon="warning">warning</span>
+<div>
+<p class="font-body-md text-body-md font-semibold text-on-surface">2 Expired Certifications</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Immediate action required for Fleet B.</p>
+</div>
+</div>
+<div class="bg-surface-container border border-outline-variant p-md flex items-center gap-md">
+<span class="material-symbols-outlined text-tertiary-container" data-icon="priority_high">priority_high</span>
+<div>
+<p class="font-body-md text-body-md font-semibold text-on-surface">1 Urgent Re-evaluation</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Candidate: James Wilson (ID: 8821)</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 4: Metrics Cards (Moved up for better dashboard flow) -->
+<section class="grid grid-cols-2 gap-sm">
+<div class="bg-surface-container border border-outline-variant p-md flex flex-col justify-between h-28">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Pending Evals</span>
+<span class="font-headline-md text-headline-md text-primary">12</span>
+</div>
+<div class="bg-surface-container border border-outline-variant p-md flex flex-col justify-between h-28">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Active Jobs</span>
+<span class="font-headline-md text-headline-md text-primary">08</span>
+</div>
+<div class="bg-surface-container border border-outline-variant p-md flex flex-col justify-between h-28">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Pass Rate %</span>
+<span class="font-headline-md text-headline-md text-primary">84%</span>
+</div>
+<div class="bg-surface-container border border-outline-variant p-md flex flex-col justify-between h-28">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Days to Hire</span>
+<span class="font-headline-md text-headline-md text-primary">14.2</span>
+</div>
+</section>
+<!-- Section 2: Today's Assigned Tests -->
+<section class="space-y-md">
+<div class="flex justify-between items-end">
+<h3 class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Assigned Tests</h3>
+<span class="font-label-sm text-label-sm text-primary">View All</span>
+</div>
+<div class="space-y-sm">
+<!-- Driver Card 1 -->
+<div class="bg-surface-container border border-outline-variant p-md space-y-md">
+<div class="flex justify-between items-start">
+<div>
+<p class="font-body-md text-body-md font-bold text-on-surface">Robert Harrison</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">HGV Class 1 Safety</p>
+</div>
+<span class="bg-[#242a34] text-secondary text-[10px] font-bold px-2 py-1 rounded-sm uppercase border border-outline-variant">Ready to Evaluate</span>
+</div>
+<button class="w-full bg-[#1683f7] hover:bg-[#4a8eff] text-white font-label-md text-label-md py-md rounded-lg transition-colors active:scale-[0.98]">
+                        Evaluate
+                    </button>
+</div>
+<!-- Driver Card 2 -->
+<div class="bg-surface-container border border-outline-variant p-md space-y-md opacity-90">
+<div class="flex justify-between items-start">
+<div>
+<p class="font-body-md text-body-md font-bold text-on-surface">Liam Carter</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Urban Delivery Competency</p>
+</div>
+<span class="bg-[#242a34] text-secondary text-[10px] font-bold px-2 py-1 rounded-sm uppercase border border-outline-variant">Ready to Evaluate</span>
+</div>
+<button class="w-full bg-[#1683f7] hover:bg-[#4a8eff] text-white font-label-md text-label-md py-md rounded-lg transition-colors active:scale-[0.98]">
+                        Evaluate
+                    </button>
+</div>
+</div>
+</section>
+<!-- Section 3: Local Follow-up -->
+<section class="space-y-sm">
+<h3 class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Local Follow-up</h3>
+<div class="bg-surface-container border border-outline-variant p-md flex items-start gap-md">
+<div class="bg-primary-container/20 p-sm rounded-lg">
+<span class="material-symbols-outlined text-primary" data-icon="call">call</span>
+</div>
+<div class="flex-1">
+<p class="font-body-md text-body-md font-semibold text-on-surface">Call Sarah M.</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Regarding Leeds Depot orientation schedule.</p>
+<div class="mt-md flex gap-sm">
+<button class="flex-1 border border-outline-variant text-on-surface font-label-sm text-label-sm py-sm rounded-lg hover:bg-surface-variant transition-colors">Dismiss</button>
+<button class="flex-1 border border-outline-variant text-primary font-label-sm text-label-sm py-sm rounded-lg hover:bg-surface-variant transition-colors">Call Now</button>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar Shell -->
+<nav class="fixed bottom-0 w-full z-50 bg-surface-container border-t border-outline-variant flex justify-around items-center h-16 px-sm">
+<div class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-4 py-1 transition-transform active:scale-95">
+<span class="material-symbols-outlined" data-icon="home" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-label-sm text-label-sm">Home</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant transition-transform active:scale-95">
+<span class="material-symbols-outlined" data-icon="work">work</span>
+<span class="font-label-sm text-label-sm">Jobs</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant transition-transform active:scale-95">
+<span class="material-symbols-outlined" data-icon="assignment_turned_in">assignment_turned_in</span>
+<span class="font-label-sm text-label-sm">Tests</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant transition-transform active:scale-95">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-sm text-label-sm">Profile</span>
+</div>
+</nav>
+</body></html>

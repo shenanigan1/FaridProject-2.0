@@ -14,22 +14,22 @@ import { CommonModule } from '@angular/common';
   selector: 'app-ui-progress-bar',
   imports: [CommonModule],
   template: `
-    <div class="w-full rounded-full bg-slate-800/60 h-2 overflow-hidden">
+    <div
+      class="ff-progress"
+      role="progressbar"
+      [attr.aria-valuemin]="indeterminate ? null : 0"
+      [attr.aria-valuemax]="indeterminate ? null : 100"
+      [attr.aria-valuenow]="indeterminate ? null : clamped"
+      [attr.aria-busy]="indeterminate ? 'true' : null"
+    >
       @if(!indeterminate)
         {
-          <div
-              class="h-full bg-blue-500 transition-all"
-              [style.width.%]="clamped"
-              aria-label="Progress"
-          ></div>
+          <span [style.width.%]="clamped"></span>
         }
 
       @else
         {
-          <div
-            class="h-full w-1/3 bg-blue-500 animate-pulse"
-            aria-label="Loading"
-          ></div>
+          <span class="w-1/3 animate-pulse"></span>
         }
 
     </div>

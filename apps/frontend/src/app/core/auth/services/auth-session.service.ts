@@ -60,6 +60,10 @@ export class AuthSessionService {
     this.meSubject.next(null);
   }
 
+  setCurrentUser(user: MeResponse | null): void {
+    this.meSubject.next(user);
+  }
+
   logout(): void {
     const refreshToken = this.tokens.getRefreshToken();
     this.tokens.clear();

@@ -1,73 +1,108 @@
-<section class="ff-jobs-page">
-  <main class="ff-jobs-main">
-      <label class="ff-jobs-search" aria-label="Search job offers">
-        <svg [lucideIcon]="icons.search" class="ff-jobs-search__icon" aria-hidden="true"></svg>
-      <input [formControl]="searchCtrl" type="search" aria-label="Search job offers" />
-    </label>
+<section class="ff-app-screen">
+  <main class="ff-app-container ff-app-container--compact ff-app-stack">
+    <section class="ff-workflow-hero">
+      <div class="ff-card-head">
+        <div>
+          <p class="ff-app-kicker">RecruitTrack</p>
+          <h1 class="ff-workflow-hero__title">Jobs</h1>
+          <p class="ff-app-subtitle">
+            Pilotez les offres, les candidatures et les lancements de tests depuis un seul espace.
+          </p>
+        </div>
+        <button type="button" class="ff-btn ff-btn-primary" (click)="openCreate()">
+          <svg [lucideIcon]="icons.plus" class="ff-icon-inline" aria-hidden="true"></svg>
+          Creer une offre
+        </button>
+      </div>
+    </section>
 
-    <section class="ff-jobs-filters" aria-label="Job filters">
-      <label class="ff-jobs-filter">
-        <svg [lucideIcon]="icons.mapPin" class="ff-jobs-filter__icon" aria-hidden="true"></svg>
-        <select [formControl]="locationCtrl">
-          @if (locationOptions$ | async; as locationOptions) {
-            @for (option of locationOptions; track option.value) {
-              <option [value]="option.value">{{ option.label }}</option>
-            }
-          }
-        </select>
-        <svg [lucideIcon]="icons.dashboard" class="ff-jobs-filter__chevron" aria-hidden="true"></svg>
+    <section class="ff-toolbar-panel" aria-label="Job search and filters">
+      <label class="ff-search-box" aria-label="Search job offers">
+        <svg [lucideIcon]="icons.search" aria-hidden="true"></svg>
+        <input
+          [formControl]="searchCtrl"
+          type="search"
+          aria-label="Search job offers"
+          placeholder="Rechercher une offre, une ville, une equipe..."
+        />
       </label>
 
-      <label class="ff-jobs-filter">
-        <svg [lucideIcon]="icons.documents" class="ff-jobs-filter__icon" aria-hidden="true"></svg>
-        <select [formControl]="contractTypeCtrl">
-          @if (contractTypeOptions$ | async; as contractTypeOptions) {
-            @for (option of contractTypeOptions; track option.value) {
-              <option [value]="option.value">{{ option.label }}</option>
+      <section class="ff-form-grid ff-form-grid--two" aria-label="Job filters">
+        <label class="ff-field-block ff-jobs-filter">
+          <span>Location</span>
+          <select class="ff-control" [formControl]="locationCtrl">
+            @if (locationOptions$ | async; as locationOptions) {
+              @for (option of locationOptions; track option.value) {
+                <option [value]="option.value">{{ option.label }}</option>
+              }
             }
-          }
-        </select>
-        <svg [lucideIcon]="icons.dashboard" class="ff-jobs-filter__chevron" aria-hidden="true"></svg>
-      </label>
+          </select>
+        </label>
 
-      <label class="ff-jobs-filter">
-        <svg [lucideIcon]="icons.badge_check" class="ff-jobs-filter__icon" aria-hidden="true"></svg>
-        <select [formControl]="statusCtrl">
-          @if (statusOptions$ | async; as statusOptions) {
-            @for (option of statusOptions; track option.value) {
-              <option [value]="option.value">{{ option.label }}</option>
+        <label class="ff-field-block ff-jobs-filter">
+          <span>Contract</span>
+          <select class="ff-control" [formControl]="contractTypeCtrl">
+            @if (contractTypeOptions$ | async; as contractTypeOptions) {
+              @for (option of contractTypeOptions; track option.value) {
+                <option [value]="option.value">{{ option.label }}</option>
+              }
             }
-          }
-        </select>
-        <svg [lucideIcon]="icons.dashboard" class="ff-jobs-filter__chevron" aria-hidden="true"></svg>
-      </label>
+          </select>
+        </label>
+
+        <label class="ff-field-block ff-jobs-filter">
+          <span>Status</span>
+          <select class="ff-control" [formControl]="statusCtrl">
+            @if (statusOptions$ | async; as statusOptions) {
+              @for (option of statusOptions; track option.value) {
+                <option [value]="option.value">{{ option.label }}</option>
+              }
+            }
+          </select>
+        </label>
+      </section>
     </section>
 
     @if (isLoading) {
-      <p class="ff-jobs-state">Loading job offers...</p>
+      <p class="ff-empty">Loading job offers...</p>
     }
 
     @if (!isLoading && error) {
-      <section class="ff-jobs-alert" role="alert">
+      <section class="ff-alert ff-alert-error" role="alert">
         {{ error }}
-        <button type="button" (click)="load()">Retry</button>
+        <button type="button" class="ff-btn ff-btn-secondary ff-u-mt-sm" (click)="load()">Retry</button>
       </section>
     }
 
     @if (!isLoading && !error) {
       @if (jobOffers$ | async; as jobOffers) {
-        <section class="ff-jobs-list" aria-label="Job cards">
+        <section class="ff-stat-strip" aria-label="Job statistics">
+          <article class="ff-stat-mini">
+            <strong class="ff-stat-mini__value">{{ jobOffers.length }}</strong>
+            <span class="ff-stat-mini__label">Offres visibles</span>
+          </article>
+          <article class="ff-stat-mini">
+            <strong class="ff-stat-mini__value">{{ activeCount(jobOffers) }}</strong>
+            <span class="ff-stat-mini__label">Actives</span>
+          </article>
+          <article class="ff-stat-mini">
+            <strong class="ff-stat-mini__value">{{ applicantsTotal(jobOffers) }}</strong>
+            <span class="ff-stat-mini__label">Candidatures</span>
+          </article>
+        </section>
+
+        <section class="ff-card-grid" aria-label="Job cards">
           @for (offer of jobOffers; track trackJob($index, offer)) {
-            <article class="ff-job-card" [class.ff-job-card--active]="offer.status === 'active'">
-              <header class="ff-job-card__header">
+            <article class="ff-data-card">
+              <header class="ff-card-head">
                 <div>
-                  <h1 class="ff-job-card__title">{{ offer.title }}</h1>
+                  <h2 class="ff-row-title ff-row-title--lg">{{ offer.title }}</h2>
                   @if (offer.companyName) {
-                    <p class="ff-job-card__company">{{ offer.companyName }}</p>
+                    <p class="ff-row-meta">{{ offer.companyName }}</p>
                   }
-                  <p class="ff-job-card__location">
+                  <p class="ff-row-meta">
                     @if (offer.location) {
-                      <svg [lucideIcon]="icons.mapPin" class="ff-job-card__mini-icon" aria-hidden="true"></svg>
+                      <svg [lucideIcon]="icons.mapPin" class="ff-icon-inline" aria-hidden="true"></svg>
                       <span>{{ offer.location }}</span>
                     }
                     <span>{{ offer.contractType }}</span>
@@ -75,128 +110,122 @@
                 </div>
 
                 <span
-                  class="ff-job-card__status"
-                  [class.ff-job-card__status--active]="offer.status === 'active'"
-                  [class.ff-job-card__status--draft]="offer.status === 'draft'"
+                  class="ff-status-pill"
+                  [class.ff-status-pill--success]="offer.status === 'active'"
+                  [class.ff-status-pill--muted]="offer.status === 'draft'"
                 >
                   {{ offer.status }}
                 </span>
               </header>
 
-              <div class="ff-job-card__meta">
-                <span class="ff-job-card__truck">
-                  <svg [lucideIcon]="icons.company" class="ff-job-card__mini-icon" aria-hidden="true"></svg>
+              <div class="ff-inline-actions ff-u-mt-md">
+                <span class="ff-status-pill">
+                  <svg [lucideIcon]="icons.company" class="ff-icon-inline" aria-hidden="true"></svg>
                   {{ offer.department }}
                 </span>
-
-                <span class="ff-job-card__divider"></span>
-
-                <span class="ff-job-card__applicants">{{ offer.applicants }}</span>
+                <span class="ff-row-meta">{{ offer.applicants }}</span>
               </div>
 
-              <footer class="ff-job-card__actions">
-                <button type="button" class="ff-job-card__manage" (click)="openEdit(offer)">
-                  Manage
+              <footer class="ff-card-foot">
+                <button type="button" class="ff-btn ff-btn-primary" (click)="openEdit(offer)">
+                  Gerer
                 </button>
                 <button
                   type="button"
-                  class="ff-job-card__more"
+                  class="ff-btn ff-btn-secondary ff-job-card__more"
                   aria-label="Open job applicants"
                   (click)="openApplicants(offer)"
                 >
-                  <svg [lucideIcon]="icons.moreVertical" class="ff-job-card__more-icon"></svg>
+                  <svg [lucideIcon]="icons.moreVertical" aria-hidden="true"></svg>
+                  Candidats
                 </button>
               </footer>
             </article>
           }
 
           @if (jobOffers.length === 0) {
-            <p class="ff-jobs-state">No job offers found.</p>
+            <p class="ff-empty">No job offers found.</p>
           }
         </section>
       }
     }
   </main>
 
-  <button type="button" class="ff-jobs-fab" aria-label="Create job offer" (click)="openCreate()">
-    <svg [lucideIcon]="icons.plus" class="ff-jobs-fab__icon"></svg>
-  </button>
-
   @if (editorMode) {
-    <section class="ff-jobs-editor" role="dialog" aria-modal="true" aria-label="Manage job offer">
-      <div class="ff-jobs-editor__panel">
-        <header class="ff-jobs-editor__header">
+    <section class="ff-modal-scrim" role="dialog" aria-modal="true" aria-label="Manage job offer">
+      <div class="ff-modal-card">
+        <header class="ff-card-head">
           <div>
-            <p>{{ editorMode === 'create' ? 'NEW OFFER' : 'JOB CONTROL' }}</p>
-            <h2>{{ editorMode === 'create' ? 'Create job offer' : 'Manage job offer' }}</h2>
+            <p class="ff-app-kicker">{{ editorMode === 'create' ? 'NEW OFFER' : 'JOB CONTROL' }}</p>
+            <h2 class="ff-section-title">{{ editorMode === 'create' ? 'Create job offer' : 'Manage job offer' }}</h2>
           </div>
-          <button type="button" class="ff-jobs-editor__close" aria-label="Close editor" (click)="closeEditor()">
+          <button type="button" class="ff-icon-btn" aria-label="Close editor" (click)="closeEditor()">
             x
           </button>
         </header>
 
         @if (apiError) {
-          <p class="ff-jobs-editor__error" role="alert">{{ apiError }}</p>
+          <p class="ff-alert ff-alert-error" role="alert">{{ apiError }}</p>
         }
 
-        <form [formGroup]="editorForm" class="ff-jobs-editor__form" (ngSubmit)="saveJob()">
-          <div class="ff-jobs-editor__field">
+        <form [formGroup]="editorForm" class="ff-form-grid ff-u-mt-lg" (ngSubmit)="saveJob()">
+          <div class="ff-field-block">
             <label for="job-company">Company</label>
             @if (companies$ | async; as companies) {
               @if (companies.length > 0) {
-                <select id="job-company" formControlName="company">
+                <select id="job-company" class="ff-control" formControlName="company">
                   @for (company of companies; track company.id) {
                     <option [ngValue]="company.id">{{ company.name }}</option>
                   }
                 </select>
               } @else {
-                <input id="job-company" formControlName="company" type="number" min="1" />
+                <input id="job-company" class="ff-control" formControlName="company" type="number" min="1" />
               }
             }
           </div>
 
-          <label>
+          <label class="ff-field-block">
             <span>Title</span>
-            <input formControlName="title" type="text" />
+            <input class="ff-control" formControlName="title" type="text" />
           </label>
 
-          <div class="ff-jobs-editor__grid">
-            <label>
+          <div class="ff-form-grid ff-form-grid--two">
+            <label class="ff-field-block">
               <span>Location</span>
-              <input formControlName="location" type="text" />
+              <input class="ff-control" formControlName="location" type="text" />
             </label>
-            <label>
+            <label class="ff-field-block">
               <span>Contract</span>
-              <input formControlName="contract_type" type="text" />
+              <input class="ff-control" formControlName="contract_type" type="text" />
             </label>
           </div>
 
-          <div class="ff-jobs-editor__grid">
-            <label>
+          <div class="ff-form-grid ff-form-grid--two">
+            <label class="ff-field-block">
               <span>Department</span>
-              <input formControlName="department" type="text" />
+              <input class="ff-control" formControlName="department" type="text" />
             </label>
-            <label>
+            <label class="ff-field-block">
               <span>Salary</span>
-              <input formControlName="salary" type="number" min="0" />
+              <input class="ff-control" formControlName="salary" type="number" min="0" />
             </label>
           </div>
 
-          <label>
+          <label class="ff-field-block">
             <span>Description</span>
-            <textarea formControlName="description" rows="4"></textarea>
+            <textarea class="ff-control" formControlName="description" rows="4"></textarea>
           </label>
 
-          <label class="ff-jobs-editor__toggle">
+          <label class="ff-choice">
             <input formControlName="is_active" type="checkbox" />
             <span>Active offer</span>
           </label>
 
-          <footer class="ff-jobs-editor__actions">
+          <footer class="ff-inline-actions ff-u-end">
             @if (editorMode === 'edit' && selectedOffer) {
               <button
                 type="button"
-                class="ff-jobs-editor__archive"
+                class="ff-btn ff-btn-warning"
                 [disabled]="isSubmitting || selectedOffer.status === 'draft'"
                 (click)="archiveJob(selectedOffer)"
               >
@@ -204,10 +233,10 @@
               </button>
             }
 
-            <button type="button" class="ff-jobs-editor__cancel" [disabled]="isSubmitting" (click)="closeEditor()">
+            <button type="button" class="ff-btn ff-btn-secondary" [disabled]="isSubmitting" (click)="closeEditor()">
               Cancel
             </button>
-            <button type="submit" class="ff-jobs-editor__save" [disabled]="isSubmitting">
+            <button type="submit" class="ff-btn ff-btn-primary" [disabled]="isSubmitting">
               {{ isSubmitting ? 'Saving...' : 'Save' }}
             </button>
           </footer>

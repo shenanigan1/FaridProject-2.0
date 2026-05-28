@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { forkJoin } from 'rxjs';
 
@@ -24,11 +24,20 @@ type TestsAdminView = 'tests' | 'templates';
 export class TestsAdminPage {
   private readonly bff = inject(TestsAdminBffService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly route = inject(ActivatedRoute);
 
   readonly activeView = signal<TestsAdminView>('tests');
   readonly activeFilter = signal('Tous');
   readonly searchControl = new FormControl('', { nonNullable: true });
-  readonly filters = ['Tous', 'Conduite', 'Securite', 'Documentation'];
+  readonly filters = [
+    'Tous',
+    'En cours',
+    'Score sous revue',
+    'Valide',
+    'Conduite',
+    'Securite',
+    'Documentation',
+  ];
 
   readonly activeTests = signal<AdminTestListItem[]>([]);
   readonly templates = signal<AdminTemplateCard[]>([]);
@@ -40,7 +49,8 @@ export class TestsAdminPage {
     const query = this.query().trim().toLowerCase();
     const filter = this.activeFilter().toLowerCase();
     return this.activeTests().filter((test) => {
-      const blob = `${test.candidateName} ${test.templateName} ${test.positionTitle} ${test.status}`.toLowerCase();
+      const blob =
+        `${test.candidateName} ${test.candidateEmail} ${test.templateName} ${test.positionTitle} ${test.managerName} ${test.status} ${test.statusLabel}`.toLowerCase();
       const matchesQuery = !query || blob.includes(query);
       const matchesFilter = filter === 'tous' || blob.includes(filter);
       return matchesQuery && matchesFilter;
@@ -62,6 +72,7 @@ export class TestsAdminPage {
     this.searchControl.valueChanges
       .pipe(takeUntilDestroyed())
       .subscribe((value) => this.query.set(value));
+    this.applyInitialQueryParams();
     this.load();
   }
 
@@ -105,5 +116,20 @@ export class TestsAdminPage {
           this.isLoading.set(false);
         },
       });
+  }
+
+  private applyInitialQueryParams(): void {
+    const params = this.route.snapshot.queryParamMap;
+    const query = params.get('q') ?? '';
+    const status = params.get('status');
+
+    if (query) {
+      this.searchControl.setValue(query);
+      this.query.set(query);
+    }
+
+    if (status && this.filters.includes(status)) {
+      this.activeFilter.set(status);
+    }
   }
 }

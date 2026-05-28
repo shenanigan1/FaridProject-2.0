@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Manager Dashboard - DriverRecruit</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-fixed": "#d8e2ff",
+                    "error-container": "#93000a",
+                    "tertiary-fixed-dim": "#ffb68e",
+                    "on-background": "#dbe2f6",
+                    "surface-container": "#18202d",
+                    "secondary-fixed-dim": "#adc6ff",
+                    "on-primary": "#003063",
+                    "on-surface": "#dbe2f6",
+                    "inverse-primary": "#005db6",
+                    "surface-container-lowest": "#060e1b",
+                    "inverse-surface": "#dbe2f6",
+                    "surface-variant": "#2d3543",
+                    "on-secondary-container": "#e0e8ff",
+                    "surface-container-high": "#222a38",
+                    "on-secondary-fixed": "#001a41",
+                    "on-tertiary": "#532200",
+                    "surface-bright": "#313948",
+                    "on-tertiary-container": "#491d00",
+                    "on-surface-variant": "#c1c6d6",
+                    "tertiary-fixed": "#ffdbc9",
+                    "surface-container-low": "#141c29",
+                    "on-secondary-fixed-variant": "#004493",
+                    "outline-variant": "#414754",
+                    "on-primary-container": "#002957",
+                    "surface-dim": "#0b1421",
+                    "outline": "#8b919f",
+                    "inverse-on-surface": "#29313f",
+                    "secondary-container": "#0064d3",
+                    "secondary": "#adc6ff",
+                    "primary-fixed-dim": "#a9c7ff",
+                    "primary": "#a9c7ff",
+                    "primary-fixed": "#d6e3ff",
+                    "on-tertiary-fixed": "#331200",
+                    "on-error": "#690005",
+                    "on-primary-fixed": "#001b3d",
+                    "background": "#0b1421",
+                    "on-secondary": "#002e69",
+                    "tertiary": "#ffb68e",
+                    "tertiary-container": "#e76e13",
+                    "on-tertiary-fixed-variant": "#763300",
+                    "error": "#ffb4ab",
+                    "surface-tint": "#a9c7ff",
+                    "primary-container": "#3a90ff",
+                    "on-primary-fixed-variant": "#00468b",
+                    "on-error-container": "#ffdad6",
+                    "surface": "#0b1421",
+                    "surface-container-highest": "#2d3543"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "margin-mobile": "16px",
+                    "gutter": "16px",
+                    "xs": "4px",
+                    "sm": "8px",
+                    "margin-desktop": "32px",
+                    "lg": "24px",
+                    "base": "8px",
+                    "xl": "32px",
+                    "md": "16px"
+            },
+            "fontFamily": {
+                    "label-md": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "label-lg": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "headline-sm": ["Inter"],
+                    "headline-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.04em", "fontWeight": "600"}],
+                    "body-sm": ["12px", {"lineHeight": "18px", "letterSpacing": "0", "fontWeight": "400"}],
+                    "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "600"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "30px", "letterSpacing": "0", "fontWeight": "700"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "letterSpacing": "0", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "0", "fontWeight": "600"}],
+                    "headline-sm": ["20px", {"lineHeight": "28px", "letterSpacing": "0", "fontWeight": "600"}],
+                    "headline-lg": ["30px", {"lineHeight": "36px", "letterSpacing": "0", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #0b1421;
+            color: #dbe2f6;
+            font-family: 'Inter', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Custom scrollbar for mobile feel */
+        ::-webkit-scrollbar {
+            width: 0px;
+            background: transparent;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  <style id="fleetflow-aaa-overrides">
+  :root { color-scheme: dark; }
+  html, body { background: #10141b !important; color: #fbfdff !important; }
+  body, body * { text-shadow: none !important; }
+  body :is(h1,h2,h3,h4,h5,h6,p,span,label,small,div,li,dt,dd,td,th,strong,em,a,button) {
+    color: #fbfdff !important;
+  }
+  body :is(.text-outline,.text-on-surface-variant,.text-slate-400,.text-gray-400,.text-neutral-400,.text-zinc-400),
+  body [class*="text-outline"],
+  body [class*="text-on-surface-variant"],
+  body [class*="text-gray"],
+  body [class*="text-slate"],
+  body [class*="text-zinc"],
+  body [class*="text-neutral"] {
+    color: #f8fbff !important;
+  }
+  body :is(header,main,footer,section,article,nav,form),
+  body [class*="bg-background"],
+  body [class*="bg-surface"],
+  body [class*="bg-[#1C2027]"],
+  body [class*="bg-[#030816]"] {
+    border-color: #7f8da3 !important;
+  }
+  body [class*="bg-background"] {
+    background-color: #10141b !important;
+  }
+  body :is(input,select,textarea) {
+    background: #050914 !important;
+    color: #ffffff !important;
+    border: 1px solid #dbeafe !important;
+  }
+  body :is(input,textarea)::placeholder { color: #f1f5f9 !important; opacity: 1 !important; }
+  body button,
+  body a[role="button"],
+  body [class*="bg-primary"],
+  body [class*="bg-secondary-container"],
+  body [class*="bg-[#1683F7]"],
+  body [class*="bg-[#1683f7]"],
+  body [class*="bg-blue"] {
+    background-color: #003f8c !important;
+    border-color: #bfdbfe !important;
+    color: #ffffff !important;
+  }
+  body [class*="bg-green"],
+  body [class*="bg-emerald"] {
+    background-color: #064e3b !important;
+    color: #ffffff !important;
+    border-color: #a7f3d0 !important;
+  }
+  body [class*="bg-orange"],
+  body [class*="bg-amber"],
+  body [class*="bg-yellow"],
+  body [class*="bg-tertiary"] {
+    background-color: #5f2109 !important;
+    color: #ffffff !important;
+    border-color: #fed7aa !important;
+  }
+  body [class*="bg-red"],
+  body [class*="bg-rose"],
+  body [class*="bg-error"],
+  body [class*="bg-danger"] {
+    background-color: #7f1d1d !important;
+    color: #ffffff !important;
+    border-color: #fecaca !important;
+  }
+  body [class*="bg-success"] {
+    background-color: #064e3b !important;
+    color: #ffffff !important;
+    border-color: #a7f3d0 !important;
+  }
+  body [class*="text-tertiary"],
+  body [class*="text-error"],
+  body [class*="text-danger"],
+  body [class*="text-success"] {
+    color: #ffffff !important;
+  }
+  body .material-symbols-outlined {
+    color: #ffffff !important;
+    background-color: #0b1220 !important;
+    border-radius: 999px !important;
+  }
+  body :is(a,button,input,select,textarea,[tabindex]):focus-visible {
+    outline: 3px solid #bfdbfe !important;
+    outline-offset: 3px !important;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      scroll-behavior: auto !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>
+</head>
+<body class="flex flex-col min-h-screen">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-surface-container-low dark:bg-surface-container-low border-b border-outline-variant dark:border-outline-variant flex justify-between items-center px-margin-mobile h-14 w-full">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-on-surface-variant" aria-hidden="true">menu</span>
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed-dim">DriverRecruit</h1>
+</div>
+<div class="w-8 h-8 rounded-full bg-surface-variant overflow-hidden border border-outline-variant">
+<img alt="Recruiter profile" class="w-full h-full object-cover" data-alt="A professional headshot of a corporate hiring manager in a high-contrast office setting. The lighting is crisp and cool-toned, aligning with a professional recruitment platform aesthetic. The background is softly blurred with hints of modern architectural lines, maintaining a focus on technical precision and corporate reliability." src="https://lh3.googleusercontent.com/aida-public/AB6AXuArSM1DXNyRwXfW84jCt7oRELuoC6XjmVdAogc6tB6mD1ijEnx4K2AtMYqc1hg98mCZkGin_Mo2HE8Z37QzYVWm7CPTQ3G8eLEDxtF_ycOya-5txXSKv2O4t2rLXVIBx5S6MjVtCKLMPDGW9xe5ndrVCVOA97Ud6gk5iWUtae78AbgNOPDxgywll6JILFxWTMZIKrL-xoFCKT6CXACaBQaImBhbPzwFbVBGeMey8--fva2WEn5Nkz4VddSrpQ3zm7qdf7ZITKkmdpw"/>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow pt-20 pb-24 px-margin-mobile max-w-[390px] mx-auto w-full overflow-x-hidden">
+<!-- Greeting -->
+<section class="mb-lg">
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Hello, Alex</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">You have 4 high-priority tasks requiring attention today.</p>
+</section>
+<!-- Critical Alerts Section -->
+<section class="mb-lg">
+<div class="bg-tertiary-container text-on-tertiary-container border border-outline-variant rounded-lg p-md flex items-start gap-md">
+<span class="material-symbols-outlined mt-1" style="font-variation-settings: 'FILL' 1;" aria-hidden="true">warning</span>
+<div>
+<h2 class="font-label-lg text-label-lg font-bold">Critical Compliance Alerts</h2>
+<ul class="mt-xs space-y-1">
+<li class="font-body-sm text-body-sm">• 2 Pending Medical Clearances</li>
+<li class="font-body-sm text-body-sm">• CDL Expiring: 1 Driver (Marcus V.)</li>
+</ul>
+</div>
+</div>
+</section>
+<!-- Metrics Row -->
+<section class="grid grid-cols-3 gap-sm mb-lg">
+<div class="bg-surface-container border border-outline-variant p-sm rounded-lg text-center">
+<p class="font-headline-sm text-headline-sm text-primary">14</p>
+<p class="font-label-md text-label-md text-on-surface-variant">Active Jobs</p>
+</div>
+<div class="bg-surface-container border border-outline-variant p-sm rounded-lg text-center">
+<p class="font-headline-sm text-headline-sm text-secondary">38</p>
+<p class="font-label-md text-label-md text-on-surface-variant">Pending Tests</p>
+</div>
+<div class="bg-surface-container border border-outline-variant p-sm rounded-lg text-center">
+<p class="font-headline-sm text-headline-sm text-tertiary-fixed-dim">122</p>
+<p class="font-label-md text-label-md text-on-surface-variant">New Contacts</p>
+</div>
+</section>
+<!-- Assigned Tests Section -->
+<section class="mb-lg">
+<div class="flex justify-between items-center mb-md">
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Today's Assigned Tests</h2>
+<span class="font-label-md text-label-md text-primary">View All</span>
+</div>
+<div class="space-y-sm">
+<!-- Driver Card 1 -->
+<div class="bg-surface-container border border-outline-variant p-md rounded-lg flex flex-col gap-sm">
+<div class="flex justify-between items-start">
+<div>
+<p class="font-label-lg text-label-lg text-on-surface">Marcus Vance</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Class A Safety</p>
+</div>
+<span class="bg-secondary-container/20 text-secondary px-sm py-xs rounded font-label-md text-label-md">85% Progress</span>
+</div>
+<div class="w-full bg-surface-variant h-1 rounded-full overflow-hidden">
+<div class="bg-primary w-[85%] h-full"></div>
+</div>
+<button class="w-full h-11 mt-sm bg-primary text-on-primary font-label-lg text-label-lg rounded-lg border border-primary transition-colors hover:bg-primary-container">
+                        Review Result
+                    </button>
+</div>
+<!-- Driver Card 2 -->
+<div class="bg-surface-container border border-outline-variant p-md rounded-lg flex flex-col gap-sm">
+<div class="flex justify-between items-start">
+<div>
+<p class="font-label-lg text-label-lg text-on-surface">Sarah Jenkins</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Hazmat Eval</p>
+</div>
+<span class="bg-error-container/20 text-error px-sm py-xs rounded font-label-md text-label-md">Awaiting Submission</span>
+</div>
+<div class="w-full bg-surface-variant h-1 rounded-full overflow-hidden">
+<div class="bg-outline w-[10%] h-full"></div>
+</div>
+<button class="w-full h-11 mt-sm border border-outline-variant text-primary font-label-lg text-label-lg rounded-lg transition-colors hover:bg-surface-container-high">
+                        Nudge Candidate
+                    </button>
+</div>
+</div>
+</section>
+<!-- Local Follow-up Card -->
+<section class="mb-lg">
+<h2 class="font-headline-sm text-headline-sm text-on-surface mb-md">Immediate Attention</h2>
+<div class="bg-surface-container-high border-2 border-primary-container p-md rounded-xl shadow-lg">
+<div class="flex items-center gap-md mb-sm">
+<div class="w-12 h-12 rounded-full bg-surface-variant overflow-hidden border border-outline-variant">
+<img alt="Roberto Gomez" class="w-full h-full object-cover" data-alt="A detailed portrait of a middle-aged man with a professional yet approachable look, representing a truck driver candidate. The lighting is high-contrast with a focus on realism and clarity. He is set against a backdrop of a logistics hub with soft industrial elements. The overall aesthetic is clean, functional, and corporate." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAus5ldAnPMJ1UkoK3BJU-kt8I1ndoipnNZqZCafQol_LeD55H7s2f7Dx8FPOwT2OEshBrC4QgK7HzwB14y2vOJlfFyXx9f8bSDG9C5u64duh2v2zBme_2QKmeBVblqxGSd25amsvXvxTLQ45hMfrbk5es-KKt4HMMKDgxB0bhZ7TDLihEvw9iPG5uYTKiFLLSOrZK-4Pcqqx0JiCOWGgfVF-eLlW-QpfKCzgrK-wYlXP4rGqVt55OsWvdHeb27gWiafILlOkryZYQ"/>
+</div>
+<div>
+<p class="font-label-lg text-label-lg text-on-surface">Roberto Gomez</p>
+<p class="font-body-sm text-body-sm text-primary">Final Interview Follow-up</p>
+</div>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mb-md">Candidate completed all tests with 98% score. Local terminal manager waiting for callback.</p>
+<div class="flex gap-sm">
+<button class="flex-1 h-11 bg-primary text-on-primary font-label-lg text-label-lg rounded-lg border border-primary">
+                        Call Now
+                    </button>
+<button class="flex-1 h-11 border border-outline-variant text-on-surface-variant font-label-lg text-label-lg rounded-lg">
+                        View Profile
+                    </button>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 bg-surface-container-low dark:bg-surface-container-low border-t border-outline-variant dark:border-outline-variant flex justify-around items-center h-20 w-full px-base">
+<!-- Home (Active) -->
+<a class="flex flex-col items-center justify-center bg-secondary-container dark:bg-secondary-container text-on-secondary-container dark:text-on-secondary-container rounded-full px-4 py-1 transition-transform duration-150 active:scale-90" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;" aria-hidden="true">home</span>
+<span class="font-label-md text-label-md">Home</span>
+</a>
+<!-- Jobs -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-4 py-1 hover:bg-surface-variant transition-transform duration-150 active:scale-90" href="#">
+<span class="material-symbols-outlined" aria-hidden="true">work</span>
+<span class="font-label-md text-label-md">Jobs</span>
+</a>
+<!-- Tests -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-4 py-1 hover:bg-surface-variant transition-transform duration-150 active:scale-90" href="#">
+<span class="material-symbols-outlined" aria-hidden="true">quiz</span>
+<span class="font-label-md text-label-md">Tests</span>
+</a>
+<!-- Profile -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-4 py-1 hover:bg-surface-variant transition-transform duration-150 active:scale-90" href="#">
+<span class="material-symbols-outlined" aria-hidden="true">account_circle</span>
+<span class="font-label-md text-label-md">Profile</span>
+</a>
+</nav>
+</body></html>

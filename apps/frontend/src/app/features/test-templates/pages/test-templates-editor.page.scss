@@ -19,7 +19,7 @@
   top: 0;
   z-index: 20;
   display: grid;
-  min-height: 4.5rem;
+  min-height: 3.9rem;
   grid-template-columns: 2.75rem 1fr auto;
   align-items: center;
   gap: 0.7rem;
@@ -31,7 +31,7 @@
 .template-mobile__topbar h1 {
   margin: 0;
   color: var(--ff-color-primary-400, #4a8eff);
-  font-size: 1.55rem;
+  font-size: 1.25rem;
   font-weight: 950;
   line-height: 1.1;
   text-shadow: var(--ff-text-shadow, 0 1px 0 #000);
@@ -65,7 +65,7 @@
 }
 
 .template-mobile__body {
-  padding: 1.25rem 1rem;
+  padding: 1rem;
 }
 
 .template-section-title,
@@ -131,7 +131,7 @@
 .template-section-card {
   display: grid;
   gap: 1rem;
-  padding: 1.25rem;
+  padding: 1rem;
 }
 
 .template-figma-grid {
@@ -150,13 +150,21 @@
   font-weight: 760;
 }
 
+.template-field-error {
+  display: block;
+  margin-top: 0.45rem;
+  color: #fecaca;
+  font-size: 0.82rem;
+  font-weight: 850;
+}
+
 .template-figma-field input,
 .template-figma-field select,
 .template-figma-field textarea,
 .template-pool-row input,
 .pool-search input {
   width: 100%;
-  min-height: 3.55rem;
+  min-height: 3rem;
   margin: 0;
   border: 1px solid var(--ff-color-border, #3b4352);
   border-radius: 0.75rem;
@@ -177,7 +185,7 @@
 
 .template-figma-toggle {
   display: flex;
-  min-height: 4.85rem;
+  min-height: 3.9rem;
   align-items: center;
   justify-content: space-between;
   gap: 0.8rem;
@@ -206,12 +214,12 @@
   gap: 0.8rem;
   border-bottom: 1px solid var(--ff-color-border-soft, #293244);
   background: rgba(255, 255, 255, 0.035);
-  padding: 1rem;
+  padding: 0.85rem 1rem;
 }
 
 .template-section-card__head > span {
-  width: 2.85rem;
-  height: 2.85rem;
+  width: 2.35rem;
+  height: 2.35rem;
   flex: 0 0 auto;
   border-radius: 999px;
   background: var(--ff-color-primary-400, #4a8eff);
@@ -267,7 +275,7 @@
 .template-mobile__primary,
 .template-mobile__add-section,
 .template-mobile__save-large {
-  min-height: 3.7rem;
+  min-height: 3.05rem;
   border: 0;
   border-radius: 0.85rem;
   background: var(--ff-color-primary-400, #4a8eff);
@@ -285,8 +293,8 @@
 }
 
 .template-mobile__save-large {
-  min-height: 4.15rem;
-  font-size: 1.15rem;
+  min-height: 3.45rem;
+  font-size: 1rem;
 }
 
 .template-empty,
@@ -407,4 +415,65 @@
   color: var(--ff-color-text-secondary, #aeb7ca);
   font-size: 1.5rem;
   font-weight: 700;
+}
+
+@media (min-width: 1024px) {
+  .template-mobile {
+    width: min(100%, 86rem);
+    padding-bottom: 2rem;
+  }
+
+  .template-mobile__topbar {
+    position: static;
+    min-height: 3.45rem;
+    margin: 1.25rem 1.5rem 0;
+    border: 1px solid var(--ff-color-border-soft, #293244);
+    border-radius: 0.95rem;
+  }
+
+  .template-mobile__body {
+    grid-template-columns: minmax(18rem, 24rem) minmax(0, 1fr);
+    align-items: start;
+    gap: 1rem 1.15rem;
+    padding: 1rem 1.5rem 2rem;
+  }
+
+  .template-section-title--general,
+  .template-figma-card {
+    grid-column: 1;
+  }
+
+  .template-section-title--structure,
+  .template-mobile__sections,
+  .template-mobile__add-section,
+  .template-alert,
+  .template-mobile__save-large {
+    grid-column: 2;
+  }
+
+  .template-section-title {
+    margin-top: 0;
+  }
+
+  .template-mobile__sections {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+  }
+
+  .template-section-card {
+    min-width: 0;
+  }
+
+  .template-figma-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pool-sheet {
+    right: 1.5rem;
+    bottom: 1.5rem;
+    max-height: calc(100dvh - 3rem);
+    transform: none;
+    border-bottom: 1px solid var(--ff-color-border, #3b4352);
+    border-radius: 1.15rem;
+  }
 }

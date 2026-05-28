@@ -1,6 +1,6 @@
 <div class="ff-field">
   @if (label) {
-    <label class="ff-field-label" [attr.for]="inputId || null">{{ label }}</label>
+    <label class="ff-field-label" [attr.for]="controlId">{{ label }}</label>
   }
 
   <div class="ff-input-wrapper">
@@ -15,10 +15,12 @@
     }
 
     <input
-      [id]="inputId || null"
+      [id]="controlId"
       [class]="inputClasses"
       [attr.type]="type"
       [attr.placeholder]="placeholder"
+      [attr.aria-invalid]="error ? 'true' : 'false'"
+      [attr.aria-describedby]="describedBy"
       [disabled]="disabled()"
       [value]="value()"
       (input)="handleInput($event)"
@@ -27,6 +29,8 @@
   </div>
 
   @if (error) {
-    <p class="ff-field-error">{{ error }}</p>
+    <p class="ff-field-error" [id]="errorId">{{ error }}</p>
+  } @else if (hint) {
+    <p class="ff-field-hint" [id]="hintId">{{ hint }}</p>
   }
 </div>

@@ -115,7 +115,9 @@ describe('JobListPageComponent', () => {
 
     const content = fixture.nativeElement.textContent as string;
 
-    expect(content).toContain('1 job offer(s) found');
+    expect(fixture.nativeElement.querySelector('.ff-workflow-hero')).not.toBeNull();
+    expect(fixture.nativeElement.querySelector('.ff-card-grid')).not.toBeNull();
+    expect(content).toContain('1 offre trouvee');
     expect(content).toContain('Freelance search agent');
   }));
 
@@ -133,7 +135,7 @@ describe('JobListPageComponent', () => {
     tick();
     fixture.detectChanges();
 
-    expect(fixture.nativeElement.textContent).toContain('No jobs found');
+    expect(fixture.nativeElement.textContent).toContain('Aucune offre trouvee');
   }));
 
   it('should render error state when the service fails', fakeAsync(() => {

@@ -1,13 +1,14 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AbstractControl, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { take } from 'rxjs/operators';
 import { LucideDynamicIcon } from '@lucide/angular';
 
 import { APP_ICONS } from '@shared/icons/app-icons';
 import { AuthSessionService } from '@core/auth/services/auth-session.service';
 import { ApiErrorResponse } from '@core/auth/models/auth.models';
+import { getRoleHomeRoute } from '@shared/navigation/app-navigation';
 
 @Component({
   standalone: true,
@@ -26,6 +27,7 @@ export class LoginPage {
   private readonly fb = inject(FormBuilder);
   private readonly session = inject(AuthSessionService);
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
 
   readonly icons = APP_ICONS;
   readonly loading = signal(false);
@@ -40,6 +42,12 @@ export class LoginPage {
 
   readonly emailError = computed(() => this.getEmailError());
   readonly passwordError = computed(() => this.getPasswordError());
+
+  constructor() {
+    if (this.route.snapshot.queryParamMap.get('session') === 'expired') {
+      this.errorMessage.set('Session expirée, reconnectez-vous.');
+    }
+  }
 
   submit(): void {
     if (this.loading()) {
@@ -63,7 +71,7 @@ export class LoginPage {
       .pipe(take(1))
       .subscribe({
         next: (response) => {
-          const target = response.user?.role === 'manager' ? '/manager' : '/dashboard';
+          const target = getRoleHomeRoute(response.user?.role);
           void this.router.navigateByUrl(target);
         },
         error: (error: { error?: ApiErrorResponse; status?: number }) => {
@@ -100,7 +108,7 @@ export class LoginPage {
     }
 
     if (control.hasError('required')) {
-      return 'Email is required.';
+      return 'Champ obligatoire';
     }
 
     if (control.hasError('email')) {
@@ -118,7 +126,7 @@ export class LoginPage {
     }
 
     if (control.hasError('required')) {
-      return 'Password is required.';
+      return 'Champ obligatoire';
     }
 
     return null;

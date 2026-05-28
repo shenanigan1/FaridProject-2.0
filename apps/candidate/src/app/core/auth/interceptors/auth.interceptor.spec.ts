@@ -8,6 +8,7 @@ import { TestBed } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
 
 import { AuthService } from '@core/auth/services/auth.service';
+import { SessionExpiredService } from '@core/auth/services/session-expired.service';
 import { TokenStorageService } from '@core/auth/services/token-storage.service';
 import { authInterceptor } from './auth.interceptor';
 
@@ -16,9 +17,13 @@ describe('authInterceptor (candidate)', () => {
   let httpMock: HttpTestingController;
   let authServiceSpy: jasmine.SpyObj<AuthService>;
   let tokenStorageSpy: jasmine.SpyObj<TokenStorageService>;
+  let sessionExpiredSpy: jasmine.SpyObj<SessionExpiredService>;
 
   beforeEach(() => {
     authServiceSpy = jasmine.createSpyObj<AuthService>('AuthService', ['refresh']);
+    sessionExpiredSpy = jasmine.createSpyObj<SessionExpiredService>('SessionExpiredService', [
+      'notify',
+    ]);
     tokenStorageSpy = jasmine.createSpyObj<TokenStorageService>('TokenStorageService', [
       'getAccessToken',
       'getRefreshToken',
@@ -35,6 +40,7 @@ describe('authInterceptor (candidate)', () => {
         provideHttpClientTesting(),
         { provide: AuthService, useValue: authServiceSpy },
         { provide: TokenStorageService, useValue: tokenStorageSpy },
+        { provide: SessionExpiredService, useValue: sessionExpiredSpy },
       ],
     });
 
@@ -89,5 +95,19 @@ describe('authInterceptor (candidate)', () => {
     firstRequest.flush({ detail: 'Unauthorized' }, { status: 401, statusText: 'Unauthorized' });
 
     expect(tokenStorageSpy.clear).toHaveBeenCalled();
+    expect(sessionExpiredSpy.notify).toHaveBeenCalledOnceWith();
+  });
+
+  it('clears tokens and opens the expired-session flow when no refresh token exists', () => {
+    tokenStorageSpy.getRefreshToken.and.returnValue(null);
+
+    http.get('/api/candidates/me/').subscribe({ error: () => void 0 });
+
+    const firstRequest = httpMock.expectOne('/api/candidates/me/');
+    firstRequest.flush({ detail: 'Unauthorized' }, { status: 401, statusText: 'Unauthorized' });
+
+    expect(authServiceSpy.refresh).not.toHaveBeenCalled();
+    expect(tokenStorageSpy.clear).toHaveBeenCalled();
+    expect(sessionExpiredSpy.notify).toHaveBeenCalledOnceWith();
   });
 });

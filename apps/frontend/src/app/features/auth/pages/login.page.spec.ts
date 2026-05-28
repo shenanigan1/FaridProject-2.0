@@ -6,7 +6,7 @@ import { of, throwError } from 'rxjs';
 import { LoginPage } from './login.page';
 
 import { AuthSessionService } from '@auth/services/auth-session.service';
-import type { LoginRequest, LoginResponse } from '@auth/models/auth.models';
+import type { AllowedRole, LoginRequest, LoginResponse } from '@auth/models/auth.models';
 
 describe('LoginPage', () => {
   let fixture: ComponentFixture<LoginPage>;
@@ -52,6 +52,27 @@ describe('LoginPage', () => {
     expect(sessionSpy.login).not.toHaveBeenCalled();
   });
 
+  it('shows required field errors with accessible descriptions', () => {
+    component.form.setValue({
+      email: '',
+      password: '',
+      rememberMe: true,
+    });
+
+    component.submit();
+    fixture.detectChanges();
+
+    const email = fixture.debugElement.query(By.css('#login-email')).nativeElement as HTMLInputElement;
+    const password = fixture.debugElement.query(By.css('#login-password')).nativeElement as HTMLInputElement;
+
+    expect(component.emailError()).toBe('Champ obligatoire');
+    expect(component.passwordError()).toBe('Champ obligatoire');
+    expect(email.getAttribute('aria-invalid')).toBe('true');
+    expect(email.getAttribute('aria-describedby')).toBe('login-email-error');
+    expect(password.getAttribute('aria-invalid')).toBe('true');
+    expect(password.getAttribute('aria-describedby')).toBe('login-password-error');
+  });
+
   it('submit should do nothing if already loading', () => {
     component.loading.set(true);
 
@@ -86,8 +107,18 @@ describe('LoginPage', () => {
     expect(sessionSpy.login).toHaveBeenCalledWith(expected, true);
   });
 
-  it('on success: should login through the session and navigate to /dashboard', () => {
-    const mockRes: LoginResponse = { access: 'ACCESS_TOKEN', refresh: 'REFRESH_TOKEN', user: null };
+  it('on success: should login through the session and navigate HR users to /dashboard', () => {
+    const mockRes: LoginResponse = {
+      access: 'ACCESS_TOKEN',
+      refresh: 'REFRESH_TOKEN',
+      user: {
+        id: 3,
+        email: 'hr@test.com',
+        first_name: 'Helene',
+        last_name: 'RH',
+        role: 'hr',
+      },
+    };
     sessionSpy.login.and.returnValue(of(mockRes));
 
     component.form.setValue({
@@ -127,6 +158,41 @@ describe('LoginPage', () => {
     component.submit();
 
     expect(router.navigateByUrl).toHaveBeenCalledWith('/manager');
+  });
+
+  it('on success: should navigate each role to its dedicated portal', () => {
+    const cases: [AllowedRole, string][] = [
+      ['admin', '/admin'],
+      ['director', '/direction'],
+      ['employee', '/employee'],
+      ['driver', '/employee'],
+      ['candidate', '/candidate-portal'],
+    ];
+
+    for (const [role, route] of cases) {
+      (router.navigateByUrl as jasmine.Spy).calls.reset();
+      sessionSpy.login.and.returnValue(of({
+        access: 'ACCESS_TOKEN',
+        refresh: 'REFRESH_TOKEN',
+        user: {
+          id: 11,
+          email: `${role}@test.com`,
+          first_name: 'Role',
+          last_name: String(role),
+          role,
+        },
+      }));
+
+      component.form.setValue({
+        email: `${role}@test.com`,
+        password: 'pwd',
+        rememberMe: true,
+      });
+
+      component.submit();
+
+      expect(router.navigateByUrl).toHaveBeenCalledWith(route);
+    }
   });
 
   it('on error: should show detail message if present and stop loading', () => {
@@ -199,5 +265,28 @@ describe('LoginPage', () => {
 
     expect(forgot).toBeTruthy();
     expect(request).toBeTruthy();
+  });
+
+  it('shows a clear session-expired message from the login URL', async () => {
+    const localSessionSpy = jasmine.createSpyObj<AuthSessionService>('AuthSessionService', ['login']);
+
+    TestBed.resetTestingModule();
+    await TestBed.configureTestingModule({
+      imports: [LoginPage],
+      providers: [
+        provideRouter([{ path: 'login', component: LoginPage }]),
+        { provide: AuthSessionService, useValue: localSessionSpy },
+      ],
+    }).compileComponents();
+
+    const localRouter = TestBed.inject(Router);
+    await localRouter.navigateByUrl('/login?session=expired');
+
+    const localFixture = TestBed.createComponent(LoginPage);
+    localFixture.detectChanges();
+
+    expect(localFixture.componentInstance.errorMessage()).toBe(
+      'Session expirée, reconnectez-vous.',
+    );
   });
 });

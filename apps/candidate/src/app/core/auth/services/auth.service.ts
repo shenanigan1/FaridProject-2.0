@@ -26,6 +26,13 @@ export interface SignUpPayload {
   password: string;
 }
 
+export interface UpdateCandidateProfilePayload {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+}
+
 interface LoginResponseDto {
   access: string;
   refresh?: string;
@@ -68,7 +75,10 @@ export class AuthService {
   private readonly candidateMeUrl = `${environment.apiBaseUrl}/api/candidates/me/`;
 
   isAuthenticated(): boolean {
-    return this.tokenStorage.isAuthenticated();
+    return (
+      this.tokenStorage.isAuthenticated() ||
+      (!!this.tokenStorage.getRefreshToken() && !!this.getAuthenticatedCandidate())
+    );
   }
 
   hasStoredSession(): boolean {
@@ -150,6 +160,23 @@ export class AuthService {
     localStorage.setItem(this.candidateProfileKey, JSON.stringify(candidate));
   }
 
+  updateProfile(payload: UpdateCandidateProfilePayload): Observable<AuthenticatedCandidate> {
+    return this.http
+      .patch<CandidateProfileDto>(this.candidateMeUrl, {
+        user: {
+          first_name: payload.firstName,
+          last_name: payload.lastName,
+          email: payload.email,
+          phone: payload.phone,
+        },
+      })
+      .pipe(
+        map((candidate) => this.mapCandidateProfile(candidate)),
+        tap((candidate) => this.saveAuthenticatedCandidate(candidate)),
+        catchError((error: unknown) => this.mapAuthError(error)),
+      );
+  }
+
   logout(): void {
     const refreshToken = this.tokenStorage.getRefreshToken();
     this.clearLocalSession();
@@ -166,7 +193,7 @@ export class AuthService {
   }
 
   restoreSession(): Observable<AuthenticatedCandidate | null> {
-    if (this.isAuthenticated()) {
+    if (this.tokenStorage.isAuthenticated()) {
       const cachedCandidate = this.getAuthenticatedCandidate();
       if (cachedCandidate) {
         return of(cachedCandidate);
@@ -197,13 +224,7 @@ export class AuthService {
 
   private resolveCandidateProfile(): Observable<AuthenticatedCandidate> {
     return this.http.get<CandidateProfileDto>(this.candidateMeUrl).pipe(
-      map((candidate) => ({
-        candidateId: candidate.id,
-        email: candidate.user.email,
-        firstName: candidate.user.first_name,
-        lastName: candidate.user.last_name,
-        phone: candidate.user.phone ?? '',
-      })),
+      map((candidate) => this.mapCandidateProfile(candidate)),
       catchError((error: unknown) => {
         if (error instanceof HttpErrorResponse && error.status === 403) {
           return throwError(
@@ -216,6 +237,16 @@ export class AuthService {
         return throwError(() => 'Unable to load candidate profile.');
       }),
     );
+  }
+
+  private mapCandidateProfile(candidate: CandidateProfileDto): AuthenticatedCandidate {
+    return {
+      candidateId: candidate.id,
+      email: candidate.user.email,
+      firstName: candidate.user.first_name,
+      lastName: candidate.user.last_name,
+      phone: candidate.user.phone ?? '',
+    };
   }
 
   private persistTokens(accessToken: string, refreshToken?: string): void {
