@@ -1,0 +1,421 @@
+{
+  "generatedAt": "2026-05-15T09:47:05.798Z",
+  "standard": "WCAG2AAA",
+  "directory": "A:\\enzo2\\M1\\Employment\\FaridProject-2.0\\docs\\figma\\aaa",
+  "screenCount": 1,
+  "totalIssues": 57,
+  "totalErrors": 57,
+  "totalWarnings": 0,
+  "results": [
+    {
+      "file": "fleetflow-ui-book.html",
+      "documentTitle": "FleetFlow UI Book - Design System MVP",
+      "pageUrl": "file:///A:/enzo2/M1/Employment/FaridProject-2.0/docs/figma/aaa/fleetflow-ui-book.html",
+      "issueCount": 57,
+      "errorCount": 57,
+      "warningCount": 0,
+      "noticeCount": 0,
+      "issues": [
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G18.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > header > section > h1",
+          "context": "<h1>Design system MVP pour construi...</h1>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > header > section > p",
+          "context": "<p class=\"lead\">\n            Ce book définit le...</p>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G18.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "#tokens-title",
+          "context": "<h2 id=\"tokens-title\">01. Tokens visuels</h2>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > section:nth-child(2) > div:nth-child(1) > div > p",
+          "context": "<p>Palette volontairement plus con...</p>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G18.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "#type-title",
+          "context": "<h2 id=\"type-title\">02. Typographie</h2>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > section:nth-child(3) > div:nth-child(1) > div > p",
+          "context": "<p>Hiérarchie compacte, sans lette...</p>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G18.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "#controls-title",
+          "context": "<h2 id=\"controls-title\">03. Contrôles et états</h2>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > section:nth-child(4) > div:nth-child(1) > div > p",
+          "context": "<p>Boutons, chips, tabs, champs et...</p>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G18.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > section:nth-child(4) > div:nth-child(2) > article:nth-child(1) > h2",
+          "context": "<h2>Boutons</h2>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > section:nth-child(4) > div:nth-child(2) > article:nth-child(1) > p",
+          "context": "<p>Hauteur min 48px, focus visible...</p>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G18.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > section:nth-child(4) > div:nth-child(2) > article:nth-child(2) > h2",
+          "context": "<h2>Chips / statuts</h2>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > section:nth-child(4) > div:nth-child(2) > article:nth-child(2) > p",
+          "context": "<p>Couleur + texte. Jamais uniquem...</p>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G18.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > section:nth-child(4) > div:nth-child(2) > article:nth-child(3) > h2",
+          "context": "<h2>Tabs</h2>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > section:nth-child(4) > div:nth-child(2) > article:nth-child(3) > p",
+          "context": "<p>Utilisées pour `Tests / Templat...</p>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G18.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > section:nth-child(4) > div:nth-child(2) > article:nth-child(4) > h2",
+          "context": "<h2>Input</h2>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > section:nth-child(4) > div:nth-child(2) > article:nth-child(4) > p",
+          "context": "<p>Label programmatique + message ...</p>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > section:nth-child(4) > div:nth-child(2) > article:nth-child(4) > div > label",
+          "context": "<label for=\"book-email\">Email address</label>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > section:nth-child(4) > div:nth-child(2) > article:nth-child(4) > div > p",
+          "context": "<p class=\"error\">Champ obligatoire</p>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G18.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > section:nth-child(4) > div:nth-child(2) > article:nth-child(5) > h2",
+          "context": "<h2>Select</h2>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > section:nth-child(4) > div:nth-child(2) > article:nth-child(5) > p",
+          "context": "<p>Pour manager, rôle, terminal, s...</p>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > section:nth-child(4) > div:nth-child(2) > article:nth-child(5) > div > label",
+          "context": "<label for=\"book-manager\">Manager référent</label>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G18.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > section:nth-child(4) > div:nth-child(2) > article:nth-child(6) > h2",
+          "context": "<h2>Textarea</h2>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > section:nth-child(4) > div:nth-child(2) > article:nth-child(6) > p",
+          "context": "<p>Commentaires manager / feedback...</p>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > section:nth-child(4) > div:nth-child(2) > article:nth-child(6) > div > label",
+          "context": "<label for=\"book-comment\">Commentaire</label>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G18.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "#business-title",
+          "context": "<h2 id=\"business-title\">04. Composants métier</h2>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > section:nth-child(5) > div:nth-child(1) > div > p",
+          "context": "<p>Les composants qui structurent ...</p>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G18.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > section:nth-child(5) > div:nth-child(2) > article:nth-child(1) > h2",
+          "context": "<h2>EvaluationCard</h2>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G18.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > section:nth-child(5) > div:nth-child(2) > article:nth-child(2) > h2",
+          "context": "<h2>TemplateCard</h2>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G18.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > section:nth-child(5) > div:nth-child(2) > article:nth-child(3) > h2",
+          "context": "<h2>QuestionBlock</h2>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G18.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > section:nth-child(5) > div:nth-child(2) > article:nth-child(4) > h2",
+          "context": "<h2>ScorePanel</h2>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G18.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > section:nth-child(5) > div:nth-child(2) > article:nth-child(5) > h2",
+          "context": "<h2>DecisionBar</h2>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > section:nth-child(5) > div:nth-child(2) > article:nth-child(5) > p",
+          "context": "<p>Sticky bottom sur détail test, ...</p>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G18.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > section:nth-child(5) > div:nth-child(2) > article:nth-child(6) > h2",
+          "context": "<h2>Empty/Error State</h2>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G18.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "#shell-title",
+          "context": "<h2 id=\"shell-title\">05. App shell et navigation par...</h2>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > section:nth-child(6) > div:nth-child(1) > div > p",
+          "context": "<p>Le shell évite les menus incohé...</p>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G18.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > section:nth-child(6) > div:nth-child(2) > article:nth-child(1) > h2",
+          "context": "<h2>Admin / Direction</h2>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G18.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > section:nth-child(6) > div:nth-child(2) > article:nth-child(2) > h2",
+          "context": "<h2>Manager</h2>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G18.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > section:nth-child(6) > div:nth-child(2) > article:nth-child(3) > h2",
+          "context": "<h2>Candidat</h2>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G18.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "#overlays-title",
+          "context": "<h2 id=\"overlays-title\">06. Overlays</h2>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > section:nth-child(7) > div:nth-child(1) > div > p",
+          "context": "<p>Modales et sheets doivent avoir...</p>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G18.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > section:nth-child(7) > div:nth-child(2) > article:nth-child(1) > h2",
+          "context": "<h2>Bottom Sheet / Ajouter pool</h2>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G18.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > section:nth-child(7) > div:nth-child(2) > article:nth-child(2) > h2",
+          "context": "<h2>Modal / Confirmation</h2>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G18.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > section:nth-child(7) > div:nth-child(2) > article:nth-child(3) > h2",
+          "context": "<h2>Toast / Feedback</h2>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G18.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "#code-title",
+          "context": "<h2 id=\"code-title\">07. Snippets de base</h2>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > section:nth-child(8) > div:nth-child(1) > div > p",
+          "context": "<p>Base minimale à reprendre dans ...</p>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G18.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "#rules-title",
+          "context": "<h2 id=\"rules-title\">08. Règles maître d’œuvre</h2>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > section:nth-child(9) > div:nth-child(1) > div > p",
+          "context": "<p>Ces règles évitent le retour de...</p>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G18.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > section:nth-child(9) > div:nth-child(2) > article:nth-child(1) > h2",
+          "context": "<h2>À faire</h2>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > section:nth-child(9) > div:nth-child(2) > article:nth-child(1) > ul > li:nth-child(1)",
+          "context": "<li>Créer une primitive shared avan...</li>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > section:nth-child(9) > div:nth-child(2) > article:nth-child(1) > ul > li:nth-child(2)",
+          "context": "<li>Chaque action métier a son bout...</li>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > section:nth-child(9) > div:nth-child(2) > article:nth-child(1) > ul > li:nth-child(3)",
+          "context": "<li>Les pages consomment API ou aff...</li>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > section:nth-child(9) > div:nth-child(2) > article:nth-child(1) > ul > li:nth-child(4)",
+          "context": "<li>Les composants complexes sont t...</li>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G18.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > section:nth-child(9) > div:nth-child(2) > article:nth-child(2) > h2",
+          "context": "<h2>À éviter</h2>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > section:nth-child(9) > div:nth-child(2) > article:nth-child(2) > ul > li:nth-child(1)",
+          "context": "<li>Copier/coller des couleurs hors...</li>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > section:nth-child(9) > div:nth-child(2) > article:nth-child(2) > ul > li:nth-child(2)",
+          "context": "<li>Créer des boutons qui font la m...</li>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > section:nth-child(9) > div:nth-child(2) > article:nth-child(2) > ul > li:nth-child(3)",
+          "context": "<li>Afficher des placeholders métie...</li>"
+        },
+        {
+          "type": "error",
+          "code": "WCAG2AAA.Principle1.Guideline1_4.1_4_6.G17.Fail",
+          "message": "This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 7:1, but text in this element has a contrast ratio of NaN:1.",
+          "selector": "html > body > main > section:nth-child(9) > div:nth-child(2) > article:nth-child(2) > ul > li:nth-child(4)",
+          "context": "<li>Créer des cards imbriquées sans...</li>"
+        }
+      ]
+    }
+  ]
+}

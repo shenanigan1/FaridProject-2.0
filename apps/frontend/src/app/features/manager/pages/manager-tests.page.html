@@ -1,33 +1,37 @@
-<section class="manager-tests-screen">
-  <div class="manager-tests-shell">
-    <header class="manager-tests-header">
-      <a class="manager-icon-button manager-icon-button--menu" routerLink="/manager" aria-label="Retour accueil"></a>
-      <h1>Tests Manager</h1>
-      <span class="manager-icon-button manager-icon-button--search" aria-hidden="true"></span>
-    </header>
+<section class="ff-workflow-screen">
+  <header class="ff-page-bar">
+    <a class="ff-page-bar__action" routerLink="/manager" aria-label="Retour accueil">&#8592;</a>
+    <h1 class="ff-page-bar__title">Tests Manager</h1>
+    <span class="ff-page-bar__spacer" aria-hidden="true"></span>
+  </header>
 
-    <input
-      type="search"
-      class="manager-search"
-      [formControl]="query"
-      aria-label="Rechercher un test ou candidat"
-    />
+  <div class="ff-workflow-shell ff-workflow-shell--narrow">
+    <label class="ff-search-box">
+      <input
+        type="search"
+        [formControl]="query"
+        aria-label="Rechercher un test ou candidat"
+        placeholder="Rechercher un test ou candidat..."
+      />
+    </label>
 
-    <div class="manager-tabs" role="tablist" aria-label="Tests manager">
+    <div class="ff-segmented ff-u-mt-lg" role="tablist" aria-label="Tests manager">
       <button
         type="button"
+        class="ff-segmented__item"
         role="tab"
         [attr.aria-selected]="activeTab() === 'todo'"
-        [class.manager-tabs__button--active]="activeTab() === 'todo'"
+        [attr.aria-pressed]="activeTab() === 'todo'"
         (click)="setTab('todo')"
       >
         Tests a passer
       </button>
       <button
         type="button"
+        class="ff-segmented__item"
         role="tab"
         [attr.aria-selected]="activeTab() === 'history'"
-        [class.manager-tabs__button--active]="activeTab() === 'history'"
+        [attr.aria-pressed]="activeTab() === 'history'"
         (click)="setTab('history')"
       >
         Tests effectues
@@ -35,29 +39,29 @@
     </div>
 
     @if (isLoading()) {
-      <p class="manager-empty">Chargement des tests assignes...</p>
+      <p class="ff-empty">Chargement des tests assignes...</p>
     } @else if (error()) {
-      <p class="manager-alert">{{ error() }}</p>
+      <p class="ff-alert ff-alert-error">{{ error() }}</p>
     } @else {
-      <div class="manager-tests-list">
+      <div class="ff-list ff-u-mt-lg">
         @for (test of filteredTests(); track test.id) {
-          <a class="manager-test-card" [routerLink]="['/manager/tests', test.id]">
-            <span class="manager-avatar">{{ initials(test) }}</span>
-            <span class="manager-test-card__body">
-              <strong>{{ test.templateName }}</strong>
-              <small>{{ test.candidateName }}</small>
+          <a class="ff-list-row ff-list-row--button" [routerLink]="['/manager/tests', test.id]">
+            <span class="ff-avatar" aria-hidden="true">{{ initials(test) }}</span>
+            <span>
+              <strong class="ff-row-title">{{ test.templateName }}</strong>
+              <small class="ff-row-meta ff-u-block">{{ test.candidateName }}</small>
               @if (test.positionTitle) {
-                <small>{{ test.positionTitle }}</small>
+                <small class="ff-row-meta ff-u-block">{{ test.positionTitle }}</small>
               }
             </span>
-            <span class="manager-test-card__status">
+            <span class="ff-status-pill">
               {{ test.status === 'in_progress' ? 'A remplir' : test.status }}
             </span>
           </a>
         }
 
         @if (filteredTests().length === 0) {
-          <p class="manager-empty">
+          <p class="ff-empty">
             {{ activeTab() === 'todo' ? 'Aucun test a faire passer.' : 'Aucun historique de test.' }}
           </p>
         }

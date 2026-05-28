@@ -21,12 +21,13 @@ describe('TokenStorageService', () => {
     sessionStorage.clear();
   });
 
-  it('stores bearer tokens for the candidate session', () => {
+  it('keeps candidate access token in sessionStorage and refresh token in localStorage', () => {
     service.saveTokens('access', 'refresh');
 
     expect(service.getAccessToken()).toBe('access');
     expect(service.getRefreshToken()).toBe('refresh');
-    expect(localStorage.getItem('access_token')).toBe('access');
+    expect(localStorage.getItem('access_token')).toBeNull();
+    expect(sessionStorage.getItem('access_token')).toBe('access');
     expect(localStorage.getItem('refresh_token')).toBe('refresh');
     expect(service.isAuthenticated()).toBeTrue();
   });
@@ -45,7 +46,7 @@ describe('TokenStorageService', () => {
     service.saveTokens(createJwtWithExpiration(Math.floor(Date.now() / 1000) - 60), 'refresh');
 
     expect(service.getAccessToken()).toBeNull();
-    expect(localStorage.getItem('access_token')).toBeNull();
+    expect(sessionStorage.getItem('access_token')).toBeNull();
     expect(service.getRefreshToken()).toBe('refresh');
     expect(service.isAuthenticated()).toBeFalse();
   });

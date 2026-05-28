@@ -88,7 +88,7 @@ class EvaluationSerializer(serializers.ModelSerializer):
         return obj.section_assignments.filter(completed_at__isnull=False).count()
 
     def get_progress_percent(self, obj: Evaluation) -> int:
-        if obj.status in {"completed", "validated"}:
+        if obj.status in {"completed", "validated", "rejected"}:
             return 100
 
         total = self.get_total_sections_count(obj)

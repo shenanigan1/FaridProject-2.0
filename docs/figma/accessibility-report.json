@@ -1,0 +1,21 @@
+{
+  "generatedAt": "2026-05-19T08:31:04.884Z",
+  "standard": "WCAG2AAA",
+  "directory": "A:\\enzo2\\M1\\Employment\\FaridProject-2.0\\docs\\figma",
+  "screenCount": 1,
+  "totalIssues": 0,
+  "totalErrors": 0,
+  "totalWarnings": 0,
+  "results": [
+    {
+      "file": "fleetflow-ui-book.html",
+      "documentTitle": "DriverRecruit — UI Book Premium Accessible",
+      "pageUrl": "file:///A:/enzo2/M1/Employment/FaridProject-2.0/docs/figma/fleetflow-ui-book.html",
+      "issueCount": 0,
+      "errorCount": 0,
+      "warningCount": 0,
+      "noticeCount": 0,
+      "issues": []
+    }
+  ]
+}

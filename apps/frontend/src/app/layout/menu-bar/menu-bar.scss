@@ -58,56 +58,66 @@
 }
 
 .ff-menu--desktop .ff-menu__link {
-  min-height: 3.25rem;
-  gap: 0.75rem;
-  border-radius: 0.9rem;
-  padding: 0.6rem 0.75rem;
+  min-height: 3rem;
+  gap: 0.65rem;
+  border: 1px solid transparent;
+  border-radius: 0.95rem;
+  padding: 0.5rem 0.75rem;
 }
 
 .ff-menu--desktop .ff-menu__link:hover,
 .ff-menu--desktop .ff-menu__link--active {
-  background-color: #111722;
+  background:
+    linear-gradient(90deg, rgba(74, 142, 255, 0.2), rgba(74, 142, 255, 0.04));
+  border-color: rgba(74, 142, 255, 0.28);
+  box-shadow: inset 3px 0 0 var(--ff-color-primary-400);
+  color: #cfe1ff;
 }
 
 .ff-menu--desktop .ff-menu__icon {
-  width: 1.5rem;
-  height: 1.5rem;
+  width: 1.35rem;
+  height: 1.35rem;
 }
 
 .ff-menu--mobile {
   width: 100%;
   border: 1px solid rgba(58, 74, 105, 0.72);
   border-bottom: 0;
-  border-radius: 0.9rem 0.9rem 0 0;
-  background-color: #020617;
-  padding: 0.65rem 1.25rem calc(env(safe-area-inset-bottom) + 0.75rem);
+  border-radius: 1.15rem 1.15rem 0 0;
+  background:
+    linear-gradient(180deg, rgba(18, 37, 76, 0.48), transparent),
+    #020713;
+  padding: 0.45rem 0.65rem calc(env(safe-area-inset-bottom) + 0.55rem);
+  box-shadow: 0 -20px 55px rgba(0, 0, 0, 0.32);
 }
 
 .ff-menu--mobile .ff-menu__items {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 0.45rem;
+  grid-template-columns: repeat(auto-fit, minmax(3.25rem, 1fr));
+  gap: 0.3rem;
 }
 
 .ff-menu--mobile .ff-menu__link {
-  min-height: 3rem;
+  min-height: 2.95rem;
   flex-direction: column;
   justify-content: center;
-  gap: 0.25rem;
-  border-radius: 0.9rem;
-  padding: 0.25rem 0.35rem;
+  gap: 0.2rem;
+  border-radius: 0.85rem;
+  padding: 0.25rem 0.25rem;
   text-align: center;
 }
 
 .ff-menu--mobile .ff-menu__link--active {
-  background-color: #071a47;
+  background: linear-gradient(180deg, #102b65, #071a47);
   color: var(--ff-color-primary-400);
+  box-shadow: var(--ff-shadow-inset);
 }
 
 .ff-menu--mobile .ff-menu__icon {
-  height: 1.3rem;
+  height: 1.2rem;
 }
 
 .ff-menu--mobile .ff-menu__label {
-  max-width: 4.5rem;
+  max-width: 100%;
+  font-size: clamp(0.62rem, 2.5vw, 0.68rem);
 }

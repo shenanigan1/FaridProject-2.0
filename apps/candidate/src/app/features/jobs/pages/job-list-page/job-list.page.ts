@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { catchError, map, of, switchMap, tap } from 'rxjs';
+import { catchError, map, of, switchMap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { JobCardComponent } from '@jobs/components/job-card/job-card.component';
@@ -68,9 +68,6 @@ export class JobListPageComponent implements OnInit {
         }),
         switchMap((filters) =>
           this.jobsPublicApiService.getJobOffers(filters).pipe(
-            tap((response) => {
-              console.log('[JobListPage] response:', response);
-            }),
             map((response) => {
               if (!response.results.length) {
                 return { kind: 'empty' } as JobListViewState;
@@ -82,9 +79,7 @@ export class JobListPageComponent implements OnInit {
                 total: response.count,
               } as JobListViewState;
             }),
-            catchError((error) => {
-              console.error('[JobListPage] error:', error);
-
+            catchError(() => {
               return of({
                 kind: 'error',
                 message: 'An error occurred while loading job offers.',

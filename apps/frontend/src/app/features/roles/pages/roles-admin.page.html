@@ -5,7 +5,7 @@
         <p class="ff-app-kicker">ADMIN</p>
         <h1 class="ff-app-title">Role Management</h1>
       </div>
-      <a [routerLink]="['/dashboard']" class="ff-btn ff-btn-secondary">
+      <a [routerLink]="['/admin']" class="ff-btn ff-btn-secondary" data-testid="roles-back-link">
         Back
       </a>
     </header>
@@ -17,7 +17,7 @@
     }
 
     <article class="ff-app-panel">
-      <h2 class="ff-row-title" style="margin-bottom: 0.75rem">Create user</h2>
+      <h2 class="ff-row-title ff-u-mb-md">Create user</h2>
       <form [formGroup]="createForm" (ngSubmit)="createUser()" class="ff-form-grid ff-form-grid--two">
         <input formControlName="email" type="email" aria-label="Email" class="ff-control" />
         <input formControlName="password" type="password" aria-label="Temporary password" class="ff-control" />
@@ -35,14 +35,14 @@
     </article>
 
     <article class="ff-app-panel">
-      <h2 class="ff-row-title" style="margin-bottom: 0.75rem">Existing users</h2>
+      <h2 class="ff-row-title ff-u-mb-md">Existing users</h2>
       @if (isLoading) {
         <p class="ff-empty">Loading users...</p>
       } @else {
         <div class="ff-app-stack">
           @for (user of users; track user.id) {
             <div class="ff-data-card">
-              <div class="ff-inline-actions" style="justify-content: space-between; margin-bottom: 0.75rem">
+          <div class="ff-inline-actions ff-u-between ff-u-mb-md">
                 <div>
                   <p class="ff-row-title">{{ user.first_name }} {{ user.last_name }}</p>
                   <p class="ff-row-meta">{{ user.email }}</p>
@@ -52,7 +52,7 @@
                 </span>
               </div>
               <div class="ff-inline-actions">
-                <select class="ff-control" style="max-width: 12rem" [value]="user.role" (change)="onRoleChange(user, $event)">
+            <select class="ff-control ff-u-select-sm" [value]="user.role" (change)="onRoleChange(user, $event)">
                   @for (role of roleOptions; track role) {
                     <option [value]="role">{{ role }}</option>
                   }

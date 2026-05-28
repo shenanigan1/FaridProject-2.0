@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from evaluations.models.evaluation import Evaluation
 from evaluations.models.evaluation import EvaluationStatus
+from recruitment.models import ApplicationStatus
 from evaluations.serializers import (
     EvaluationSerializer,
     EvaluationQuestionnaireUpdateSerializer,
@@ -62,6 +63,25 @@ class EvaluationViewSet(ModelViewSet):
             return SubjectEvaluationSerializer
 
         return EvaluationSerializer
+
+    def perform_update(self, serializer):
+        evaluation = serializer.save()
+        update_fields = []
+
+        if (
+            evaluation.status == EvaluationStatus.VALIDATED
+            and evaluation.validated_at is None
+        ):
+            evaluation.validated_at = timezone.now()
+            update_fields.append("validated_at")
+
+        if evaluation.status == EvaluationStatus.REJECTED and evaluation.application_id:
+            application = evaluation.application
+            application.status = ApplicationStatus.REJECTED
+            application.save(update_fields=["status", "updated_at"])
+
+        if update_fields:
+            evaluation.save(update_fields=[*update_fields, "updated_at"])
 
     @action(detail=False, methods=["post"], url_path="launch")
     def launch(self, request):

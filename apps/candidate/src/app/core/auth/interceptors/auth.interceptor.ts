@@ -9,6 +9,7 @@ import {
 import { Observable, catchError, switchMap, throwError } from 'rxjs';
 
 import { AuthService } from '@core/auth/services/auth.service';
+import { SessionExpiredService } from '@core/auth/services/session-expired.service';
 import { TokenStorageService } from '@core/auth/services/token-storage.service';
 
 export const authInterceptor: HttpInterceptorFn = (
@@ -17,6 +18,7 @@ export const authInterceptor: HttpInterceptorFn = (
 ): Observable<HttpEvent<unknown>> => {
   const tokenStorage = inject(TokenStorageService);
   const authService = inject(AuthService);
+  const sessionExpired = inject(SessionExpiredService);
 
   const isCandidateCreationRequest =
     request.method === 'POST' && /\/api\/candidates\/?$/.test(request.url);
@@ -50,6 +52,7 @@ export const authInterceptor: HttpInterceptorFn = (
       const refreshToken = tokenStorage.getRefreshToken();
       if (!refreshToken) {
         tokenStorage.clear();
+        sessionExpired.notify();
         return throwError(() => error);
       }
 
@@ -67,6 +70,7 @@ export const authInterceptor: HttpInterceptorFn = (
         }),
         catchError((refreshError: unknown) => {
           tokenStorage.clear();
+          sessionExpired.notify();
           return throwError(() => refreshError);
         }),
       );

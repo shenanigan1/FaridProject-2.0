@@ -24,6 +24,16 @@ class MeView(APIView):
     def get(self, request):
         return Response(MeSerializer(request.user).data, status=status.HTTP_200_OK)
 
+    def patch(self, request):
+        allowed_fields = {"email", "first_name", "last_name", "phone"}
+        payload = {
+            key: value for key, value in request.data.items() if key in allowed_fields
+        }
+        serializer = MeSerializer(request.user, data=payload, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 class CookieTokenRefreshView(APIView):
     permission_classes = [AllowAny]

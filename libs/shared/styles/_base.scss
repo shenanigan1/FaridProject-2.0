@@ -1,55 +1,83 @@
 @layer base {
   :root {
     --ff-color-background: #10141b;
-    --ff-color-background-deep: #050608;
-    --ff-color-header: #020617;
+    --ff-color-background-deep: #070b12;
+    --ff-color-header: #030816;
     --ff-color-border: #3b4352;
-    --ff-color-border-soft: rgba(139, 144, 160, 0.24);
+    --ff-color-border-soft: rgba(151, 164, 188, 0.22);
 
     --ff-color-primary-100: #cfe0ff;
     --ff-color-primary-400: #4a8eff;
     --ff-color-primary-500: #1683f7;
-    --ff-color-primary-600: #0d64c8;
+    --ff-color-primary-600: #005ec4;
     --ff-color-primary-soft: rgba(74, 142, 255, 0.18);
 
-    --ff-color-secondary-500: #8ea7d6;
+    --ff-color-secondary-500: #9cb3dd;
 
     --ff-color-surface-1: #1c2027;
-    --ff-color-surface-2: #151922;
-    --ff-color-surface-3: #10131a;
-    --ff-color-surface-raised: #20242d;
+    --ff-color-surface-2: #242a34;
+    --ff-color-surface-3: #111722;
+    --ff-color-surface-raised: #202631;
+    --ff-color-surface-muted: #151a22;
 
-    --ff-color-text-primary: #f2f4fb;
-    --ff-color-text-secondary: #c1c6d7;
-    --ff-color-text-muted: #9aa3b5;
+    --ff-color-text-primary: #f7f9ff;
+    --ff-color-text-secondary: #d7deef;
+    --ff-color-text-muted: #aeb8ca;
     --ff-color-text-disabled: #667180;
 
-    --ff-color-success: #22C55E;
-    --ff-color-warning: #F59E0B;
-    --ff-color-error: #EF4444;
-    --ff-color-info: #38BDF8;
+    --ff-color-success: #4ade80;
+    --ff-color-warning: #ffb86b;
+    --ff-color-error: #ff8a8a;
+    --ff-color-info: #7dd3fc;
     --ff-color-danger-100: #ffb4ab;
     --ff-color-orange: #ff8a1f;
 
-    --ff-radius-control: 0.85rem;
-    --ff-radius-card: 1rem;
-    --ff-radius-panel: 1.25rem;
+    --ff-radius-xs: 0.45rem;
+    --ff-radius-sm: 0.65rem;
+    --ff-radius-control: 0.75rem;
+    --ff-radius-card: 0.95rem;
+    --ff-radius-panel: 1.15rem;
     --ff-radius-pill: 999px;
 
     --ff-text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
     --ff-text-shadow-strong: 0 2px 0 rgba(0, 0, 0, 0.55);
-    --ff-shadow-card: 0 18px 40px rgba(0, 0, 0, 0.24);
-    --ff-shadow-primary: 0 20px 45px rgba(22, 131, 247, 0.3);
+    --ff-shadow-card: 0 12px 28px rgba(0, 0, 0, 0.22);
+    --ff-shadow-card-soft: 0 8px 18px rgba(0, 0, 0, 0.18);
+    --ff-shadow-primary: 0 12px 24px rgba(22, 131, 247, 0.2);
+    --ff-shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.055);
+
+    --ff-space-1: 0.25rem;
+    --ff-space-2: 0.5rem;
+    --ff-space-3: 0.75rem;
+    --ff-space-4: 1rem;
+    --ff-space-5: 1.25rem;
+    --ff-space-6: 1.5rem;
+    --ff-space-8: 2rem;
+
+    --ff-font-size-xs: 0.75rem;
+    --ff-font-size-sm: 0.875rem;
+    --ff-font-size-md: 1rem;
+    --ff-font-size-lg: 1.125rem;
+    --ff-font-size-xl: 1.35rem;
+    --ff-font-size-2xl: 1.75rem;
   }
 
   html {
     font-family: Inter, "SF Pro Display", system-ui, sans-serif;
+    background: var(--ff-color-background-deep);
+    min-height: 100%;
   }
 
   body {
     @apply antialiased;
-    background-color: var(--ff-color-background);
+    min-height: 100%;
+    margin: 0;
+    background:
+      radial-gradient(circle at 8% 4%, rgba(22, 131, 247, 0.14), transparent 34rem),
+      radial-gradient(circle at 92% 0%, rgba(255, 122, 26, 0.07), transparent 28rem),
+      linear-gradient(180deg, #080b11 0%, var(--ff-color-background) 44%, #090b10 100%);
     color: var(--ff-color-text-primary);
+    overflow-x: hidden;
   }
 
   button,
@@ -62,8 +90,26 @@
 
   :focus-visible {
     @apply outline-none ring-2;
-    --tw-ring-color: var(--ff-color-primary-500);
+    --tw-ring-color: #8ebcff;
     --tw-ring-offset-width: 2px;
     --tw-ring-offset-color: var(--ff-color-background);
+  }
+
+  * {
+    scrollbar-color: rgba(174, 184, 202, 0.42) transparent;
+  }
+
+  ::selection {
+    background: rgba(74, 142, 255, 0.38);
+    color: var(--ff-color-text-primary);
+  }
+
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus {
+    -webkit-text-fill-color: var(--ff-color-text-primary);
+    caret-color: var(--ff-color-text-primary);
+    box-shadow: 0 0 0 1000px var(--ff-color-surface-3) inset;
+    transition: background-color 9999s ease-out;
   }
 }

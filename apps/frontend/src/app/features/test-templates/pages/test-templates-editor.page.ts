@@ -545,15 +545,10 @@ export class TestTemplateEditorPage {
 
     if (!this.isEditMode()) return;
 
-    if (this.form.invalid) {
+    const validationError = this.templateValidationError();
+    if (validationError) {
       this.form.markAllAsTouched();
-      return;
-    }
-
-    if (!this.isTemplateReady()) {
-      this.apiError.set(
-        'Complete the workflow: add sections, set total weight to 100, and attach at least one pool to every section.',
-      );
+      this.apiError.set(validationError);
       return;
     }
 
@@ -598,13 +593,25 @@ export class TestTemplateEditorPage {
   }
 
   isTemplateReady(): boolean {
+    return this.templateValidationError() === null;
+  }
+
+  private templateValidationError(): string | null {
+    if (this.form.controls.name.hasError('required')) return 'Champ obligatoire';
+    if (this.form.controls.duration_minutes.hasError('required')) return 'Champ obligatoire';
+    if (this.form.controls.min_pass_score.hasError('required')) return 'Champ obligatoire';
+
+    if (this.form.invalid) return 'Corrigez les champs du template avant de sauvegarder.';
+
     const sections = this.sections();
-    return (
-      this.form.valid &&
-      sections.length > 0 &&
-      this.totalWeight() === 100 &&
-      sections.every((section) => section.title.trim().length > 0 && section.pools.length > 0)
-    );
+    if (sections.length === 0) return 'Ajoutez au moins une section au template.';
+    if (sections.some((section) => section.title.trim().length === 0)) return 'Champ obligatoire';
+    if (this.totalWeight() !== 100) return 'Le poids total des sections doit etre egal a 100%.';
+    if (sections.some((section) => section.pools.length === 0)) {
+      return 'Chaque section doit contenir au moins un pool de questions.';
+    }
+
+    return null;
   }
 
   formatLabel(format?: string): string {

@@ -41,13 +41,13 @@ const ROLE_OPTIONS: UserRole[] = [
       <div class="ff-app-container ff-app-stack">
         <header class="ff-app-header">
           <button routerLink="/contact" class="ff-btn ff-btn-secondary">
-            <svg [lucideIcon]="icons.back" style="width: 1rem; height: 1rem"></svg>
+            <svg [lucideIcon]="icons.back" class="ff-icon-inline"></svg>
             Back
           </button>
 
           @if (contact() && canManageContacts()) {
             <button type="button" class="ff-btn ff-btn-secondary" (click)="menuOpen.set(true)">
-              <svg [lucideIcon]="icons.moreVertical" style="width: 1rem; height: 1rem"></svg>
+              <svg [lucideIcon]="icons.moreVertical" class="ff-icon-inline"></svg>
             </button>
           }
         </header>
@@ -58,7 +58,7 @@ const ROLE_OPTIONS: UserRole[] = [
 
         @if (contact(); as currentContact) {
           <article class="ff-data-card">
-            <div class="ff-inline-actions" style="align-items: flex-start; justify-content: space-between">
+            <div class="ff-inline-actions ff-inline-actions--split-start">
               <div>
                 <p class="ff-app-kicker">{{ currentContact.role }}</p>
                 <h1 class="ff-app-title">{{ fullName() }}</h1>
@@ -134,8 +134,8 @@ const ROLE_OPTIONS: UserRole[] = [
 
       @if (menuOpen() && contact(); as currentContact) {
         <div class="ff-modal-scrim">
-          <div class="ff-app-panel" style="width: min(100%, 28rem)">
-            <header class="ff-app-header" style="margin-bottom: 1rem">
+          <div class="ff-app-panel ff-app-container--modal">
+            <header class="ff-app-header ff-header--spaced">
               <div>
                 <p class="ff-app-kicker">ACTIONS</p>
                 <h2 class="ff-app-title">Contact</h2>

@@ -31,6 +31,8 @@ describe('TestsAdminBffService', () => {
     http.expectOne('/api/evaluations/').flush([
       {
         id: 7,
+        subject: 3,
+        application: 11,
         status: 'in_progress',
         template_name: 'Conduite de Nuit',
         subject_full_name: 'Nadia Benali',
@@ -50,7 +52,7 @@ describe('TestsAdminBffService', () => {
     ]);
   });
 
-  it('lists only unfinished created tests with progress from API data', () => {
+  it('lists all created tests with progress from API data', () => {
     let rows: ReturnType<typeof service.listActiveTests> extends import('rxjs').Observable<infer T> ? T : never = [];
 
     service.listActiveTests().subscribe((items) => {
@@ -60,6 +62,8 @@ describe('TestsAdminBffService', () => {
     http.expectOne('/api/evaluations/').flush([
       {
         id: 7,
+        subject: 3,
+        application: 11,
         status: 'in_progress',
         template_name: 'Conduite de Nuit',
         subject_full_name: 'Nadia Benali',
@@ -89,7 +93,23 @@ describe('TestsAdminBffService', () => {
 
     expect(rows).toEqual([
       jasmine.objectContaining({
+        evaluationId: 9,
+        candidateName: 'Sarah Miller',
+        templateName: 'Routier',
+        progressPercent: 100,
+        statusLabel: 'Valide',
+      }),
+      jasmine.objectContaining({
+        evaluationId: 8,
+        candidateName: 'John Doe',
+        templateName: 'Hazmat',
+        progressPercent: 100,
+        statusLabel: 'Score sous revue',
+      }),
+      jasmine.objectContaining({
         evaluationId: 7,
+        candidateId: 3,
+        applicationId: 11,
         candidateName: 'Nadia Benali',
         templateName: 'Conduite de Nuit',
         progressPercent: 66,
@@ -97,6 +117,17 @@ describe('TestsAdminBffService', () => {
         totalSectionsCount: 3,
       }),
     ]);
+  });
+
+  it('sends rejected status when refusing an assessment', () => {
+    service.rejectAssessment(12).subscribe((result) => {
+      expect(result).toEqual({ ok: true });
+    });
+
+    const request = http.expectOne('/api/evaluations/12/');
+    expect(request.request.method).toBe('PATCH');
+    expect(request.request.body).toEqual({ status: 'rejected' });
+    request.flush({ id: 12, status: 'rejected' });
   });
 
   it('builds assessment scores from questionnaire sections', () => {

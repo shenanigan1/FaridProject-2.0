@@ -21,13 +21,17 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   ],
 })
 export class UiTextareaComponent implements ControlValueAccessor {
+  private static nextId = 0;
+
   @Input() label: string | null = null;
   @Input() hint: string | null = null;
   @Input() error: string | null = null;
+  @Input() textareaId = '';
 
   @Input() placeholder = '';
   @Input() rows = 4;
 
+  readonly generatedId = `ff-textarea-${++UiTextareaComponent.nextId}`;
   readonly value = signal('');
   readonly disabled = signal(false);
 
@@ -61,5 +65,25 @@ export class UiTextareaComponent implements ControlValueAccessor {
 
   get textareaClasses(): string {
     return ['ff-input', 'mt-1', 'min-h-24', this.error ? 'ff-input-error' : ''].filter(Boolean).join(' ');
+  }
+
+  get controlId(): string {
+    return this.textareaId || this.generatedId;
+  }
+
+  get errorId(): string {
+    return `${this.controlId}-error`;
+  }
+
+  get hintId(): string {
+    return `${this.controlId}-hint`;
+  }
+
+  get describedBy(): string | null {
+    if (this.error) {
+      return this.errorId;
+    }
+
+    return this.hint ? this.hintId : null;
   }
 }

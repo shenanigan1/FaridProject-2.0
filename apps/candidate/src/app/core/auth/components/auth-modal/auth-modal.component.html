@@ -1,9 +1,28 @@
-<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
-  <div class="w-full max-w-md">
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4">
+  <button
+    type="button"
+    class="absolute inset-0 bg-black/70"
+    data-testid="candidate-auth-backdrop"
+    aria-label="Close authentication dialog"
+    (click)="onClose()"
+  ></button>
+
+  <div
+    #dialogPanel
+    class="relative w-full max-w-md"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="candidate-auth-title"
+    tabindex="-1"
+  >
     <app-auth-card
       [title]="mode === 'signin' ? 'Sign in' : 'Create account'"
       subtitle="Access your candidate space"
     >
+      <h2 id="candidate-auth-title" class="sr-only">
+        {{ mode === 'signin' ? 'Sign in' : 'Create account' }}
+      </h2>
+
       @if (errorMessage) {
         <app-ui-alert [message]="errorMessage" variant="error" />
       }
@@ -11,23 +30,26 @@
       <form class="space-y-4" [formGroup]="authForm" (ngSubmit)="onSubmit()">
         @if (mode === 'signup') {
           <app-ui-text-input
-            formControlName="firstName"
-            label="First name"
-            placeholder="John"
-            [error]="getFieldError('firstName')"
+          formControlName="firstName"
+          inputId="candidate-first-name"
+          label="First name"
+          placeholder="John"
+          [error]="getFieldError('firstName')"
           />
 
           <app-ui-text-input
-            formControlName="lastName"
-            label="Last name"
-            placeholder="Doe"
-            [error]="getFieldError('lastName')"
+          formControlName="lastName"
+          inputId="candidate-last-name"
+          label="Last name"
+          placeholder="Doe"
+          [error]="getFieldError('lastName')"
           />
 
           <app-ui-text-input
-            formControlName="phone"
-            label="Phone"
-            placeholder="+33..."
+          formControlName="phone"
+          inputId="candidate-phone"
+          label="Phone"
+          placeholder="+33..."
             type="tel"
             [error]="getFieldError('phone')"
           />
@@ -35,6 +57,7 @@
 
         <app-ui-text-input
           formControlName="email"
+          inputId="candidate-email"
           label="Email"
           placeholder="candidate@example.com"
           type="email"
@@ -43,6 +66,7 @@
 
         <app-ui-text-input
           formControlName="password"
+          inputId="candidate-password"
           label="Password"
           placeholder="••••••••"
           type="password"

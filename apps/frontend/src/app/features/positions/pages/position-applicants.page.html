@@ -50,6 +50,17 @@
               <div class="mt-3 ff-inline-actions text-xs">
                 <span class="ff-row-meta">Applied at: {{ applicant.appliedAt }}</span>
                 <span class="ff-status-pill">Ongoing tests: {{ applicant.ongoingTestsCount }}</span>
+                <a
+                  class="ff-status-pill ff-status-pill--success"
+                  [routerLink]="['/tests']"
+                  [queryParams]="{
+                    q: applicant.email,
+                    status: 'Score sous revue',
+                    position: positionId
+                  }"
+                >
+                  Tests effectues: {{ applicant.completedTestsCount }}
+                </a>
               </div>
 
               @if (applicant.ongoingTestsCount > 0) {

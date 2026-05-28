@@ -37,6 +37,7 @@ describe('JobCardComponent', () => {
 
   it('should render the title', () => {
     const text = fixture.nativeElement.textContent;
+    expect(fixture.nativeElement.querySelector('.ff-data-card')).not.toBeNull();
     expect(text).toContain('Freelance search agent');
   });
 
@@ -60,7 +61,7 @@ describe('JobCardComponent', () => {
     const anchor: HTMLAnchorElement = fixture.nativeElement.querySelector('a');
 
     expect(anchor).toBeTruthy();
-    expect(anchor.textContent?.trim()).toBe('View details');
+    expect(anchor.textContent?.trim()).toBe('Voir details');
 
     await fixture.whenStable();
     fixture.detectChanges();

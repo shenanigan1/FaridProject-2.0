@@ -8,6 +8,7 @@ import {
 } from '@angular/common/http';
 import { catchError, Observable, switchMap, throwError } from 'rxjs';
 import { AuthService } from 'src/app/core/auth/services/auth.service';
+import { SessionExpiredService } from 'src/app/core/auth/services/session-expired.service';
 import { TokenStorageService } from 'src/app/core/auth/services/token-storage.service';
 
 export const authInterceptor: HttpInterceptorFn = (
@@ -16,6 +17,7 @@ export const authInterceptor: HttpInterceptorFn = (
 ): Observable<HttpEvent<unknown>> => {
   const tokenStorage = inject(TokenStorageService);
   const authService = inject(AuthService);
+  const sessionExpired = inject(SessionExpiredService);
 
   const isLoginEndpoint = req.url.includes('/api/auth/login');
   const isRefreshEndpoint = req.url.includes('/api/auth/refresh');
@@ -49,6 +51,7 @@ export const authInterceptor: HttpInterceptorFn = (
       const refreshToken = tokenStorage.getRefreshToken();
       if (!refreshToken) {
         tokenStorage.clear();
+        sessionExpired.notify();
         return throwError(() => err);
       }
 
@@ -68,6 +71,7 @@ export const authInterceptor: HttpInterceptorFn = (
         }),
         catchError((refreshErr: unknown) => {
           tokenStorage.clear();
+          sessionExpired.notify();
           return throwError(() => refreshErr);
         }),
       );

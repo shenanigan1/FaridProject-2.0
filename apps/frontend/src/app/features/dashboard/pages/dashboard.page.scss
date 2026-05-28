@@ -5,24 +5,36 @@
 .ff-dashboard-page {
   min-height: 100%;
   overflow: hidden;
-  background: var(--ff-color-background);
+  background:
+    radial-gradient(circle at 92% 0%, rgba(74, 142, 255, 0.1), transparent 18rem),
+    linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+    var(--ff-color-background);
+  background-size: auto, 24px 24px, 24px 24px, auto;
   color: var(--ff-color-text-primary);
 }
 
 .ff-dashboard-content {
-  width: min(100%, 92rem);
+  width: min(100%, 88rem);
   margin: 0 auto;
-  padding: 2rem 1.5rem 3rem;
+  padding: 1.35rem 1.25rem 2.25rem;
 }
 
 .ff-dashboard-hero {
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
+  border: 1px solid rgba(74, 142, 255, 0.22);
+  border-radius: 1.5rem;
+  background:
+    radial-gradient(circle at 12% 0%, rgba(74, 142, 255, 0.18), transparent 18rem),
+    linear-gradient(145deg, rgba(27, 34, 45, 0.92), rgba(15, 20, 28, 0.96));
+  box-shadow: var(--ff-shadow-card), var(--ff-shadow-inset);
+  padding: 1.25rem;
 }
 
 .ff-dashboard-hero__title {
   margin: 0;
   color: var(--ff-color-text-primary);
-  font-size: 3rem;
+  font-size: clamp(2rem, 3.5vw, 2.6rem);
   font-style: italic;
   font-weight: 950;
   letter-spacing: 0;
@@ -34,15 +46,18 @@
 .ff-dashboard-kpis,
 .ff-dashboard-grid {
   display: grid;
-  gap: 1.5rem;
+  gap: 1rem;
 }
 
 .ff-dashboard-kpi-card,
 .ff-dashboard-panel,
 .ff-dashboard-inflow__item,
 .ff-dashboard-metrics__item {
-  border: 1px solid #1c2027;
-  background-color: #0b0e15;
+  border: 1px solid var(--ff-color-border-soft);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.008)),
+    var(--ff-color-surface-1);
+  box-shadow: var(--ff-shadow-card), var(--ff-shadow-inset);
 }
 
 .ff-dashboard-kpi-card,
@@ -58,10 +73,11 @@
 
 .ff-dashboard-kpi-card {
   position: relative;
-  min-height: 9.35rem;
+  min-height: 7.25rem;
   overflow: hidden;
   width: 100%;
-  padding: 2rem;
+  border-radius: var(--ff-radius-card);
+  padding: 1.05rem 1.1rem;
   text-align: left;
   box-shadow: var(--ff-shadow-card);
 }
@@ -71,7 +87,7 @@
 }
 
 .ff-dashboard-kpi-card--cyan {
-  border-left: 4px solid var(--ff-color-primary-500);
+  border-left: 4px solid var(--ff-color-primary-400);
 }
 
 .ff-dashboard-kpi-card--disabled {
@@ -97,7 +113,7 @@
 
 .ff-dashboard-kpi-card__label {
   margin: 0;
-  color: #c1c6d7;
+  color: var(--ff-color-text-muted);
   font-size: 0.625rem;
   letter-spacing: 0.3em;
 }
@@ -105,22 +121,22 @@
 .ff-dashboard-kpi-card__metric {
   display: flex;
   align-items: flex-end;
-  gap: 1rem;
-  margin-top: 0.5rem;
+  gap: 0.75rem;
+  margin-top: 0.35rem;
 }
 
 .ff-dashboard-kpi-card__value {
   color: var(--ff-color-text-primary);
-  font-size: 3.75rem;
-  font-style: italic;
-  font-weight: 700;
+  font-size: clamp(2.45rem, 4vw, 3.1rem);
+  font-style: normal;
+  font-weight: 950;
   letter-spacing: 0;
   line-height: 1;
 }
 
 .ff-dashboard-kpi-card__meta {
   max-width: 7rem;
-  color: var(--ff-color-primary-500);
+  color: var(--ff-color-primary-100);
   font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 0.1em;
@@ -129,7 +145,7 @@
 }
 
 .ff-dashboard-kpi-card__hint {
-  margin: 0.75rem 0 0;
+  margin: 0.5rem 0 0;
   color: #8e9bb0;
   font-size: 0.78rem;
 }
@@ -143,16 +159,17 @@
 }
 
 .ff-dashboard-kpi-card__icon-svg {
-  width: 6.6rem;
-  height: 6.3rem;
+  width: 5.1rem;
+  height: 4.9rem;
 }
 
 .ff-dashboard-grid {
-  margin-top: 3rem;
+  margin-top: 1.4rem;
 }
 
 .ff-dashboard-panel {
-  padding: 1.5rem;
+  border-radius: var(--ff-radius-panel);
+  padding: 1rem;
 }
 
 .ff-dashboard-panel__header {
@@ -160,13 +177,13 @@
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
 
 .ff-dashboard-panel__title {
   margin: 0;
   color: var(--ff-color-text-primary);
-  font-size: 1.125rem;
+  font-size: 0.98rem;
   font-style: italic;
   font-weight: 600;
   letter-spacing: 0;
@@ -206,7 +223,7 @@
 .ff-dashboard-metrics,
 .ff-dashboard-live {
   display: grid;
-  gap: 1rem;
+  gap: 0.75rem;
 }
 
 .ff-dashboard-inflow__item {
@@ -215,7 +232,8 @@
   align-items: center;
   gap: 1rem;
   width: 100%;
-  padding: 0.75rem;
+  border-radius: 1rem;
+  padding: 0.65rem;
   color: inherit;
   text-align: left;
 }
@@ -234,13 +252,14 @@
 
 .ff-dashboard-inflow__avatar {
   display: flex;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 2.25rem;
+  height: 2.25rem;
   align-items: center;
   justify-content: center;
-  border: 1px solid #414754;
-  background-color: #1c2027;
-  color: #8e9bb0;
+  border: 1px solid rgba(74, 142, 255, 0.36);
+  border-radius: 0.85rem;
+  background: linear-gradient(145deg, #31527f, #172845);
+  color: #d9e7ff;
 }
 
 .ff-dashboard-inflow__content {
@@ -278,6 +297,8 @@
   width: 100%;
   color: inherit;
   text-align: left;
+  border-radius: 1rem;
+  overflow: hidden;
 }
 
 .ff-dashboard-metrics__bar {
@@ -294,7 +315,7 @@
   justify-content: space-between;
   gap: 1rem;
   min-width: 0;
-  padding: 1rem 1rem 1rem 1.125rem;
+  padding: 0.8rem 0.85rem 0.8rem 0.95rem;
 }
 
 .ff-dashboard-metrics__name {
@@ -316,7 +337,7 @@
 .ff-dashboard-metrics__score {
   margin: 0;
   color: var(--ff-color-primary-500);
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-style: italic;
   font-weight: 700;
   letter-spacing: 0;
@@ -328,8 +349,9 @@
 
 .ff-dashboard-metrics__badge {
   display: inline-flex;
-  background-color: var(--ff-color-primary-500);
-  color: #fff;
+  border-radius: 999px;
+  background-color: rgba(74, 142, 255, 0.18);
+  color: var(--ff-color-primary-100);
   padding: 0.06rem 0.5rem;
   font-size: 0.5rem;
   line-height: 1.5;
@@ -389,12 +411,14 @@
 .ff-dashboard-live__progress {
   height: 0.375rem;
   overflow: hidden;
-  background-color: #1c2027;
+  background-color: #2b313b;
+  border-radius: 999px;
 }
 
 .ff-dashboard-live__progress-bar {
   height: 100%;
-  background-color: var(--ff-color-primary-500);
+  border-radius: inherit;
+  background: linear-gradient(90deg, #7fb5ff, var(--ff-color-primary-400));
 }
 
 .ff-dashboard-live__label {
@@ -421,7 +445,7 @@
 
 @media (min-width: 1024px) {
   .ff-dashboard-content {
-    padding: 2rem 2.5rem 3rem;
+    padding: 1.35rem 1.75rem 2.5rem;
   }
 
   .ff-dashboard-grid {
@@ -430,6 +454,6 @@
   }
 
   .ff-dashboard-panel {
-    min-height: 20.5rem;
+    min-height: 17rem;
   }
 }

@@ -6,17 +6,17 @@ import { CommonModule } from '@angular/common';
   selector: 'app-ui-empty-state',
   imports: [CommonModule],
   template: `
-    <div class="rounded-2xl border border-slate-800 bg-slate-900/30 p-6 text-center">
-      <div class="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-800/50">
+    <div class="ff-empty text-center">
+      <div class="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-[var(--ff-radius-card)] bg-[var(--ff-color-surface-2)]">
         <ng-content select="[icon]"></ng-content>
       </div>
 
-      <h3 class="text-base font-semibold text-slate-100">
+      <h3 class="ff-section-title text-base">
         {{ title }}
       </h3>
 
       @if (subtitle) {
-        <p class="mt-1 text-sm text-slate-400">
+        <p class="ff-row-meta mt-1">
           {{ subtitle }}
         </p>
       }

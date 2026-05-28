@@ -1,8 +1,10 @@
 from django.db import models
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
+from users.permissions import IsHrAdminOrDirector
 
 
 from templates_grid.models import QuestionPool, SkillQuestion
@@ -12,6 +14,13 @@ from templates_grid.serializers import QuestionPoolSerializer, SkillQuestionSeri
 class QuestionPoolViewSet(ModelViewSet):
     queryset = QuestionPool.objects.all().order_by("id")
     serializer_class = QuestionPoolSerializer
+
+    def get_permissions(self):
+        if self.action in ["create", "update", "partial_update", "destroy"]:
+            return [IsAuthenticated(), IsHrAdminOrDirector()]
+        if self.action == "questions" and self.request.method == "POST":
+            return [IsAuthenticated(), IsHrAdminOrDirector()]
+        return [IsAuthenticated()]
 
     search_fields = ["name", "code"]
 

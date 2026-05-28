@@ -1,0 +1,131 @@
+{
+  "generatedAt": "2026-05-15T09:19:33.126Z",
+  "standard": "WCAG2AAA",
+  "directory": "A:\\enzo2\\M1\\Employment\\FaridProject-2.0\\docs\\stitch\\fleetflow-mobile-preview-2026-05-15T08-44-48-644Z\\aaa",
+  "screenCount": 12,
+  "totalIssues": 0,
+  "totalErrors": 0,
+  "totalWarnings": 0,
+  "results": [
+    {
+      "file": "01-login.html",
+      "documentTitle": "FleetFlow - Login",
+      "pageUrl": "file:///A:/enzo2/M1/Employment/FaridProject-2.0/docs/stitch/fleetflow-mobile-preview-2026-05-15T08-44-48-644Z/aaa/01-login.html",
+      "issueCount": 0,
+      "errorCount": 0,
+      "warningCount": 0,
+      "noticeCount": 0,
+      "issues": []
+    },
+    {
+      "file": "02-admin-dashboard.html",
+      "documentTitle": "FleetFlow - Admin Dashboard",
+      "pageUrl": "file:///A:/enzo2/M1/Employment/FaridProject-2.0/docs/stitch/fleetflow-mobile-preview-2026-05-15T08-44-48-644Z/aaa/02-admin-dashboard.html",
+      "issueCount": 0,
+      "errorCount": 0,
+      "warningCount": 0,
+      "noticeCount": 0,
+      "issues": []
+    },
+    {
+      "file": "03-contacts-directory.html",
+      "documentTitle": "FleetFlow - Contacts Directory",
+      "pageUrl": "file:///A:/enzo2/M1/Employment/FaridProject-2.0/docs/stitch/fleetflow-mobile-preview-2026-05-15T08-44-48-644Z/aaa/03-contacts-directory.html",
+      "issueCount": 0,
+      "errorCount": 0,
+      "warningCount": 0,
+      "noticeCount": 0,
+      "issues": []
+    },
+    {
+      "file": "04-tests-validation.html",
+      "documentTitle": "FleetFlow Admin - Tests",
+      "pageUrl": "file:///A:/enzo2/M1/Employment/FaridProject-2.0/docs/stitch/fleetflow-mobile-preview-2026-05-15T08-44-48-644Z/aaa/04-tests-validation.html",
+      "issueCount": 0,
+      "errorCount": 0,
+      "warningCount": 0,
+      "noticeCount": 0,
+      "issues": []
+    },
+    {
+      "file": "05-template-pool-question-editor.html",
+      "documentTitle": "FleetFlow Template Builder",
+      "pageUrl": "file:///A:/enzo2/M1/Employment/FaridProject-2.0/docs/stitch/fleetflow-mobile-preview-2026-05-15T08-44-48-644Z/aaa/05-template-pool-question-editor.html",
+      "issueCount": 0,
+      "errorCount": 0,
+      "warningCount": 0,
+      "noticeCount": 0,
+      "issues": []
+    },
+    {
+      "file": "06-jobs-applicants.html",
+      "documentTitle": "FleetFlow Jobs Management",
+      "pageUrl": "file:///A:/enzo2/M1/Employment/FaridProject-2.0/docs/stitch/fleetflow-mobile-preview-2026-05-15T08-44-48-644Z/aaa/06-jobs-applicants.html",
+      "issueCount": 0,
+      "errorCount": 0,
+      "warningCount": 0,
+      "noticeCount": 0,
+      "issues": []
+    },
+    {
+      "file": "07-launch-evaluation.html",
+      "documentTitle": "FleetFlow - Launch Evaluation",
+      "pageUrl": "file:///A:/enzo2/M1/Employment/FaridProject-2.0/docs/stitch/fleetflow-mobile-preview-2026-05-15T08-44-48-644Z/aaa/07-launch-evaluation.html",
+      "issueCount": 0,
+      "errorCount": 0,
+      "warningCount": 0,
+      "noticeCount": 0,
+      "issues": []
+    },
+    {
+      "file": "08-manager-dashboard.html",
+      "documentTitle": "Manager Dashboard - DriverRecruit",
+      "pageUrl": "file:///A:/enzo2/M1/Employment/FaridProject-2.0/docs/stitch/fleetflow-mobile-preview-2026-05-15T08-44-48-644Z/aaa/08-manager-dashboard.html",
+      "issueCount": 0,
+      "errorCount": 0,
+      "warningCount": 0,
+      "noticeCount": 0,
+      "issues": []
+    },
+    {
+      "file": "09-manager-questionnaire.html",
+      "documentTitle": "Manager Evaluation - Logistics Recruitment",
+      "pageUrl": "file:///A:/enzo2/M1/Employment/FaridProject-2.0/docs/stitch/fleetflow-mobile-preview-2026-05-15T08-44-48-644Z/aaa/09-manager-questionnaire.html",
+      "issueCount": 0,
+      "errorCount": 0,
+      "warningCount": 0,
+      "noticeCount": 0,
+      "issues": []
+    },
+    {
+      "file": "10-candidate-public-jobs.html",
+      "documentTitle": "FleetFlow - Candidate Public Jobs",
+      "pageUrl": "file:///A:/enzo2/M1/Employment/FaridProject-2.0/docs/stitch/fleetflow-mobile-preview-2026-05-15T08-44-48-644Z/aaa/10-candidate-public-jobs.html",
+      "issueCount": 0,
+      "errorCount": 0,
+      "warningCount": 0,
+      "noticeCount": 0,
+      "issues": []
+    },
+    {
+      "file": "11-candidate-applications-tests.html",
+      "documentTitle": "FleetFlow - Candidate Applications Tests",
+      "pageUrl": "file:///A:/enzo2/M1/Employment/FaridProject-2.0/docs/stitch/fleetflow-mobile-preview-2026-05-15T08-44-48-644Z/aaa/11-candidate-applications-tests.html",
+      "issueCount": 0,
+      "errorCount": 0,
+      "warningCount": 0,
+      "noticeCount": 0,
+      "issues": []
+    },
+    {
+      "file": "12-test-assessment-detail.html",
+      "documentTitle": "Assessment Detail - FleetFlow",
+      "pageUrl": "file:///A:/enzo2/M1/Employment/FaridProject-2.0/docs/stitch/fleetflow-mobile-preview-2026-05-15T08-44-48-644Z/aaa/12-test-assessment-detail.html",
+      "issueCount": 0,
+      "errorCount": 0,
+      "warningCount": 0,
+      "noticeCount": 0,
+      "issues": []
+    }
+  ]
+}

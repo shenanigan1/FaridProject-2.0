@@ -27,13 +27,17 @@ export interface UiSelectOption<T extends string = string> {
   ],
 })
 export class UiSelectComponent<T extends string = string> implements ControlValueAccessor {
+  private static nextId = 0;
+
   @Input() label: string | null = null;
   @Input() hint: string | null = null;
   @Input() error: string | null = null;
+  @Input() selectId = '';
 
   @Input() placeholder = 'Select...';
   @Input() options: UiSelectOption<T>[] = [];
 
+  readonly generatedId = `ff-select-${++UiSelectComponent.nextId}`;
   readonly value = signal<T | null>(null);
   readonly disabled = signal(false);
 
@@ -68,5 +72,25 @@ export class UiSelectComponent<T extends string = string> implements ControlValu
 
   get selectClasses(): string {
     return ['ff-input', 'mt-1', this.error ? 'ff-input-error' : ''].filter(Boolean).join(' ');
+  }
+
+  get controlId(): string {
+    return this.selectId || this.generatedId;
+  }
+
+  get errorId(): string {
+    return `${this.controlId}-error`;
+  }
+
+  get hintId(): string {
+    return `${this.controlId}-hint`;
+  }
+
+  get describedBy(): string | null {
+    if (this.error) {
+      return this.errorId;
+    }
+
+    return this.hint ? this.hintId : null;
   }
 }

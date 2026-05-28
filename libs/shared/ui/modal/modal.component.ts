@@ -1,6 +1,8 @@
 import {
+  AfterViewChecked,
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   EventEmitter,
   HostListener,
   Input,
@@ -8,6 +10,7 @@ import {
   OnDestroy,
   Output,
   SimpleChanges,
+  ViewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -22,7 +25,7 @@ let nextId = 0;
   templateUrl: './modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UiModalComponent implements OnChanges, OnDestroy {
+export class UiModalComponent implements AfterViewChecked, OnChanges, OnDestroy {
   @Input() open = false;
   @Output() openChange = new EventEmitter<boolean>();
 
@@ -33,8 +36,22 @@ export class UiModalComponent implements OnChanges, OnDestroy {
   /** used for aria-labelledby */
   readonly titleId = `ui-modal-title-${++nextId}`;
 
+  @ViewChild('dialogPanel') private dialogPanel?: ElementRef<HTMLElement>;
+
+  private focusedCurrentOpen = false;
+
+  ngAfterViewChecked(): void {
+    if (!this.open || this.focusedCurrentOpen) return;
+
+    this.dialogPanel?.nativeElement.focus();
+    this.focusedCurrentOpen = true;
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['open']) this.syncBodyScrollLock();
+    if (changes['open']) {
+      this.focusedCurrentOpen = false;
+      this.syncBodyScrollLock();
+    }
   }
 
   ngOnDestroy(): void {
@@ -66,7 +83,7 @@ export class UiModalComponent implements OnChanges, OnDestroy {
     this.openChange.emit(false);
   }
 
-  stop(e: MouseEvent): void {
+  stop(e: Event): void {
     e.stopPropagation();
   }
 

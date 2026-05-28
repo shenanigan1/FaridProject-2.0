@@ -26,18 +26,22 @@ export class RelaunchTestPage {
   readonly selectedTemplateId = signal<number | null>(null);
   readonly error = signal<string | null>(null);
   readonly query = signal('');
+  readonly difficultyFilter = signal('all');
   readonly searchControl = new FormControl('', { nonNullable: true });
 
   readonly filteredTemplates = computed(() => {
     const query = this.query().trim().toLowerCase();
+    const difficulty = this.difficultyFilter();
     return this.templates().filter((template) => {
       const blob = `${template.name} ${template.description} ${template.difficulty}`.toLowerCase();
-      return !query || blob.includes(query);
+      const matchesSearch = !query || blob.includes(query);
+      const matchesDifficulty = difficulty === 'all' || template.difficulty.toLowerCase() === difficulty;
+      return matchesSearch && matchesDifficulty;
     });
   });
 
   readonly selectedTemplate = computed(() =>
-    this.templates().find((template) => template.id === this.selectedTemplateId()) ?? null,
+    this.filteredTemplates().find((template) => template.id === this.selectedTemplateId()) ?? null,
   );
 
   constructor() {
@@ -51,14 +55,18 @@ export class RelaunchTestPage {
     this.selectedTemplateId.set(templateId);
   }
 
+  setDifficultyFilter(value: string): void {
+    this.difficultyFilter.set(value);
+  }
+
   confirmSelection(): void {
-    const selected = this.selectedTemplateId();
+    const selected = this.selectedTemplate();
     if (!selected || !Number.isInteger(this.applicationId) || this.applicationId <= 0) {
       this.error.set('Application introuvable pour lancer le test.');
       return;
     }
 
-    void this.router.navigate(['/tests/launch', this.applicationId, selected]);
+    void this.router.navigate(['/tests/launch', this.applicationId, selected.id]);
   }
 
   private load(): void {

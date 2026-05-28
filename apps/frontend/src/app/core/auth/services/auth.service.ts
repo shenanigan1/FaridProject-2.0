@@ -4,6 +4,13 @@ import { Observable } from 'rxjs';
 import { environment } from '@env/environment';
 import { LoginRequest, LoginResponse, MeResponse } from '@auth/models/auth.models';
 
+export interface UpdateMePayload {
+  email: string;
+  first_name: string;
+  last_name: string;
+  phone?: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly http = inject(HttpClient);
@@ -18,6 +25,10 @@ export class AuthService {
 
   me(): Observable<MeResponse> {
     return this.http.get<MeResponse>(`${this.base}/me/`);
+  }
+
+  updateMe(payload: UpdateMePayload): Observable<MeResponse> {
+    return this.http.patch<MeResponse>(`${this.base}/me/`, payload);
   }
 
   refresh(refresh?: string): Observable<{ access: string; refresh?: string }> {

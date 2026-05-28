@@ -1,0 +1,555 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FleetFlow - Maquette workflow MVP AAA</title>
+    <style>
+      :root {
+        --bg: #10141b;
+        --ink: #fbfdff;
+        --muted: #dbeafe;
+        --panel: #1c2027;
+        --panel-2: #222a38;
+        --line: #93a4bd;
+        --blue: #003f8c;
+        --blue-2: #0b4fa0;
+        --green: #064e3b;
+        --orange: #7c2d12;
+        --red: #7f1d1d;
+        --shadow: 0 22px 80px rgba(0, 0, 0, 0.42);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: radial-gradient(circle at 18% 0%, #182847 0, transparent 34%),
+          linear-gradient(180deg, #0b1018, var(--bg));
+        color: var(--ink);
+        font-family:
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+      }
+
+      .board {
+        width: 3900px;
+        min-height: 2200px;
+        padding: 72px;
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 64px;
+        align-items: end;
+        margin-bottom: 40px;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+
+      h1 {
+        font-size: 60px;
+        line-height: 1.02;
+        letter-spacing: 0;
+      }
+
+      .subtitle {
+        margin-top: 18px;
+        max-width: 1450px;
+        color: var(--muted);
+        font-size: 24px;
+        line-height: 1.4;
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        min-height: 38px;
+        padding: 0 18px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: #050914;
+        color: var(--ink);
+        font-weight: 800;
+        font-size: 16px;
+        text-transform: uppercase;
+      }
+
+      .flow {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 18px;
+        margin: 36px 0 56px;
+      }
+
+      .flow-step {
+        min-height: 112px;
+        padding: 22px;
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        background: linear-gradient(145deg, var(--blue), #04275c);
+        box-shadow: var(--shadow);
+      }
+
+      .flow-step span {
+        display: block;
+        color: #bfdbfe;
+        font-size: 14px;
+        font-weight: 900;
+        text-transform: uppercase;
+      }
+
+      .flow-step strong {
+        display: block;
+        margin-top: 10px;
+        font-size: 26px;
+        line-height: 1.15;
+      }
+
+      .section-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: 54px 0 22px;
+      }
+
+      .section-title h2 {
+        font-size: 34px;
+      }
+
+      .screens {
+        display: grid;
+        grid-template-columns: repeat(7, 390px);
+        gap: 30px;
+        align-items: start;
+      }
+
+      .phone {
+        width: 390px;
+        height: 844px;
+        border: 1px solid var(--line);
+        border-radius: 30px;
+        overflow: hidden;
+        background: #0f141d;
+        box-shadow: var(--shadow);
+      }
+
+      .phone img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+
+      .caption {
+        margin-top: 12px;
+        color: var(--muted);
+        font-size: 17px;
+        font-weight: 800;
+      }
+
+      .wireframe {
+        width: 390px;
+        height: 844px;
+        display: flex;
+        flex-direction: column;
+        border: 1px solid var(--line);
+        border-radius: 30px;
+        overflow: hidden;
+        background: var(--bg);
+        box-shadow: var(--shadow);
+      }
+
+      .appbar {
+        min-height: 76px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 20px;
+        background: #030816;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .appbar h3 {
+        font-size: 24px;
+      }
+
+      .appbar small {
+        display: block;
+        margin-top: 2px;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .avatar {
+        width: 42px;
+        height: 42px;
+        border-radius: 999px;
+        background: var(--blue);
+        border: 1px solid #bfdbfe;
+      }
+
+      .content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        padding: 18px;
+        overflow: hidden;
+      }
+
+      .card {
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: var(--panel);
+        padding: 18px;
+      }
+
+      .card h4 {
+        font-size: 21px;
+      }
+
+      .card p {
+        margin-top: 8px;
+        color: var(--muted);
+        font-size: 15px;
+        line-height: 1.35;
+      }
+
+      .row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        min-height: 32px;
+        padding: 0 12px;
+        border: 1px solid #bfdbfe;
+        border-radius: 10px;
+        background: var(--blue);
+        font-size: 12px;
+        font-weight: 900;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+
+      .tag.green {
+        background: var(--green);
+        border-color: #a7f3d0;
+      }
+
+      .tag.orange {
+        background: var(--orange);
+        border-color: #fed7aa;
+      }
+
+      .tag.red {
+        background: var(--red);
+        border-color: #fecaca;
+      }
+
+      .actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+
+      .button {
+        min-height: 50px;
+        display: grid;
+        place-items: center;
+        border: 1px solid #bfdbfe;
+        border-radius: 12px;
+        background: var(--blue);
+        font-size: 16px;
+        font-weight: 900;
+      }
+
+      .button.red {
+        background: var(--red);
+        border-color: #fecaca;
+      }
+
+      .nav {
+        min-height: 82px;
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 8px;
+        padding: 12px 14px;
+        background: #030816;
+        border-top: 1px solid var(--line);
+      }
+
+      .nav span {
+        display: grid;
+        place-items: center;
+        border-radius: 14px;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .nav .active {
+        color: white;
+        background: var(--blue);
+      }
+
+      .rules {
+        display: grid;
+        grid-template-columns: 1.1fr 1fr 1fr;
+        gap: 24px;
+      }
+
+      .rule-card {
+        padding: 28px;
+        border: 1px solid var(--line);
+        border-radius: 26px;
+        background: var(--panel);
+        box-shadow: var(--shadow);
+      }
+
+      .rule-card h3 {
+        font-size: 28px;
+      }
+
+      .rule-card ul {
+        margin: 18px 0 0;
+        padding-left: 22px;
+        color: var(--muted);
+        font-size: 19px;
+        line-height: 1.55;
+      }
+
+      .references {
+        display: grid;
+        grid-template-columns: repeat(12, 180px);
+        gap: 18px;
+      }
+
+      .ref {
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        overflow: hidden;
+        background: #050914;
+      }
+
+      .ref img {
+        width: 180px;
+        height: 390px;
+        object-fit: cover;
+        object-position: top;
+        display: block;
+      }
+
+      .ref p {
+        padding: 10px;
+        min-height: 48px;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 800;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="board">
+      <section class="hero" aria-labelledby="title">
+        <div>
+          <span class="badge">Mobile-first / AAA checked</span>
+          <h1 id="title">FleetFlow MVP workflow réimaginé</h1>
+          <p class="subtitle">
+            Maquette cible pensée pour un parcours demo efficace: chaque rôle arrive sur un écran utile,
+            chaque action a une intention unique, et les tests suivent un chemin lisible de l’offre jusqu’à
+            la décision finale.
+          </p>
+        </div>
+        <span class="badge">390 × 844 preview</span>
+      </section>
+
+      <section class="flow" aria-label="Workflow cible">
+        <div class="flow-step"><span>01</span><strong>Login + rôle</strong></div>
+        <div class="flow-step"><span>02</span><strong>Jobs + candidats</strong></div>
+        <div class="flow-step"><span>03</span><strong>Lancement test</strong></div>
+        <div class="flow-step"><span>04</span><strong>Manager remplit</strong></div>
+        <div class="flow-step"><span>05</span><strong>Admin valide</strong></div>
+        <div class="flow-step"><span>06</span><strong>Candidat suit</strong></div>
+      </section>
+
+      <div class="section-title">
+        <h2>Écrans optimisés pour le MVP</h2>
+        <span class="badge">Workflow sans duplication d’actions</span>
+      </div>
+
+      <section class="screens" aria-label="Écrans MVP optimisés">
+        <article>
+          <div class="wireframe">
+            <div class="appbar"><div><h3>Admin Command</h3><small>Direction/Admin</small></div><div class="avatar"></div></div>
+            <div class="content">
+              <div class="card"><div class="row"><h4>Tests sous revue</h4><span class="tag orange">Action</span></div><p>6 évaluations prêtes avec décisions visibles: valider, refuser ou relancer.</p></div>
+              <div class="card"><div class="row"><h4>Jobs actifs</h4><span class="tag green">Live</span></div><p>14 offres ouvertes, triées par urgence et activité récente.</p></div>
+              <div class="card"><h4>Raccourcis sécurisés</h4><p>Contacts, rôles, templates, pools et reporting selon permissions.</p></div>
+              <div class="actions"><div class="button">Tests</div><div class="button">Jobs</div></div>
+            </div>
+            <div class="nav"><span class="active">Home</span><span>Contacts</span><span>Tests</span><span>Jobs</span><span>Rôles</span></div>
+          </div>
+          <p class="caption">Dashboard rôle: actionnable sans surcharge.</p>
+        </article>
+
+        <article>
+          <div class="wireframe">
+            <div class="appbar"><div><h3>Applicants</h3><small>Senior CDL-A Driver</small></div><div class="avatar"></div></div>
+            <div class="content">
+              <div class="card"><div class="row"><h4>John Doe</h4><span class="tag green">1 test</span></div><p>Score 94/100 · Interview · bouton vers l’historique filtré.</p></div>
+              <div class="card"><div class="row"><h4>Sarah Miller</h4><span class="tag orange">Review</span></div><p>Validation en attente · accès direct au dossier test.</p></div>
+              <div class="card"><div class="row"><h4>Michael Chen</h4><span class="tag">Launch</span></div><p>Aucun test en cours · lancement disponible avec template.</p></div>
+              <div class="button">Lancer un test</div>
+            </div>
+            <div class="nav"><span>Home</span><span>Contacts</span><span>Tests</span><span class="active">Jobs</span><span>Profil</span></div>
+          </div>
+          <p class="caption">Applicants: le test devient une action métier claire.</p>
+        </article>
+
+        <article>
+          <div class="wireframe">
+            <div class="appbar"><div><h3>Lancement Test</h3><small>Assignation managers</small></div><div class="avatar"></div></div>
+            <div class="content">
+              <div class="card"><h4>Évaluation Conducteur Senior</h4><p>120 min · 500 pts · 0/3 sections configurées.</p></div>
+              <div class="card"><div class="row"><h4>Conduite de Nuit</h4><span class="tag orange">Requis</span></div><p>Sélectionner un manager référent.</p></div>
+              <div class="card"><div class="row"><h4>Habilitation Hazmat</h4><span class="tag orange">Requis</span></div><p>Manager obligatoire avant lancement.</p></div>
+              <div class="button">Lancer l’évaluation</div>
+            </div>
+            <div class="nav"><span>Missions</span><span>Jobs</span><span class="active">Tests</span><span>Profil</span><span></span></div>
+          </div>
+          <p class="caption">Blocage explicite: impossible de lancer incomplet.</p>
+        </article>
+
+        <article>
+          <div class="wireframe">
+            <div class="appbar"><div><h3>Évaluation Terrain</h3><small>Manager scoped</small></div><div class="avatar"></div></div>
+            <div class="content">
+              <div class="card"><div class="row"><h4>Jean-Pierre</h4><span class="tag orange">À faire</span></div><p>Le manager ne voit que ses sections assignées.</p></div>
+              <div class="card"><div class="row"><h4>Conduite de Nuit</h4><span class="tag green">36/40</span></div><p>Réponses, commentaire section, score auto modifiable.</p></div>
+              <div class="card"><h4>Observations globales</h4><p>Synthèse obligatoire avant soumission finale.</p></div>
+              <div class="actions"><div class="button">Brouillon</div><div class="button">Soumettre</div></div>
+            </div>
+            <div class="nav"><span class="active">Nouveau</span><span>Historique</span><span>Stats</span><span></span><span></span></div>
+          </div>
+          <p class="caption">Manager: focus sur le test, pas sur l’admin.</p>
+        </article>
+
+        <article>
+          <div class="wireframe">
+            <div class="appbar"><div><h3>Test Assessment</h3><small>Admin/Direction</small></div><div class="avatar"></div></div>
+            <div class="content">
+              <div class="card"><div class="row"><h4>88 / 100</h4><span class="tag green">Passed</span></div><p>Amina Al-Fayed · Class A Chauffeur.</p></div>
+              <div class="card"><h4>Safety & Compliance</h4><p>Réponses, bonnes réponses, commentaire manager, override, éliminatoire.</p></div>
+              <div class="card"><h4>Décision finale</h4><p>Chaque bouton a un effet différent et confirmé.</p></div>
+              <div class="actions"><div class="button red">Refuser</div><div class="button">Retest</div></div>
+              <div class="button">Valider</div>
+            </div>
+            <div class="nav"><span>Home</span><span>Contacts</span><span class="active">Tests</span><span>Jobs</span><span></span></div>
+          </div>
+          <p class="caption">Admin: validation, refus et re-test séparés.</p>
+        </article>
+
+        <article>
+          <div class="wireframe">
+            <div class="appbar"><div><h3>Question Studio</h3><small>Admin/RH</small></div><div class="avatar"></div></div>
+            <div class="content">
+              <div class="card"><h4>Template CDL-A</h4><p>Sections visibles, pools attachés, points équilibrés sur 100.</p></div>
+              <div class="card"><div class="row"><h4>Pool Sécurité</h4><span class="tag green">Manage</span></div><p>QCM multi, vrai/faux, note, libre, pratique.</p></div>
+              <div class="card"><div class="row"><h4>Scoring</h4><span class="tag orange">Auto</span></div><p>Bonne réponse obligatoire, éliminatoire, override tracé.</p></div>
+              <div class="button">Ajouter une question</div>
+            </div>
+            <div class="nav"><span>Tests</span><span>Templates</span><span class="active">Pools</span><span>Questions</span><span></span></div>
+          </div>
+          <p class="caption">Studio: création test sans workflow technique caché.</p>
+        </article>
+
+        <article>
+          <div class="wireframe">
+            <div class="appbar"><div><h3>Mes Candidatures</h3><small>Candidat</small></div><div class="avatar"></div></div>
+            <div class="content">
+              <div class="card"><div class="row"><h4>Offres publiques</h4><span class="tag green">Public</span></div><p>Consultables sans connexion, apply protégé.</p></div>
+              <div class="card"><div class="row"><h4>Chauffeur SPL</h4><span class="tag orange">Test</span></div><p>Étape 3/5 · test technique à passer.</p></div>
+              <div class="card"><div class="row"><h4>Résultats</h4><span class="tag">Suivi</span></div><p>Certificat et détails visibles après validation.</p></div>
+              <div class="button">Voir mes tests</div>
+            </div>
+            <div class="nav"><span>Offres</span><span class="active">Candidatures</span><span>Tests</span><span>Profil</span><span></span></div>
+          </div>
+          <p class="caption">Candidat: public d’abord, privé après login.</p>
+        </article>
+      </section>
+
+      <div class="section-title">
+        <h2>Règles UX / sécurité à appliquer dans l’app</h2>
+        <span class="badge">À transformer en composants shared</span>
+      </div>
+      <section class="rules">
+        <article class="rule-card">
+          <h3>Workflow</h3>
+          <ul>
+            <li>Un écran dédié par décision importante.</li>
+            <li>Plus de boutons qui font la même chose.</li>
+            <li>Les filtres `/tests` deviennent la source unique de recherche.</li>
+            <li>Chaque état test est visible: draft, progress, review, validated, rejected.</li>
+          </ul>
+        </article>
+        <article class="rule-card">
+          <h3>Accessibilité AAA</h3>
+          <ul>
+            <li>Contrastes forts et états focus visibles.</li>
+            <li>Labels explicites sur tous les champs.</li>
+            <li>Messages d’erreur compréhensibles.</li>
+            <li>Décisions critiques confirmées et non uniquement colorées.</li>
+          </ul>
+        </article>
+        <article class="rule-card">
+          <h3>Architecture</h3>
+          <ul>
+            <li>App shell et nav par rôle centralisés.</li>
+            <li>Cards, tabs, chips, sheets, buttons en shared.</li>
+            <li>Pages alimentées API ou empty state propre.</li>
+            <li>Scoping backend conservé: manager, candidat, RH/admin.</li>
+          </ul>
+        </article>
+      </section>
+
+      <div class="section-title">
+        <h2>Screens importés comme références visuelles</h2>
+        <span class="badge">Exports AAA durcis</span>
+      </div>
+      <section class="references" aria-label="Screens sources importés">
+        <div class="ref"><img alt="" src="../stitch/fleetflow-mobile-preview-2026-05-15T08-44-48-644Z/aaa/viewport/01-login.png" /><p>Login</p></div>
+        <div class="ref"><img alt="" src="../stitch/fleetflow-mobile-preview-2026-05-15T08-44-48-644Z/aaa/viewport/02-admin-dashboard.png" /><p>Admin dashboard</p></div>
+        <div class="ref"><img alt="" src="../stitch/fleetflow-mobile-preview-2026-05-15T08-44-48-644Z/aaa/viewport/03-contacts-directory.png" /><p>Contacts</p></div>
+        <div class="ref"><img alt="" src="../stitch/fleetflow-mobile-preview-2026-05-15T08-44-48-644Z/aaa/viewport/04-tests-validation.png" /><p>Tests validation</p></div>
+        <div class="ref"><img alt="" src="../stitch/fleetflow-mobile-preview-2026-05-15T08-44-48-644Z/aaa/viewport/05-template-pool-question-editor.png" /><p>Editor</p></div>
+        <div class="ref"><img alt="" src="../stitch/fleetflow-mobile-preview-2026-05-15T08-44-48-644Z/aaa/viewport/06-jobs-applicants.png" /><p>Applicants</p></div>
+        <div class="ref"><img alt="" src="../stitch/fleetflow-mobile-preview-2026-05-15T08-44-48-644Z/aaa/viewport/07-launch-evaluation.png" /><p>Launch</p></div>
+        <div class="ref"><img alt="" src="../stitch/fleetflow-mobile-preview-2026-05-15T08-44-48-644Z/aaa/viewport/08-manager-dashboard.png" /><p>Manager</p></div>
+        <div class="ref"><img alt="" src="../stitch/fleetflow-mobile-preview-2026-05-15T08-44-48-644Z/aaa/viewport/09-manager-questionnaire.png" /><p>Questionnaire</p></div>
+        <div class="ref"><img alt="" src="../stitch/fleetflow-mobile-preview-2026-05-15T08-44-48-644Z/aaa/viewport/10-candidate-public-jobs.png" /><p>Candidate jobs</p></div>
+        <div class="ref"><img alt="" src="../stitch/fleetflow-mobile-preview-2026-05-15T08-44-48-644Z/aaa/viewport/11-candidate-applications-tests.png" /><p>Applications</p></div>
+        <div class="ref"><img alt="" src="../stitch/fleetflow-mobile-preview-2026-05-15T08-44-48-644Z/aaa/viewport/12-test-assessment-detail.png" /><p>Assessment</p></div>
+      </section>
+    </main>
+  </body>
+</html>

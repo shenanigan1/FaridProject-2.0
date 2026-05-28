@@ -19,10 +19,13 @@ describe('TestsAdminPage workflow', () => {
       of([
         {
           evaluationId: 1,
+          candidateId: 4,
+          applicationId: 9,
           candidateName: 'Nadia Benali',
           candidateEmail: 'nadia@example.com',
           templateName: 'Conduite de Nuit',
           positionTitle: 'Driver',
+          managerName: 'Marc Manager',
           status: 'in_progress',
           statusLabel: 'En cours',
           receivedAt: '2026-05-01T10:00:00Z',
@@ -36,10 +39,13 @@ describe('TestsAdminPage workflow', () => {
       of([
         {
           evaluationId: 1,
+          candidateId: 4,
+          applicationId: 9,
           candidateName: 'Nadia Benali',
           candidateEmail: 'nadia@example.com',
           templateName: 'Conduite de Nuit',
           positionTitle: 'Driver',
+          managerName: 'Marc Manager',
           status: 'completed',
           statusLabel: 'Score sous revue',
           receivedAt: '2026-05-01T10:00:00Z',
@@ -69,12 +75,26 @@ describe('TestsAdminPage workflow', () => {
   });
 
   it('renders unfinished tests with progress from evaluations API', () => {
+    const host = fixture.nativeElement as HTMLElement;
     const text = (fixture.nativeElement as HTMLElement).textContent ?? '';
 
+    expect(host.querySelector('.ff-page-bar')).not.toBeNull();
+    expect(host.querySelector('.ff-workflow-shell')).not.toBeNull();
+    expect(host.querySelector('.ff-segmented')).not.toBeNull();
+    expect(host.querySelector('.ff-search-box')).not.toBeNull();
     expect(text).toContain('Tests');
     expect(text).toContain('Nadia Benali');
     expect(text).toContain('66%');
     expect(text).toContain('2 / 3');
+  });
+
+  it('separates assessment opening from retest launch', () => {
+    const host = fixture.nativeElement as HTMLElement;
+    const openLink = host.querySelector<HTMLAnchorElement>('[data-testid="open-assessment-1"]');
+    const relaunchLink = host.querySelector<HTMLAnchorElement>('[data-testid="relaunch-assessment-1"]');
+
+    expect(openLink?.getAttribute('href')).toBe('/tests/1');
+    expect(relaunchLink?.getAttribute('href')).toBe('/tests/relaunch/4?applicationId=9');
   });
 
   it('switches to templates and renders backend templates', () => {

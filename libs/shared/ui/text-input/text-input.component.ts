@@ -27,13 +27,17 @@ type UiTextInputType = 'text' | 'email' | 'number' | 'search' | 'tel' | 'url' | 
   ],
 })
 export class UiTextInputComponent implements ControlValueAccessor {
+  private static nextId = 0;
+
   @Input() label: string | null = null;
   @Input() inputId = '';
   @Input() placeholder = '';
   @Input() type: UiTextInputType = 'text';
   @Input() error: string | null = null;
+  @Input() hint: string | null = null;
   @Input() icon: any | null = null;
 
+  readonly generatedId = `ff-text-input-${++UiTextInputComponent.nextId}`;
   readonly value = signal('');
   readonly disabled = signal(false);
 
@@ -74,5 +78,25 @@ export class UiTextInputComponent implements ControlValueAccessor {
     ]
       .filter(Boolean)
       .join(' ');
+  }
+
+  get controlId(): string {
+    return this.inputId || this.generatedId;
+  }
+
+  get errorId(): string {
+    return `${this.controlId}-error`;
+  }
+
+  get hintId(): string {
+    return `${this.controlId}-hint`;
+  }
+
+  get describedBy(): string | null {
+    if (this.error) {
+      return this.errorId;
+    }
+
+    return this.hint ? this.hintId : null;
   }
 }

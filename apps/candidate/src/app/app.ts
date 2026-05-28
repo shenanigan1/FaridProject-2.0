@@ -1,52 +1,62 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterOutlet } from '@angular/router';
+import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { filter } from 'rxjs';
 
 import { AuthModalComponent } from '@core/auth/components/auth-modal/auth-modal.component';
-import {
-  AuthService,
-  AuthenticatedCandidate,
-} from '@core/auth/services/auth.service';
-import { UiButtonPrimaryComponent } from '@lib-ui/button-primary/button-primary.component';
-import { UiModalComponent } from '@lib-ui/modal/modal.component';
-import { UiTextInputComponent } from '@lib-ui/text-input/text-input.component';
+import { AuthService } from '@core/auth/services/auth.service';
+import { SessionExpiredService } from '@core/auth/services/session-expired.service';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule,
+    RouterLink,
+    RouterLinkActive,
     RouterOutlet,
     AuthModalComponent,
-    UiModalComponent,
-    UiButtonPrimaryComponent,
-    UiTextInputComponent,
   ],
   templateUrl: './app.html',
 })
 export class App {
   private readonly authService = inject(AuthService);
-  private readonly formBuilder = inject(FormBuilder);
+  private readonly sessionExpired = inject(SessionExpiredService);
+  private readonly router = inject(Router);
 
-  readonly appTitle = 'Farid Candidate';
+  readonly appTitle = 'FleetFlow Candidate';
 
   authModalOpen = false;
-  profileModalOpen = false;
+  sessionExpiredMessage: string | null = null;
 
-  readonly profileForm = this.formBuilder.nonNullable.group({
-    firstName: ['', [Validators.required]],
-    lastName: ['', [Validators.required]],
-    email: ['', [Validators.required, Validators.email]],
-    phone: [''],
-  });
+  readonly navItems = [
+    { label: 'Offres', route: '/jobs' },
+    { label: 'Candidatures', route: '/applications' },
+    { label: 'Tests', route: '/tests' },
+    { label: 'Profil', route: '/profile' },
+  ];
 
   constructor() {
     const hadStoredSession = this.authService.hasStoredSession();
     this.authService.restoreSession().subscribe((candidate) => {
       this.authModalOpen = hadStoredSession && !candidate;
     });
+
+    this.router.events
+      .pipe(
+        filter((event): event is NavigationEnd => event instanceof NavigationEnd),
+        takeUntilDestroyed(),
+      )
+      .subscribe((event) => this.requireAuthForProtectedRoute(event.urlAfterRedirects));
+
+    this.sessionExpired.expired$
+      .pipe(takeUntilDestroyed())
+      .subscribe((message) => {
+        this.sessionExpiredMessage = message;
+        this.authModalOpen = true;
+        void this.router.navigateByUrl('/jobs');
+      });
   }
 
   onProfileClicked(): void {
@@ -55,49 +65,32 @@ export class App {
       return;
     }
 
-    this.openProfileModal();
+    void this.router.navigateByUrl('/profile');
   }
 
   onAuthSuccess(): void {
     this.authModalOpen = false;
-    this.openProfileModal();
+    this.sessionExpiredMessage = null;
+    void this.router.navigateByUrl('/dashboard');
   }
 
-  onProfileSave(): void {
-    this.profileForm.markAllAsTouched();
-    if (this.profileForm.invalid) {
-      return;
-    }
-
-    const currentCandidate = this.authService.getAuthenticatedCandidate();
-    if (!currentCandidate) {
+  openProtectedRoute(route: string): void {
+    if (!this.authService.isAuthenticated()) {
       this.authModalOpen = true;
-      this.profileModalOpen = false;
       return;
     }
 
-    const formValue = this.profileForm.getRawValue();
-
-    this.authService.saveAuthenticatedCandidate({
-      candidateId: currentCandidate.candidateId,
-      firstName: formValue.firstName,
-      lastName: formValue.lastName,
-      email: formValue.email,
-      phone: formValue.phone,
-    });
-
-    this.profileModalOpen = false;
+    void this.router.navigateByUrl(route);
   }
 
   onLogoutClicked(): void {
     this.authService.logout();
-    this.profileModalOpen = false;
   }
 
   get profileInitials(): string {
     const candidate = this.authService.getAuthenticatedCandidate();
     if (!candidate) {
-      return '👤';
+      return 'GU';
     }
 
     return `${candidate.firstName.charAt(0)}${candidate.lastName.charAt(0)}`.toUpperCase();
@@ -112,24 +105,18 @@ export class App {
     return `${candidate.firstName} ${candidate.lastName}`.trim();
   }
 
-  private openProfileModal(): void {
-    const candidate = this.authService.getAuthenticatedCandidate();
-    if (!candidate) {
-      this.authModalOpen = true;
-      this.profileModalOpen = false;
+  private requireAuthForProtectedRoute(url: string): void {
+    const isProtected =
+      url.startsWith('/dashboard') ||
+      url.startsWith('/applications') ||
+      url.startsWith('/tests') ||
+      url.startsWith('/profile');
+
+    if (!isProtected || this.authService.isAuthenticated()) {
       return;
     }
 
-    this.patchProfileForm(candidate);
-    this.profileModalOpen = true;
-  }
-
-  private patchProfileForm(candidate: AuthenticatedCandidate): void {
-    this.profileForm.patchValue({
-      firstName: candidate.firstName,
-      lastName: candidate.lastName,
-      email: candidate.email,
-      phone: candidate.phone,
-    });
+    this.authModalOpen = true;
+    void this.router.navigateByUrl('/jobs');
   }
 }

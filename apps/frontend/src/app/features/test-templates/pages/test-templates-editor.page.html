@@ -15,7 +15,7 @@
     <p class="template-alert">{{ pageError() }}</p>
   } @else {
     <main class="template-mobile__body">
-      <section class="template-section-title">
+      <section class="template-section-title template-section-title--general">
         <span class="template-section-title__icon">i</span>
         <h2>INFORMATIONS GENERALES</h2>
       </section>
@@ -24,6 +24,9 @@
         <label class="template-figma-field template-figma-field--full">
           <span>Nom du Template</span>
           <input formControlName="name" placeholder="ex: Inspection Securite" />
+          @if (form.controls.name.touched && form.controls.name.hasError('required')) {
+            <small class="template-field-error">Champ obligatoire</small>
+          }
         </label>
 
         <div class="template-figma-grid">
@@ -55,7 +58,7 @@
         </div>
       </section>
 
-      <section class="template-section-title">
+      <section class="template-section-title template-section-title--structure">
         <span class="template-section-title__icon">+</span>
         <h2>STRUCTURE DU TEST</h2>
         <strong>{{ sections().length }} Section{{ sections().length > 1 ? 's' : '' }}</strong>
@@ -72,6 +75,9 @@
                   [value]="section.title"
                   (input)="updateSectionTitle(section.id, $any($event.target).value)"
                 />
+                @if (!section.title.trim()) {
+                  <small class="template-field-error">Champ obligatoire</small>
+                }
               </label>
               <button type="button" aria-label="Supprimer la section" (click)="removeSection(section.id)">
                 &#128465;

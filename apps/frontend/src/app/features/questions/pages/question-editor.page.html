@@ -1,5 +1,5 @@
 <section class="ff-app-screen">
-  <div class="ff-app-container ff-app-stack" style="max-width: 48rem">
+  <div class="ff-app-container ff-app-stack ff-u-max-form">
     <header class="ff-app-header">
       <div>
         <p class="ff-app-kicker">QUESTION BANK</p>
@@ -60,7 +60,7 @@
             </div>
 
             <div class="ff-field-block">
-              <div class="ff-inline-actions" style="justify-content: space-between">
+          <div class="ff-inline-actions ff-u-between">
                 <label for="question-text">Question</label>
                 <span class="ff-muted">{{ textCount() }}/2500</span>
               </div>
@@ -167,7 +167,7 @@
               <h2 class="ff-section-title">{{ form.controls.title.value }}</h2>
             }
             @if (form.controls.text.value) {
-              <p class="ff-row-meta" style="white-space: pre-wrap">{{ form.controls.text.value }}</p>
+                  <p class="ff-row-meta ff-u-pre-wrap">{{ form.controls.text.value }}</p>
             } @else {
               <p class="ff-empty">Question text is empty.</p>
             }

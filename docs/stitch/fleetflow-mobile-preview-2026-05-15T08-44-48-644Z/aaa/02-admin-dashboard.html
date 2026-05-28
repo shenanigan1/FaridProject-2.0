@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head>
+<title>FleetFlow - Admin Dashboard</title>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-container": "#3a90ff",
+                        "on-error": "#690005",
+                        "on-secondary-container": "#e0e8ff",
+                        "secondary-fixed-dim": "#adc6ff",
+                        "on-primary": "#003063",
+                        "on-surface-variant": "#c1c6d6",
+                        "on-secondary-fixed": "#001a41",
+                        "secondary-fixed": "#d8e2ff",
+                        "on-primary-container": "#002957",
+                        "primary": "#a9c7ff",
+                        "outline-variant": "#414754",
+                        "surface-bg": "#10141b",
+                        "on-secondary-fixed-variant": "#004493",
+                        "on-primary-fixed-variant": "#00468b",
+                        "on-surface": "#e0e2ec",
+                        "tertiary-fixed": "#ffdbc9",
+                        "error-container": "#93000a",
+                        "surface-container-lowest": "#0b0e15",
+                        "surface-tint": "#a9c7ff",
+                        "surface-dim": "#10131a",
+                        "surface-container-high": "#272a31",
+                        "background": "#10131a",
+                        "on-secondary": "#002e69",
+                        "on-tertiary": "#532200",
+                        "inverse-on-surface": "#2d3038",
+                        "on-background": "#e0e2ec",
+                        "on-tertiary-fixed": "#331200",
+                        "tertiary-container": "#e76e13",
+                        "primary-fixed-dim": "#a9c7ff",
+                        "surface-container-low": "#181c23",
+                        "warning": "#f59e0b",
+                        "on-primary-fixed": "#001b3d",
+                        "tertiary": "#ffb68e",
+                        "surface-container-highest": "#31353c",
+                        "secondary-container": "#0064d3",
+                        "surface": "#10131a",
+                        "surface-bright": "#030816",
+                        "secondary": "#adc6ff",
+                        "surface-variant": "#31353c",
+                        "surface-container": "#1c2027",
+                        "inverse-surface": "#e0e2ec",
+                        "on-error-container": "#ffdad6",
+                        "on-tertiary-fixed-variant": "#763300",
+                        "error": "#ef4444",
+                        "inverse-primary": "#005db6",
+                        "success": "#22c55e",
+                        "primary-fixed": "#d6e3ff",
+                        "on-tertiary-container": "#491d00",
+                        "outline": "#3b4352",
+                        "tertiary-fixed-dim": "#ffb68e"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "unit": "8px",
+                        "container-max": "1440px",
+                        "margin": "32px",
+                        "base": "4px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "title-lg": ["Inter"],
+                        "label-md": ["Inter"],
+                        "label-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-md": ["Inter"],
+                        "title-md": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "display-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "title-lg": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                        "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "title-md": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+                        "label-sm": ["11px", {"lineHeight": "16px", "letterSpacing": "0.03em", "fontWeight": "500"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  <style id="fleetflow-aaa-overrides">
+  :root { color-scheme: dark; }
+  html, body { background: #10141b !important; color: #fbfdff !important; }
+  body, body * { text-shadow: none !important; }
+  body :is(h1,h2,h3,h4,h5,h6,p,span,label,small,div,li,dt,dd,td,th,strong,em,a,button) {
+    color: #fbfdff !important;
+  }
+  body :is(.text-outline,.text-on-surface-variant,.text-slate-400,.text-gray-400,.text-neutral-400,.text-zinc-400),
+  body [class*="text-outline"],
+  body [class*="text-on-surface-variant"],
+  body [class*="text-gray"],
+  body [class*="text-slate"],
+  body [class*="text-zinc"],
+  body [class*="text-neutral"] {
+    color: #f8fbff !important;
+  }
+  body :is(header,main,footer,section,article,nav,form),
+  body [class*="bg-background"],
+  body [class*="bg-surface"],
+  body [class*="bg-[#1C2027]"],
+  body [class*="bg-[#030816]"] {
+    border-color: #7f8da3 !important;
+  }
+  body [class*="bg-background"] {
+    background-color: #10141b !important;
+  }
+  body :is(input,select,textarea) {
+    background: #050914 !important;
+    color: #ffffff !important;
+    border: 1px solid #dbeafe !important;
+  }
+  body :is(input,textarea)::placeholder { color: #f1f5f9 !important; opacity: 1 !important; }
+  body button,
+  body a[role="button"],
+  body [class*="bg-primary"],
+  body [class*="bg-secondary-container"],
+  body [class*="bg-[#1683F7]"],
+  body [class*="bg-[#1683f7]"],
+  body [class*="bg-blue"] {
+    background-color: #003f8c !important;
+    border-color: #bfdbfe !important;
+    color: #ffffff !important;
+  }
+  body [class*="bg-green"],
+  body [class*="bg-emerald"] {
+    background-color: #064e3b !important;
+    color: #ffffff !important;
+    border-color: #a7f3d0 !important;
+  }
+  body [class*="bg-orange"],
+  body [class*="bg-amber"],
+  body [class*="bg-yellow"],
+  body [class*="bg-tertiary"] {
+    background-color: #5f2109 !important;
+    color: #ffffff !important;
+    border-color: #fed7aa !important;
+  }
+  body [class*="bg-red"],
+  body [class*="bg-rose"],
+  body [class*="bg-error"],
+  body [class*="bg-danger"] {
+    background-color: #7f1d1d !important;
+    color: #ffffff !important;
+    border-color: #fecaca !important;
+  }
+  body [class*="bg-success"] {
+    background-color: #064e3b !important;
+    color: #ffffff !important;
+    border-color: #a7f3d0 !important;
+  }
+  body [class*="text-tertiary"],
+  body [class*="text-error"],
+  body [class*="text-danger"],
+  body [class*="text-success"] {
+    color: #ffffff !important;
+  }
+  body .material-symbols-outlined {
+    color: #ffffff !important;
+    background-color: #0b1220 !important;
+    border-radius: 999px !important;
+  }
+  body :is(a,button,input,select,textarea,[tabindex]):focus-visible {
+    outline: 3px solid #bfdbfe !important;
+    outline-offset: 3px !important;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      scroll-behavior: auto !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>
+</head>
+<body class="bg-surface-bg text-on-surface min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="w-full top-0 sticky bg-surface-bg dark:bg-surface-bg border-b border-outline flex justify-between items-center px-4 py-2 z-50">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary cursor-pointer active:scale-95" data-icon="menu" aria-hidden="true">menu</span>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">Logistics Admin</h1>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer p-2 hover:bg-surface-container-high transition-colors rounded-full" data-icon="search" aria-hidden="true">search</span>
+<div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center overflow-hidden border border-outline">
+<img alt="Admin User Profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBq3oXcCiPm-0-bYgmeIbZDpXJnt_QaxTNNVsxWiNfF8J7Wphu2scN22U_KUQi-wQnj6B-pUfig6rKrZGD7OauON8sxCTT0U0eURaeZxIw7IzhJRyEN0lEC7ggVtPA_FxpO4KkeYtpL8EJvLeRjUG2ETU5dzRh-J8VT-tEJ7sz00wDNYmHTpyv0Chtm2lfsq6Y2Q1OOA9xkkCXooIa9XjaW_1pwANgHELuIy2-9kHAoz_ZfZjh15RDrwApmgIS9mqSi3xxKrW533EY"/>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 overflow-y-auto px-4 pt-6 pb-24 md:px-margin">
+<!-- System Sync Alert -->
+<div class="mb-gutter flex items-center gap-3 px-4 py-3 bg-surface-container-low border border-outline rounded-lg">
+<span class="material-symbols-outlined text-warning text-[20px]" data-icon="sync_problem" aria-hidden="true">sync_problem</span>
+<span class="font-label-md text-label-md text-on-surface-variant">System Sync Delay: 2m</span>
+</div>
+<!-- KPI Grid (Bento Style) -->
+<div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-gutter">
+<div class="bg-surface-container border border-outline p-4 rounded-xl flex flex-col justify-between hover:bg-surface-container-high transition-colors cursor-pointer group">
+<div class="flex justify-between items-start mb-4">
+<span class="material-symbols-outlined text-primary text-[24px]" data-icon="work" aria-hidden="true">work</span>
+<span class="text-primary font-bold font-title-lg text-title-lg">14</span>
+</div>
+<span class="font-label-lg text-label-lg text-on-surface-variant group-hover:text-on-surface">Active Jobs</span>
+</div>
+<div class="bg-surface-container border border-outline p-4 rounded-xl flex flex-col justify-between hover:bg-surface-container-high transition-colors cursor-pointer group">
+<div class="flex justify-between items-start mb-4">
+<span class="material-symbols-outlined text-tertiary text-[24px]" data-icon="quiz" aria-hidden="true">quiz</span>
+<span class="text-tertiary font-bold font-title-lg text-title-lg">38</span>
+</div>
+<span class="font-label-lg text-label-lg text-on-surface-variant group-hover:text-on-surface">Pending Tests</span>
+</div>
+<div class="col-span-2 md:col-span-1 bg-surface-container border border-outline p-4 rounded-xl flex flex-col justify-between hover:bg-surface-container-high transition-colors cursor-pointer group">
+<div class="flex justify-between items-start mb-4">
+<span class="material-symbols-outlined text-success text-[24px]" data-icon="contacts" aria-hidden="true">contacts</span>
+<span class="text-success font-bold font-title-lg text-title-lg">122</span>
+</div>
+<span class="font-label-lg text-label-lg text-on-surface-variant group-hover:text-on-surface">New Contacts</span>
+</div>
+</div>
+<!-- Dynamic Content Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Test Validation Queue (Urgent) -->
+<section class="lg:col-span-7 flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<h2 class="font-title-md text-title-md text-on-surface">Test Validation Queue</h2>
+<span class="px-2 py-1 bg-error-container text-on-error-container text-[10px] font-bold rounded uppercase">2 Urgent</span>
+</div>
+<div class="bg-surface-container border border-outline rounded-xl overflow-hidden">
+<!-- Validation Item 1 -->
+<div class="p-4 border-b border-outline hover:bg-surface-container-high transition-colors flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 bg-surface-container-highest rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" data-icon="verified_user" aria-hidden="true">verified_user</span>
+</div>
+<div>
+<h2 class="font-label-lg text-label-lg text-on-surface">Class A Driver Test</h2>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Candidate: Marcus Vance • <span class="text-error">92% Match</span></p>
+</div>
+</div>
+<button class="bg-secondary-container text-on-secondary-container px-3 py-1.5 rounded-lg font-label-md text-label-md hover:brightness-110 active:scale-95 transition-all" aria-label="Review">Review</button>
+</div>
+<!-- Validation Item 2 -->
+<div class="p-4 hover:bg-surface-container-high transition-colors flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 bg-surface-container-highest rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary" data-icon="medical_services" aria-hidden="true">medical_services</span>
+</div>
+<div>
+<h2 class="font-label-lg text-label-lg text-on-surface">Pending Medical</h2>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Candidate: Sarah Jenkins • Expiring in 4h</p>
+</div>
+</div>
+<button class="bg-secondary-container text-on-secondary-container px-3 py-1.5 rounded-lg font-label-md text-label-md hover:brightness-110 active:scale-95 transition-all" aria-label="Review">Review</button>
+</div>
+</div>
+<!-- Job Activity Overview -->
+<div class="mt-4 bg-surface-container border border-outline rounded-xl p-4">
+<h2 class="font-title-md text-title-md text-on-surface mb-4">Job Activity Overview</h2>
+<div class="space-y-4">
+<div>
+<div class="flex justify-between mb-1">
+<span class="font-label-md text-label-md text-on-surface-variant">Last-Mile Specialist (Chicago)</span>
+<span class="font-label-md text-label-md text-primary">85% Filled</span>
+</div>
+<div class="w-full bg-surface-container-highest h-2 rounded-full overflow-hidden">
+<div class="bg-primary-container h-full" style="width: 85%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between mb-1">
+<span class="font-label-md text-label-md text-on-surface-variant">Logistics Coordinator</span>
+<span class="font-label-md text-label-md text-tertiary">12/40 Pipeline</span>
+</div>
+<div class="w-full bg-surface-container-highest h-2 rounded-full overflow-hidden">
+<div class="bg-tertiary-container h-full" style="width: 30%"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Recent Inflow Section -->
+<section class="lg:col-span-5">
+<div class="bg-surface-container border border-outline rounded-xl flex flex-col h-full">
+<div class="p-4 border-b border-outline flex justify-between items-center bg-surface-container-high rounded-t-xl">
+<h2 class="font-title-md text-title-md text-on-surface">Recent Inflow</h2>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer" data-icon="more_vert" aria-hidden="true">more_vert</span>
+</div>
+<div class="flex-1">
+<!-- Candidate 1 -->
+<div class="p-4 border-b border-outline flex items-center gap-4 hover:bg-surface-container-high transition-colors">
+<img alt="Candidate 1" class="w-12 h-12 rounded-full border border-outline" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBGmXBagjpgzSXYjj0VuvH-_lws_mVuupnGgD4p2PrWdbDKBbsmhuQGJZmEVGIlD1pJaxUD1gnPLsjyEd7jCcHx2X2rHXqWEIBfQ7k7evSReadqBgcqvzTU8PPZAX8tENGC9w7ymWIDEH3v1z7hR3dc2oXXt7gPrqxwwrtnoIxywjfmZlaXvj1-Oq2sImxLzt1lttZ6D19PJUGJA2ugHWH9rl2IeUNxJ6B7NAX-WivFqu0rx7LtTT1uYD4r9Uj1eT8AL4oUqu2mYBg"/>
+<div class="flex-1">
+<p class="font-label-lg text-label-lg text-on-surface">James Wilson</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Hazmat Certified • 4y Exp</p>
+</div>
+<div class="text-right">
+<p class="font-label-sm text-label-sm text-on-surface-variant">2m ago</p>
+<span class="text-success text-[10px] font-bold uppercase">New</span>
+</div>
+</div>
+<!-- Candidate 2 -->
+<div class="p-4 border-b border-outline flex items-center gap-4 hover:bg-surface-container-high transition-colors">
+<img alt="Candidate 2" class="w-12 h-12 rounded-full border border-outline" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQpmnNdBdVg_Z42zYK2pkBTnMBU6fIvCWtJGzN_6Q1il5sY3JDXZBAlrLYFapnCb17HrRQibsf98d8wXF2nLTLjp7nSbcGDaO37N-jko7CShCl9324r7lf7Mnyg0y_3gwx1-wE3Rsrf69L8d1DBfSIsaJGDgzXLFbHuL44gtzyhKkV9QSTelwFOBIBHf9LCMKJAErDLCqiNOK5Q8S8cM3CJh5mbQcJXvFZXHwOtaQas-An244jq-YXAwmPk6Mc31qMfnoj7-nrqvU"/>
+<div class="flex-1">
+<p class="font-label-lg text-label-lg text-on-surface">Amina Al-Fayed</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Cold-Chain Specialist</p>
+</div>
+<div class="text-right">
+<p class="font-label-sm text-label-sm text-on-surface-variant">15m ago</p>
+</div>
+</div>
+<!-- Candidate 3 -->
+<div class="p-4 flex items-center gap-4 hover:bg-surface-container-high transition-colors">
+<img alt="Candidate 3" class="w-12 h-12 rounded-full border border-outline" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDqsjrbkJuKSOz5b8jRvAB-RCDocN9dyRUWGHT6DNr16vpXBwIeMp5diV2wMtu6xU_y9c1SdhrC83cUpGhnHXogb4sg0yMnrhyewphWRFKZhlA1qzeu73nFESS84gWHXWkNwIpbHoZeraU2fu9SDY-7sfe4Lv_wYhse8vgTmHsgNezlWrF0Wj3Go95RcEKTQ3Pfzp5mor3BQJD8DV8G8kAV-3mVrTqoEpDgguhAczDMMRsHM2yAo9vsVu9l-H2mgdMNSktTtLeSk9k"/>
+<div class="flex-1">
+<p class="font-label-lg text-label-lg text-on-surface">Roberto Gomez</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Class B CDL • Local</p>
+</div>
+<div class="text-right">
+<p class="font-label-sm text-label-sm text-on-surface-variant">1h ago</p>
+</div>
+</div>
+</div>
+<div class="p-4 mt-auto">
+<button class="w-full py-2.5 border border-outline text-on-surface font-label-lg text-label-lg rounded hover:bg-surface-container-high transition-colors">View All Candidates</button>
+</div>
+</div>
+</section>
+</div>
+<!-- Functional Action Bar -->
+<div class="mt-gutter grid grid-cols-1 md:grid-cols-3 gap-4">
+<button class="flex items-center justify-center gap-2 bg-primary-container text-on-primary-container font-label-lg text-label-lg py-3 rounded-lg hover:brightness-110 transition-all">
+<span class="material-symbols-outlined text-[20px]" data-icon="add_circle" aria-hidden="true">add_circle</span>
+                Create New Job Post
+            </button>
+<button class="flex items-center justify-center gap-2 border border-outline text-on-surface font-label-lg text-label-lg py-3 rounded-lg hover:bg-surface-container-high transition-all">
+<span class="material-symbols-outlined text-[20px]" data-icon="assignment_ind" aria-hidden="true">assignment_ind</span>
+                Assign Test Batch
+            </button>
+<button class="flex items-center justify-center gap-2 border border-outline text-on-surface font-label-lg text-label-lg py-3 rounded-lg hover:bg-surface-container-high transition-all">
+<span class="material-symbols-outlined text-[20px]" data-icon="download" aria-hidden="true">download</span>
+                Export Fleet Report
+            </button>
+</div>
+</main>
+<!-- Footer -->
+<footer class="hidden md:flex flex-col md:flex-row justify-between items-center px-margin w-full bg-surface-container-low dark:bg-surface-container-low py-4 mt-auto border-t border-outline">
+<span class="font-label-sm text-label-sm text-on-surface-variant">System Status: All Systems Operational © 2024 FleetForce</span>
+<div class="flex gap-6 mt-4 md:mt-0">
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface transition-colors" href="#">Privacy</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface transition-colors" href="#">Security</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface transition-colors" href="#">API</a>
+</div>
+</footer>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-2 py-2 bg-surface-container dark:bg-surface-container border-t border-outline z-50">
+<div class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-xl p-2 transition-all duration-200 active:scale-90">
+<span class="material-symbols-outlined" data-icon="dashboard" aria-hidden="true">dashboard</span>
+<span class="font-label-sm text-label-sm">Dashboard</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:text-on-surface transition-all duration-200 active:scale-90">
+<span class="material-symbols-outlined" data-icon="contacts" aria-hidden="true">contacts</span>
+<span class="font-label-sm text-label-sm">Contacts</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:text-on-surface transition-all duration-200 active:scale-90">
+<span class="material-symbols-outlined" data-icon="quiz" aria-hidden="true">quiz</span>
+<span class="font-label-sm text-label-sm">Tests</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:text-on-surface transition-all duration-200 active:scale-90">
+<span class="material-symbols-outlined" data-icon="work" aria-hidden="true">work</span>
+<span class="font-label-sm text-label-sm">Jobs</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:text-on-surface transition-all duration-200 active:scale-90">
+<span class="material-symbols-outlined" data-icon="assignment_ind" aria-hidden="true">assignment_ind</span>
+<span class="font-label-sm text-label-sm">Roles</span>
+</div>
+</nav>
+</body></html>

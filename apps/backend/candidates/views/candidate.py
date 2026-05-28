@@ -28,7 +28,7 @@ class CandidateViewSet(ModelViewSet):
 
         return [IsAuthenticated()]
 
-    @action(detail=False, methods=["get"], url_path="me")
+    @action(detail=False, methods=["get", "patch"], url_path="me")
     def me(self, request):
         if request.user.role != UserRoles.CANDIDATE:
             return Response(status=status.HTTP_403_FORBIDDEN)
@@ -36,6 +36,12 @@ class CandidateViewSet(ModelViewSet):
         candidate = self.get_queryset().filter(user=request.user).first()
         if candidate is None:
             return Response(status=status.HTTP_404_NOT_FOUND)
+
+        if request.method == "PATCH":
+            serializer = self.get_serializer(candidate, data=request.data, partial=True)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
 
         serializer = self.get_serializer(candidate)
         return Response(serializer.data, status=status.HTTP_200_OK)

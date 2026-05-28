@@ -14,11 +14,9 @@ import { UiAlertComponent } from '@lib-ui/alert/alert.component';
 import { UiBadgeComponent } from '@lib-ui/badge/badge.component';
 import { UiButtonPrimaryComponent } from '@lib-ui/button-primary/button-primary.component';
 import { UiButtonSecondaryComponent } from '@lib-ui/button-secondary/button-secondary.component';
-import { UiCardComponent } from '@lib-ui/card/card.component';
 import { UiEmptyStateComponent } from '@lib-ui/empty-state/empty-state.component';
 import { UiIconButtonComponent } from '@lib-ui/icon-button/icon-button.component';
 import { UiModalComponent } from '@lib-ui/modal/modal.component';
-import { UiSkeletonComponent } from '@lib-ui/skeleton/skeleton.component';
 import { UiTextareaComponent } from '@lib-ui/textarea/textarea.component';
 import { UiTextInputComponent } from '@lib-ui/text-input/text-input.component';
 
@@ -37,8 +35,6 @@ type JobOfferDetailPageState = 'loading' | 'success' | 'not-found' | 'error';
     UiBadgeComponent,
     UiAlertComponent,
     UiIconButtonComponent,
-    UiCardComponent,
-    UiSkeletonComponent,
     UiEmptyStateComponent,
     UiModalComponent,
     UiTextInputComponent,

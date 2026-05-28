@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>FleetFlow | Logistics &amp; Recruitment Portal</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-high": "#272a31",
+                        "surface-bright": "#363941",
+                        "background": "#10131a",
+                        "primary-container": "#3a90ff",
+                        "on-secondary-container": "#9cb5ed",
+                        "secondary-fixed-dim": "#adc6ff",
+                        "on-primary-fixed-variant": "#00468b",
+                        "on-tertiary": "#532200",
+                        "outline": "#8b919f",
+                        "tertiary-fixed-dim": "#ffb68d",
+                        "on-surface-variant": "#c1c6d6",
+                        "on-tertiary-fixed-variant": "#763300",
+                        "tertiary": "#ffb68d",
+                        "on-primary-fixed": "#001b3d",
+                        "surface-variant": "#32353c",
+                        "surface-container-lowest": "#0b0e15",
+                        "secondary-container": "#2c4677",
+                        "on-primary-container": "#002957",
+                        "surface-container": "#1d2027",
+                        "outline-variant": "#414754",
+                        "primary": "#a9c7ff",
+                        "on-surface": "#e0e2ec",
+                        "surface-dim": "#10131a",
+                        "on-secondary-fixed-variant": "#2c4677",
+                        "error": "#ffb4ab",
+                        "surface-container-highest": "#32353c",
+                        "tertiary-container": "#e76e13",
+                        "tertiary-fixed": "#ffdbc9",
+                        "success": "#a9c7ff",
+                        "on-background": "#e0e2ec",
+                        "secondary": "#adc6ff",
+                        "on-primary": "#003063",
+                        "secondary-fixed": "#d8e2ff",
+                        "inverse-primary": "#005db6",
+                        "on-secondary-fixed": "#001a42",
+                        "surface-container-low": "#191b23",
+                        "error-container": "#93000a",
+                        "on-error": "#690005",
+                        "on-tertiary-container": "#491d00",
+                        "surface-tint": "#a9c7ff",
+                        "surface": "#10131a",
+                        "on-error-container": "#ffdad6",
+                        "on-tertiary-fixed": "#331200",
+                        "primary-fixed": "#d6e3ff",
+                        "on-secondary": "#122f5f",
+                        "inverse-on-surface": "#2d3038",
+                        "inverse-surface": "#e0e2ec",
+                        "primary-fixed-dim": "#a9c7ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "unit": "4px",
+                        "sm": "8px",
+                        "header-height": "64px",
+                        "xs": "4px",
+                        "sidebar-width": "256px",
+                        "md": "16px",
+                        "lg": "24px",
+                        "gutter": "16px",
+                        "xl": "40px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-md": ["Inter"],
+                        "code-sm": ["JetBrains Mono"],
+                        "label-sm": ["Inter"],
+                        "headline-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                        "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                        "code-sm": ["11px", {"lineHeight": "14px", "fontWeight": "400"}],
+                        "label-sm": ["11px", {"lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "headline-lg": ["30px", {"lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+                    }
+                }
+            }
+        };
+    </script>
+<style>
+        body {
+            background-color: #10131a;
+            color: #e0e2ec;
+            -webkit-font-smoothing: antialiased;
+            overflow: hidden;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-center min-h-screen">
+<!-- Login Container -->
+<main class="w-full max-w-[420px] flex flex-col items-center px-lg">
+<!-- Branding Section -->
+<div class="mb-xl flex flex-col items-center text-center">
+<div class="mb-md">
+<img alt="FleetFlow Logo" class="w-[64px] h-[64px] object-contain" src="https://lh3.googleusercontent.com/aida/ADBb0ugdSn9LmIor5SBe-HXltobJhmC2YpOB93tIrPCsgZeEDQnMQo9Oor1kAcY67Hc3KvYoh5Zobec7cTujhJSDRpQMhuyirdbLtVWPV-akYIfJPg5n-Ot-SgCU8VuDlt21dYf7ZzwUdvkvbBODJcwUunTWe0pYIonep_xuzBrVBvAeqFyI6DNSzVYBwNrTB2D5T2zPm2lbegIdXwn9hKDSl_wsweZ6r9aCNueL-Pe_pVGf_GMLCE5Gwg2o79IB"/>
+</div>
+<h1 class="font-headline-md text-headline-md text-on-surface mb-xs tracking-tight">FleetFlow</h1>
+<p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-widest">Logistics &amp; Recruitment Portal</p>
+</div>
+<!-- Authentication Card -->
+<div class="w-full bg-surface-container border border-outline-variant p-lg rounded-sm">
+<form action="#" class="space-y-lg" method="POST">
+<!-- Email Field -->
+<div class="space-y-sm">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase" for="email">Email Address</label>
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-md flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-outline text-[20px]">alternate_email</span>
+</div>
+<input class="w-full bg-surface-container-lowest border border-outline-variant text-on-surface font-body-md text-body-md rounded-sm py-md pl-[44px] pr-md focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none transition-all placeholder:text-outline" id="email" name="email" placeholder="name@fleetflow.com" required="" type="email"/>
+</div>
+</div>
+<!-- Password Field -->
+<div class="space-y-sm">
+<div class="flex justify-between items-center">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase" for="password">Password</label>
+</div>
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-md flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-outline text-[20px]">lock</span>
+</div>
+<input class="w-full bg-surface-container-lowest border border-outline-variant text-on-surface font-body-md text-body-md rounded-sm py-md pl-[44px] pr-md focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none transition-all placeholder:text-outline" id="password" name="password" placeholder="••••••••" required="" type="password"/>
+</div>
+</div>
+<!-- Remember & Forgot -->
+<div class="flex items-center justify-between">
+<div class="flex items-center">
+<input class="h-4 w-4 rounded border-outline-variant bg-surface-container-lowest text-primary-container focus:ring-primary-container" id="remember-me" name="remember-me" type="checkbox"/>
+<label class="ml-sm font-label-md text-label-md text-on-surface-variant" for="remember-me">Remember me</label>
+</div>
+<a class="font-label-md text-label-md text-primary hover:text-primary-container transition-colors" href="#">Forgot password?</a>
+</div>
+<!-- Primary CTA -->
+<button class="w-full bg-primary-container text-on-primary-container font-label-md text-label-md py-md px-lg rounded-sm hover:opacity-90 active:scale-[0.98] transition-all flex justify-center items-center gap-sm uppercase tracking-wider font-bold" type="submit">
+                    Log in
+                    <span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'wght' 700">arrow_forward</span>
+</button>
+</form>
+</div>
+<!-- Footer Actions -->
+<div class="mt-lg text-center">
+<p class="font-body-md text-body-md text-on-surface-variant">
+                Don't have an account? 
+                <a class="text-primary hover:underline font-bold transition-all ml-xs" href="#">Request access</a>
+</p>
+</div>
+</main>
+<!-- System Version Footer -->
+<footer class="fixed bottom-lg w-full px-xl flex justify-between items-center opacity-40">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-[16px]">sensors</span>
+<span class="font-code-sm text-code-sm text-on-surface-variant uppercase tracking-tighter">V 2.4.0 KINETIC // SYSTEM_ACTIVE</span>
+</div>
+<div class="flex gap-lg">
+<span class="font-code-sm text-code-sm text-on-surface-variant uppercase">Encrypted Session</span>
+<span class="font-code-sm text-code-sm text-on-surface-variant uppercase">© 2024 FF_LOGISTICS</span>
+</div>
+</footer>
+</body></html>

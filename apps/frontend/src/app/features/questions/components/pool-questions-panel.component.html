@@ -30,7 +30,7 @@
     <div class="ff-app-stack">
       @for (q of filtered(); track q.id) {
         <article class="ff-data-card">
-          <div class="ff-inline-actions" style="align-items: flex-start; justify-content: space-between">
+      <div class="ff-inline-actions ff-u-between">
             <div>
               <p class="ff-app-kicker">{{ badgeLabel(q.format) }}</p>
               <h3 class="ff-row-title">{{ q.title || q.text }}</h3>
@@ -47,7 +47,7 @@
             </button>
           </div>
 
-          <footer class="ff-inline-actions" style="justify-content: space-between; margin-top: 0.9rem">
+        <footer class="ff-inline-actions ff-u-between ff-u-mt-md">
             <span class="ff-status-pill" [class.ff-status-pill--muted]="!q.is_mandatory">
               {{ q.is_mandatory ? 'Mandatory' : 'Optional' }}
             </span>

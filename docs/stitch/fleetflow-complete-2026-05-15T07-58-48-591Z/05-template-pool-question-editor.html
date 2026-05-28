@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Assessment Template Builder | FleetFlow</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container": "#1c2027",
+                    "surface-container-highest": "#31353d",
+                    "inverse-on-surface": "#2d3038",
+                    "on-tertiary": "#532200",
+                    "tertiary": "#ffb68e",
+                    "inverse-surface": "#dfe2ec",
+                    "surface-tint": "#a9c7ff",
+                    "tertiary-container": "#e76e13",
+                    "secondary-container": "#0064d3",
+                    "primary-fixed": "#d6e3ff",
+                    "tertiary-fixed": "#ffdbc9",
+                    "on-secondary-fixed": "#001a41",
+                    "error-container": "#93000a",
+                    "inverse-primary": "#005db6",
+                    "on-primary": "#003063",
+                    "surface-container-low": "#181c23",
+                    "on-secondary-container": "#e0e8ff",
+                    "tertiary-fixed-dim": "#ffb68e",
+                    "error": "#ffb4ab",
+                    "on-tertiary-fixed": "#331200",
+                    "on-tertiary-container": "#491d00",
+                    "surface-dim": "#0f131a",
+                    "on-primary-container": "#002957",
+                    "on-surface": "#dfe2ec",
+                    "surface-container-lowest": "#0a0e15",
+                    "primary-fixed-dim": "#a9c7ff",
+                    "surface-variant": "#31353d",
+                    "outline-variant": "#414754",
+                    "secondary-fixed-dim": "#adc6ff",
+                    "on-primary-fixed-variant": "#00468b",
+                    "on-secondary-fixed-variant": "#004493",
+                    "outline": "#8b919f",
+                    "background": "#0f131a",
+                    "primary": "#a9c7ff",
+                    "on-secondary": "#002e69",
+                    "on-surface-variant": "#c1c6d6",
+                    "surface": "#0f131a",
+                    "surface-container-high": "#262a32",
+                    "secondary": "#adc6ff",
+                    "secondary-fixed": "#d8e2ff",
+                    "primary-container": "#3a90ff",
+                    "on-tertiary-fixed-variant": "#763300",
+                    "on-primary-fixed": "#001b3d",
+                    "on-error": "#690005",
+                    "on-background": "#dfe2ec",
+                    "on-error-container": "#ffdad6",
+                    "surface-bright": "#353941"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "base": "4px",
+                    "xl": "32px",
+                    "xs": "4px",
+                    "sm": "8px",
+                    "lg": "24px",
+                    "margin-mobile": "16px",
+                    "margin-desktop": "32px",
+                    "md": "16px",
+                    "gutter": "16px"
+            },
+            "fontFamily": {
+                    "headline-xl": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "body-md": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "label-md": ["Inter"],
+                    "label-sm": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-xl": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-lg": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "body-sm": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "label-sm": ["11px", {"lineHeight": "14px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #0f131a;
+            color: #dfe2ec;
+        }
+    </style>
+</head>
+<body class="flex flex-col h-screen overflow-hidden">
+<!-- TopNavBar -->
+<header class="bg-surface-container-low dark:bg-surface-container-low border-b border-outline-variant dark:border-outline-variant flex justify-between items-center h-16 px-margin-desktop w-full sticky top-0 z-50">
+<div class="flex items-center gap-lg">
+<span class="text-headline-md font-headline-md font-black text-primary dark:text-primary">FleetFlow</span>
+<div class="hidden md:flex gap-md">
+<nav class="flex items-center gap-md text-body-md font-body-md">
+<a class="text-on-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-container-highest transition-colors px-sm py-xs rounded" href="#">Dashboard</a>
+<a class="text-primary border-b-2 border-primary px-sm py-xs" href="#">Tests</a>
+<a class="text-on-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-container-highest transition-colors px-sm py-xs rounded" href="#">Jobs</a>
+</nav>
+</div>
+</div>
+<div class="flex items-center gap-md">
+<button class="material-symbols-outlined text-on-surface-variant hover:bg-surface-container-highest p-sm rounded-full transition-colors">notifications</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:bg-surface-container-highest p-sm rounded-full transition-colors">settings</button>
+<div class="h-8 w-8 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container font-bold overflow-hidden">
+<img alt="Recruiter Profile" class="object-cover h-full w-full" data-alt="A professional headshot of a corporate recruiter in a high-contrast studio setting. The subject is a male in his late 30s wearing a sharp charcoal suit and white shirt, looking directly into the lens with a focused and reliable expression. The background is a clean, dark navy blue, creating a sense of executive authority and precision in a modern logistics recruitment environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBHvsMtalDIH8Be7NlevI-edhgBaiVtfUIDmI8UBLAKvqOTcOcQews8A1UwtOxgYtbBYUGIMJgta-1yXaUBTGZCBqByLJ75AjBOkN5CUmbmY4ti3Y_92Loea5cEzgLjc_x5HfdXtaVjSYujhvv3adjJSqpz1q233vnBF0HVZ51oEfiQ2FX9lz9IikdQML7fC-n7UNgumtFTVyhrP4CAhNXW9Im8ewdkZB1AMx6OxyPgps3iU0ejzK66Xozd-_tiK0dLLXP8ZZpEighL"/>
+</div>
+</div>
+</header>
+<div class="flex flex-1 overflow-hidden">
+<!-- SideNavBar (Navigation Anchor) -->
+<aside class="hidden lg:flex flex-col h-full py-lg px-md space-y-sm bg-surface-container-low dark:bg-surface-container-low border-r border-outline-variant dark:border-outline-variant w-64 shrink-0">
+<div class="flex flex-col gap-xs mb-lg">
+<span class="text-headline-md font-headline-md font-bold text-on-surface">FleetFlow</span>
+<span class="text-label-md font-label-md text-on-surface-variant">Logistics Recruitment</span>
+</div>
+<nav class="flex-1 space-y-xs">
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-surface-container dark:hover:bg-surface-container text-on-surface transition-all duration-200 ease-in-out rounded-xl" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-label-md font-label-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-surface-container dark:hover:bg-surface-container text-on-surface transition-all duration-200 ease-in-out rounded-xl" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="text-label-md font-label-md">Contacts</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm text-primary font-bold bg-surface-container-highest rounded-xl transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">quiz</span>
+<span class="text-label-md font-label-md">Tests</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-surface-container dark:hover:bg-surface-container text-on-surface transition-all duration-200 ease-in-out rounded-xl" href="#">
+<span class="material-symbols-outlined">work</span>
+<span class="text-label-md font-label-md">Jobs</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-surface-container dark:hover:bg-surface-container text-on-surface transition-all duration-200 ease-in-out rounded-xl" href="#">
+<span class="material-symbols-outlined">assignment_ind</span>
+<span class="text-label-md font-label-md">Roles</span>
+</a>
+</nav>
+<div class="pt-lg border-t border-outline-variant flex flex-col gap-xs">
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-surface-container rounded-xl transition-colors" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="text-label-md font-label-md">Help Center</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-surface-container rounded-xl transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-label-md font-label-md">Settings</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area: 3-Column Layout -->
+<main class="flex-1 overflow-hidden flex flex-col">
+<!-- Breadcrumbs / Actions -->
+<div class="h-14 px-lg flex items-center justify-between bg-surface-dim">
+<div class="flex items-center gap-sm">
+<span class="text-label-md font-label-md text-on-surface-variant">Templates</span>
+<span class="material-symbols-outlined text-outline text-sm">chevron_right</span>
+<span class="text-label-md font-label-md text-on-surface">New Logistics Assessment</span>
+</div>
+<div class="flex items-center gap-md">
+<button class="px-lg py-sm border border-outline-variant text-secondary font-label-md rounded hover:bg-surface-container-highest transition-colors">Save Draft</button>
+<button class="px-lg py-sm bg-primary text-on-primary font-label-md rounded hover:opacity-90 transition-opacity">Publish Template</button>
+</div>
+</div>
+<!-- The Workflow Canvas -->
+<div class="flex-1 flex overflow-hidden p-lg gap-lg">
+<!-- Column 1: Template Basics (Narrow) -->
+<section class="w-72 shrink-0 flex flex-col gap-lg overflow-y-auto">
+<div class="bg-surface-container border border-outline-variant p-md rounded-lg flex flex-col gap-md">
+<h3 class="text-label-md font-label-md text-primary uppercase tracking-widest">Template Basics</h3>
+<div class="flex flex-col gap-xs">
+<label class="text-label-sm font-label-sm text-on-surface-variant">Template Name</label>
+<input class="bg-surface-dim border border-outline-variant rounded p-sm text-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none" type="text" value="Heavy Haulage Safety"/>
+</div>
+<div class="flex flex-col gap-xs">
+<label class="text-label-sm font-label-sm text-on-surface-variant">Description</label>
+<textarea class="bg-surface-dim border border-outline-variant rounded p-sm text-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none" rows="3">Standard safety protocol assessment for oversized load operators.</textarea>
+</div>
+<div class="grid grid-cols-2 gap-md">
+<div class="flex flex-col gap-xs">
+<label class="text-label-sm font-label-sm text-on-surface-variant">Duration (Min)</label>
+<input class="bg-surface-dim border border-outline-variant rounded p-sm text-body-md text-on-surface" type="number" value="45"/>
+</div>
+<div class="flex flex-col gap-xs">
+<label class="text-label-sm font-label-sm text-on-surface-variant">Passing Score</label>
+<div class="relative">
+<input class="w-full bg-surface-dim border border-outline-variant rounded p-sm text-body-md text-on-surface pr-8" type="number" value="85"/>
+<span class="absolute right-2 top-2 text-on-surface-variant text-label-md">%</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-xs">
+<label class="text-label-sm font-label-sm text-on-surface-variant">Difficulty Level</label>
+<select class="bg-surface-dim border border-outline-variant rounded p-sm text-body-md text-on-surface appearance-none">
+<option>Junior</option>
+<option selected="">Mid-Level</option>
+<option>Senior</option>
+</select>
+</div>
+</div>
+<div class="bg-surface-container border border-outline-variant p-md rounded-lg">
+<h3 class="text-label-md font-label-md text-primary uppercase tracking-widest mb-md">Analytics Preview</h3>
+<div class="space-y-sm">
+<div class="flex justify-between text-label-sm">
+<span class="text-on-surface-variant">Avg. Completion</span>
+<span class="text-on-surface">32m 14s</span>
+</div>
+<div class="flex justify-between text-label-sm">
+<span class="text-on-surface-variant">Drop-off Rate</span>
+<span class="text-tertiary">12.4%</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Column 2: Assessment Structure (Wide) -->
+<section class="flex-1 flex flex-col gap-md overflow-y-auto">
+<div class="flex items-center justify-between px-xs">
+<h2 class="text-headline-md font-headline-md text-on-surface">Assessment Structure</h2>
+<button class="flex items-center gap-xs text-primary font-label-md hover:underline">
+<span class="material-symbols-outlined text-sm">add_circle</span>
+                            Add New Section
+                        </button>
+</div>
+<!-- Section Card 1 -->
+<div class="bg-surface-container border border-outline-variant rounded-lg p-md">
+<div class="flex items-center gap-md mb-md">
+<span class="material-symbols-outlined text-outline cursor-grab">drag_indicator</span>
+<div class="flex-1">
+<input class="bg-transparent text-headline-sm font-bold text-on-surface border-none p-0 focus:ring-0 w-full" type="text" value="Core Fleet Maintenance"/>
+<p class="text-body-sm text-on-surface-variant">General mechanical and pre-trip inspection standards.</p>
+</div>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-error transition-colors">delete</button>
+</div>
+<div class="space-y-sm mb-md">
+<div class="bg-surface-dim border border-outline-variant p-sm rounded flex items-center justify-between group">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary text-md">grid_view</span>
+<span class="text-body-md">Engine Diagnostic Pool (12 Questions)</span>
+</div>
+<span class="material-symbols-outlined text-outline opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">edit</span>
+</div>
+<div class="bg-surface-dim border border-outline-variant p-sm rounded flex items-center justify-between group border-primary">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary text-md">grid_view</span>
+<span class="text-body-md font-bold text-primary">Hydraulic Systems Basics (5 Questions)</span>
+</div>
+<span class="material-symbols-outlined text-primary cursor-pointer">chevron_right</span>
+</div>
+</div>
+<button class="w-full py-sm border border-dashed border-outline-variant text-on-surface-variant text-label-md rounded hover:bg-surface-container-highest transition-colors flex items-center justify-center gap-xs">
+<span class="material-symbols-outlined text-sm">add</span>
+                            Add Pool
+                        </button>
+</div>
+<!-- Section Card 2 -->
+<div class="bg-surface-container border border-outline-variant rounded-lg p-md">
+<div class="flex items-center gap-md mb-md">
+<span class="material-symbols-outlined text-outline cursor-grab">drag_indicator</span>
+<div class="flex-1">
+<input class="bg-transparent text-headline-sm font-bold text-on-surface border-none p-0 focus:ring-0 w-full" type="text" value="Route Planning &amp; Fuel Theory"/>
+<p class="text-body-sm text-on-surface-variant">Efficient driving patterns and navigation software usage.</p>
+</div>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-error transition-colors">delete</button>
+</div>
+<div class="space-y-sm mb-md">
+<div class="bg-surface-dim border border-outline-variant p-sm rounded flex items-center justify-between group">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary text-md">grid_view</span>
+<span class="text-body-md">Load Weight Optimization (8 Questions)</span>
+</div>
+<span class="material-symbols-outlined text-outline opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">edit</span>
+</div>
+</div>
+<button class="w-full py-sm border border-dashed border-outline-variant text-on-surface-variant text-label-md rounded hover:bg-surface-container-highest transition-colors flex items-center justify-center gap-xs">
+<span class="material-symbols-outlined text-sm">add</span>
+                            Add Pool
+                        </button>
+</div>
+</section>
+<!-- Column 3: Question Pool Editor (Medium) -->
+<section class="w-96 shrink-0 flex flex-col gap-md">
+<div class="bg-surface-container border border-primary border-t-4 rounded-lg flex flex-col h-full">
+<!-- Header -->
+<div class="p-md border-b border-outline-variant bg-surface-container-high">
+<div class="flex items-center justify-between mb-xs">
+<span class="text-label-sm font-label-sm text-primary uppercase">Pool Editor</span>
+<span class="bg-secondary-container text-on-secondary-container text-[10px] px-sm py-[2px] rounded-full font-bold">ACTIVE</span>
+</div>
+<h3 class="text-headline-md font-bold text-on-surface">Hydraulic Systems Basics</h3>
+<p class="text-body-sm text-on-surface-variant mt-xs">5 Questions total • 50 Points available</p>
+</div>
+<!-- Questions List -->
+<div class="flex-1 overflow-y-auto p-md space-y-lg">
+<!-- Question 1: Multiple Choice -->
+<div class="bg-surface-dim border border-outline-variant rounded p-sm relative">
+<div class="flex items-start justify-between mb-sm">
+<span class="text-label-sm text-on-surface-variant">Q1 • Multiple Choice</span>
+<div class="flex items-center gap-sm">
+<div class="flex items-center gap-xs">
+<span class="text-label-sm text-tertiary">Eliminatory</span>
+<div class="w-6 h-3 bg-tertiary-container rounded-full relative cursor-pointer">
+<div class="absolute right-0 w-3 h-3 bg-tertiary rounded-full"></div>
+</div>
+</div>
+</div>
+</div>
+<p class="text-body-md font-bold mb-md">What is the standard PSI for a Series 3 Lift Arm under full load?</p>
+<div class="space-y-sm mb-md">
+<label class="flex items-center gap-sm p-xs border border-outline-variant rounded bg-surface-container hover:border-primary cursor-pointer">
+<div class="w-4 h-4 border-2 border-outline rounded-full"></div>
+<span class="text-body-sm">1,500 PSI</span>
+</label>
+<label class="flex items-center gap-sm p-xs border border-primary rounded bg-primary-container/10 cursor-pointer">
+<div class="w-4 h-4 border-2 border-primary rounded-full flex items-center justify-center">
+<div class="w-2 h-2 bg-primary rounded-full"></div>
+</div>
+<span class="text-body-sm font-bold text-primary">2,200 PSI (Correct)</span>
+</label>
+<label class="flex items-center gap-sm p-xs border border-outline-variant rounded bg-surface-container hover:border-primary cursor-pointer">
+<div class="w-4 h-4 border-2 border-outline rounded-full"></div>
+<span class="text-body-sm">3,100 PSI</span>
+</label>
+</div>
+<div class="grid grid-cols-2 gap-sm mb-sm">
+<div class="flex flex-col gap-xs">
+<label class="text-label-sm text-on-surface-variant">Max Points</label>
+<input class="bg-surface-container-high border border-outline-variant rounded p-xs text-body-sm text-on-surface" type="number" value="10"/>
+</div>
+</div>
+<div class="flex flex-col gap-xs">
+<label class="text-label-sm text-on-surface-variant">Manager Comment</label>
+<input class="bg-surface-container-high border border-outline-variant rounded p-xs text-body-sm text-on-surface" placeholder="Internal notes for reviewers..." type="text"/>
+</div>
+</div>
+<!-- Question 2: True/False -->
+<div class="bg-surface-dim border border-outline-variant rounded p-sm">
+<div class="flex items-start justify-between mb-sm">
+<span class="text-label-sm text-on-surface-variant">Q2 • True / False</span>
+</div>
+<p class="text-body-md font-bold mb-md">Hydraulic fluid should be changed every 500 operating hours.</p>
+<div class="flex gap-md mb-md">
+<button class="flex-1 py-xs border border-primary text-primary rounded font-bold bg-primary/5">True</button>
+<button class="flex-1 py-xs border border-outline-variant text-on-surface-variant rounded">False</button>
+</div>
+<div class="flex flex-col gap-xs">
+<label class="text-label-sm text-on-surface-variant">Max Points</label>
+<input class="bg-surface-container-high border border-outline-variant rounded p-xs text-body-sm text-on-surface w-24" type="number" value="5"/>
+</div>
+</div>
+<!-- Question 3: Free Text -->
+<div class="bg-surface-dim border border-outline-variant rounded p-sm">
+<div class="flex items-start justify-between mb-sm">
+<span class="text-label-sm text-on-surface-variant">Q3 • Free Text</span>
+</div>
+<p class="text-body-md font-bold mb-sm">Describe the safety protocol when a hydraulic leak is detected during transit.</p>
+<div class="h-24 w-full bg-surface-container-high border border-outline-variant rounded mb-md flex items-center justify-center italic text-on-surface-variant/40 text-body-sm">
+                                    Candidate Input Area
+                                </div>
+<div class="flex flex-col gap-xs">
+<label class="text-label-sm text-on-surface-variant">Max Points</label>
+<input class="bg-surface-container-high border border-outline-variant rounded p-xs text-body-sm text-on-surface w-24" type="number" value="20"/>
+</div>
+</div>
+</div>
+<!-- Footer Actions -->
+<div class="p-md bg-surface-container-high border-t border-outline-variant flex gap-sm">
+<button class="flex-1 py-sm bg-surface-container-highest text-on-surface font-label-md rounded flex items-center justify-center gap-xs">
+<span class="material-symbols-outlined text-sm">add</span>
+                                Add Question
+                            </button>
+<button class="px-md py-sm border border-outline-variant text-on-surface-variant rounded material-symbols-outlined">more_horiz</button>
+</div>
+</div>
+</section>
+</div>
+</main>
+</div>
+<!-- Footer (The Bottom Anchor) -->
+<footer class="bg-surface-container-low dark:bg-surface-container-low border-t border-outline-variant dark:border-outline-variant flex justify-between items-center py-md px-margin-desktop w-full mt-auto shrink-0">
+<span class="text-label-md font-label-md text-on-surface-variant">© 2024 FleetFlow Logistics Recruitment. All rights reserved.</span>
+<div class="flex gap-lg">
+<a class="text-body-sm font-body-sm text-on-surface-variant hover:text-primary dark:hover:text-primary transition-colors" href="#">System Status: Operational</a>
+<a class="text-body-sm font-body-sm text-on-surface-variant hover:text-primary dark:hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="text-body-sm font-body-sm text-on-surface-variant hover:text-primary dark:hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="text-body-sm font-body-sm text-on-surface-variant hover:text-primary dark:hover:text-primary transition-colors" href="#">Security</a>
+</div>
+</footer>
+</body></html>

@@ -6,6 +6,7 @@ class EvaluationStatus(models.TextChoices):
     IN_PROGRESS = "in_progress", "In progress"
     COMPLETED = "completed", "Completed"
     VALIDATED = "validated", "Validated"
+    REJECTED = "rejected", "Rejected"
 
 
 class Evaluation(models.Model):

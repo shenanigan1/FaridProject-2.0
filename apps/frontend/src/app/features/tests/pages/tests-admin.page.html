@@ -1,21 +1,21 @@
-<section class="test-flow">
-  <header class="test-flow__appbar">
-    <button type="button" class="test-flow__icon-btn" aria-label="Menu">&#9776;</button>
-    <h1>{{ isTestsView() ? 'Tests' : 'Templates de Test' }}</h1>
-    <button type="button" class="test-flow__icon-btn" aria-label="Search">&#8981;</button>
+<section class="ff-workflow-screen">
+  <header class="ff-page-bar">
+    <button type="button" class="ff-page-bar__action" aria-label="Menu">&#9776;</button>
+    <h1 class="ff-page-bar__title">{{ isTestsView() ? 'Tests' : 'Templates de Test' }}</h1>
+    <button type="button" class="ff-page-bar__action" aria-label="Search">&#8981;</button>
   </header>
 
-  <div class="test-flow__shell">
-    <div class="test-flow__tabs">
-      <button type="button" [attr.aria-pressed]="isTestsView()" (click)="setView('tests')">
+  <div class="ff-workflow-shell">
+    <div class="ff-segmented">
+      <button type="button" class="ff-segmented__item" [attr.aria-pressed]="isTestsView()" (click)="setView('tests')">
         Tests
       </button>
-      <button type="button" [attr.aria-pressed]="!isTestsView()" (click)="setView('templates')">
+      <button type="button" class="ff-segmented__item" [attr.aria-pressed]="!isTestsView()" (click)="setView('templates')">
         Templates
       </button>
     </div>
 
-    <label class="test-flow__search">
+    <label class="ff-search-box ff-filter-stack">
       <input
         type="search"
         [formControl]="searchControl"
@@ -24,12 +24,12 @@
       />
     </label>
 
-    <div class="test-flow__filters" aria-label="Filtres">
+    <div class="ff-chip-row" aria-label="Filtres">
       @for (filter of filters; track filter) {
         <button
           type="button"
-          class="test-flow__chip"
-          [class.test-flow__chip--active]="activeFilter() === filter"
+          class="ff-chip"
+          [class.ff-chip--active]="activeFilter() === filter"
           (click)="setFilter(filter)"
         >
           {{ filter }}
@@ -38,82 +38,97 @@
     </div>
 
     @if (isLoading()) {
-      <p class="test-flow__empty">Chargement des donnees...</p>
+      <p class="ff-empty">Chargement des donnees...</p>
     } @else if (error()) {
-      <p class="test-flow__alert" role="alert">{{ error() }}</p>
+      <p class="ff-alert ff-alert-error" role="alert">{{ error() }}</p>
     } @else if (isTestsView()) {
-      <div class="test-flow__stack">
+      <div class="ff-list">
         @for (test of filteredActiveTests(); track test.evaluationId) {
-          <article class="test-flow__card">
-            <div class="test-flow__card-head">
+          <article class="ff-data-card">
+            <div class="ff-card-head">
               <div>
-                <h2 class="test-flow__title">{{ test.candidateName }}</h2>
-                <p class="test-flow__meta">{{ test.templateName }}</p>
+                <h2 class="ff-row-title ff-row-title--lg">{{ test.candidateName }}</h2>
+                <p class="ff-row-meta">{{ test.templateName }}</p>
                 @if (test.positionTitle) {
-                  <p class="test-flow__meta">{{ test.positionTitle }}</p>
+                  <p class="ff-row-meta">{{ test.positionTitle }}</p>
                 }
               </div>
-              <span class="test-flow__status">{{ test.status }}</span>
+              <span class="ff-status-pill">{{ test.statusLabel }}</span>
             </div>
 
-            <div class="test-flow__progress-block">
-              <div class="test-flow__metric-row">
-                <span class="test-flow__meta">{{ test.statusLabel }}</span>
+            <div class="ff-progress-block">
+              <div class="ff-metric-row">
+                <span class="ff-row-meta">{{ test.statusLabel }}</span>
                 <strong>{{ test.progressPercent }}%</strong>
               </div>
-              <div class="test-flow__progress" aria-hidden="true">
+              <div class="ff-progress" aria-hidden="true">
                 <span [style.width.%]="test.progressPercent"></span>
               </div>
               @if (test.totalSectionsCount > 0) {
-                <p class="test-flow__meta">
+                <p class="ff-row-meta">
                   {{ test.completedSectionsCount }} / {{ test.totalSectionsCount }} sections terminees
                 </p>
               }
             </div>
 
-            <div class="test-flow__actions">
-              <a class="test-flow__btn test-flow__btn--primary" [routerLink]="['/tests', test.evaluationId]">
-                Ouvrir
+            <div class="ff-actions-grid">
+              <a
+                class="ff-btn ff-btn-primary"
+                [routerLink]="['/tests', test.evaluationId]"
+                [attr.data-testid]="'open-assessment-' + test.evaluationId"
+              >
+                Voir le dossier
               </a>
-              <a class="test-flow__btn" [routerLink]="['/tests', test.evaluationId]">
-                Voir details
-              </a>
+              @if (test.applicationId) {
+                <a
+                  class="ff-btn ff-btn-secondary"
+                  [routerLink]="['/tests/relaunch', test.candidateId]"
+                  [queryParams]="{ applicationId: test.applicationId }"
+                  [attr.data-testid]="'relaunch-assessment-' + test.evaluationId"
+                >
+                  Relancer
+                </a>
+              } @else {
+                <button type="button" class="ff-btn ff-btn-disabled" disabled>
+                  Relance indisponible
+                </button>
+              }
             </div>
           </article>
         }
 
         @if (filteredActiveTests().length === 0) {
-          <p class="test-flow__empty">Aucun test non termine en base pour ce filtre.</p>
+          <p class="ff-empty">Aucun test en base pour ce filtre.</p>
         }
       </div>
     } @else {
-      <div class="test-flow__stack">
+      <div class="ff-list">
         @for (template of filteredTemplates(); track template.id) {
-          <article class="test-flow__card">
-            <div class="test-flow__card-head">
+          <article class="ff-data-card">
+            <div class="ff-card-head">
               <div>
-                <span class="test-flow__status" [class.test-flow__status--warning]="template.difficulty === 'medium'">
+                <span class="ff-status-pill" [class.ff-status-pill--warning]="template.difficulty === 'medium'">
                   {{ difficultyLabel(template.difficulty) }}
                 </span>
-                <h2 class="test-flow__title" style="margin-top: 1rem">{{ template.name }}</h2>
-                <p class="test-flow__meta">{{ template.description }}</p>
+                <h2 class="ff-row-title ff-row-title--lg ff-u-mt-md">{{ template.name }}</h2>
+                <p class="ff-row-meta">{{ template.description }}</p>
               </div>
-              <a class="test-flow__icon-btn" [routerLink]="['/templates', template.id]" aria-label="Modifier">&#8942;</a>
+              <a class="ff-page-bar__action" [routerLink]="['/templates', template.id]" aria-label="Modifier">&#8942;</a>
             </div>
 
-            <div class="test-flow__actions">
-              <span class="test-flow__meta">{{ template.pointsTotal }} pts</span>
-              <span class="test-flow__meta">{{ template.durationMinutes }} min</span>
+            <div class="ff-inline-actions ff-u-mt-md">
+              <span class="ff-row-meta">{{ template.pointsTotal }} pts</span>
+              <span class="ff-row-meta">{{ template.durationMinutes }} min</span>
             </div>
           </article>
         }
 
         @if (filteredTemplates().length === 0) {
-          <p class="test-flow__empty">Aucun template en base pour ce filtre.</p>
+          <p class="ff-empty">Aucun template en base pour ce filtre.</p>
         }
       </div>
 
-      <a routerLink="/templates/new" class="test-flow__fab" aria-label="Nouveau template">+</a>
+      <a routerLink="/templates/new" class="ff-fab" aria-label="Nouveau template">+</a>
     }
   </div>
 </section>

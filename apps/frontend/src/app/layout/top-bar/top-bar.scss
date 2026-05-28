@@ -9,7 +9,10 @@
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid var(--ff-color-border-soft);
-  background-color: var(--ff-color-header);
+  background:
+    linear-gradient(90deg, rgba(17, 35, 72, 0.44), transparent 45%),
+    var(--ff-color-header);
+  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.025);
   padding: 0 1rem;
 }
 
@@ -38,9 +41,9 @@
 .ff-topbar__brand-name {
   min-width: 0;
   overflow: hidden;
-  color: var(--ff-color-primary-400);
-  font-size: 1.125rem;
-  font-weight: 850;
+  color: #68a8ff;
+  font-size: clamp(1rem, 2vw, 1.12rem);
+  font-weight: 900;
   letter-spacing: 0;
   line-height: 1.55;
   text-overflow: ellipsis;
@@ -55,13 +58,16 @@
 .ff-topbar__icon-button,
 .ff-topbar__user {
   position: relative;
-  width: 2rem;
-  height: 2rem;
+  width: 2.35rem;
+  height: 2.35rem;
   justify-content: center;
   border: 1px solid var(--ff-color-border-soft);
-  border-radius: 0.9rem;
-  background-color: var(--ff-color-surface-3);
+  border-radius: 1rem;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.015)),
+    var(--ff-color-surface-3);
   color: var(--ff-color-text-muted);
+  box-shadow: var(--ff-shadow-inset);
 }
 
 .ff-topbar__icon-button:hover,
@@ -92,14 +98,15 @@
 
 .ff-topbar__avatar {
   display: inline-flex;
-  width: 1.875rem;
-  height: 1.875rem;
+  width: 2rem;
+  height: 2rem;
   align-items: center;
   justify-content: center;
   border-radius: inherit;
-  background-color: var(--ff-color-surface-1);
+  background:
+    linear-gradient(145deg, #31527f, #172845);
   color: var(--ff-color-text-primary);
-  font-size: 0.68rem;
+  font-size: 0.72rem;
   font-weight: 900;
 }
 
@@ -111,7 +118,9 @@
   width: min(18rem, calc(100vw - 2rem));
   border: 1px solid var(--ff-color-border-soft);
   border-radius: 0.9rem;
-  background-color: #0b0e15;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(74, 142, 255, 0.12), transparent 10rem),
+    #0b0e15;
   box-shadow: 0 24px 50px rgba(0, 0, 0, 0.42);
   padding: 0.5rem;
 }
@@ -162,6 +171,6 @@
 
 @media (min-width: 1024px) {
   .ff-topbar {
-    padding-inline: 1.5rem;
+    padding-inline: 1.25rem;
   }
 }

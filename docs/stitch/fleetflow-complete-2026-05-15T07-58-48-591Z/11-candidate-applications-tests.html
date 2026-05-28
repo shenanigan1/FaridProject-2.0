@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Candidate Dashboard - FleetFlow</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#a9c7ff",
+                        "on-primary": "#003063",
+                        "primary-fixed-dim": "#a9c7ff",
+                        "on-surface": "#dfe2ec",
+                        "secondary-container": "#0064d3",
+                        "on-secondary-fixed": "#001a41",
+                        "background": "#0f131a",
+                        "surface-dim": "#0f131a",
+                        "outline": "#8b919f",
+                        "surface-container-high": "#262a32",
+                        "error-container": "#93000a",
+                        "surface-variant": "#31353d",
+                        "surface-bright": "#353941",
+                        "inverse-on-surface": "#2d3038",
+                        "on-secondary": "#002e69",
+                        "on-tertiary-container": "#491d00",
+                        "secondary-fixed": "#d8e2ff",
+                        "error": "#ffb4ab",
+                        "surface-container-low": "#181c23",
+                        "primary-container": "#3a90ff",
+                        "on-primary-fixed-variant": "#00468b",
+                        "surface": "#0f131a",
+                        "on-surface-variant": "#c1c6d6",
+                        "on-tertiary": "#532200",
+                        "surface-tint": "#a9c7ff",
+                        "outline-variant": "#414754",
+                        "surface-container-lowest": "#0a0e15",
+                        "inverse-surface": "#dfe2ec",
+                        "primary-fixed": "#d6e3ff",
+                        "on-error-container": "#ffdad6",
+                        "on-primary-container": "#002957",
+                        "tertiary-fixed-dim": "#ffb68e",
+                        "tertiary": "#ffb68e",
+                        "tertiary-container": "#e76e13",
+                        "on-background": "#dfe2ec",
+                        "on-secondary-container": "#e0e8ff",
+                        "secondary-fixed-dim": "#adc6ff",
+                        "secondary": "#adc6ff",
+                        "surface-container": "#1c2027",
+                        "inverse-primary": "#005db6"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "gutter-md": "16px",
+                        "unit": "4px",
+                        "container-max": "1280px",
+                        "margin-md": "24px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "label-md": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "label-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["16px", {"lineHeight": "24px", "letterSpacing": "0px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "0px", "fontWeight": "600"}],
+                        "headline-sm": ["20px", {"lineHeight": "28px", "letterSpacing": "0px", "fontWeight": "600"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0px", "fontWeight": "400"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "36px", "letterSpacing": "0px", "fontWeight": "700"}],
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600"}],
+                        "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "0px", "fontWeight": "700"}],
+                        "label-sm": ["11px", {"lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "500"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: #0f131a;
+            color: #dfe2ec;
+            font-family: 'Inter', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .custom-border {
+            border: 1px solid #3b4352;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="flex flex-col min-h-screen">
+<!-- TopAppBar -->
+<header class="bg-background dark:bg-background border-b border-outline-variant w-full top-0 flex justify-between items-center px-gutter-md h-16 z-50">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" data-icon="local_shipping">local_shipping</span>
+<span class="font-headline-sm text-headline-sm font-bold text-primary">LOGI-RECRUIT</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-on-surface-variant hover:bg-surface-variant p-2 rounded-full transition-colors duration-200" data-icon="notifications">notifications</button>
+</div>
+</header>
+<main class="flex-grow px-4 pt-6 pb-24 md:px-margin-md max-w-container-max mx-auto w-full">
+<!-- Profile Summary Section -->
+<section class="mb-8">
+<div class="bg-surface-container custom-border p-4 rounded-lg flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="h-14 w-14 rounded-full bg-surface-variant flex items-center justify-center border border-outline-variant overflow-hidden">
+<img alt="Marcus Reed" class="h-full w-full object-cover" data-alt="A professional headshot of a middle-aged man with a friendly expression, set against a neutral, dark industrial office background. The lighting is focused and clean, emphasizing a professional corporate aesthetic. The overall color palette matches a dark mode UI with deep blues and subtle grays, maintaining a high-contrast and reliable atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDEgTQ2neT1sC6zGgCB4lBUy6HQpeyT7-yt9X4ZA8wSu2-4W6JCXfm1Ybm-H7Ye6xw1HGqR20wU_PcZZYPrHV7PQca4LTSU2XztPfj3oe4GuwDitFNuH-J4FA5hov5QVG0vEcUhI_tI3RfP_9z8jFxryQZuwEkGN7db6UA3glFV8gCsaKtJtJ9hj8q3Fm4bZzX63KDka0v-kBfO1cvoadeFyFwKvuealHo1DcRnK_lqMwQhSVbb78hmNtW2QXOZrGt_nBI5Yy8y610U"/>
+</div>
+<div>
+<h1 class="font-headline-sm text-headline-sm text-on-surface">Marcus Reed</h1>
+<p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Candidate ID: #FF-88219</p>
+</div>
+</div>
+<span class="bg-primary/10 text-primary border border-primary/30 px-3 py-1 rounded-full font-label-md text-label-md">
+                    Active Candidate
+                </span>
+</div>
+</section>
+<!-- Application Progress Section -->
+<section class="mb-8">
+<div class="flex items-center justify-between mb-4">
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Application Progress</h2>
+<span class="font-label-md text-label-md text-primary">View All</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+<!-- Application Card 1 -->
+<div class="bg-surface-container custom-border p-4 rounded-lg hover:bg-[#242a34] transition-colors duration-200">
+<div class="flex justify-between items-start mb-3">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant mb-1 uppercase">Leeds Depot</span>
+<h3 class="font-body-lg text-body-lg font-bold text-on-surface">HGV Class 1 Driver - Night Shift</h3>
+</div>
+</div>
+<div class="flex items-center justify-between mt-6 pt-3 border-t border-outline-variant">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]" data-icon="schedule">schedule</span>
+<span class="font-label-md text-label-md">Applied 2d ago</span>
+</div>
+<span class="bg-primary-container/20 text-primary border border-primary-container/40 px-2 py-0.5 rounded font-label-md text-label-md uppercase">
+                            Entretien
+                        </span>
+</div>
+</div>
+<!-- Application Card 2 -->
+<div class="bg-surface-container custom-border p-4 rounded-lg hover:bg-[#242a34] transition-colors duration-200">
+<div class="flex justify-between items-start mb-3">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant mb-1 uppercase">Manchester Hub</span>
+<h3 class="font-body-lg text-body-lg font-bold text-on-surface">Fleet Dispatcher Assistant</h3>
+</div>
+</div>
+<div class="flex items-center justify-between mt-6 pt-3 border-t border-outline-variant">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]" data-icon="schedule">schedule</span>
+<span class="font-label-md text-label-md">Applied 5d ago</span>
+</div>
+<span class="bg-secondary-container/20 text-secondary border border-secondary-container/40 px-2 py-0.5 rounded font-label-md text-label-md uppercase">
+                            Test en cours
+                        </span>
+</div>
+</div>
+<!-- Application Card 3 -->
+<div class="bg-surface-container custom-border p-4 rounded-lg hover:bg-[#242a34] transition-colors duration-200">
+<div class="flex justify-between items-start mb-3">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant mb-1 uppercase">Sheffield Logistics Park</span>
+<h3 class="font-body-lg text-body-lg font-bold text-on-surface">Warehouse Operations Lead</h3>
+</div>
+</div>
+<div class="flex items-center justify-between mt-6 pt-3 border-t border-outline-variant">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]" data-icon="schedule">schedule</span>
+<span class="font-label-md text-label-md">Applied 1w ago</span>
+</div>
+<span class="bg-error-container/20 text-error border border-error-container/40 px-2 py-0.5 rounded font-label-md text-label-md uppercase">
+                            Rejeté
+                        </span>
+</div>
+</div>
+</div>
+</section>
+<!-- Assigned Tests Section -->
+<section class="mb-8">
+<h2 class="font-headline-sm text-headline-sm text-on-surface mb-4">Assigned Tests</h2>
+<div class="bg-surface-container-high custom-border p-5 rounded-lg border-l-4 border-l-primary">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+<div class="flex gap-4">
+<div class="bg-primary/10 h-12 w-12 rounded flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary" data-icon="quiz">quiz</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Theory &amp; Safety Test</h3>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-md">Complete this mandatory assessment to proceed with your Manchester Hub application. Estimated time: 20 mins.</p>
+</div>
+</div>
+<button class="bg-[#1683f7] hover:bg-[#1e90ff] active:bg-[#0064d3] text-white px-6 py-3 rounded font-label-md text-label-md uppercase tracking-widest transition-all w-full md:w-auto">
+                        Accéder au test
+                    </button>
+</div>
+</div>
+</section>
+<!-- Empty State Example (Message History) -->
+<section class="mb-8">
+<h2 class="font-headline-sm text-headline-sm text-on-surface mb-4">Message History</h2>
+<div class="bg-surface-container custom-border p-12 rounded-lg flex flex-col items-center text-center">
+<div class="bg-surface-variant h-16 w-16 rounded-full flex items-center justify-center mb-4">
+<span class="material-symbols-outlined text-outline text-3xl" data-icon="mail_outline">mail_outline</span>
+</div>
+<h3 class="font-body-lg text-body-lg font-bold text-on-surface mb-1">No messages yet</h3>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-xs mb-6">When a recruiter contacts you regarding your applications, the conversation will appear here.</p>
+<button class="border border-outline-variant text-primary hover:bg-surface-variant px-4 py-2 rounded font-label-md text-label-md transition-colors">
+                    Check Help Center
+                </button>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 bg-surface-container-low dark:bg-surface-container-low border-t border-outline-variant flex justify-around items-center h-20 px-4 pb-2 md:hidden">
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-on-surface scale-95 active:scale-90 transition-transform">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-md text-label-md">Home</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-on-surface scale-95 active:scale-90 transition-transform">
+<span class="material-symbols-outlined" data-icon="assignment_ind">assignment_ind</span>
+<span class="font-label-md text-label-md">Applications</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-on-surface scale-95 active:scale-90 transition-transform">
+<span class="material-symbols-outlined" data-icon="quiz">quiz</span>
+<span class="font-label-md text-label-md">Tests</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-4 py-1 scale-95 active:scale-90 transition-transform">
+<span class="material-symbols-outlined" data-icon="person" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-label-md text-label-md">Profile</span>
+</div>
+</nav>
+</body></html>

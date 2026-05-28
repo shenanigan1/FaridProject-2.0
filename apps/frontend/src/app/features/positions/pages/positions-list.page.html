@@ -23,7 +23,7 @@
           <div class="ff-app-stack">
             @for (p of positions; track p.id) {
               <article class="ff-data-card">
-                <div class="ff-inline-actions" style="align-items: flex-start; justify-content: space-between">
+          <div class="ff-inline-actions ff-u-between">
                   <div>
                     <h2 class="ff-row-title">{{ p.title }}</h2>
                     <p class="ff-row-meta">
@@ -42,7 +42,7 @@
                   }
                 </div>
 
-                <footer class="ff-inline-actions" style="justify-content: space-between; margin-top: 1rem">
+          <footer class="ff-inline-actions ff-u-between ff-u-mt-lg">
                   <a class="ff-status-pill" [routerLink]="['/positions', p.id, 'applicants']">
                     Applicants: {{ getAppliedCount(p.id, appliedCounts) }}
                   </a>

@@ -1,8 +1,10 @@
 import os
 from pathlib import Path
 from datetime import timedelta
+from collections.abc import Mapping
 
 import dj_database_url
+from django.core.exceptions import ImproperlyConfigured
 from dotenv import load_dotenv
 
 # =============================================================================
@@ -20,11 +22,19 @@ load_dotenv(BASE_DIR / ".env")
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 DEBUG = os.getenv("DEBUG", "False").lower() == "true"
+IS_PRODUCTION = os.getenv("DJANGO_ENV", "").lower() in {"prod", "production"}
 
-ALLOWED_HOSTS = os.getenv(
+
+def comma_separated_env(name: str, default: str = "") -> list[str]:
+    return [
+        value.strip() for value in os.getenv(name, default).split(",") if value.strip()
+    ]
+
+
+ALLOWED_HOSTS = comma_separated_env(
     "ALLOWED_HOSTS",
     "localhost,127.0.0.1,.onrender.com",
-).split(",")
+)
 
 # =============================================================================
 # APPLICATIONS
@@ -122,10 +132,19 @@ ROOT_URLCONF = "core.urls"
 # CORS
 # =============================================================================
 
-CORS_ALLOWED_ORIGINS = os.getenv(
+DEFAULT_CORS_ALLOWED_ORIGINS = (
+    "http://localhost:4200",
+    "http://127.0.0.1:4200",
+    "http://localhost:4201",
+    "http://127.0.0.1:4201",
+    "http://localhost:4300",
+    "http://127.0.0.1:4300",
+)
+
+CORS_ALLOWED_ORIGINS = comma_separated_env(
     "CORS_ALLOWED_ORIGINS",
-    "http://localhost:4200,http://127.0.0.1:4200",
-).split(",")
+    ",".join(DEFAULT_CORS_ALLOWED_ORIGINS),
+)
 CORS_ALLOW_CREDENTIALS = os.getenv("CORS_ALLOW_CREDENTIALS", "False").lower() == "true"
 CSRF_TRUSTED_ORIGINS = [
     origin
@@ -197,3 +216,32 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 # =============================================================================
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+def missing_required_production_settings(env: Mapping[str, str]) -> list[str]:
+    missing = [
+        name
+        for name in (
+            "SECRET_KEY",
+            "DATABASE_URL",
+            "ALLOWED_HOSTS",
+            "CORS_ALLOWED_ORIGINS",
+        )
+        if not env.get(name)
+    ]
+
+    if env.get("DEBUG", "False").lower() == "true":
+        missing.append("DEBUG=false")
+
+    if env.get("CORS_ALLOW_CREDENTIALS", "False").lower() == "true":
+        missing.append("CORS_ALLOW_CREDENTIALS=false")
+
+    return missing
+
+
+if IS_PRODUCTION:
+    missing_settings = missing_required_production_settings(os.environ)
+    if missing_settings:
+        raise ImproperlyConfigured(
+            "Missing or unsafe production settings: " + ", ".join(missing_settings)
+        )

@@ -1,5 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output, inject } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostListener,
+  Output,
+  ViewChild,
+  inject,
+} from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { finalize } from 'rxjs';
 
@@ -22,12 +31,14 @@ import { UiTextInputComponent } from '@lib-ui/text-input/text-input.component';
   ],
   templateUrl: './auth-modal.component.html',
 })
-export class AuthModalComponent {
+export class AuthModalComponent implements AfterViewInit {
   private readonly formBuilder = inject(FormBuilder);
   private readonly authService = inject(AuthService);
 
   @Output() authenticated = new EventEmitter<void>();
   @Output() closed = new EventEmitter<void>();
+
+  @ViewChild('dialogPanel') private dialogPanel?: ElementRef<HTMLElement>;
 
   mode: 'signin' | 'signup' = 'signin';
   isSubmitting = false;
@@ -43,6 +54,10 @@ export class AuthModalComponent {
 
   constructor() {
     this.applyModeValidators();
+  }
+
+  ngAfterViewInit(): void {
+    this.dialogPanel?.nativeElement.focus();
   }
 
   switchMode(): void {
@@ -92,6 +107,11 @@ export class AuthModalComponent {
     this.closed.emit();
   }
 
+  @HostListener('document:keydown.escape')
+  onEscape(): void {
+    this.onClose();
+  }
+
   getFieldError(controlName: 'firstName' | 'lastName' | 'phone' | 'email' | 'password'): string | null {
     const control = this.authForm.controls[controlName];
 
@@ -100,7 +120,7 @@ export class AuthModalComponent {
     }
 
     if (control.errors['required']) {
-      return 'This field is required.';
+      return 'Champ obligatoire';
     }
 
     if (control.errors['email']) {

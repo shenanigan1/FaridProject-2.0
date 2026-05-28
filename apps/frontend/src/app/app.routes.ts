@@ -32,9 +32,68 @@ export const routes: Routes = [
 
   {
     path: 'dashboard',
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['hr'] },
     loadComponent: () =>
       import('./features/dashboard/pages/dashboard.page').then((m) => m.DashboardPage),
+  },
+  {
+    path: 'admin',
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['admin'], mode: 'admin' },
+    loadComponent: () =>
+      import('./features/dashboards/pages/executive-dashboard.page').then(
+        (m) => m.ExecutiveDashboardPage,
+      ),
+  },
+  {
+    path: 'direction',
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['director'], mode: 'direction' },
+    loadComponent: () =>
+      import('./features/dashboards/pages/executive-dashboard.page').then(
+        (m) => m.ExecutiveDashboardPage,
+      ),
+  },
+  {
+    path: 'reporting',
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['director'], mode: 'direction' },
+    loadComponent: () =>
+      import('./features/dashboards/pages/executive-dashboard.page').then(
+        (m) => m.ExecutiveDashboardPage,
+      ),
+  },
+  {
+    path: 'employee',
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['employee', 'driver'] },
+    loadComponent: () =>
+      import('./features/dashboards/pages/employee-dashboard.page').then(
+        (m) => m.EmployeeDashboardPage,
+      ),
+  },
+  {
+    path: 'employee/tests',
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['employee', 'driver'] },
+    loadComponent: () =>
+      import('./features/dashboards/pages/employee-dashboard.page').then(
+        (m) => m.EmployeeDashboardPage,
+      ),
+  },
+  {
+    path: 'candidate-portal',
+    loadComponent: () =>
+      import('./features/shared/pages/work-in-progress.page').then((m) => m.WorkInProgressPage),
+    canActivate: [AuthGuard, RoleGuard],
+    data: {
+      roles: ['candidate'],
+      title: 'Candidate portal',
+      description: 'Les comptes candidats utilisent l’application candidate dédiée.',
+      errorCode: 'AUTH-CANDIDATE',
+      errorMessage: 'Open the candidate application to continue.',
+    },
   },
 
   {
@@ -130,7 +189,31 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     loadComponent: () => import('./features/profile/pages/profile.page').then((m) => m.ProfilePage),
   },
+  {
+    path: 'forbidden',
+    loadComponent: () =>
+      import('./features/shared/pages/work-in-progress.page').then((m) => m.WorkInProgressPage),
+    data: {
+      title: 'Accès refusé',
+      description: 'Votre rôle ne permet pas d’ouvrir cette page.',
+      errorCode: 'AUTH-403',
+      errorMessage: 'Forbidden route for the current role.',
+    },
+  },
 
-  { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
-  { path: '**', redirectTo: 'dashboard' },
+  {
+    path: '',
+    pathMatch: 'full',
+    loadComponent: () =>
+      import('./features/dashboards/pages/role-home-redirect.page').then(
+        (m) => m.RoleHomeRedirectPage,
+      ),
+  },
+  {
+    path: '**',
+    loadComponent: () =>
+      import('./features/dashboards/pages/role-home-redirect.page').then(
+        (m) => m.RoleHomeRedirectPage,
+      ),
+  },
 ];

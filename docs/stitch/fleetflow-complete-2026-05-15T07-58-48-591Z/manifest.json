@@ -1,0 +1,128 @@
+{
+  "createdAt": "2026-05-15T08:23:11.779Z",
+  "title": "FleetFlow Complete App Design",
+  "projectId": "16155795163148659828",
+  "outDir": "A:\\enzo2\\M1\\Employment\\FaridProject-2.0\\docs\\stitch\\fleetflow-complete-2026-05-15T07-58-48-591Z",
+  "screens": [
+    {
+      "slug": "01-login",
+      "device": "DESKTOP",
+      "prompt": "\n\nFleetFlow / Kinetic logistics recruitment product.\nDesign a professional production MVP, not a marketing site.\nVisual system: dark app UI, #10141b background, #030816 app/header, #1c2027 cards,\n#242a34 raised surfaces, #3b4352 borders, #1683f7 primary blue, #4a8eff secondary blue,\nclear orange warning, red danger, green success. High contrast RGAA/WCAG AA.\nTypography: Inter/system, compact but breathable, no negative letter spacing.\nLayout: mobile-first patterns that scale to a desktop app shell. Buttons must be explicit.\nAccessibility: visible focus, real labels, readable error states, keyboard-friendly controls.\nAvoid fake stock-photo atmosphere, gradient blobs, decorative clutter, huge hero sections.\nUse realistic logistics/recruitment content labels only to demonstrate layout.\n\nCreate the login page. Centered FleetFlow logo, compact auth card that fits without scrolling\non a laptop viewport, dark autofill-safe inputs, email/password, remember me, forgot password,\nprimary Log in CTA, request access link, footer version V 0.0.0 \"KINETIC\" // SYSTEM_ACTIVE.\nProfessional proportions, generous spacing, no oversized card.\n",
+      "screenId": "4fdb36fb07774a49916761ee4390bdea",
+      "htmlFile": "01-login.html",
+      "imageFile": "01-login.png",
+      "htmlUrl": "https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ8Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpbCiVodG1sX2QzNjgwYmM1NDRiYjQwMDA4NWRlZGQ1MmI0OTc2Y2FkEgsSBxDWrfP47QYYAZIBJAoKcHJvamVjdF9pZBIWQhQxNjE1NTc5NTE2MzE0ODY1OTgyOA&filename=&opi=96797242",
+      "imageUrl": "https://lh3.googleusercontent.com/aida/ADBb0uhXaT_mOxRCp3OObYys1Fqrk11_B71xYPskmaOUoJHcwHDd_MM_Zp3GNYtNLtzwwlJ-g_NeF-3ZgBtoPoFUWrs_1HHPfDpfA5QiQnUZ5DPKR7LZI9CutOSHVSL2hP81zU4odiqGYdp2KIhbCJrkVM3OG48Q0B0Cw6i2YmaO27MsIqp2t3qeWW0JF0Z6rKz8L60xVdJ4SdpMv0oWbuRpSxFr5_SxXAsSZjmb_-5QdPwTbY_EPM-6PGjypYtJ"
+    },
+    {
+      "slug": "02-admin-dashboard",
+      "device": "DESKTOP",
+      "prompt": "\n\nFleetFlow / Kinetic logistics recruitment product.\nDesign a professional production MVP, not a marketing site.\nVisual system: dark app UI, #10141b background, #030816 app/header, #1c2027 cards,\n#242a34 raised surfaces, #3b4352 borders, #1683f7 primary blue, #4a8eff secondary blue,\nclear orange warning, red danger, green success. High contrast RGAA/WCAG AA.\nTypography: Inter/system, compact but breathable, no negative letter spacing.\nLayout: mobile-first patterns that scale to a desktop app shell. Buttons must be explicit.\nAccessibility: visible focus, real labels, readable error states, keyboard-friendly controls.\nAvoid fake stock-photo atmosphere, gradient blobs, decorative clutter, huge hero sections.\nUse realistic logistics/recruitment content labels only to demonstrate layout.\n\nCreate the Admin_Command dashboard desktop screen. Sidebar navigation with Dashboard, Contacts,\nTests, Jobs, Roles. Top app bar with search and profile. Main content: KPI cards in a compact grid,\nrecent inflow and test validation queue side by side, job activity overview, empty/loading/error\nstate treatment hints. Dense but calm desktop application layout.\n",
+      "screenId": "ebafef205f0948e1a1679317c5d731d8",
+      "htmlFile": "02-admin-dashboard.html",
+      "imageFile": "02-admin-dashboard.png",
+      "htmlUrl": "https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ8Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpbCiVodG1sX2Q2NmMxZWI3OTRjMzQ1ZGQ4NGUyNjJkOGRjYWJkNGQ0EgsSBxDWrfP47QYYAZIBJAoKcHJvamVjdF9pZBIWQhQxNjE1NTc5NTE2MzE0ODY1OTgyOA&filename=&opi=96797242",
+      "imageUrl": "https://lh3.googleusercontent.com/aida/ADBb0uhVAZQQqYAJls7LIX6m0hmn3BH71zo1m-DjQ0_k2X-STUrMSKuFe32fXaxPsJ1X2NAcIN65KxecMCE9LRh57HMZMF0bWSxZ-VrBLeHHQctCxk1e6x5VsLk9k4_XDwyiTjgxBePyD6QZiwOHuhGGqaxe1jsKiGehmrnIBGsTgKuTe3ZbSNUwFr9NrI6-3Evq8xIYqyLIinenkJgU7PTqi8Z4-mfCCdtW9jzHuayfPJxk1KsuAJ6BbOo_cak"
+    },
+    {
+      "slug": "03-contacts-directory",
+      "device": "DESKTOP",
+      "prompt": "\n\nFleetFlow / Kinetic logistics recruitment product.\nDesign a professional production MVP, not a marketing site.\nVisual system: dark app UI, #10141b background, #030816 app/header, #1c2027 cards,\n#242a34 raised surfaces, #3b4352 borders, #1683f7 primary blue, #4a8eff secondary blue,\nclear orange warning, red danger, green success. High contrast RGAA/WCAG AA.\nTypography: Inter/system, compact but breathable, no negative letter spacing.\nLayout: mobile-first patterns that scale to a desktop app shell. Buttons must be explicit.\nAccessibility: visible focus, real labels, readable error states, keyboard-friendly controls.\nAvoid fake stock-photo atmosphere, gradient blobs, decorative clutter, huge hero sections.\nUse realistic logistics/recruitment content labels only to demonstrate layout.\n\nCreate the contacts/personnel directory screen for admin/RH. Sidebar retained. Search and filters\nfor all/chauffeurs/candidats/managers, list/table hybrid of people, create contact CTA,\nrole/status chips, safe edit affordances. Include a right details drawer preview with personal\ndetails, credentials, actions Call/Message/Edit Role.\n",
+      "screenId": "01bd065df281483697724d142ea6460c",
+      "htmlFile": "03-contacts-directory.html",
+      "imageFile": "03-contacts-directory.png",
+      "htmlUrl": "https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ8Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpbCiVodG1sXzg1YzRjMDY3ZmZkMDQzYzY5Yzc4ZTgyZjRlYjdlNWNmEgsSBxDWrfP47QYYAZIBJAoKcHJvamVjdF9pZBIWQhQxNjE1NTc5NTE2MzE0ODY1OTgyOA&filename=&opi=96797242",
+      "imageUrl": "https://lh3.googleusercontent.com/aida/ADBb0uiMyArzfsCjkOngGEpHmE4NfEiyyGSPLP35Sin11dTs6CMX2rz7eZcycHEpCcr1XFf-k14Iiw7wRXQtXSrXqZEYXZYp0imesFSQqTFIg0XKFqfxm8b9qikbpjmU7OyqYkP4GW0lLVii-u7lxCQetMVMx_cCwEbn8FD6-DU4zfRoe-9XC8dd1J6TY5pqaoFNQETQo7W5VnxjuqiccQdSQ_MUBD1UpEHosR34Dkk9xcmE_ODPlKBfk7EQPgbk"
+    },
+    {
+      "slug": "04-tests-validation",
+      "device": "DESKTOP",
+      "prompt": "\n\nFleetFlow / Kinetic logistics recruitment product.\nDesign a professional production MVP, not a marketing site.\nVisual system: dark app UI, #10141b background, #030816 app/header, #1c2027 cards,\n#242a34 raised surfaces, #3b4352 borders, #1683f7 primary blue, #4a8eff secondary blue,\nclear orange warning, red danger, green success. High contrast RGAA/WCAG AA.\nTypography: Inter/system, compact but breathable, no negative letter spacing.\nLayout: mobile-first patterns that scale to a desktop app shell. Buttons must be explicit.\nAccessibility: visible focus, real labels, readable error states, keyboard-friendly controls.\nAvoid fake stock-photo atmosphere, gradient blobs, decorative clutter, huge hero sections.\nUse realistic logistics/recruitment content labels only to demonstrate layout.\n\nCreate the Tests admin page. Tabs Tests / Templates, search, filters by status/candidate/job/template/manager.\nList all tests including in progress, completed, validated, rejected. Each card/row shows candidate,\njob, template, progress, sections completed, status, and actions: View dossier, Relaunch, Validate, Reject.\nClear distinction between primary and secondary actions.\n",
+      "screenId": "20ee1c050f77402483fcec2378313d13",
+      "htmlFile": "04-tests-validation.html",
+      "imageFile": "04-tests-validation.png",
+      "htmlUrl": "https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ8Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpbCiVodG1sXzk4NzI1ODI3ZTVhMzQ3NTdiMTEyMjUwYzA5NmU3NGM5EgsSBxDWrfP47QYYAZIBJAoKcHJvamVjdF9pZBIWQhQxNjE1NTc5NTE2MzE0ODY1OTgyOA&filename=&opi=96797242",
+      "imageUrl": "https://lh3.googleusercontent.com/aida/ADBb0uipSjuPc34y02GlrcdOdEIo1SGYIDL-pMjvp98Xr0H68RILLpMHq2_R-MHReaSB6lzCJkmWSo2a7PS4eJavglFevDqBs_pXhf3DzB8-3GVtMaBd0Okz8Pdc9wdSfoOSgibsmmAR2g7bw6jWf6uPcZ6I_qyeWbbPYcJqhy29ZsA9k32pnWc0rrDNdZbExcItTWWx5dr6uVzqYHM_tZVD9aPkigJ5s_-IrrxEuqiOje4P77LGeGqymXmklAKv"
+    },
+    {
+      "slug": "05-template-pool-question-editor",
+      "device": "DESKTOP",
+      "prompt": "\n\nFleetFlow / Kinetic logistics recruitment product.\nDesign a professional production MVP, not a marketing site.\nVisual system: dark app UI, #10141b background, #030816 app/header, #1c2027 cards,\n#242a34 raised surfaces, #3b4352 borders, #1683f7 primary blue, #4a8eff secondary blue,\nclear orange warning, red danger, green success. High contrast RGAA/WCAG AA.\nTypography: Inter/system, compact but breathable, no negative letter spacing.\nLayout: mobile-first patterns that scale to a desktop app shell. Buttons must be explicit.\nAccessibility: visible focus, real labels, readable error states, keyboard-friendly controls.\nAvoid fake stock-photo atmosphere, gradient blobs, decorative clutter, huge hero sections.\nUse realistic logistics/recruitment content labels only to demonstrate layout.\n\nCreate the template builder workflow screen. Left column: template basic info, duration, difficulty,\npassing score. Middle: sections stacked with attached question pools. Right: pool/question editor panel.\nQuestion types: free text, yes/no, true/false, rating, multiple choice, practical. Show correct answer\nselection, eliminatory toggle, max points scaled to 100, manager comment field behavior. Include Add Pool\nbottom sheet/modal visual.\n",
+      "screenId": "55c7ce7a71814af9a76e22e2834d7ea2",
+      "htmlFile": "05-template-pool-question-editor.html",
+      "imageFile": "05-template-pool-question-editor.png",
+      "htmlUrl": "https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ8Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpbCiVodG1sXzhjYjc0ZDNiYjA1YjQxNGY5ZGJmNGJiZWE4NzZmMWI2EgsSBxDWrfP47QYYAZIBJAoKcHJvamVjdF9pZBIWQhQxNjE1NTc5NTE2MzE0ODY1OTgyOA&filename=&opi=96797242",
+      "imageUrl": "https://lh3.googleusercontent.com/aida/ADBb0ugoC9_lGyS3GmQgP1MDErw5NxgqvRAR-EjvgeREQ-NxW3m2D3oqH4TVaH0gIP6chh5uJIRpDnEewc7swMYIAtnOKfVxLLIcYDHNnjsPERXfr-M3fykfjXGAIiHP4Te3ZV0oRyz6HhCvOQeqLwlMb0hO-Zrovzm1TQsiaUQIzpcpbReDUjM8SNy4z4O4Ti8ZZnAgeZGKQrb_u895MPTmVi6JROAlc8QFFWVLWXoG5Z1XgsSmqwljMR9ipRq-"
+    },
+    {
+      "slug": "06-jobs-applicants",
+      "device": "DESKTOP",
+      "prompt": "\n\nFleetFlow / Kinetic logistics recruitment product.\nDesign a professional production MVP, not a marketing site.\nVisual system: dark app UI, #10141b background, #030816 app/header, #1c2027 cards,\n#242a34 raised surfaces, #3b4352 borders, #1683f7 primary blue, #4a8eff secondary blue,\nclear orange warning, red danger, green success. High contrast RGAA/WCAG AA.\nTypography: Inter/system, compact but breathable, no negative letter spacing.\nLayout: mobile-first patterns that scale to a desktop app shell. Buttons must be explicit.\nAccessibility: visible focus, real labels, readable error states, keyboard-friendly controls.\nAvoid fake stock-photo atmosphere, gradient blobs, decorative clutter, huge hero sections.\nUse realistic logistics/recruitment content labels only to demonstrate layout.\n\nCreate Jobs and applicants management screen. Job list left or top with search/filters; selected job detail\nwith tabs Applicants / Details / Settings. Applicants table/cards show candidate, status, test score,\ntests completed button in green, Launch Test, View Profile. Include safe empty state and clear disabled\nstate when a test is already in progress.\n",
+      "screenId": "204d43fabdb14b6c9080ac3b0985887b",
+      "htmlFile": "06-jobs-applicants.html",
+      "imageFile": "06-jobs-applicants.png",
+      "htmlUrl": "https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ8Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpbCiVodG1sXzVjY2YyNjVjZWJjNjRmN2I5NTA5Y2IwMDhjNzliOGE1EgsSBxDWrfP47QYYAZIBJAoKcHJvamVjdF9pZBIWQhQxNjE1NTc5NTE2MzE0ODY1OTgyOA&filename=&opi=96797242",
+      "imageUrl": "https://lh3.googleusercontent.com/aida/ADBb0ugEnvNvxCi9SM9d4febbg8iK1itNlAs5VEL4HsuDQNqPBPzFSbsWpXrGfH0A7fG3nz_VrjG4BjBPIg8ZRYlCrdd6nVdZefKx0eKwiGA6IW6e1RatsKvxSPUCgv7sSHfKOenp1uGZa2tgga_PftcrESW7whlY6kM67VPNXcBW-ec2yGyLmcRkzW7_kuf-_76OOB1k4KAd6GjB2fMKaGi_UL0u2lZ7tXwDEVAKLjLQxo7ohh8Kgqizip81Zpb"
+    },
+    {
+      "slug": "07-launch-evaluation",
+      "device": "MOBILE",
+      "prompt": "\n\nFleetFlow / Kinetic logistics recruitment product.\nDesign a professional production MVP, not a marketing site.\nVisual system: dark app UI, #10141b background, #030816 app/header, #1c2027 cards,\n#242a34 raised surfaces, #3b4352 borders, #1683f7 primary blue, #4a8eff secondary blue,\nclear orange warning, red danger, green success. High contrast RGAA/WCAG AA.\nTypography: Inter/system, compact but breathable, no negative letter spacing.\nLayout: mobile-first patterns that scale to a desktop app shell. Buttons must be explicit.\nAccessibility: visible focus, real labels, readable error states, keyboard-friendly controls.\nAvoid fake stock-photo atmosphere, gradient blobs, decorative clutter, huge hero sections.\nUse realistic logistics/recruitment content labels only to demonstrate layout.\n\nCreate mobile Launch Evaluation screen. Back app bar. Title \"Lancement du Test\". Template summary,\nprogress of configuration, section cards for modules like Conduite de Nuit, Habilitation Hazmat,\nInspection Mecanique. Each section has points/duration and manager assignment select. Sticky bottom\nCTA \"Lancer l'evaluation\" disabled until each required manager is selected.\n",
+      "screenId": "7e3cd0ab85484587bcfa50eb28030f8a",
+      "htmlFile": "07-launch-evaluation.html",
+      "imageFile": "07-launch-evaluation.png",
+      "htmlUrl": "https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ8Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpbCiVodG1sXzY3MDQwOTViZmM5ZjQ5NmM4NWM3OWFhMTIyMzRlZGU3EgsSBxDWrfP47QYYAZIBJAoKcHJvamVjdF9pZBIWQhQxNjE1NTc5NTE2MzE0ODY1OTgyOA&filename=&opi=96797242",
+      "imageUrl": "https://lh3.googleusercontent.com/aida/ADBb0ugev1SMMsW0UKbQUzI9WHGj0qR9lzMnzpsDLPnxJwF7QWtqOZwXQg7UhDtJhxgxjXApK8VU4NMv1Fy6KpnZihQnhZQfimT92Zoi8GulLcAMH46h9pM73GjiN75DZ4haNl10jJ5GFdF9oU0klN-zF8V9smBQOFyRzNit85P4iC-v1NHDHxQbpiQeu1nJckhDAh5FxRerr3LLipZRNHCjeMrzrK5Eg1SAP0Od3c-tbydTOWujJJ769qsAumXB"
+    },
+    {
+      "slug": "08-manager-dashboard",
+      "device": "MOBILE",
+      "prompt": "\n\nFleetFlow / Kinetic logistics recruitment product.\nDesign a professional production MVP, not a marketing site.\nVisual system: dark app UI, #10141b background, #030816 app/header, #1c2027 cards,\n#242a34 raised surfaces, #3b4352 borders, #1683f7 primary blue, #4a8eff secondary blue,\nclear orange warning, red danger, green success. High contrast RGAA/WCAG AA.\nTypography: Inter/system, compact but breathable, no negative letter spacing.\nLayout: mobile-first patterns that scale to a desktop app shell. Buttons must be explicit.\nAccessibility: visible focus, real labels, readable error states, keyboard-friendly controls.\nAvoid fake stock-photo atmosphere, gradient blobs, decorative clutter, huge hero sections.\nUse realistic logistics/recruitment content labels only to demonstrate layout.\n\nCreate Manager mobile dashboard. Header DriverRecruit, greeting, today's assigned tests, critical alerts,\nlocal follow-up card, metrics cards, bottom nav Home Jobs Tests Profile. Manager only sees tests/sections\nassigned to them. Strong mobile spacing, no cramped text.\n",
+      "screenId": "c4c06ec20be4439f81009c03638c6ef0",
+      "htmlFile": "08-manager-dashboard.html",
+      "imageFile": "08-manager-dashboard.png",
+      "htmlUrl": "https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ8Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpbCiVodG1sXzlkMTY0YjU5ZWQ3NjQ3MjdhNzRlNmFmMzJkMTc2Mzk3EgsSBxDWrfP47QYYAZIBJAoKcHJvamVjdF9pZBIWQhQxNjE1NTc5NTE2MzE0ODY1OTgyOA&filename=&opi=96797242",
+      "imageUrl": "https://lh3.googleusercontent.com/aida/ADBb0ujSPoZHn0UXFd3m2LBilF5pZDJVeAk82RSvqttg1AJS5BrU7TYgaA06vFq8LuZNd2-mSmA5DgniJdcU4ghAbAVCCmBRHLlx5UqOxYONRPGNsP9MYOSl4xW8LqXjw_X3mlg__-njQK7Qgx34HjXmzfx_2j5rkCwVHL-unOTHY8xcFSdTRVxEvqh4DoJuKxcentttt5aR5EJiuf1dq1HfBq7pr8eYueDUrczX7jfQtkpxdNLlOMnFkWkdV6M"
+    },
+    {
+      "slug": "09-manager-questionnaire",
+      "device": "MOBILE",
+      "prompt": "\n\nFleetFlow / Kinetic logistics recruitment product.\nDesign a professional production MVP, not a marketing site.\nVisual system: dark app UI, #10141b background, #030816 app/header, #1c2027 cards,\n#242a34 raised surfaces, #3b4352 borders, #1683f7 primary blue, #4a8eff secondary blue,\nclear orange warning, red danger, green success. High contrast RGAA/WCAG AA.\nTypography: Inter/system, compact but breathable, no negative letter spacing.\nLayout: mobile-first patterns that scale to a desktop app shell. Buttons must be explicit.\nAccessibility: visible focus, real labels, readable error states, keyboard-friendly controls.\nAvoid fake stock-photo atmosphere, gradient blobs, decorative clutter, huge hero sections.\nUse realistic logistics/recruitment content labels only to demonstrate layout.\n\nCreate Manager questionnaire screen for evaluating a driver. Candidate header, current score, sections assigned\nto this manager only. Questions support rating stars, yes/no, true/false, QCM, free text with manual score,\nquestion comments, section comments, global observations, save draft, submit evaluation. Make errors clear:\n\"Champ obligatoire\".\n",
+      "screenId": "074c557279dc4a7aa1fb88c2d78f316f",
+      "htmlFile": "09-manager-questionnaire.html",
+      "imageFile": "09-manager-questionnaire.png",
+      "htmlUrl": "https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ8Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpbCiVodG1sXzg1ZDYzOWI0ZDViMTQ0ZmE4NDhjYzY2N2UzNWI1MDYwEgsSBxDWrfP47QYYAZIBJAoKcHJvamVjdF9pZBIWQhQxNjE1NTc5NTE2MzE0ODY1OTgyOA&filename=&opi=96797242",
+      "imageUrl": "https://lh3.googleusercontent.com/aida/ADBb0ugELXIyrGsSDLP-2h3DtiOq_Qm66_VF32vnYogMiiIhCpA41rYTZebMx9GTpwgkPIUMA2i_tLs-hr-GA6QReFi9eYB4cgN5Iij8DiMiHYdStE6q4QfD43TvAmyf-sZ5znzSJjBkmXaOGUBLospy8Xi281iKLfhXQkDV1Doxve_fx4h3KF6Eo3TLzxhsTAKNJZpMqZWk232RVx5Ez26eEyF82cn1itL8wrGGxW1AyNxuEP9bTq_99TKqoII"
+    },
+    {
+      "slug": "10-candidate-public-jobs",
+      "device": "MOBILE",
+      "prompt": "\n\nFleetFlow / Kinetic logistics recruitment product.\nDesign a professional production MVP, not a marketing site.\nVisual system: dark app UI, #10141b background, #030816 app/header, #1c2027 cards,\n#242a34 raised surfaces, #3b4352 borders, #1683f7 primary blue, #4a8eff secondary blue,\nclear orange warning, red danger, green success. High contrast RGAA/WCAG AA.\nTypography: Inter/system, compact but breathable, no negative letter spacing.\nLayout: mobile-first patterns that scale to a desktop app shell. Buttons must be explicit.\nAccessibility: visible focus, real labels, readable error states, keyboard-friendly controls.\nAvoid fake stock-photo atmosphere, gradient blobs, decorative clutter, huge hero sections.\nUse realistic logistics/recruitment content labels only to demonstrate layout.\n\nCreate Candidate public jobs screen. Public job offers visible without login. Header Recrutement Routier,\nsearch/filter cards, premium job cards with salary, location, contract, equipment, save icon, view details.\nBottom nav Offres / Candidatures / Tests / Profil, protected tabs open login modal if not authenticated.\n",
+      "screenId": "5e3665bff2d5468f855c3ad0016fdab3",
+      "htmlFile": "10-candidate-public-jobs.html",
+      "imageFile": "10-candidate-public-jobs.png",
+      "htmlUrl": "https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ8Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpbCiVodG1sX2VlMWE3YjczNGVjNzRlYmFhMmNiYWJlZGJlNzg2OWQxEgsSBxDWrfP47QYYAZIBJAoKcHJvamVjdF9pZBIWQhQxNjE1NTc5NTE2MzE0ODY1OTgyOA&filename=&opi=96797242",
+      "imageUrl": "https://lh3.googleusercontent.com/aida/ADBb0ugJTnjQRLk6BVJE362XtxAkgaMhkBfaA84ATzGgqu9kXnyg_MQWTcvJ4okyivt4edDtnoOpiGn06iowYy8r7NaV73s61mpp9m14bUFTzsZUPZeb-2sP8BzD7ii87XFXExX1WKOpdSj13cItw2oyD2mxuoIWUixNoAqZQT7_VPNU0DgvSH0Vh8qS78_vlWNlauSnIT0ddmDJ2ADMp6k-jsIxDVVmQZHCDFwe2cxew3cZ0mkfnl_L0wC1eGN-"
+    },
+    {
+      "slug": "11-candidate-applications-tests",
+      "device": "MOBILE",
+      "prompt": "\n\nFleetFlow / Kinetic logistics recruitment product.\nDesign a professional production MVP, not a marketing site.\nVisual system: dark app UI, #10141b background, #030816 app/header, #1c2027 cards,\n#242a34 raised surfaces, #3b4352 borders, #1683f7 primary blue, #4a8eff secondary blue,\nclear orange warning, red danger, green success. High contrast RGAA/WCAG AA.\nTypography: Inter/system, compact but breathable, no negative letter spacing.\nLayout: mobile-first patterns that scale to a desktop app shell. Buttons must be explicit.\nAccessibility: visible focus, real labels, readable error states, keyboard-friendly controls.\nAvoid fake stock-photo atmosphere, gradient blobs, decorative clutter, huge hero sections.\nUse realistic logistics/recruitment content labels only to demonstrate layout.\n\nCreate Candidate dashboard/applications/tests screen. Candidate profile summary, application progress cards,\nassigned tests, statuses entretien/test en cours/rejete, clear CTAs Acceder au test or Voir detail.\nIf no data, use a polished empty state without fake backend content.\n",
+      "screenId": "890ef45ac77e48cdaba83006b8ffa8c3",
+      "htmlFile": "11-candidate-applications-tests.html",
+      "imageFile": "11-candidate-applications-tests.png",
+      "htmlUrl": "https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ8Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpbCiVodG1sXzI1M2EyYmNhOTU2YjQyMjNiOWRhNGFmNWUwMjlmYjNmEgsSBxDWrfP47QYYAZIBJAoKcHJvamVjdF9pZBIWQhQxNjE1NTc5NTE2MzE0ODY1OTgyOA&filename=&opi=96797242",
+      "imageUrl": "https://lh3.googleusercontent.com/aida/ADBb0ugcsiWCIV8QxI01HGYNCsW4wS-OM-zXQDD67ta2q_OeSWCOPlzFjqdoihSCdufqycTaylsclCt4eJvvAB4StXvvWxa2OPbNkYQnXSZS27eFRoB2E0HuDRanf_egaZoSuOQKP_kkdp0MVYEcwv2057sCYVfBSHWLLolRTxRTIxnAFRGPe5_U5OTsAkpKuASDRNQZv0VwitV5NnCo9I3ESSTZck4Hpmo50NjxABe1ChWOV2N-6RQ-aQ6qzqJw"
+    },
+    {
+      "slug": "12-test-assessment-detail",
+      "device": "DESKTOP",
+      "prompt": "\n\nFleetFlow / Kinetic logistics recruitment product.\nDesign a professional production MVP, not a marketing site.\nVisual system: dark app UI, #10141b background, #030816 app/header, #1c2027 cards,\n#242a34 raised surfaces, #3b4352 borders, #1683f7 primary blue, #4a8eff secondary blue,\nclear orange warning, red danger, green success. High contrast RGAA/WCAG AA.\nTypography: Inter/system, compact but breathable, no negative letter spacing.\nLayout: mobile-first patterns that scale to a desktop app shell. Buttons must be explicit.\nAccessibility: visible focus, real labels, readable error states, keyboard-friendly controls.\nAvoid fake stock-photo atmosphere, gradient blobs, decorative clutter, huge hero sections.\nUse realistic logistics/recruitment content labels only to demonstrate layout.\n\nCreate admin/direction Test Assessment detail. Top summary score and candidate/job/template. Sections stacked\nas accordions; opening a section reveals all responses, correct answers, manager comments, automatic score,\nmanual override, eliminatory markers. Global evaluator feedback below final section. Bottom actions:\nValidate, Request retest, Reject candidate. Avoid compact cramped text.\n",
+      "screenId": "ba8d535ae8c74d87830a32b8d876e404",
+      "htmlFile": "12-test-assessment-detail.html",
+      "imageFile": "12-test-assessment-detail.png",
+      "htmlUrl": "https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ8Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpbCiVodG1sX2MyODAzYmM3ZGY5ODRlOGZiMWIwZGE4YjdmMzE4ZDQ4EgsSBxDWrfP47QYYAZIBJAoKcHJvamVjdF9pZBIWQhQxNjE1NTc5NTE2MzE0ODY1OTgyOA&filename=&opi=96797242",
+      "imageUrl": "https://lh3.googleusercontent.com/aida/ADBb0ugVt9-msc0gdVk_z8dVn9pCZuE79-O3aQKdtPEWngj9GwZUQ8CwP9J1J-oBGvrPYpxGyHv-LzWuDZU3XfOiOK941nX5CtWTzuLAW3t5AhdxUKsxNqWPfyIhmKJOu8nTzJYpOTzjMfcqD4_qDcldib3Igts8LSRIFnv8b7F5fPMQvTPX1ONljn-fnYR2RqmG8-gtMI33zRNQB2X2Bnrqv-W8S1Cw4RN8ArVfdkWLrC82XpYl51C1wnKZ8Qvy"
+    }
+  ]
+}

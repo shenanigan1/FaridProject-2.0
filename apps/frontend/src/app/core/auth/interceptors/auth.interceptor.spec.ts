@@ -8,6 +8,7 @@ import { TestBed } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
 
 import { AuthService } from '@auth/services/auth.service';
+import { SessionExpiredService } from '@auth/services/session-expired.service';
 import { TokenStorageService } from '@auth/services/token-storage.service';
 import { authInterceptor } from './auth.interceptor';
 
@@ -16,6 +17,7 @@ describe('authInterceptor (HttpInterceptorFn)', () => {
   let httpMock: HttpTestingController;
   let tokenStorageMock: jasmine.SpyObj<TokenStorageService>;
   let authServiceMock: jasmine.SpyObj<AuthService>;
+  let sessionExpiredMock: jasmine.SpyObj<SessionExpiredService>;
 
   beforeEach(() => {
     tokenStorageMock = jasmine.createSpyObj<TokenStorageService>('TokenStorageService', [
@@ -27,6 +29,9 @@ describe('authInterceptor (HttpInterceptorFn)', () => {
     ]);
 
     authServiceMock = jasmine.createSpyObj<AuthService>('AuthService', ['refresh']);
+    sessionExpiredMock = jasmine.createSpyObj<SessionExpiredService>('SessionExpiredService', [
+      'notify',
+    ]);
 
     TestBed.configureTestingModule({
       providers: [
@@ -34,6 +39,7 @@ describe('authInterceptor (HttpInterceptorFn)', () => {
         provideHttpClientTesting(),
         { provide: TokenStorageService, useValue: tokenStorageMock },
         { provide: AuthService, useValue: authServiceMock },
+        { provide: SessionExpiredService, useValue: sessionExpiredMock },
       ],
     });
 
@@ -121,7 +127,22 @@ describe('authInterceptor (HttpInterceptorFn)', () => {
 
     expect(authServiceMock.refresh).toHaveBeenCalledOnceWith('REFRESH');
     expect(tokenStorageMock.clear).toHaveBeenCalled();
+    expect(sessionExpiredMock.notify).toHaveBeenCalledOnceWith();
     expect(receivedError).toEqual(jasmine.any(Error));
     httpMock.expectNone('/api/protected');
+  });
+
+  it('should clear tokens and notify session expiration when no refresh token exists', () => {
+    tokenStorageMock.getAccessToken.and.returnValue('ACCESS');
+    tokenStorageMock.getRefreshToken.and.returnValue(null);
+
+    http.get('/api/protected').subscribe({ error: () => void 0 });
+
+    const req = httpMock.expectOne('/api/protected');
+    req.flush({ message: 'Unauthorized' }, { status: 401, statusText: 'Unauthorized' });
+
+    expect(authServiceMock.refresh).not.toHaveBeenCalled();
+    expect(tokenStorageMock.clear).toHaveBeenCalledTimes(1);
+    expect(sessionExpiredMock.notify).toHaveBeenCalledOnceWith();
   });
 });

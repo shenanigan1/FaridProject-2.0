@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>FleetFlow Admin Command Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-fixed-dim": "#ffb68e",
+                        "outline": "#8b919f",
+                        "on-surface-variant": "#c1c6d6",
+                        "tertiary-fixed": "#ffdbc9",
+                        "on-tertiary-fixed-variant": "#763300",
+                        "tertiary-container": "#e76e13",
+                        "tertiary": "#ffb68e",
+                        "secondary": "#adc6ff",
+                        "on-background": "#e0e2ec",
+                        "background": "#10131a",
+                        "surface-container-high": "#272a31",
+                        "surface-bright": "#363941",
+                        "on-secondary-container": "#e0e8ff",
+                        "on-secondary-fixed-variant": "#004493",
+                        "surface-dim": "#10131a",
+                        "primary-container": "#3a90ff",
+                        "on-tertiary": "#532200",
+                        "surface-container": "#1c2027",
+                        "secondary-fixed-dim": "#adc6ff",
+                        "on-primary-fixed-variant": "#00468b",
+                        "error": "#ffb4ab",
+                        "surface-container-highest": "#31353c",
+                        "secondary-container": "#0064d3",
+                        "on-tertiary-container": "#491d00",
+                        "on-primary-container": "#002957",
+                        "outline-variant": "#3b4352",
+                        "surface-container-lowest": "#0b0e15",
+                        "on-error": "#690005",
+                        "surface": "#10131a",
+                        "on-error-container": "#ffdad6",
+                        "surface-tint": "#a9c7ff",
+                        "surface-container-low": "#181c23",
+                        "inverse-surface": "#e0e2ec",
+                        "on-secondary": "#002e69",
+                        "inverse-on-surface": "#2d3038",
+                        "primary-fixed": "#d6e3ff",
+                        "on-tertiary-fixed": "#331200",
+                        "primary-fixed-dim": "#a9c7ff",
+                        "on-surface": "#e0e2ec",
+                        "primary": "#a9c7ff",
+                        "on-primary": "#003063",
+                        "inverse-primary": "#005db6",
+                        "on-primary-fixed": "#001b3d",
+                        "secondary-fixed": "#d8e2ff",
+                        "error-container": "#93000a",
+                        "on-secondary-fixed": "#001a41",
+                        "surface-variant": "#31353c"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "gutter": "16px",
+                        "margin-mobile": "16px",
+                        "xl": "40px",
+                        "sm": "8px",
+                        "unit": "4px",
+                        "margin-desktop": "32px",
+                        "lg": "24px",
+                        "md": "16px",
+                        "xs": "4px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-md": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "headline-sm": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: #10131a;
+            color: #e0e2ec;
+            font-family: 'Inter', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #10131a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #3b4352;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="dark overflow-x-hidden">
+<!-- SideNavBar Shell -->
+<aside class="flex flex-col h-full w-64 fixed left-0 top-0 z-40 bg-surface-container-lowest dark:bg-surface-container-lowest border-r border-outline-variant">
+<div class="px-lg py-xl">
+<h1 class="text-headline-sm font-headline-sm font-bold text-primary dark:text-primary">FleetFlow</h1>
+<p class="text-label-md font-label-md text-on-surface-variant">Logistics Recruitment</p>
+</div>
+<nav class="flex-1 px-md space-y-xs">
+<!-- Active Tab -->
+<a class="flex items-center gap-md px-md py-sm text-primary dark:text-primary font-bold border-r-2 border-primary hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="text-label-md font-label-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant dark:text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="contacts">contacts</span>
+<span class="text-label-md font-label-md">Contacts</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant dark:text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="quiz">quiz</span>
+<span class="text-label-md font-label-md">Tests</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant dark:text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="work">work</span>
+<span class="text-label-md font-label-md">Jobs</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant dark:text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="assignment_ind">assignment_ind</span>
+<span class="text-label-md font-label-md">Roles</span>
+</a>
+</nav>
+<div class="p-lg border-t border-outline-variant">
+<div class="flex items-center gap-md">
+<div class="h-10 w-10 bg-primary-container rounded-full flex items-center justify-center text-on-primary-container font-bold">
+                    AD
+                </div>
+<div>
+<p class="text-label-md font-label-md">Admin Command</p>
+<p class="text-label-sm font-label-sm text-outline">System Lead</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Wrapper -->
+<div class="ml-64 flex flex-col min-h-screen">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center px-lg h-16 sticky top-0 z-30 bg-surface-container-lowest dark:bg-surface-container-lowest border-b border-outline-variant">
+<div class="flex items-center flex-1 max-w-xl">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline" data-icon="search">search</span>
+<input class="w-full bg-surface-container border border-outline-variant rounded px-10 py-1.5 text-body-md focus:ring-2 focus:ring-primary focus:outline-none placeholder-outline transition-all" placeholder="Search candidates, jobs, or test IDs..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-md ml-lg">
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-high rounded transition-all focus:ring-2 focus:ring-primary">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-high rounded transition-all focus:ring-2 focus:ring-primary">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+</div>
+</header>
+<!-- Page Content -->
+<main class="p-lg space-y-lg flex-1">
+<!-- KPI Grid -->
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-md">
+<div class="bg-surface-container border border-outline-variant p-md flex flex-col justify-between">
+<div>
+<p class="text-label-sm font-label-sm text-outline uppercase tracking-wider">Active Requisitions</p>
+<h2 class="text-headline-md font-headline-md text-on-surface mt-xs">142</h2>
+</div>
+<div class="flex items-center text-primary mt-sm">
+<span class="material-symbols-outlined text-sm" data-icon="trending_up">trending_up</span>
+<span class="text-label-sm font-label-sm ml-1">+12% from last week</span>
+</div>
+</div>
+<div class="bg-surface-container border border-outline-variant p-md flex flex-col justify-between">
+<div>
+<p class="text-label-sm font-label-sm text-outline uppercase tracking-wider">Total Candidates</p>
+<h2 class="text-headline-md font-headline-md text-on-surface mt-xs">8,492</h2>
+</div>
+<div class="flex items-center text-on-surface-variant mt-sm">
+<span class="material-symbols-outlined text-sm" data-icon="group">group</span>
+<span class="text-label-sm font-label-sm ml-1">Live database total</span>
+</div>
+</div>
+<div class="bg-surface-container border border-outline-variant p-md flex flex-col justify-between relative overflow-hidden">
+<div>
+<p class="text-label-sm font-label-sm text-outline uppercase tracking-wider">Validation Queue</p>
+<h2 class="text-headline-md font-headline-md text-on-surface mt-xs">27</h2>
+</div>
+<div class="flex items-center text-tertiary mt-sm">
+<span class="material-symbols-outlined text-sm" data-icon="priority_high">priority_high</span>
+<span class="text-label-sm font-label-sm ml-1">Requires urgent action</span>
+</div>
+</div>
+<div class="bg-surface-container border border-outline-variant p-md flex flex-col justify-between">
+<div>
+<p class="text-label-sm font-label-sm text-outline uppercase tracking-wider">Time to Hire</p>
+<h2 class="text-headline-md font-headline-md text-on-surface mt-xs">14.2d</h2>
+</div>
+<div class="flex items-center text-error mt-sm">
+<span class="material-symbols-outlined text-sm" data-icon="timer">timer</span>
+<span class="text-label-sm font-label-sm ml-1">+2.1d delay average</span>
+</div>
+</div>
+</section>
+<!-- Middle Section -->
+<section class="grid grid-cols-1 lg:grid-cols-2 gap-lg">
+<!-- Recent Inflow -->
+<div class="bg-surface-container border border-outline-variant flex flex-col">
+<div class="px-md py-sm border-b border-outline-variant flex justify-between items-center bg-surface-container-low">
+<h3 class="text-label-md font-label-md font-bold text-on-surface">Recent Inflow</h3>
+<button class="text-primary text-label-sm font-label-sm hover:underline">View All</button>
+</div>
+<div class="divide-y divide-outline-variant">
+<!-- Candidate Item -->
+<div class="px-md py-sm flex items-center justify-between hover:bg-surface-container-high transition-colors group">
+<div class="flex items-center gap-md">
+<div class="h-8 w-8 bg-surface-container-highest rounded border border-outline-variant flex items-center justify-center text-outline text-label-sm">JD</div>
+<div>
+<p class="text-body-md font-semibold text-on-surface">Jack Dawson</p>
+<p class="text-label-sm font-label-sm text-outline">Class 1 Driver • Leeds Depot</p>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-tighter bg-primary-container/20 text-primary border border-primary/30">New</span>
+</div>
+<div class="px-md py-sm flex items-center justify-between hover:bg-surface-container-high transition-colors group">
+<div class="flex items-center gap-md">
+<div class="h-8 w-8 bg-surface-container-highest rounded border border-outline-variant flex items-center justify-center text-outline text-label-sm">SM</div>
+<div>
+<p class="text-body-md font-semibold text-on-surface">Sarah Miller</p>
+<p class="text-label-sm font-label-sm text-outline">Logistics Planner • Bristol Hub</p>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-tighter bg-secondary-container/20 text-secondary border border-secondary/30">Under Review</span>
+</div>
+<div class="px-md py-sm flex items-center justify-between hover:bg-surface-container-high transition-colors group">
+<div class="flex items-center gap-md">
+<div class="h-8 w-8 bg-surface-container-highest rounded border border-outline-variant flex items-center justify-center text-outline text-label-sm">RK</div>
+<div>
+<p class="text-body-md font-semibold text-on-surface">Robert King</p>
+<p class="text-label-sm font-label-sm text-outline">Warehouse Supervisor • Manchester</p>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-tighter bg-primary-container/20 text-primary border border-primary/30">New</span>
+</div>
+<div class="px-md py-sm flex items-center justify-between hover:bg-surface-container-high transition-colors group">
+<div class="flex items-center gap-md">
+<div class="h-8 w-8 bg-surface-container-highest rounded border border-outline-variant flex items-center justify-center text-outline text-label-sm">AL</div>
+<div>
+<p class="text-body-md font-semibold text-on-surface">Amina Latif</p>
+<p class="text-label-sm font-label-sm text-outline">Fleet Maintenance Tech • London</p>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-tighter bg-secondary-container/20 text-secondary border border-secondary/30">Under Review</span>
+</div>
+</div>
+<div class="p-sm text-center border-t border-outline-variant">
+<p class="text-label-sm font-label-sm text-outline flex items-center justify-center gap-xs">
+<span class="material-symbols-outlined text-xs" data-icon="update">update</span>
+                            Refreshed 2 minutes ago
+                        </p>
+</div>
+</div>
+<!-- Test Validation Queue -->
+<div class="bg-surface-container border border-outline-variant flex flex-col">
+<div class="px-md py-sm border-b border-outline-variant flex justify-between items-center bg-surface-container-low">
+<h3 class="text-label-md font-label-md font-bold text-on-surface">Test Validation Queue</h3>
+<div class="flex items-center gap-xs">
+<span class="h-2 w-2 rounded-full bg-tertiary"></span>
+<span class="text-label-sm font-label-sm text-on-surface-variant">12 Pending Review</span>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-lowest text-label-sm text-outline uppercase tracking-wider">
+<th class="px-md py-2 font-semibold">Test ID</th>
+<th class="px-md py-2 font-semibold">Candidate</th>
+<th class="px-md py-2 font-semibold">Score</th>
+<th class="px-md py-2 font-semibold text-right">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<tr>
+<td class="px-md py-sm text-label-sm font-mono text-secondary">#TQ-8812</td>
+<td class="px-md py-sm text-body-md">David Chen</td>
+<td class="px-md py-sm"><span class="text-on-surface font-bold">88%</span> <span class="text-outline text-xs">/ 100</span></td>
+<td class="px-md py-sm text-right">
+<button class="bg-primary text-on-primary text-label-sm font-label-sm px-3 py-1 rounded hover:bg-primary-container transition-all">Review</button>
+</td>
+</tr>
+<tr>
+<td class="px-md py-sm text-label-sm font-mono text-secondary">#TQ-8815</td>
+<td class="px-md py-sm text-body-md">Maria Garcia</td>
+<td class="px-md py-sm"><span class="text-on-surface font-bold">92%</span> <span class="text-outline text-xs">/ 100</span></td>
+<td class="px-md py-sm text-right">
+<button class="bg-primary text-on-primary text-label-sm font-label-sm px-3 py-1 rounded hover:bg-primary-container transition-all">Review</button>
+</td>
+</tr>
+<tr>
+<td class="px-md py-sm text-label-sm font-mono text-secondary">#TQ-8819</td>
+<td class="px-md py-sm text-body-md">James Wilson</td>
+<td class="px-md py-sm"><span class="text-on-surface font-bold">74%</span> <span class="text-outline text-xs">/ 100</span></td>
+<td class="px-md py-sm text-right">
+<button class="bg-primary text-on-primary text-label-sm font-label-sm px-3 py-1 rounded hover:bg-primary-container transition-all">Review</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Empty State Hint/Footer Pattern -->
+<div class="px-md py-lg text-center bg-surface-container-low border-t border-outline-variant">
+<div class="flex flex-col items-center opacity-40">
+<span class="material-symbols-outlined text-3xl mb-1" data-icon="hourglass_empty">hourglass_empty</span>
+<p class="text-label-sm font-label-sm">Waiting for more assessment completions...</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Bottom Section: Job Activity -->
+<section class="bg-surface-container border border-outline-variant">
+<div class="px-md py-sm border-b border-outline-variant flex justify-between items-center bg-surface-container-low">
+<h3 class="text-label-md font-label-md font-bold text-on-surface">Job Activity Overview</h3>
+<div class="flex gap-sm">
+<button class="flex items-center gap-xs border border-outline-variant bg-surface-container px-3 py-1.5 text-label-sm font-label-sm text-on-surface-variant hover:bg-surface-container-high rounded transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="filter_list">filter_list</span> Filter
+                        </button>
+<button class="flex items-center gap-xs border border-outline-variant bg-surface-container px-3 py-1.5 text-label-sm font-label-sm text-on-surface-variant hover:bg-surface-container-high rounded transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="download">download</span> Export
+                        </button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-lowest text-label-sm text-outline uppercase tracking-wider">
+<th class="px-md py-3 font-semibold border-r border-outline-variant">Job Title &amp; Reference</th>
+<th class="px-md py-3 font-semibold border-r border-outline-variant">Recruiter</th>
+<th class="px-md py-3 font-semibold border-r border-outline-variant">Funnel Status</th>
+<th class="px-md py-3 font-semibold">Priority</th>
+<th class="px-md py-3 font-semibold text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<tr class="hover:bg-surface-container-high transition-colors">
+<td class="px-md py-sm border-r border-outline-variant">
+<p class="text-body-md font-bold text-on-surface">HGV Class 1 Driver - Night Shift</p>
+<p class="text-label-sm font-mono text-outline">REF: LOG-2024-001</p>
+</td>
+<td class="px-md py-sm border-r border-outline-variant">
+<div class="flex items-center gap-sm">
+<div class="h-6 w-6 rounded-full bg-outline-variant flex items-center justify-center text-[10px]">TH</div>
+<span class="text-body-md">Tom Hardy</span>
+</div>
+</td>
+<td class="px-md py-sm border-r border-outline-variant">
+<div class="flex items-center gap-md">
+<div class="flex flex-col">
+<span class="text-label-sm font-bold text-primary">12</span>
+<span class="text-[9px] uppercase text-outline">Apps</span>
+</div>
+<div class="flex flex-col">
+<span class="text-label-sm font-bold text-secondary">4</span>
+<span class="text-[9px] uppercase text-outline">Interv.</span>
+</div>
+<div class="flex flex-col">
+<span class="text-label-sm font-bold text-tertiary">2</span>
+<span class="text-[9px] uppercase text-outline">Offer</span>
+</div>
+</div>
+</td>
+<td class="px-md py-sm border-r border-outline-variant">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-error-container/20 text-error border border-error/30">High</span>
+</td>
+<td class="px-md py-sm text-right">
+<button class="p-1 hover:text-primary transition-all">
+<span class="material-symbols-outlined" data-icon="visibility">visibility</span>
+</button>
+<button class="p-1 hover:text-primary transition-all">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-high transition-colors">
+<td class="px-md py-sm border-r border-outline-variant">
+<p class="text-body-md font-bold text-on-surface">Logistics Analyst (Lead)</p>
+<p class="text-label-sm font-mono text-outline">REF: LOG-2024-042</p>
+</td>
+<td class="px-md py-sm border-r border-outline-variant">
+<div class="flex items-center gap-sm">
+<div class="h-6 w-6 rounded-full bg-outline-variant flex items-center justify-center text-[10px]">SC</div>
+<span class="text-body-md">Sarah Connor</span>
+</div>
+</td>
+<td class="px-md py-sm border-r border-outline-variant">
+<div class="flex items-center gap-md">
+<div class="flex flex-col">
+<span class="text-label-sm font-bold text-primary">48</span>
+<span class="text-[9px] uppercase text-outline">Apps</span>
+</div>
+<div class="flex flex-col">
+<span class="text-label-sm font-bold text-secondary">8</span>
+<span class="text-[9px] uppercase text-outline">Interv.</span>
+</div>
+<div class="flex flex-col">
+<span class="text-label-sm font-bold text-tertiary">0</span>
+<span class="text-[9px] uppercase text-outline">Offer</span>
+</div>
+</div>
+</td>
+<td class="px-md py-sm border-r border-outline-variant">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-outline-variant text-on-surface-variant border border-outline-variant">Medium</span>
+</td>
+<td class="px-md py-sm text-right">
+<button class="p-1 hover:text-primary transition-all">
+<span class="material-symbols-outlined" data-icon="visibility">visibility</span>
+</button>
+<button class="p-1 hover:text-primary transition-all">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="flex justify-between items-center py-sm px-lg w-full bg-surface-dim dark:bg-surface-dim border-t border-outline-variant">
+<p class="text-label-sm font-label-sm text-outline">© 2024 FleetFlow Logistics. All rights reserved.</p>
+<div class="flex gap-lg">
+<a class="text-label-sm font-label-sm text-primary underline transition-colors" href="#">System Status: Operational</a>
+<a class="text-label-sm font-label-sm text-outline hover:text-on-surface transition-colors" href="#">Privacy Policy</a>
+<a class="text-label-sm font-label-sm text-outline hover:text-on-surface transition-colors" href="#">Terms of Service</a>
+<a class="text-label-sm font-label-sm text-outline hover:text-on-surface transition-colors" href="#">Support</a>
+</div>
+</footer>
+</div>
+<!-- Floating Action Button Contextual (Hidden on Dashboard but mapped for logic) -->
+<!-- Suppressed on Dashboard to prioritize information density per instructions -->
+</body></html>

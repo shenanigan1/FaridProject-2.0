@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head>
+<title>FleetFlow - Candidate Applications Tests</title>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-fixed-dim": "#a9c7ff",
+                    "tertiary-container": "#8991a2",
+                    "surface-container-low": "#181c23",
+                    "on-surface-variant": "#c1c6d6",
+                    "outline": "#8b919f",
+                    "tertiary-fixed-dim": "#bfc7d9",
+                    "on-primary-fixed": "#001b3d",
+                    "tertiary": "#bfc7d9",
+                    "on-tertiary": "#29313f",
+                    "inverse-on-surface": "#2d3038",
+                    "on-background": "#dfe2ec",
+                    "on-tertiary-fixed": "#141c29",
+                    "background": "#0f131a",
+                    "inverse-primary": "#005db6",
+                    "primary-fixed": "#d6e3ff",
+                    "surface-container-high": "#262a32",
+                    "on-secondary": "#002e69",
+                    "on-tertiary-container": "#222a38",
+                    "tertiary-fixed": "#dbe2f6",
+                    "error-container": "#93000a",
+                    "surface-container-lowest": "#0a0e15",
+                    "surface-tint": "#a9c7ff",
+                    "surface-dim": "#0f131a",
+                    "outline-variant": "#414754",
+                    "error": "#ffb4ab",
+                    "on-primary-fixed-variant": "#00468b",
+                    "on-secondary-fixed-variant": "#004493",
+                    "surface-container": "#1c2027",
+                    "on-primary-container": "#002957",
+                    "primary": "#a9c7ff",
+                    "inverse-surface": "#dfe2ec",
+                    "on-error-container": "#ffdad6",
+                    "on-tertiary-fixed-variant": "#3f4756",
+                    "secondary": "#adc6ff",
+                    "on-primary": "#003063",
+                    "on-surface": "#dfe2ec",
+                    "secondary-fixed": "#d8e2ff",
+                    "on-secondary-fixed": "#001a41",
+                    "surface-variant": "#31353d",
+                    "primary-container": "#3a90ff",
+                    "surface-container-highest": "#31353d",
+                    "on-error": "#690005",
+                    "secondary-container": "#0064d3",
+                    "surface": "#0f131a",
+                    "on-secondary-container": "#e0e8ff",
+                    "surface-bright": "#353941",
+                    "secondary-fixed-dim": "#adc6ff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "md": "16px",
+                    "lg": "24px",
+                    "base": "4px",
+                    "sm": "8px",
+                    "gutter": "16px",
+                    "margin-desktop": "32px",
+                    "margin-mobile": "16px",
+                    "xs": "4px",
+                    "xl": "32px"
+            },
+            "fontFamily": {
+                    "display-lg": ["Inter"],
+                    "label-md": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "caption": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "body-md": ["Inter"],
+                    "title-md": ["Inter"]
+            },
+            "fontSize": {
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "caption": ["11px", {"lineHeight": "14px", "fontWeight": "400"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { background-color: #0f131a; color: #dfe2ec; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  <style id="fleetflow-aaa-overrides">
+  :root { color-scheme: dark; }
+  html, body { background: #10141b !important; color: #fbfdff !important; }
+  body, body * { text-shadow: none !important; }
+  body :is(h1,h2,h3,h4,h5,h6,p,span,label,small,div,li,dt,dd,td,th,strong,em,a,button) {
+    color: #fbfdff !important;
+  }
+  body :is(.text-outline,.text-on-surface-variant,.text-slate-400,.text-gray-400,.text-neutral-400,.text-zinc-400),
+  body [class*="text-outline"],
+  body [class*="text-on-surface-variant"],
+  body [class*="text-gray"],
+  body [class*="text-slate"],
+  body [class*="text-zinc"],
+  body [class*="text-neutral"] {
+    color: #f8fbff !important;
+  }
+  body :is(header,main,footer,section,article,nav,form),
+  body [class*="bg-background"],
+  body [class*="bg-surface"],
+  body [class*="bg-[#1C2027]"],
+  body [class*="bg-[#030816]"] {
+    border-color: #7f8da3 !important;
+  }
+  body [class*="bg-background"] {
+    background-color: #10141b !important;
+  }
+  body :is(input,select,textarea) {
+    background: #050914 !important;
+    color: #ffffff !important;
+    border: 1px solid #dbeafe !important;
+  }
+  body :is(input,textarea)::placeholder { color: #f1f5f9 !important; opacity: 1 !important; }
+  body button,
+  body a[role="button"],
+  body [class*="bg-primary"],
+  body [class*="bg-secondary-container"],
+  body [class*="bg-[#1683F7]"],
+  body [class*="bg-[#1683f7]"],
+  body [class*="bg-blue"] {
+    background-color: #003f8c !important;
+    border-color: #bfdbfe !important;
+    color: #ffffff !important;
+  }
+  body [class*="bg-green"],
+  body [class*="bg-emerald"] {
+    background-color: #064e3b !important;
+    color: #ffffff !important;
+    border-color: #a7f3d0 !important;
+  }
+  body [class*="bg-orange"],
+  body [class*="bg-amber"],
+  body [class*="bg-yellow"],
+  body [class*="bg-tertiary"] {
+    background-color: #5f2109 !important;
+    color: #ffffff !important;
+    border-color: #fed7aa !important;
+  }
+  body [class*="bg-red"],
+  body [class*="bg-rose"],
+  body [class*="bg-error"],
+  body [class*="bg-danger"] {
+    background-color: #7f1d1d !important;
+    color: #ffffff !important;
+    border-color: #fecaca !important;
+  }
+  body [class*="bg-success"] {
+    background-color: #064e3b !important;
+    color: #ffffff !important;
+    border-color: #a7f3d0 !important;
+  }
+  body [class*="text-tertiary"],
+  body [class*="text-error"],
+  body [class*="text-danger"],
+  body [class*="text-success"] {
+    color: #ffffff !important;
+  }
+  body .material-symbols-outlined {
+    color: #ffffff !important;
+    background-color: #0b1220 !important;
+    border-radius: 999px !important;
+  }
+  body :is(a,button,input,select,textarea,[tabindex]):focus-visible {
+    outline: 3px solid #bfdbfe !important;
+    outline-offset: 3px !important;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      scroll-behavior: auto !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>
+</head>
+<body class="font-body-md text-body-md antialiased min-h-screen flex flex-col max-w-[390px] mx-auto overflow-x-hidden border-x border-outline-variant">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full max-w-[390px] z-50 flex items-center justify-between px-margin-mobile h-16 bg-background dark:bg-background border-b border-outline-variant dark:border-outline-variant">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary dark:text-primary" style="font-variation-settings: 'FILL' 1;" aria-hidden="true">local_shipping</span>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary dark:text-primary">FleetFlow</h1>
+</div>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant">
+<img alt="Candidate Profile" class="w-full h-full object-cover" data-alt="A professional close-up portrait of a middle-aged man with a friendly expression, wearing a clean collared shirt. The lighting is soft and studio-quality, emphasizing a professional corporate atmosphere. The background is a blurred modern office setting with cool blue and charcoal tones, maintaining a high-contrast dark-mode aesthetic consistent with a logistics recruitment platform." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBf9oTfzFQ83LEoNLs90-x-tGnfyg3CaiERSG3P8Vg9Ay-S-bx2W0M5-e05L_G1iMlxp4xAPiptpCnDU0dBuj0XBC97uUhqP23lDu1AKy10yHit6QqBGZKr2ih0u1jx6e-2voWQyOF46UDZ803aeljEOxj0_R8neBnuQvGun0ppUP-hcg0gzffIFzyuuJhGRqaz35Sfxwphka3XMWxT565paMRxkkvnlWAC8Sw-StGHxhDzBwf26ip_IMlVQqbYBuOxIKN0Uh5iy8Q"/>
+</div>
+</header>
+<main class="flex-1 mt-16 mb-20 px-margin-mobile py-lg flex flex-col gap-lg">
+<!-- Profile Summary -->
+<section class="bg-surface-container rounded-xl p-md border border-outline-variant">
+<div class="flex items-start justify-between mb-md">
+<div>
+<h2 class="font-title-md text-title-md text-on-surface mb-1">Alexandre Dupont</h2>
+<div class="flex items-center gap-sm">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span class="font-label-md text-label-md text-primary uppercase tracking-wider">Disponible</span>
+</div>
+</div>
+<button class="material-symbols-outlined text-on-surface-variant p-sm hover:bg-surface-variant rounded-full transition-colors" aria-label="Modifier">edit</button>
+</div>
+<div class="grid grid-cols-2 gap-sm">
+<div class="bg-background rounded-lg p-sm border border-outline-variant/30 text-center">
+<p class="font-caption text-caption text-on-surface-variant uppercase mb-1">Applications</p>
+<p class="font-title-md text-title-md text-on-surface">3</p>
+</div>
+<div class="bg-background rounded-lg p-sm border border-outline-variant/30 text-center">
+<p class="font-caption text-caption text-on-surface-variant uppercase mb-1">Tests</p>
+<p class="font-title-md text-title-md text-on-surface">1</p>
+</div>
+</div>
+</section>
+<!-- Application Progress -->
+<section class="flex flex-col gap-md">
+<h2 class="font-title-md text-title-md text-on-surface px-base">Candidatures en cours</h2>
+<!-- Card 1 -->
+<div class="bg-surface-container rounded-xl border border-outline-variant overflow-hidden">
+<div class="p-md">
+<div class="flex justify-between items-start mb-sm">
+<h2 class="font-body-lg font-semibold text-on-surface leading-tight">Conducteur SPL - Transport Frigo</h2>
+<span class="bg-primary-container/20 text-primary-container text-[10px] font-bold px-2 py-0.5 rounded border border-primary-container/30 uppercase">Test en cours</span>
+</div>
+<div class="flex items-center gap-xs text-on-surface-variant mb-md">
+<span class="material-symbols-outlined text-[16px]" aria-hidden="true">domain</span>
+<p class="font-body-md">LogiTrans</p>
+</div>
+<button class="w-full bg-primary text-on-primary py-sm rounded-lg font-label-md text-label-md hover:opacity-90 active:scale-[0.98] transition-all flex items-center justify-center gap-sm">
+                        Accéder au test
+                        <span class="material-symbols-outlined text-[18px]" aria-hidden="true">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface-container rounded-xl border border-outline-variant overflow-hidden">
+<div class="p-md">
+<div class="flex justify-between items-start mb-sm">
+<h2 class="font-body-lg font-semibold text-on-surface leading-tight">Chauffeur Régional</h2>
+<span class="bg-secondary-container/20 text-secondary text-[10px] font-bold px-2 py-0.5 rounded border border-secondary-container/30 uppercase">Entretien</span>
+</div>
+<div class="flex items-center gap-xs text-on-surface-variant mb-md">
+<span class="material-symbols-outlined text-[16px]" aria-hidden="true">domain</span>
+<p class="font-body-md">Kinetic Express</p>
+</div>
+<button class="w-full border border-outline-variant text-primary py-sm rounded-lg font-label-md text-label-md hover:bg-surface-variant active:scale-[0.98] transition-all">
+                        Voir détail
+                    </button>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="bg-surface-container rounded-xl border border-outline-variant opacity-80 overflow-hidden">
+<div class="p-md">
+<div class="flex justify-between items-start mb-sm">
+<h2 class="font-body-lg font-semibold text-on-surface leading-tight">Conducteur Benne</h2>
+<span class="bg-error-container/20 text-error text-[10px] font-bold px-2 py-0.5 rounded border border-error-container/30 uppercase">Rejeté</span>
+</div>
+<div class="flex items-center gap-xs text-on-surface-variant mb-md">
+<span class="material-symbols-outlined text-[16px]" aria-hidden="true">domain</span>
+<p class="font-body-md">FleetForce</p>
+</div>
+<button class="w-full border border-outline-variant text-on-surface-variant py-sm rounded-lg font-label-md text-label-md hover:bg-surface-variant active:scale-[0.98] transition-all">
+                        Voir motif
+                    </button>
+</div>
+</div>
+</section>
+<!-- Assigned Tests Section -->
+<section class="flex flex-col gap-md">
+<h2 class="font-title-md text-title-md text-on-surface px-base">Tests assignés</h2>
+<div class="bg-surface-container-high rounded-xl p-md border border-primary/30 relative overflow-hidden">
+<div class="absolute top-0 right-0 p-md opacity-10">
+<span class="material-symbols-outlined text-[64px]" style="font-variation-settings: 'wght' 700;" aria-hidden="true">quiz</span>
+</div>
+<div class="relative z-10">
+<div class="flex items-center justify-between mb-sm">
+<span class="bg-primary/10 text-primary text-[10px] font-bold px-2 py-0.5 rounded border border-primary/20 uppercase">À faire</span>
+<div class="flex items-center gap-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-[14px]" aria-hidden="true">schedule</span>
+<span class="font-caption text-caption">45 min</span>
+</div>
+</div>
+<h2 class="font-body-lg font-semibold text-on-surface mb-md">Évaluation Sécurité Routière</h2>
+<button class="w-full bg-primary text-on-primary py-sm rounded-lg font-label-md text-label-md hover:opacity-90 active:scale-[0.98] transition-all shadow-lg shadow-primary/20">
+                        Lancer le test
+                    </button>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full max-w-[390px] z-50 flex justify-around items-center h-20 bg-surface-container dark:bg-surface-container border-t border-outline-variant dark:border-outline-variant pb-safe">
+<!-- Home (Active) -->
+<a class="flex flex-col items-center justify-center bg-secondary-container dark:bg-secondary-container text-on-secondary-container dark:text-on-secondary-container rounded-full px-4 py-1 active:scale-95 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;" aria-hidden="true">dashboard</span>
+<span class="font-label-md text-label-md">Home</span>
+</a>
+<!-- Jobs -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-4 py-1 hover:text-primary dark:hover:text-primary transition-colors active:scale-95 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" aria-hidden="true">work</span>
+<span class="font-label-md text-label-md">Jobs</span>
+</a>
+<!-- Tests -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-4 py-1 hover:text-primary dark:hover:text-primary transition-colors active:scale-95 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" aria-hidden="true">quiz</span>
+<span class="font-label-md text-label-md">Tests</span>
+</a>
+<!-- Profile -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-4 py-1 hover:text-primary dark:hover:text-primary transition-colors active:scale-95 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" aria-hidden="true">person</span>
+<span class="font-label-md text-label-md">Profile</span>
+</a>
+</nav>
+</body></html>

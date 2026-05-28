@@ -1,12 +1,16 @@
 <label class="ff-field">
   @if (label) {
-    <span class="ff-field-label">{{ label }}</span>
+    <span class="ff-field-label" [id]="controlId + '-label'">{{ label }}</span>
   }
 
   <textarea
+    [id]="controlId"
     [class]="textareaClasses"
     [attr.placeholder]="placeholder"
     [attr.rows]="rows"
+    [attr.aria-labelledby]="label ? controlId + '-label' : null"
+    [attr.aria-invalid]="error ? 'true' : 'false'"
+    [attr.aria-describedby]="describedBy"
     [disabled]="disabled()"
     [value]="value()"
     (input)="handleInput($event)"
@@ -14,8 +18,8 @@
   ></textarea>
 
   @if (error) {
-    <p class="ff-field-error">{{ error }}</p>
+    <p class="ff-field-error" [id]="errorId">{{ error }}</p>
   } @else if (hint) {
-    <p class="ff-field-hint">{{ hint }}</p>
+    <p class="ff-field-hint" [id]="hintId">{{ hint }}</p>
   }
 </label>

@@ -4,8 +4,17 @@
     "apps/frontend",
     "apps/candidate"
   ],
-  
   "scripts": {
-    "lint:eslint": "ng lint"
+    "lint:eslint": "ng lint",
+    "stitch:design": "node scripts/stitch-design.mjs",
+    "stitch:app": "node scripts/stitch-fleetflow-app.mjs",
+    "stitch:mobile": "node scripts/stitch-fleetflow-app.mjs --forceDevice=MOBILE --title=\"FleetFlow Complete Mobile Preview\"",
+    "stitch:a11y": "node scripts/stitch-a11y-audit.mjs",
+    "stitch:harden-a11y": "node scripts/stitch-harden-a11y.mjs",
+    "stitch:screenshots": "node scripts/stitch-render-screenshots.mjs"
+  },
+  "devDependencies": {
+    "@google/stitch-sdk": "^0.3.5",
+    "pa11y": "^9.1.1"
   }
 }

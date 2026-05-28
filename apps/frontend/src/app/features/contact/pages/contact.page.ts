@@ -1,12 +1,24 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
 import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
-import { AuthSessionService } from '@auth/services/auth-session.service';
 import { MeResponse } from '@auth/models/auth.models';
-import { AdminUser, RolesAdminService, UserRole } from '@features/roles/services/roles-admin.service';
+import { AuthSessionService } from '@auth/services/auth-session.service';
+import {
+  AdminUser,
+  RolesAdminService,
+  UserRole,
+} from '@features/roles/services/roles-admin.service';
+import { UiModalComponent } from '@lib-ui/modal/modal.component';
 
 const ROLE_OPTIONS: UserRole[] = [
   'admin',
@@ -21,7 +33,7 @@ const ROLE_OPTIONS: UserRole[] = [
 @Component({
   standalone: true,
   selector: 'app-contact-list-page',
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, UiModalComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section class="ff-app-screen">
@@ -33,70 +45,68 @@ const ROLE_OPTIONS: UserRole[] = [
           </div>
 
           @if (canManageContacts()) {
-            <button type="button" class="ff-btn ff-btn-primary" (click)="createPanelOpen.set(!createPanelOpen())">
+            <button type="button" class="ff-btn ff-btn-primary" (click)="createPanelOpen.set(true)">
               Create Contact
             </button>
           }
         </header>
 
-        @if (canManageContacts() && createPanelOpen()) {
-          <article class="ff-app-panel ff-app-stack">
-            <div>
-              <p class="ff-app-kicker">NEW CONTACT</p>
-              <h2 class="ff-row-title">Créer un accès</h2>
+        <app-ui-modal
+          [open]="canManageContacts() && createPanelOpen()"
+          (openChange)="onCreateModalChange($event)"
+          title="Creer un acces utilisateur"
+          size="lg"
+        >
+          <form [formGroup]="createForm" (ngSubmit)="createContact()" class="ff-form-grid ff-form-grid--two">
+            <label>
+              <span class="ff-field-label">Email</span>
+              <input formControlName="email" type="email" class="ff-control" />
+              @if (createForm.controls.email.touched && createForm.controls.email.hasError('required')) {
+                <small class="ff-field-error">Champ obligatoire</small>
+              }
+            </label>
+
+            <label>
+              <span class="ff-field-label">Mot de passe</span>
+              <input formControlName="password" type="password" class="ff-control" />
+              @if (createForm.controls.password.touched && createForm.controls.password.hasError('required')) {
+                <small class="ff-field-error">Champ obligatoire</small>
+              }
+            </label>
+
+            <label>
+              <span class="ff-field-label">Prenom</span>
+              <input formControlName="first_name" type="text" class="ff-control" />
+              @if (createForm.controls.first_name.touched && createForm.controls.first_name.hasError('required')) {
+                <small class="ff-field-error">Champ obligatoire</small>
+              }
+            </label>
+
+            <label>
+              <span class="ff-field-label">Nom</span>
+              <input formControlName="last_name" type="text" class="ff-control" />
+              @if (createForm.controls.last_name.touched && createForm.controls.last_name.hasError('required')) {
+                <small class="ff-field-error">Champ obligatoire</small>
+              }
+            </label>
+
+            <label>
+              <span class="ff-field-label">Role</span>
+              <select formControlName="role" class="ff-control">
+                @for (role of roleOptions; track role) {
+                  <option [value]="role">{{ role }}</option>
+                }
+              </select>
+            </label>
+
+            <div modal-actions class="ff-inline-actions ff-u-between ff-u-full">
+              <button type="button" class="ff-btn ff-btn-secondary" (click)="closeCreatePanel()">
+                Annuler
+              </button>
+              <button type="submit" class="ff-btn ff-btn-primary">Creer le contact</button>
             </div>
-
-            <form [formGroup]="createForm" (ngSubmit)="createContact()" class="ff-form-grid ff-form-grid--two">
-              <label>
-                <span class="ff-field-label">Email</span>
-                <input formControlName="email" type="email" class="ff-control" />
-                @if (createForm.controls.email.touched && createForm.controls.email.hasError('required')) {
-                  <small class="ff-field-error">Champ obligatoire</small>
-                }
-              </label>
-
-              <label>
-                <span class="ff-field-label">Mot de passe</span>
-                <input formControlName="password" type="password" class="ff-control" />
-                @if (createForm.controls.password.touched && createForm.controls.password.hasError('required')) {
-                  <small class="ff-field-error">Champ obligatoire</small>
-                }
-              </label>
-
-              <label>
-                <span class="ff-field-label">Prénom</span>
-                <input formControlName="first_name" type="text" class="ff-control" />
-                @if (createForm.controls.first_name.touched && createForm.controls.first_name.hasError('required')) {
-                  <small class="ff-field-error">Champ obligatoire</small>
-                }
-              </label>
-
-              <label>
-                <span class="ff-field-label">Nom</span>
-                <input formControlName="last_name" type="text" class="ff-control" />
-                @if (createForm.controls.last_name.touched && createForm.controls.last_name.hasError('required')) {
-                  <small class="ff-field-error">Champ obligatoire</small>
-                }
-              </label>
-
-              <label>
-                <span class="ff-field-label">Rôle</span>
-                <select formControlName="role" class="ff-control">
-                  @for (role of roleOptions; track role) {
-                    <option [value]="role">{{ role }}</option>
-                  }
-                </select>
-              </label>
-
-              <div class="ff-inline-actions">
-                <button type="submit" class="ff-btn ff-btn-primary">Créer le contact</button>
-                <button type="button" class="ff-btn ff-btn-secondary" (click)="closeCreatePanel()">
-                  Annuler
-                </button>
-              </div>
-            </form>
-          </article>
-        }
+          </form>
+        </app-ui-modal>
 
         <div class="ff-app-panel ff-app-stack">
           <input
@@ -126,7 +136,7 @@ const ROLE_OPTIONS: UserRole[] = [
           <div class="ff-app-stack">
             @for (user of filteredUsers(); track user.id) {
               <article class="ff-data-card" [routerLink]="['/contact', user.id]">
-                <div class="ff-inline-actions" style="align-items: flex-start; justify-content: space-between">
+                <div class="ff-inline-actions ff-inline-actions--split-start">
                   <div>
                     <h2 class="ff-row-title">{{ user.first_name }} {{ user.last_name }}</h2>
                     <p class="ff-row-meta">{{ user.email }}</p>
@@ -214,6 +224,15 @@ export class ContactPage {
     this.selectedRole.set(target.value as 'all' | UserRole);
   }
 
+  onCreateModalChange(open: boolean): void {
+    if (open) {
+      this.createPanelOpen.set(true);
+      return;
+    }
+
+    this.closeCreatePanel();
+  }
+
   closeCreatePanel(): void {
     this.createPanelOpen.set(false);
     this.createForm.reset({
@@ -227,7 +246,7 @@ export class ContactPage {
 
   createContact(): void {
     if (!this.canManageContacts()) {
-      this.pageMessage.set('Action réservée aux administrateurs et à la direction.');
+      this.pageMessage.set('Action reservee aux administrateurs et a la direction.');
       return;
     }
 
@@ -242,11 +261,11 @@ export class ContactPage {
       .subscribe({
         next: (created) => {
           this.users.set([created, ...this.users()]);
-          this.pageMessage.set('Contact créé.');
+          this.pageMessage.set('Contact cree.');
           this.closeCreatePanel();
         },
         error: () => {
-          this.pageMessage.set('Impossible de créer le contact.');
+          this.pageMessage.set('Impossible de creer le contact.');
         },
       });
   }

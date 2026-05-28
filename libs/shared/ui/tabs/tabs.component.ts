@@ -60,21 +60,22 @@ export class UiTabsComponent<K extends string = string> {
 
   get containerClasses(): string {
     return this.variant === 'pill'
-      ? 'inline-flex items-center gap-2 rounded-2xl border border-slate-800 bg-slate-900/50 p-1'
-      : 'flex items-center gap-4 border-b border-slate-800';
+      ? 'ff-segmented'
+      : 'flex items-center gap-4 border-b border-[var(--ff-color-border-soft)]';
   }
 
   tabClasses(key: K, disabled: boolean): string {
     const isActive = key === this.activeKey;
 
-    const base =
-      'text-sm transition disabled:opacity-60 disabled:cursor-not-allowed';
+    const base = 'text-sm transition disabled:opacity-60 disabled:cursor-not-allowed';
 
     if (this.variant === 'underline') {
       return [
         base,
         'pb-2',
-        isActive ? 'text-slate-100 border-b-2 border-blue-500' : 'text-slate-400 hover:text-slate-200',
+        isActive
+          ? 'text-[var(--ff-color-text-primary)] border-b-2 border-[var(--ff-color-primary-500)]'
+          : 'text-[var(--ff-color-text-muted)] hover:text-[var(--ff-color-text-secondary)]',
         disabled ? '' : '',
       ].join(' ');
     }
@@ -82,8 +83,8 @@ export class UiTabsComponent<K extends string = string> {
     // pill
     return [
       base,
-      'rounded-xl px-3 py-1.5',
-      isActive ? 'bg-slate-800 text-slate-100' : 'text-slate-300 hover:bg-slate-800/60',
+      'ff-segmented__item',
+      isActive ? 'ff-segmented__item--active' : '',
     ].join(' ');
   }
 

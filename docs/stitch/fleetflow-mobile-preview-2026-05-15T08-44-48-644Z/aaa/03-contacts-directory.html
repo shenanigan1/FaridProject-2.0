@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head>
+<title>FleetFlow - Contacts Directory</title>
+<meta charset="utf-8"/>
+<meta content="width=390, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-container": "#002957",
+                        "surface-container": "#1c2027",
+                        "on-tertiary-fixed-variant": "#763300",
+                        "on-error-container": "#ffdad6",
+                        "inverse-surface": "#e0e2ec",
+                        "primary": "#a9c7ff",
+                        "error": "#ffb4ab",
+                        "on-secondary-fixed-variant": "#004493",
+                        "on-primary-fixed-variant": "#00468b",
+                        "outline-variant": "#414754",
+                        "secondary-container": "#0064d3",
+                        "surface": "#10131a",
+                        "on-error": "#690005",
+                        "surface-container-highest": "#31353c",
+                        "primary-container": "#3a90ff",
+                        "secondary-fixed-dim": "#adc6ff",
+                        "surface-bright": "#363941",
+                        "on-secondary-container": "#e0e8ff",
+                        "on-primary": "#003063",
+                        "secondary": "#adc6ff",
+                        "surface-variant": "#31353c",
+                        "on-secondary-fixed": "#001a41",
+                        "secondary-fixed": "#d8e2ff",
+                        "on-surface": "#e0e2ec",
+                        "on-tertiary": "#532200",
+                        "on-tertiary-fixed": "#331200",
+                        "on-background": "#e0e2ec",
+                        "inverse-on-surface": "#2d3038",
+                        "outline": "#8b919f",
+                        "surface-container-low": "#181c23",
+                        "on-surface-variant": "#c1c6d6",
+                        "tertiary-container": "#e76e13",
+                        "primary-fixed-dim": "#a9c7ff",
+                        "tertiary": "#ffb68e",
+                        "on-primary-fixed": "#001b3d",
+                        "tertiary-fixed-dim": "#ffb68e",
+                        "surface-dim": "#10131a",
+                        "surface-tint": "#a9c7ff",
+                        "surface-container-lowest": "#0b0e15",
+                        "error-container": "#93000a",
+                        "tertiary-fixed": "#ffdbc9",
+                        "inverse-primary": "#005db6",
+                        "background": "#10131a",
+                        "on-tertiary-container": "#491d00",
+                        "on-secondary": "#002e69",
+                        "surface-container-high": "#272a31",
+                        "primary-fixed": "#d6e3ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "md": "1rem",
+                        "lg": "1.5rem",
+                        "base": "4px",
+                        "sm": "0.5rem",
+                        "gutter": "1rem",
+                        "margin-desktop": "2rem",
+                        "margin-mobile": "1rem",
+                        "xs": "0.25rem",
+                        "xl": "2rem"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "label-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["11px", {"lineHeight": "1", "fontWeight": "500"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "body-lg": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-md": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "headline-md": ["20px", {"lineHeight": "1.4", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "label-md": ["12px", {"lineHeight": "1", "letterSpacing": "0.02em", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        body {
+            background-color: #10141b;
+            color: #e0e2ec;
+            font-family: 'Inter', sans-serif;
+            width: 390px;
+            margin: 0 auto;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  <style id="fleetflow-aaa-overrides">
+  :root { color-scheme: dark; }
+  html, body { background: #10141b !important; color: #fbfdff !important; }
+  body, body * { text-shadow: none !important; }
+  body :is(h1,h2,h3,h4,h5,h6,p,span,label,small,div,li,dt,dd,td,th,strong,em,a,button) {
+    color: #fbfdff !important;
+  }
+  body :is(.text-outline,.text-on-surface-variant,.text-slate-400,.text-gray-400,.text-neutral-400,.text-zinc-400),
+  body [class*="text-outline"],
+  body [class*="text-on-surface-variant"],
+  body [class*="text-gray"],
+  body [class*="text-slate"],
+  body [class*="text-zinc"],
+  body [class*="text-neutral"] {
+    color: #f8fbff !important;
+  }
+  body :is(header,main,footer,section,article,nav,form),
+  body [class*="bg-background"],
+  body [class*="bg-surface"],
+  body [class*="bg-[#1C2027]"],
+  body [class*="bg-[#030816]"] {
+    border-color: #7f8da3 !important;
+  }
+  body [class*="bg-background"] {
+    background-color: #10141b !important;
+  }
+  body :is(input,select,textarea) {
+    background: #050914 !important;
+    color: #ffffff !important;
+    border: 1px solid #dbeafe !important;
+  }
+  body :is(input,textarea)::placeholder { color: #f1f5f9 !important; opacity: 1 !important; }
+  body button,
+  body a[role="button"],
+  body [class*="bg-primary"],
+  body [class*="bg-secondary-container"],
+  body [class*="bg-[#1683F7]"],
+  body [class*="bg-[#1683f7]"],
+  body [class*="bg-blue"] {
+    background-color: #003f8c !important;
+    border-color: #bfdbfe !important;
+    color: #ffffff !important;
+  }
+  body [class*="bg-green"],
+  body [class*="bg-emerald"] {
+    background-color: #064e3b !important;
+    color: #ffffff !important;
+    border-color: #a7f3d0 !important;
+  }
+  body [class*="bg-orange"],
+  body [class*="bg-amber"],
+  body [class*="bg-yellow"],
+  body [class*="bg-tertiary"] {
+    background-color: #5f2109 !important;
+    color: #ffffff !important;
+    border-color: #fed7aa !important;
+  }
+  body [class*="bg-red"],
+  body [class*="bg-rose"],
+  body [class*="bg-error"],
+  body [class*="bg-danger"] {
+    background-color: #7f1d1d !important;
+    color: #ffffff !important;
+    border-color: #fecaca !important;
+  }
+  body [class*="bg-success"] {
+    background-color: #064e3b !important;
+    color: #ffffff !important;
+    border-color: #a7f3d0 !important;
+  }
+  body [class*="text-tertiary"],
+  body [class*="text-error"],
+  body [class*="text-danger"],
+  body [class*="text-success"] {
+    color: #ffffff !important;
+  }
+  body .material-symbols-outlined {
+    color: #ffffff !important;
+    background-color: #0b1220 !important;
+    border-radius: 999px !important;
+  }
+  body :is(a,button,input,select,textarea,[tabindex]):focus-visible {
+    outline: 3px solid #bfdbfe !important;
+    outline-offset: 3px !important;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      scroll-behavior: auto !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>
+</head>
+<body class="dark bg-surface-dim">
+<!-- TopAppBar -->
+<header class="flex items-center justify-between px-margin-mobile h-16 w-full bg-surface-container-lowest border-b border-outline-variant fixed top-0 z-40">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-primary transition-colors duration-200 active:scale-95" data-icon="menu" aria-hidden="true">menu</span>
+<h1 class="font-headline-md text-headline-md font-bold text-on-surface">FleetFlow</h1>
+</div>
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-primary transition-colors duration-200 active:scale-95" data-icon="search" aria-hidden="true">search</span>
+</div>
+</header>
+<main class="pt-16 pb-32">
+<!-- Search & Filters -->
+<section class="px-margin-mobile py-md">
+<div class="relative mb-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline" data-icon="search" aria-hidden="true">search</span>
+<input class="w-full bg-surface-container border border-outline-variant rounded-lg py-sm pl-10 pr-md text-body-md focus:border-primary-container focus:ring-0 text-on-surface" placeholder="Search personnel..." type="text"/ aria-label="Search personnel...">
+</div>
+<div class="flex gap-sm overflow-x-auto pb-xs no-scrollbar">
+<button class="px-md py-xs bg-primary-container text-on-primary-container rounded-full font-label-md text-label-md whitespace-nowrap" aria-label="All">All</button>
+<button class="px-md py-xs bg-surface-container border border-outline-variant text-on-surface-variant rounded-full font-label-md text-label-md whitespace-nowrap" aria-label="Chauffeurs">Chauffeurs</button>
+<button class="px-md py-xs bg-surface-container border border-outline-variant text-on-surface-variant rounded-full font-label-md text-label-md whitespace-nowrap" aria-label="Candidates">Candidates</button>
+<button class="px-md py-xs bg-surface-container border border-outline-variant text-on-surface-variant rounded-full font-label-md text-label-md whitespace-nowrap" aria-label="Managers">Managers</button>
+</div>
+</section>
+<!-- Personnel List -->
+<section class="flex flex-col">
+<!-- Row 1 (Amina - Selected State) -->
+<div class="flex items-center gap-md px-margin-mobile py-md border-b border-outline-variant bg-surface-container-highest">
+<div class="w-10 h-10 rounded-full bg-tertiary-container flex items-center justify-center text-on-tertiary-container font-bold">AA</div>
+<div class="flex-1 min-w-0">
+<h2 class="font-headline-md text-body-lg text-on-surface truncate">Amina Al-Fayed</h2>
+<p class="font-body-md text-label-md text-on-surface-variant">Class A Chauffeur</p>
+</div>
+<div class="flex flex-col items-end gap-xs">
+<span class="px-xs py-[2px] bg-green-900/30 text-green-400 rounded-sm text-[10px] font-bold uppercase tracking-wider">Active</span>
+<span class="font-label-sm text-label-sm text-outline">Chicago</span>
+</div>
+</div>
+<!-- Row 2 -->
+<div class="flex items-center gap-md px-margin-mobile py-md border-b border-outline-variant bg-surface-container hover:bg-surface-container-high transition-colors">
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container font-bold">JW</div>
+<div class="flex-1 min-w-0">
+<h2 class="font-headline-md text-body-lg text-on-surface truncate">James Wilson</h2>
+<p class="font-body-md text-label-md text-on-surface-variant">Class A Chauffeur</p>
+</div>
+<div class="flex flex-col items-end gap-xs">
+<span class="px-xs py-[2px] bg-primary-container/20 text-primary-container rounded-sm text-[10px] font-bold uppercase tracking-wider">Pending</span>
+<span class="font-label-sm text-label-sm text-outline">5y Exp</span>
+</div>
+</div>
+<!-- Row 3 -->
+<div class="flex items-center gap-md px-margin-mobile py-md border-b border-outline-variant bg-surface-container hover:bg-surface-container-high transition-colors">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest border border-outline-variant flex items-center justify-center text-outline font-bold">RK</div>
+<div class="flex-1 min-w-0">
+<h2 class="font-headline-md text-body-lg text-on-surface truncate">Robert Kowalski</h2>
+<p class="font-body-md text-label-md text-on-surface-variant">Fleet Manager</p>
+</div>
+<div class="flex flex-col items-end gap-xs">
+<span class="px-xs py-[2px] bg-green-900/30 text-green-400 rounded-sm text-[10px] font-bold uppercase tracking-wider">Active</span>
+<span class="font-label-sm text-label-sm text-outline">Detroit</span>
+</div>
+</div>
+<!-- Row 4 -->
+<div class="flex items-center gap-md px-margin-mobile py-md border-b border-outline-variant bg-surface-container hover:bg-surface-container-high transition-colors">
+<div class="w-10 h-10 rounded-full bg-tertiary-container flex items-center justify-center text-on-tertiary-container font-bold">LH</div>
+<div class="flex-1 min-w-0">
+<h2 class="font-headline-md text-body-lg text-on-surface truncate">Lisa Huang</h2>
+<p class="font-body-md text-label-md text-on-surface-variant">Candidate</p>
+</div>
+<div class="flex flex-col items-end gap-xs">
+<span class="px-xs py-[2px] bg-tertiary-container/20 text-tertiary-container rounded-sm text-[10px] font-bold uppercase tracking-wider">Interviewing</span>
+<span class="font-label-sm text-label-sm text-outline">Austin</span>
+</div>
+</div>
+</section>
+</main>
+<!-- FAB -->
+<button class="fixed right-margin-mobile bottom-20 w-14 h-14 bg-primary-container text-on-primary-container rounded-xl shadow-lg flex items-center justify-center z-30 transition-all duration-200 active:scale-95" aria-label="person add">
+<span class="material-symbols-outlined" data-icon="person_add" style="font-variation-settings: 'FILL' 1;" aria-hidden="true">person_add</span>
+</button>
+<!-- Detail Drawer Overlay -->
+<div class="fixed inset-0 bg-black/60 z-50 flex flex-col justify-end">
+<div class="bg-surface-container rounded-t-xl w-full max-h-[751px] overflow-y-auto flex flex-col shadow-2xl border-t border-outline-variant">
+<!-- Drag Handle -->
+<div class="w-full flex justify-center py-sm">
+<div class="w-8 h-1 bg-outline-variant rounded-full"></div>
+</div>
+<!-- Header Info -->
+<div class="px-margin-mobile pb-md flex items-start justify-between">
+<div class="flex items-center gap-md">
+<div class="w-16 h-16 rounded-full bg-tertiary-container flex items-center justify-center text-on-tertiary-container font-bold text-headline-md">AA</div>
+<div>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">Amina Al-Fayed</h2>
+<p class="font-body-md text-body-md text-primary-container">Class A Chauffeur • Senior</p>
+</div>
+</div>
+<button class="p-xs text-outline hover:text-on-surface" aria-label="Fermer">
+<span class="material-symbols-outlined" data-icon="close" aria-hidden="true">close</span>
+</button>
+</div>
+<!-- Profile Content -->
+<div class="px-margin-mobile space-y-lg pb-xl">
+<!-- Quick Contact -->
+<div class="grid grid-cols-2 gap-sm">
+<button class="flex items-center justify-center gap-xs py-md bg-surface-container-high border border-outline-variant rounded-lg text-primary-container font-label-md">
+<span class="material-symbols-outlined text-sm" data-icon="call" aria-hidden="true">call</span>
+                        Call
+                    </button>
+<button class="flex items-center justify-center gap-xs py-md bg-surface-container-high border border-outline-variant rounded-lg text-primary-container font-label-md">
+<span class="material-symbols-outlined text-sm" data-icon="message" aria-hidden="true">message</span>
+                        Message
+                    </button>
+</div>
+<!-- Info Blocks -->
+<div class="space-y-md">
+<div class="flex flex-col gap-xs">
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-widest">Email</span>
+<span class="font-body-md text-body-md text-on-surface">a.alfayed@fleetflow.io</span>
+</div>
+<div class="flex flex-col gap-xs">
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-widest">Credentials</span>
+<div class="flex flex-wrap gap-xs">
+<span class="px-xs py-[2px] bg-surface-container-highest border border-outline-variant rounded-sm text-[11px] text-on-surface-variant font-medium">CDL-A</span>
+<span class="px-xs py-[2px] bg-surface-container-highest border border-outline-variant rounded-sm text-[11px] text-on-surface-variant font-medium">HAZMAT</span>
+<span class="px-xs py-[2px] bg-surface-container-highest border border-outline-variant rounded-sm text-[11px] text-on-surface-variant font-medium">TANKER</span>
+</div>
+</div>
+</div>
+<!-- Recent Activity -->
+<div class="space-y-md">
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-widest">Recent Activity</span>
+<div class="space-y-sm">
+<div class="flex items-start gap-sm">
+<div class="w-1 bg-primary-container h-10 rounded-full mt-1"></div>
+<div>
+<p class="font-body-md text-body-md text-on-surface">Completed Route #4421</p>
+<p class="font-label-sm text-label-sm text-outline">2 hours ago • Chicago Hub</p>
+</div>
+</div>
+<div class="flex items-start gap-sm">
+<div class="w-1 bg-outline-variant h-10 rounded-full mt-1"></div>
+<div>
+<p class="font-body-md text-body-md text-on-surface">Safety Inspection Passed</p>
+<p class="font-label-sm text-label-sm text-outline">Yesterday • 14:30</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Action -->
+<button class="w-full py-md bg-secondary-container text-on-secondary-container rounded-lg font-bold text-body-md flex items-center justify-center gap-sm">
+<span class="material-symbols-outlined" data-icon="edit" aria-hidden="true">edit</span>
+                    Edit Role &amp; Permissions
+                </button>
+</div>
+</div>
+</div>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-16 px-gutter bg-surface-container-lowest border-t border-outline-variant">
+<a class="flex flex-col items-center justify-center text-on-surface-variant transition-all duration-200 active:opacity-80" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard" aria-hidden="true">dashboard</span>
+<span class="font-label-sm text-label-sm">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary-container dark:text-primary-container font-bold transition-all duration-200 active:opacity-80" href="#">
+<span class="material-symbols-outlined" data-icon="groups" style="font-variation-settings: 'FILL' 1;" aria-hidden="true">groups</span>
+<span class="font-label-sm text-label-sm">Personnel</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant transition-all duration-200 active:opacity-80" href="#">
+<span class="material-symbols-outlined" data-icon="work" aria-hidden="true">work</span>
+<span class="font-label-sm text-label-sm">Jobs</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant transition-all duration-200 active:opacity-80" href="#">
+<span class="material-symbols-outlined" data-icon="settings" aria-hidden="true">settings</span>
+<span class="font-label-sm text-label-sm">Settings</span>
+</a>
+</nav>
+</body></html>

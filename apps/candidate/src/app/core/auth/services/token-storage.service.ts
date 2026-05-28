@@ -7,10 +7,10 @@ export class TokenStorageService {
   private accessToken: string | null = null;
 
   getAccessToken(): string | null {
-    this.accessToken = this.accessToken ?? localStorage.getItem(this.accessKey);
+    this.accessToken = this.accessToken ?? sessionStorage.getItem(this.accessKey);
     if (this.isJwtExpired(this.accessToken)) {
       this.accessToken = null;
-      localStorage.removeItem(this.accessKey);
+      sessionStorage.removeItem(this.accessKey);
       return null;
     }
 
@@ -23,7 +23,8 @@ export class TokenStorageService {
 
   saveTokens(accessToken: string, refreshToken?: string): void {
     this.accessToken = accessToken;
-    localStorage.setItem(this.accessKey, accessToken);
+    localStorage.removeItem(this.accessKey);
+    sessionStorage.setItem(this.accessKey, accessToken);
     if (refreshToken) {
       localStorage.setItem(this.refreshKey, refreshToken);
     }
@@ -32,6 +33,7 @@ export class TokenStorageService {
   clear(): void {
     this.accessToken = null;
     localStorage.removeItem(this.accessKey);
+    sessionStorage.removeItem(this.accessKey);
     localStorage.removeItem(this.refreshKey);
   }
 

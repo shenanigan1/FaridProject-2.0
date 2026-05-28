@@ -63,6 +63,8 @@ export interface PositionApplicant {
   appliedAt: string;
   ongoingTestsCount: number;
   ongoingTestIds: number[];
+  completedTestsCount: number;
+  completedTestIds: number[];
 }
 
 export interface InProgressTestItem {
@@ -160,6 +162,7 @@ export class PositionApplicantsService {
       map(({ applications, candidates, evaluations }) => {
         const candidateById = new Map(candidates.map((candidate) => [candidate.id, candidate]));
         const ongoingTestsByApplication = this.getOngoingTestsByApplication(evaluations);
+        const completedTestsByApplication = this.getCompletedTestsByApplication(evaluations);
 
         return applications
           .filter((application) => application.position === positionId)
@@ -167,6 +170,7 @@ export class PositionApplicantsService {
           .map((application) => {
             const candidate = candidateById.get(application.candidate);
             const ongoingTests = ongoingTestsByApplication.get(application.id) ?? [];
+            const completedTests = completedTestsByApplication.get(application.id) ?? [];
 
             return {
               applicationId: application.id,
@@ -180,6 +184,8 @@ export class PositionApplicantsService {
               appliedAt: application.created_at,
               ongoingTestsCount: ongoingTests.length,
               ongoingTestIds: ongoingTests.map((item) => item.id),
+              completedTestsCount: completedTests.length,
+              completedTestIds: completedTests.map((item) => item.id),
             };
           });
       }),
@@ -318,6 +324,28 @@ export class PositionApplicantsService {
 
     for (const evaluation of evaluations) {
       if (evaluation.status !== 'in_progress' || evaluation.application === null) {
+        continue;
+      }
+
+      const appId = evaluation.application;
+      const existing = byApplication.get(appId) ?? [];
+      existing.push(evaluation);
+      byApplication.set(appId, existing);
+    }
+
+    return byApplication;
+  }
+
+  private getCompletedTestsByApplication(
+    evaluations: EvaluationDto[],
+  ): Map<number, EvaluationDto[]> {
+    const byApplication = new Map<number, EvaluationDto[]>();
+
+    for (const evaluation of evaluations) {
+      if (
+        !['completed', 'validated'].includes(evaluation.status) ||
+        evaluation.application === null
+      ) {
         continue;
       }
 

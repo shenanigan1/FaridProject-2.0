@@ -28,8 +28,8 @@
           class="ff-data-card w-full text-left"
           [attr.aria-label]="'Open template ' + (t.name)"
         >
-          <div class="ff-inline-actions" style="align-items: flex-start; justify-content: space-between">
-            <div style="min-width: 0">
+          <div class="ff-inline-actions ff-u-between">
+            <div class="ff-u-min-0">
               <h2 class="ff-row-title">{{ t.name }}</h2>
               <p class="ff-row-meta">Updated {{ (t.updated_at || t.created_at) | date:'MMM d, y' }}</p>
             </div>
@@ -41,7 +41,7 @@
             }
           </div>
 
-          <div class="ff-form-grid ff-form-grid--two" style="border-top: 1px solid var(--ff-color-border-soft); margin-top: 0.85rem; padding-top: 0.85rem">
+          <div class="ff-form-grid ff-form-grid--two ff-u-divided-top">
             @if (t.points_total !== null && t.points_total !== undefined) {
               <div>
                 <div class="ff-app-kicker">POINTS</div>

@@ -11,11 +11,13 @@
     ></div>
 
     <!-- Panel -->
-    <button
+    <div
+      #dialogPanel
       class="relative"
       [class]="panelClasses"
       role="dialog"
       aria-modal="true"
+      tabindex="-1"
       [attr.aria-labelledby]="title ? titleId : null"
       (click)="stop($event)"
     >
@@ -45,6 +47,6 @@
           <ng-content select="[modal-actions]"></ng-content>
         </div>
       </div>
-    </button>
+    </div>
   </div>
 }

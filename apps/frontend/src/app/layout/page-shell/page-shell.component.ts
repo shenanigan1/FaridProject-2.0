@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule],
   template: `
     <section class="ff-app-screen">
-      <div class="ff-app-container ff-app-stack" style="max-width: 48rem">
+      <div class="ff-app-container ff-app-container--narrow ff-app-stack">
         <header class="ff-app-header">
           <div>
             <p class="ff-app-kicker">Workspace</p>

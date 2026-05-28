@@ -3,6 +3,7 @@ import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { MenuBarComponent, type MenuItem } from './layout/menu-bar/menu-bar';
 import { TopBarComponent } from './layout/top-bar/top-bar';
 import { AuthSessionService } from './core/auth/services/auth-session.service';
+import { SessionExpiredService } from './core/auth/services/session-expired.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter } from 'rxjs';
 import { buildAppNavigation } from '@shared/navigation/app-navigation';
@@ -15,6 +16,7 @@ import { buildAppNavigation } from '@shared/navigation/app-navigation';
 })
 export class App {
   private readonly session = inject(AuthSessionService);
+  private readonly sessionExpired = inject(SessionExpiredService);
   private readonly router = inject(Router);
 
   protected readonly title = signal('frontend');
@@ -34,6 +36,18 @@ export class App {
 
     if (url.startsWith('/manager')) {
       return 'DriverRecruit';
+    }
+
+    if (url.startsWith('/admin')) {
+      return 'ADMIN_COMMAND';
+    }
+
+    if (url.startsWith('/direction') || url.startsWith('/reporting')) {
+      return 'DIRECTION_CORE';
+    }
+
+    if (url.startsWith('/employee')) {
+      return 'EMPLOYEE_PORTAL';
     }
 
     if (url.startsWith('/dashboard')) {
@@ -64,6 +78,13 @@ export class App {
       .loadMeOnce()
       .pipe(takeUntilDestroyed())
       .subscribe();
+
+    this.sessionExpired.expired$
+      .pipe(takeUntilDestroyed())
+      .subscribe(() => {
+        this.session.clearMe();
+        void this.router.navigateByUrl('/login?session=expired');
+      });
   }
 
   onEditProfile(): void {
