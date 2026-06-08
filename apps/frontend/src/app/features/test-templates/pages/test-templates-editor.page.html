@@ -1,10 +1,10 @@
-<section class="template-workflow template-mobile">
-  <header class="template-mobile__topbar">
-    <button type="button" class="template-mobile__icon" aria-label="Retour" (click)="discard()">
+<section class="template-editor">
+  <header class="template-editor__topbar">
+    <button type="button" class="template-editor__icon" aria-label="Retour" (click)="discard()">
       &#8592;
     </button>
-    <h1>{{ templateId() === null ? 'Nouveau Template' : form.controls.name.value || 'Manage Template' }}</h1>
-    <button type="button" class="template-mobile__save" [disabled]="isSaving()" (click)="save()">
+    <h1>{{ templateId() === null ? 'NOUVEAU TEMPLATE' : 'MODIFIER LE TEMPLATE' }}</h1>
+    <button type="button" class="template-editor__save" [disabled]="isSaving()" (click)="save()">
       Save
     </button>
   </header>
@@ -14,155 +14,169 @@
   } @else if (pageError()) {
     <p class="template-alert">{{ pageError() }}</p>
   } @else {
-    <main class="template-mobile__body">
-      <section class="template-section-title template-section-title--general">
-        <span class="template-section-title__icon">i</span>
-        <h2>INFORMATIONS GENERALES</h2>
-      </section>
+    <main class="template-editor__body">
+      <section class="template-card template-card--basic" [formGroup]="form" aria-labelledby="basicInfoTitle">
+        <div class="template-kicker" id="basicInfoTitle">BASIC INFO</div>
 
-      <section class="template-figma-card" [formGroup]="form">
-        <label class="template-figma-field template-figma-field--full">
-          <span>Nom du Template</span>
-          <input formControlName="name" placeholder="ex: Inspection Securite" />
+        <label class="template-field template-field--full">
+          <span>TITLE</span>
+          <input formControlName="name" placeholder="Nom du template" />
           @if (form.controls.name.touched && form.controls.name.hasError('required')) {
-            <small class="template-field-error">Champ obligatoire</small>
+            <small class="template-field__error">Champ obligatoire</small>
           }
         </label>
 
-        <div class="template-figma-grid">
-          <label class="template-figma-field">
-            <span>Duree (min)</span>
-            <input type="number" formControlName="duration_minutes" />
+        <div class="template-card__grid">
+          <label class="template-field">
+            <span>DURATION</span>
+            <input type="number" formControlName="duration_minutes" aria-label="Duree en minutes" />
           </label>
 
-          <label class="template-figma-field">
-            <span>Difficulte</span>
+          <label class="template-field template-field--select">
+            <span>DIFFICULTY</span>
             <select formControlName="difficulty">
-              <option value="easy">Facile</option>
-              <option value="medium">Moyen</option>
-              <option value="hard">Difficile</option>
+              <option value="easy">Easy</option>
+              <option value="medium">Medium</option>
+              <option value="hard">Hard</option>
             </select>
           </label>
         </div>
 
-        <div class="template-figma-grid">
-          <label class="template-figma-field">
-            <span>Score minimum</span>
-            <input type="number" formControlName="min_pass_score" />
-          </label>
-
-          <label class="template-figma-toggle">
-            <span>Template actif</span>
-            <input type="checkbox" formControlName="is_active" />
-          </label>
+        <div class="template-score">
+          <div class="template-score__head">
+            <span>PASSING SCORE</span>
+            <strong>{{ form.controls.min_pass_score.value }}%</strong>
+          </div>
+          <input
+            type="range"
+            min="0"
+            max="100"
+            step="1"
+            formControlName="min_pass_score"
+            aria-label="Score minimum de validation"
+          />
         </div>
       </section>
 
-      <section class="template-section-title template-section-title--structure">
-        <span class="template-section-title__icon">+</span>
-        <h2>STRUCTURE DU TEST</h2>
-        <strong>{{ sections().length }} Section{{ sections().length > 1 ? 's' : '' }}</strong>
+      <section class="template-editor__section-title">
+        <div>
+          <span aria-hidden="true"></span>
+          <h2>TEST SECTIONS</h2>
+        </div>
+        <strong>{{ sections().length }} TOTAL</strong>
       </section>
 
-      <div class="template-mobile__sections">
+      <div class="template-editor__sections">
         @for (section of sections(); track section.id; let index = $index) {
-          <article class="template-section-card">
-            <header class="template-section-card__head">
-              <span>{{ (index + 1).toString().padStart(2, '0') }}</span>
-              <label class="template-figma-field template-figma-field--compact">
-                <span>Section</span>
+          <article class="template-section">
+            <header class="template-section__header">
+              <label class="template-section__title">
+                <span>SECTION {{ index + 1 }}</span>
                 <input
                   [value]="section.title"
+                  aria-label="Titre de la section"
                   (input)="updateSectionTitle(section.id, $any($event.target).value)"
                 />
                 @if (!section.title.trim()) {
-                  <small class="template-field-error">Champ obligatoire</small>
+                  <small class="template-field__error">Champ obligatoire</small>
                 }
               </label>
-              <button type="button" aria-label="Supprimer la section" (click)="removeSection(section.id)">
+
+              <button
+                type="button"
+                class="template-section__delete"
+                aria-label="Supprimer la section"
+                (click)="removeSection(section.id)"
+              >
                 &#128465;
               </button>
             </header>
 
-            <label class="template-figma-field">
-              <span>Commentaire manager</span>
+            <label class="template-section__description">
+              <span>Description et commentaire manager</span>
               <textarea
                 [value]="section.description"
-                placeholder="Consignes ou commentaire visible pour le manager..."
+                placeholder="Consignes visibles pendant le passage du test..."
                 (input)="updateSectionDescription(section.id, $any($event.target).value)"
               ></textarea>
             </label>
 
-            <label class="template-figma-field">
-              <span>Poids de la section</span>
+            <label class="template-section__weight">
+              <span>WEIGHT</span>
               <input
                 type="number"
+                min="0"
+                max="100"
                 [value]="section.weight"
+                aria-label="Poids de la section"
                 (input)="updateSectionWeight(section.id, $any($event.target).valueAsNumber)"
               />
+              <small>%</small>
             </label>
 
-            <div class="template-section-card__pools">
+            <div class="template-section__pools">
               @for (rule of section.pools; track rule.poolId) {
-                <article class="template-pool-row">
-                  <div>
+                <article class="template-pool">
+                  <div class="template-pool__icon" aria-hidden="true">?</div>
+                  <div class="template-pool__content">
                     <strong>{{ poolName(rule.poolId) }}</strong>
-                    <span>{{ rule.randomCount }} questions</span>
+                    <span>{{ poolRuleLabel(rule) }}</span>
+                    <small>{{ poolCode(rule.poolId) }}</small>
                   </div>
-                  <input
-                    type="number"
-                    [value]="rule.randomCount"
-                    aria-label="Nombre de questions"
-                    (input)="updatePoolRandomCount(section.id, rule.poolId, $any($event.target).valueAsNumber)"
-                  />
-                  <button type="button" (click)="detachPool(section.id, rule.poolId)">Retirer</button>
+
+                  <button type="button" class="template-pool__edit" (click)="editPool(rule.poolId)">
+                    EDIT POOL
+                  </button>
+
+                  <button
+                    type="button"
+                    class="template-pool__remove"
+                    aria-label="Retirer le pool"
+                    (click)="detachPool(section.id, rule.poolId)"
+                  >
+                    x
+                  </button>
                 </article>
               }
 
               @if (section.pools.length === 0) {
-                <p class="template-mobile__hint">Aucun pool attache a cette section.</p>
+                <p class="template-empty template-empty--inline">
+                  Aucun pool rattache. Ajoutez une banque de questions pour rendre cette section valide.
+                </p>
               }
             </div>
 
-            <button type="button" class="template-mobile__primary" (click)="openPoolSheet(section.id)">
-              Ajouter un Pool
+            <button type="button" class="template-add-pool" (click)="openPoolSheet(section.id)">
+              <span aria-hidden="true">+</span>
+              ADD QUESTION POOL
             </button>
           </article>
         }
       </div>
 
-      <button type="button" class="template-mobile__add-section" (click)="addSection()">
-        <span>+</span>
-        Ajouter une Section
+      <button type="button" class="template-add-section" (click)="addSection()">
+        <span aria-hidden="true">+</span>
+        ADD NEW SECTION
       </button>
 
       @if (apiError()) {
         <p class="template-alert">{{ apiError() }}</p>
       }
 
-      <button type="button" class="template-mobile__save-large" [disabled]="isSaving()" (click)="save()">
-        Enregistrer le Template
+      <button type="button" class="template-submit" [disabled]="isSaving()" (click)="save()">
+        Enregistrer le template
       </button>
     </main>
   }
 
   @if (poolSheetOpen()) {
-    <div
-      class="pool-sheet-backdrop"
-      role="presentation"
-      (click)="closePoolSheet()"
-    ></div>
+    <div class="pool-sheet-backdrop" role="presentation" (click)="closePoolSheet()"></div>
 
-    <section
-      class="pool-sheet"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="poolSheetTitle"
-    >
+    <section class="pool-sheet" role="dialog" aria-modal="true" aria-labelledby="poolSheetTitle">
       <div class="pool-sheet__handle" aria-hidden="true"></div>
       <header class="pool-sheet__head">
         <div>
-          <p>Question Pools</p>
+          <p>QUESTION POOLS</p>
           <h2 id="poolSheetTitle">Ajouter un Pool</h2>
         </div>
         <button type="button" (click)="closePoolSheet()" aria-label="Fermer">x</button>
@@ -186,10 +200,15 @@
       <p class="pool-sheet__label">Pools existants</p>
       <div class="pool-list pool-list--sheet">
         @for (pool of filteredPools(); track pool.id) {
-          <button type="button" (click)="attachPoolFromSheet(pool.id)">
-            <strong>{{ pool.name }}</strong>
-            <span>{{ pool.code }}</span>
-          </button>
+          <article class="pool-list__row">
+            <button type="button" class="pool-list__main" (click)="attachPoolFromSheet(pool.id)">
+              <strong>{{ pool.name }}</strong>
+              <span>{{ pool.code }}</span>
+            </button>
+            <button type="button" class="pool-list__manage" (click)="editPool(pool.id)">
+              Manage
+            </button>
+          </article>
         }
         @if (filteredPools().length === 0) {
           <p class="template-empty">Aucun pool trouve dans la base.</p>

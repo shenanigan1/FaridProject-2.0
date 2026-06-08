@@ -411,6 +411,11 @@ export class TestTemplateEditorPage {
     void this.router.navigate(['/pools/new']);
   }
 
+  editPool(poolId: string): void {
+    if (!poolId) return;
+    void this.router.navigate(['/pools', poolId]);
+  }
+
   attachPoolFromSheet(poolId: string): void {
     const sectionId = this.poolSheetSectionId();
     if (!sectionId) return;
@@ -421,6 +426,16 @@ export class TestTemplateEditorPage {
 
   poolName(poolId: string): string {
     return this.pools().find((p) => p.id === poolId)?.name ?? poolId;
+  }
+
+  poolCode(poolId: string): string {
+    return this.pools().find((p) => p.id === poolId)?.code ?? 'QUESTION_POOL';
+  }
+
+  poolRuleLabel(rule: SectionPoolRuleVm): string {
+    const count = Math.max(0, Math.floor(rule.randomCount || 0));
+    const mode = rule.mandatoryCount !== undefined ? 'FIXED' : 'RANDOMIZED';
+    return `${count} QUESTIONS • ${mode}`;
   }
 
   // ---- sections actions ----

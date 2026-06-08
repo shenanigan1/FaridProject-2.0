@@ -135,6 +135,18 @@ describe('ManagerTestDetailPage', () => {
     });
   });
 
+  it('renders the evaluator answer, score and comment controls for assigned sections', () => {
+    const compiled = fixture.nativeElement as HTMLElement;
+
+    expect(compiled.querySelector('#test-manager-comment')).not.toBeNull();
+    expect(compiled.querySelector('#section-comment-3')).not.toBeNull();
+    expect(compiled.querySelector('#answer-7')).not.toBeNull();
+    expect(compiled.querySelector('#comment-7')).not.toBeNull();
+    expect(compiled.querySelector('#score-7')).not.toBeNull();
+    expect(compiled.textContent).toContain('Enregistrer brouillon');
+    expect(compiled.textContent).toContain('Soumettre les sections');
+  });
+
   it('extracts selectable options from the question rubric', () => {
     component.questionnaire.set(questionnaireWithQuestion({
       ...baseQuestion,
@@ -186,6 +198,15 @@ describe('ManagerTestDetailPage', () => {
 
     expect(testsSpy.saveQuestionnaire).not.toHaveBeenCalled();
     expect(component.message()).toContain('Reponse obligatoire manquante');
+  });
+
+  it('blocks validation when a mandatory question has no score', () => {
+    component.updateAnswer(7, 'candidate_answer', 'OK');
+
+    component.saveQuestionnaire(true);
+
+    expect(testsSpy.saveQuestionnaire).not.toHaveBeenCalled();
+    expect(component.message()).toContain('Note obligatoire manquante');
   });
 
   it('bounds score to the question points', () => {
