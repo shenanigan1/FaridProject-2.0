@@ -73,13 +73,11 @@ describe('app navigation', () => {
   it('builds the manager MVP navigation without admin-only entries', () => {
     expect(buildAppNavigation('manager').map((item) => item.label)).toEqual([
       'Home',
-      'Jobs',
       'Tests',
       'Profil',
     ]);
     expect(buildAppNavigation('manager').map((item) => item.route)).toEqual([
       '/manager',
-      '/jobs',
       '/manager/tests',
       '/profile',
     ]);

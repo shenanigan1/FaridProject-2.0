@@ -43,7 +43,6 @@ const directionNavigation: AppNavigationItem[] = [
 
 const managerNavigation: AppNavigationItem[] = [
   { label: 'Home', icon: APP_ICONS.home, route: '/manager' },
-  { label: 'Jobs', icon: APP_ICONS.jobs, route: '/jobs' },
   { label: 'Tests', icon: APP_ICONS.clipboard_check, route: '/manager/tests' },
   { label: 'Profil', icon: APP_ICONS.user, route: '/profile' },
 ];
@@ -55,7 +54,7 @@ const employeeNavigation: AppNavigationItem[] = [
 ];
 
 export function isRecruitmentRole(role: AppNavigationRole): boolean {
-  return role === 'admin' || role === 'hr' || role === 'director' || role === 'manager';
+  return role === 'admin' || role === 'hr' || role === 'director';
 }
 
 export function getRoleHomeRoute(role: AppNavigationRole): string {

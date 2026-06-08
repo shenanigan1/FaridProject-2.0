@@ -24,7 +24,7 @@
           <span>{{ selectedTest.updatedAt | date: 'short' }}</span>
         </div>
 
-        <div class="manager-test-card manager-test-card--selected">
+        <div class="manager-test-card manager-test-card--selected" aria-label="Candidat evalue">
           <span class="manager-avatar">{{ initials(selectedTest) }}</span>
           <span class="manager-test-card__body">
             <strong>{{ selectedTest.candidateName }}</strong>
@@ -52,10 +52,12 @@
             <p class="manager-alert">Question eliminatoire echouee : validation impossible sans correction manager.</p>
           }
 
-          <label class="manager-field-label" for="test-manager-comment">Commentaire test</label>
+          <label class="manager-field-label" for="test-manager-comment">Commentaire global du test</label>
           <textarea
             id="test-manager-comment"
             class="manager-wide-textarea"
+            rows="4"
+            placeholder="Synthese globale, points forts, risques, decision recommandee..."
             [disabled]="selectedTest.status !== 'in_progress'"
             [value]="form.test_manager_comment"
             (input)="updateTestComment($any($event.target).value)"
@@ -99,6 +101,8 @@
                 <textarea
                   class="manager-wide-textarea"
                   [id]="'section-comment-' + section.section_id"
+                  rows="3"
+                  placeholder="Observation sur cette section, contexte, points de vigilance..."
                   [disabled]="!canEditSection(selectedTest, section)"
                   [value]="section.manager_comment"
                   (input)="updateSectionComment(section.section_id, $any($event.target).value)"
@@ -132,7 +136,9 @@
                         <p class="manager-question__hint">{{ question.explanation }}</p>
                       }
 
-                      <label [attr.for]="'answer-' + question.question_id">Reponse candidat</label>
+                      <label class="manager-field-label" [attr.for]="'answer-' + question.question_id">
+                        Reponse candidat / observation terrain
+                      </label>
                       @if (choiceOptions(question); as options) {
                         @if (options.length > 0) {
                           <div class="manager-choice-grid">
@@ -151,6 +157,9 @@
                         } @else {
                           <textarea
                             [id]="'answer-' + question.question_id"
+                            class="manager-question-textarea"
+                            rows="4"
+                            placeholder="Saisir la reponse ou les observations du candidat..."
                             [disabled]="!canEditSection(selectedTest, section)"
                             [value]="question.candidate_answer"
                             (input)="updateAnswer(question.question_id, 'candidate_answer', $any($event.target).value)"
@@ -171,9 +180,14 @@
                         }
                       }
 
-                      <label [attr.for]="'comment-' + question.question_id">Commentaire question</label>
+                      <label class="manager-field-label" [attr.for]="'comment-' + question.question_id">
+                        Commentaire evaluateur
+                      </label>
                       <textarea
                         [id]="'comment-' + question.question_id"
+                        class="manager-question-textarea"
+                        rows="3"
+                        placeholder="Commentaire manager sur cette reponse..."
                         [disabled]="!canEditSection(selectedTest, section)"
                         [value]="question.manager_comment"
                         (input)="updateAnswer(question.question_id, 'manager_comment', $any($event.target).value)"
@@ -215,7 +229,7 @@
                 [disabled]="saving() || !hasOpenSection()"
                 (click)="saveQuestionnaire(true)"
               >
-                {{ saving() ? 'Validation...' : 'Valider mes sections' }}
+                {{ saving() ? 'Soumission...' : 'Soumettre les sections' }}
               </button>
             </div>
           }

@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { forkJoin } from 'rxjs';
+import { forkJoin, map, switchMap } from 'rxjs';
 import {
   ManagerQuestionnaire,
   ManagerQuestionnaireQuestion,
@@ -235,11 +235,22 @@ export class ManagerTestDetailPage {
         test_manager_comment: questionnaire.test_manager_comment,
         complete_sections: completeSections,
       })
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(
+        switchMap((saved) =>
+          this.testsService.getAssignedTest(test.id).pipe(
+            map((freshTest) => ({
+              saved,
+              freshTest,
+            })),
+          ),
+        ),
+        takeUntilDestroyed(this.destroyRef),
+      )
       .subscribe({
-        next: (saved) => {
+        next: ({ saved, freshTest }) => {
+          this.test.set(freshTest);
           this.questionnaire.set(saved);
-          this.message.set(completeSections ? 'Sections validees.' : 'Questionnaire enregistre.');
+          this.message.set(completeSections ? 'Sections soumises.' : 'Brouillon enregistre.');
           this.saving.set(false);
         },
         error: () => {
@@ -471,6 +482,13 @@ export class ManagerTestDetailPage {
       );
     if (invalidScore) {
       return `Score invalide : ${invalidScore.title || invalidScore.text}`;
+    }
+
+    const missingScore = questionnaire.sections
+      .flatMap((section) => section.questions)
+      .find((question) => question.is_mandatory && question.score === null);
+    if (missingScore) {
+      return `Note obligatoire manquante : ${missingScore.title || missingScore.text}`;
     }
 
     return null;

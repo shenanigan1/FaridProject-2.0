@@ -161,19 +161,23 @@ describe('TestTemplateEditorPage', () => {
     expect(component.form.disabled).toBeFalse();
   });
 
-  it('should render the Figma single-page editor with general info, sections and pools together', () => {
+  it('should render the mockup single-page editor with basic info, sections and pool actions together', () => {
     const { fixture, component } = setup({ routeId: null });
 
     component.addSection();
+    const sectionId = component.sections()[0].id;
+    component.attachPoolToSection(sectionId, 'p1');
     fixture.detectChanges();
 
     const text = (fixture.nativeElement as HTMLElement).textContent ?? '';
 
-    expect(text).toContain('INFORMATIONS GENERALES');
-    expect(text).toContain('STRUCTURE DU TEST');
-    expect(text).toContain('Ajouter un Pool');
-    expect(text).toContain('Ajouter une Section');
-    expect(text).toContain('Enregistrer le Template');
+    expect(text).toContain('BASIC INFO');
+    expect(text).toContain('PASSING SCORE');
+    expect(text).toContain('TEST SECTIONS');
+    expect(text).toContain('ADD QUESTION POOL');
+    expect(text).toContain('ADD NEW SECTION');
+    expect(text).toContain('EDIT POOL');
+    expect(text).toContain('Enregistrer le template');
   });
 
   it('filteredPools() should filter by name/code (case-insensitive)', () => {
@@ -293,6 +297,14 @@ describe('TestTemplateEditorPage', () => {
     component.createPoolFromSheet();
 
     expect(routerMock.navigate).toHaveBeenCalledWith(['/pools/new']);
+  });
+
+  it('editPool() should route to the selected pool editor', () => {
+    const { component, routerMock } = setup({ routeId: null });
+
+    component.editPool('p1');
+
+    expect(routerMock.navigate).toHaveBeenCalledWith(['/pools', 'p1']);
   });
 
   it('save() in create mode should call api.create and navigate to /templates/:id', async () => {
