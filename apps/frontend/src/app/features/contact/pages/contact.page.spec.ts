@@ -74,7 +74,8 @@ describe('ContactPage', () => {
     const text = fixture.nativeElement.textContent as string;
 
     expect(component.canManageContacts()).toBeTrue();
-    expect(text).toContain('Create Contact');
+    expect(text).toContain('RECENT CONTACTS');
+    expect(text).toContain('Creer un contact');
   });
 
   it('opens user creation in a real dialog instead of an inline panel', () => {

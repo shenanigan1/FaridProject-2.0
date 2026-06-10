@@ -23,6 +23,7 @@ let nextId = 0;
   selector: 'app-ui-modal',
   imports: [CommonModule],
   templateUrl: './modal.component.html',
+  styleUrl: './modal.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UiModalComponent implements AfterViewChecked, OnChanges, OnDestroy {
@@ -88,12 +89,11 @@ export class UiModalComponent implements AfterViewChecked, OnChanges, OnDestroy 
   }
 
   get panelClasses(): string {
-    const base =
-      'w-full rounded-2xl border border-slate-800 bg-slate-950 text-slate-100 shadow-2xl';
+    const base = 'ff-modal-panel';
     const sizes: Record<UiModalSize, string> = {
-      sm: 'max-w-sm',
-      md: 'max-w-lg',
-      lg: 'max-w-3xl',
+      sm: 'ff-modal-panel--sm',
+      md: 'ff-modal-panel--md',
+      lg: 'ff-modal-panel--lg',
     };
     return `${base} ${sizes[this.size]}`;
   }

@@ -78,12 +78,12 @@ describe('TestsAdminPage workflow', () => {
     const host = fixture.nativeElement as HTMLElement;
     const text = (fixture.nativeElement as HTMLElement).textContent ?? '';
 
-    expect(host.querySelector('.ff-page-bar')).not.toBeNull();
     expect(host.querySelector('.ff-workflow-shell')).not.toBeNull();
     expect(host.querySelector('.ff-segmented')).not.toBeNull();
     expect(host.querySelector('.ff-search-box')).not.toBeNull();
-    expect(text).toContain('Tests');
-    expect(text).toContain('Nadia Benali');
+    expect(text).toContain('OPERATIONAL LAYER');
+    expect(text).toContain('Gestion des Tests');
+    expect(text).toContain('nadia@example.com');
     expect(text).toContain('66%');
     expect(text).toContain('2 / 3');
   });

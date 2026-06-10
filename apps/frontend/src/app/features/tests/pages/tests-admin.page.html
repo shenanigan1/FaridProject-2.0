@@ -1,21 +1,22 @@
-<section class="ff-workflow-screen">
-  <header class="ff-page-bar">
-    <button type="button" class="ff-page-bar__action" aria-label="Menu">&#9776;</button>
-    <h1 class="ff-page-bar__title">{{ isTestsView() ? 'Tests' : 'Templates de Test' }}</h1>
-    <button type="button" class="ff-page-bar__action" aria-label="Search">&#8981;</button>
-  </header>
-
+<section class="ff-workflow-screen tests-admin-screen">
   <div class="ff-workflow-shell">
-    <div class="ff-segmented">
+    <div class="ff-segmented tests-admin-switch">
       <button type="button" class="ff-segmented__item" [attr.aria-pressed]="isTestsView()" (click)="setView('tests')">
-        Tests
+        TESTS
       </button>
       <button type="button" class="ff-segmented__item" [attr.aria-pressed]="!isTestsView()" (click)="setView('templates')">
-        Templates
+        TEMPLATES
       </button>
     </div>
 
-    <label class="ff-search-box ff-filter-stack">
+    <div class="tests-admin-hero">
+      <p class="ff-app-kicker">OPERATIONAL LAYER</p>
+      <h1 class="tests-admin-title">
+        {{ isTestsView() ? 'Gestion des Tests' : 'Templates de Test' }}
+      </h1>
+    </div>
+
+    <label class="ff-search-box tests-admin-search">
       <input
         type="search"
         [formControl]="searchControl"
@@ -24,7 +25,7 @@
       />
     </label>
 
-    <div class="ff-chip-row" aria-label="Filtres">
+    <div class="ff-chip-row tests-admin-filters" aria-label="Filtres">
       @for (filter of filters; track filter) {
         <button
           type="button"
@@ -42,30 +43,32 @@
     } @else if (error()) {
       <p class="ff-alert ff-alert-error" role="alert">{{ error() }}</p>
     } @else if (isTestsView()) {
-      <div class="ff-list">
+      <div class="tests-admin-list">
         @for (test of filteredActiveTests(); track test.evaluationId) {
-          <article class="ff-data-card">
-            <div class="ff-card-head">
-              <div>
-                <h2 class="ff-row-title ff-row-title--lg">{{ test.candidateName }}</h2>
-                <p class="ff-row-meta">{{ test.templateName }}</p>
-                @if (test.positionTitle) {
-                  <p class="ff-row-meta">{{ test.positionTitle }}</p>
-                }
-              </div>
-              <span class="ff-status-pill">{{ test.statusLabel }}</span>
-            </div>
+          <article class="tests-admin-card">
+            <a class="tests-admin-card__main" [routerLink]="['/tests', test.evaluationId]">
+              <span class="tests-admin-card__avatar" aria-hidden="true">
+                {{ test.candidateName.slice(0, 2).toUpperCase() }}
+              </span>
 
-            <div class="ff-progress-block">
+              <span class="tests-admin-card__body">
+                <strong>{{ test.candidateEmail || test.candidateName }}</strong>
+                <small>{{ test.templateName }} - {{ test.positionTitle || 'Evaluation' }}</small>
+              </span>
+
+              <span class="tests-admin-card__chevron" aria-hidden="true">&gt;</span>
+            </a>
+
+            <div class="tests-admin-card__progress">
               <div class="ff-metric-row">
-                <span class="ff-row-meta">{{ test.statusLabel }}</span>
+                <span>{{ test.statusLabel }}</span>
                 <strong>{{ test.progressPercent }}%</strong>
               </div>
               <div class="ff-progress" aria-hidden="true">
                 <span [style.width.%]="test.progressPercent"></span>
               </div>
               @if (test.totalSectionsCount > 0) {
-                <p class="ff-row-meta">
+                <p>
                   {{ test.completedSectionsCount }} / {{ test.totalSectionsCount }} sections terminees
                 </p>
               }
@@ -77,7 +80,7 @@
                 [routerLink]="['/tests', test.evaluationId]"
                 [attr.data-testid]="'open-assessment-' + test.evaluationId"
               >
-                Voir le dossier
+                Voir details
               </a>
               @if (test.applicationId) {
                 <a
@@ -102,23 +105,23 @@
         }
       </div>
     } @else {
-      <div class="ff-list">
+      <div class="tests-admin-template-list">
         @for (template of filteredTemplates(); track template.id) {
-          <article class="ff-data-card">
-            <div class="ff-card-head">
-              <div>
-                <span class="ff-status-pill" [class.ff-status-pill--warning]="template.difficulty === 'medium'">
-                  {{ difficultyLabel(template.difficulty) }}
-                </span>
-                <h2 class="ff-row-title ff-row-title--lg ff-u-mt-md">{{ template.name }}</h2>
-                <p class="ff-row-meta">{{ template.description }}</p>
-              </div>
-              <a class="ff-page-bar__action" [routerLink]="['/templates', template.id]" aria-label="Modifier">&#8942;</a>
+          <article class="tests-template-card">
+            <div>
+              <span class="ff-status-pill" [class.ff-status-pill--warning]="template.difficulty === 'medium'">
+                {{ difficultyLabel(template.difficulty) }}
+              </span>
+              <p class="tests-template-card__ref">REF: KT-{{ template.id }}</p>
             </div>
 
-            <div class="ff-inline-actions ff-u-mt-md">
-              <span class="ff-row-meta">{{ template.pointsTotal }} pts</span>
-              <span class="ff-row-meta">{{ template.durationMinutes }} min</span>
+            <h2>{{ template.name }}</h2>
+            <p>{{ template.description }}</p>
+
+            <div class="tests-template-card__meta">
+              <span>{{ template.pointsTotal }} pts</span>
+              <span>{{ template.durationMinutes }} min</span>
+              <a [routerLink]="['/templates', template.id]" aria-label="Modifier template">...</a>
             </div>
           </article>
         }

@@ -19,9 +19,11 @@ describe('TopBarComponent', () => {
     fixture.detectChanges();
   });
 
-  it('renders desktop console identity and user initials', () => {
+  it('renders FleetFlow product identity, section context and user initials', () => {
     const text = (fixture.nativeElement as HTMLElement).textContent ?? '';
 
+    expect(text).toContain('FF');
+    expect(text).toContain('FleetFlow');
     expect(text).toContain('Recruitment Overview');
     expect(text).toContain('TU');
   });

@@ -1,0 +1,45 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.ff-field {
+  display: block;
+  width: 100%;
+}
+
+.ff-input {
+  width: 100%;
+  min-width: 0;
+  min-height: 8rem;
+  box-sizing: border-box;
+  padding: 0.95rem 1rem;
+  resize: vertical;
+  border: 1px solid var(--ff-color-border-soft, rgba(151, 164, 188, 0.22));
+  border-radius: var(--ff-radius-control, 0.75rem);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.025), transparent),
+    var(--ff-color-surface-3, #111722);
+  color: var(--ff-color-text-primary, #f7f9ff);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  outline: 0;
+}
+
+.ff-input::placeholder {
+  color: var(--ff-color-text-muted, #aeb8ca);
+}
+
+.ff-input:hover {
+  border-color: var(--ff-color-secondary-500, #9cb3dd);
+}
+
+.ff-input:focus,
+.ff-input:focus-visible {
+  border-color: var(--ff-color-primary-500, #1683f7);
+  box-shadow: 0 0 0 3px rgba(74, 142, 255, 0.18);
+}
+
+.ff-input-error {
+  border-color: var(--ff-color-error, #ff8a8a);
+}

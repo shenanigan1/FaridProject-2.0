@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
-import { CommonModule, DatePipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
@@ -10,7 +10,6 @@ import { QuestionPool } from '@features/pools/models/question-pool.model';
 import { UiEmptyStateComponent } from '@lib-ui/empty-state/empty-state.component';
 import { UiButtonPrimaryComponent } from '@lib-ui/button-primary/button-primary.component';
 import { UiAlertComponent } from '@lib-ui/alert/alert.component';
-import { UiTextInputComponent } from '@lib-ui/text-input/text-input.component';
 
 @Component({
   standalone: true,
@@ -18,14 +17,13 @@ import { UiTextInputComponent } from '@lib-ui/text-input/text-input.component';
   imports: [
     CommonModule,
     RouterModule,
-    DatePipe,
     ReactiveFormsModule,
     UiEmptyStateComponent,
     UiButtonPrimaryComponent,
     UiAlertComponent,
-    UiTextInputComponent
   ],
   templateUrl: './pools-list.page.html',
+  styleUrl: './pools-list.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PoolsListPageComponent {

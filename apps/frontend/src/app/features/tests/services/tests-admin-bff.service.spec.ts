@@ -119,6 +119,51 @@ describe('TestsAdminBffService', () => {
     ]);
   });
 
+  it('follows paginated evaluation responses so launched tests are visible in production lists', () => {
+    let rows: ReturnType<typeof service.listActiveTests> extends import('rxjs').Observable<infer T> ? T : never = [];
+
+    service.listActiveTests().subscribe((items) => {
+      rows = items;
+    });
+
+    http.expectOne('/api/evaluations/').flush({
+      results: [],
+      next: '/api/evaluations/?page=2',
+    });
+    http.expectOne('/api/evaluations/?page=2').flush({
+      results: [
+        {
+          id: 42,
+          subject: 3,
+          application: 1,
+          status: 'in_progress',
+          template_name: 'DRIVING',
+          subject_full_name: 'jonnyTest@gmail.com',
+          subject_email: 'jonnyTest@gmail.com',
+          position_title: 'Livraison Express',
+          assigned_to: 7,
+          assigned_to_full_name: 'Marc Manager',
+          updated_at: '2026-06-10T14:28:57Z',
+          progress_percent: 0,
+          completed_sections_count: 0,
+          total_sections_count: 1,
+        },
+      ],
+      next: null,
+    });
+
+    expect(rows).toEqual([
+      jasmine.objectContaining({
+        evaluationId: 42,
+        candidateEmail: 'jonnyTest@gmail.com',
+        templateName: 'DRIVING',
+        statusLabel: 'En cours',
+        managerName: 'Marc Manager',
+        totalSectionsCount: 1,
+      }),
+    ]);
+  });
+
   it('sends rejected status when refusing an assessment', () => {
     service.rejectAssessment(12).subscribe((result) => {
       expect(result).toEqual({ ok: true });

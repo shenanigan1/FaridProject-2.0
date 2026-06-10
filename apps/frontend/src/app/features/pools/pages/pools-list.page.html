@@ -1,17 +1,24 @@
 <section class="ff-app-screen">
-  <div class="ff-app-container ff-app-stack">
-    <header class="ff-app-header">
-      <div>
-        <p class="ff-app-kicker">QUESTION POOLS</p>
-        <h1 class="ff-app-title">Reusable Banks</h1>
-      </div>
+  <div class="ff-app-container ff-app-container--compact ff-app-stack pools-page">
+    <header class="pools-hero">
+      <h1>Question Pools</h1>
+      <p>Manage and organize structured question repositories for technical evaluations.</p>
     </header>
 
-    <app-ui-text-input
-      [formControl]="queryCtrl"
-      type="search"
-      aria-label="Search pool names or codes"
-    ></app-ui-text-input>
+    <label class="ff-search-box pools-search">
+      <input
+        [formControl]="queryCtrl"
+        type="search"
+        aria-label="Search pool names or codes"
+        placeholder="Search pools..."
+      />
+    </label>
+
+    <div class="ff-chip-row pools-chips" aria-label="Pool filters">
+      <button type="button" class="ff-chip ff-chip--active">Tous</button>
+      <button type="button" class="ff-chip">Conduite</button>
+      <button type="button" class="ff-chip">Securite</button>
+    </div>
 
     @if (isLoading()) {
       <p class="ff-empty">Loading pools...</p>
@@ -25,22 +32,23 @@
     }
 
     @if (!isLoading() && !error()) {
-      <div class="ff-app-stack">
+      <div class="pools-list">
         @if (filtered().length) {
           @for (pool of filtered(); track pool.id) {
-            <article class="ff-data-card">
-          <div class="ff-inline-actions ff-u-between">
-                <div>
-                  <h2 class="ff-row-title">{{ pool.name }}</h2>
-                  <p class="ff-row-meta">
-                    <span>{{ pool.code }}</span>
-                    @if (pool.updatedAt) {
-                      <span> Updated {{ pool.updatedAt | date:'MMM d, y' }}</span>
-                    }
-                  </p>
-                </div>
+            <article class="pool-card">
+              <div class="pool-card__top">
+                <span class="ff-status-pill ff-status-pill--success">ACTIVE</span>
+                <span>REF: KT-{{ pool.id }}</span>
+              </div>
 
-                <app-ui-button-primary [routerLink]="['/pools', pool.id]">Manage</app-ui-button-primary>
+              <h2>{{ pool.name }}</h2>
+
+              <div class="pool-card__code">{{ pool.code }}</div>
+
+              <div class="pool-card__meta">
+                <span>0 pts</span>
+                <span>90 min</span>
+                <a [routerLink]="['/pools', pool.id]" aria-label="Manage pool">...</a>
               </div>
             </article>
           }

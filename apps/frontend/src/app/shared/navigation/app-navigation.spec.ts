@@ -29,13 +29,14 @@ describe('app navigation', () => {
     ]);
   });
 
-  it('builds the direction navigation without admin-only role management', () => {
+  it('builds the direction navigation with recruitment administration entries', () => {
     expect(buildAppNavigation('director').map((item) => item.label)).toEqual([
       'Dashboard',
       'Contacts',
       'Tests',
       'Jobs',
       'Reporting',
+      'Roles',
     ]);
     expect(buildAppNavigation('director').map((item) => item.route)).toEqual([
       '/direction',
@@ -43,6 +44,7 @@ describe('app navigation', () => {
       '/tests',
       '/jobs',
       '/reporting',
+      '/roles',
     ]);
   });
 
@@ -52,6 +54,7 @@ describe('app navigation', () => {
       '/contact',
       '/tests',
       '/jobs',
+      '/roles',
     ]);
     expect(isRecruitmentRole('hr')).toBeTrue();
   });
