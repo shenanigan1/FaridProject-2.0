@@ -41,6 +41,7 @@ type JobOfferDetailPageState = 'loading' | 'success' | 'not-found' | 'error';
     UiTextareaComponent,
   ],
   templateUrl: './job-offer-detail.page.html',
+  styleUrl: './job-offer-detail.page.scss',
 })
 export class JobOfferDetailPageComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
@@ -139,6 +140,30 @@ export class JobOfferDetailPageComponent implements OnInit {
     if (!isOpen) {
       this.applicationSubmitting = false;
     }
+  }
+
+  getApplicationFieldError(
+    controlName: keyof typeof this.applicationForm.controls,
+  ): string | null {
+    const control = this.applicationForm.controls[controlName];
+
+    if (!control.touched || control.valid) {
+      return null;
+    }
+
+    if (control.hasError('required')) {
+      return 'Champ obligatoire';
+    }
+
+    if (control.hasError('email')) {
+      return 'Email invalide';
+    }
+
+    if (control.hasError('maxlength')) {
+      return 'Texte trop long';
+    }
+
+    return 'Valeur invalide';
   }
 
   private openAuthModal(): void {

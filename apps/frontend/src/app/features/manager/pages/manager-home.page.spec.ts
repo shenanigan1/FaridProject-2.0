@@ -75,4 +75,14 @@ describe('ManagerHomePage', () => {
     expect(component.pendingTests().length).toBe(1);
     expect(component.completedTests().length).toBe(1);
   });
+
+  it('renders the ops dashboard visual language and fill actions', () => {
+    const text = (fixture.nativeElement as HTMLElement).textContent ?? '';
+
+    expect(text).toContain('DRIVERECRUIT // OPS_DASHBOARD');
+    expect(text).toContain('STATUS_ON');
+    expect(text).toContain('FLUX EN ATTENTE');
+    expect(text).toContain('REMPLIR');
+    expect(text).toContain('HISTORIQUE RECENT');
+  });
 });

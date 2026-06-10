@@ -594,7 +594,12 @@ def test_launch_evaluation_assigns_managers_by_section_and_scopes_questionnaire(
     )
 
     assert launch_res.status_code == 201
+    assert launch_res.data[0]["assigned_to"] == manager_a.id
+    assert launch_res.data[0]["assigned_to_full_name"] == (
+        manager_a.full_name or manager_a.email
+    )
     evaluation = Evaluation.objects.get(id=launch_res.data[0]["id"])
+    assert evaluation.assigned_to_id == manager_a.id
     assert (
         EvaluationSectionAssignment.objects.filter(evaluation=evaluation).count() == 2
     )

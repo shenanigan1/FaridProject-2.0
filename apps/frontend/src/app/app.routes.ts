@@ -163,7 +163,7 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/roles/pages/roles-admin.page').then((m) => m.RolesAdminPage),
     canActivate: [AuthGuard, RoleGuard],
-    data: { roles: ['admin'] },
+    data: { roles: ['hr', 'admin', 'director'] },
   },
   {
     path: 'contact',

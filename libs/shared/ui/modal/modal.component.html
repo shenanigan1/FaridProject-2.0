@@ -1,8 +1,7 @@
 @if (open) {
-  <div class="fixed inset-0 z-50 flex items-center justify-center p-4">
-    <!-- Backdrop: focusable + keyboard accessible -->
+  <div class="ff-modal-layer">
     <div
-      class="absolute inset-0 bg-black/60"
+      class="ff-modal-backdrop"
       role="button"
       tabindex="0"
       aria-label="Close dialog"
@@ -10,10 +9,8 @@
       (keydown)="backdropKeydown($event)"
     ></div>
 
-    <!-- Panel -->
     <div
       #dialogPanel
-      class="relative"
       [class]="panelClasses"
       role="dialog"
       aria-modal="true"
@@ -21,31 +18,29 @@
       [attr.aria-labelledby]="title ? titleId : null"
       (click)="stop($event)"
     >
-      <div class="flex items-start justify-between gap-4 p-5 border-b border-slate-800">
-        <div class="min-w-0">
+      <div class="ff-modal-header">
+        <div class="ff-modal-heading">
           @if (title) {
-            <h3 class="text-lg font-semibold" [id]="titleId">{{ title }}</h3>
+            <h3 class="ff-modal-title" [id]="titleId">{{ title }}</h3>
           }
         </div>
 
         <button
           type="button"
-          class="h-9 w-9 rounded-xl hover:bg-slate-800/60 transition"
+          class="ff-modal-close"
           aria-label="Close dialog"
           (click)="close()"
         >
-          ✕
+          x
         </button>
       </div>
 
-      <div class="p-5">
+      <div class="ff-modal-body">
         <ng-content></ng-content>
       </div>
 
-      <div class="p-5 pt-0">
-        <div class="flex justify-end gap-2">
-          <ng-content select="[modal-actions]"></ng-content>
-        </div>
+      <div class="ff-modal-actions">
+        <ng-content select="[modal-actions]"></ng-content>
       </div>
     </div>
   </div>

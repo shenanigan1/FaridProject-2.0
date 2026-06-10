@@ -1,0 +1,45 @@
+:host {
+  display: block;
+}
+
+.candidate-apply-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.candidate-apply-form__full {
+  grid-column: 1 / -1;
+}
+
+.candidate-apply-form__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding-top: 0.25rem;
+}
+
+.candidate-apply-form__actions app-ui-button-secondary {
+  min-width: 9rem;
+}
+
+.candidate-apply-form__actions app-ui-button-primary {
+  min-width: min(100%, 16rem);
+}
+
+@media (max-width: 42rem) {
+  .candidate-apply-form {
+    grid-template-columns: 1fr;
+    gap: 0.85rem;
+  }
+
+  .candidate-apply-form__actions {
+    flex-direction: column-reverse;
+  }
+
+  .candidate-apply-form__actions app-ui-button-secondary,
+  .candidate-apply-form__actions app-ui-button-primary {
+    width: 100%;
+    min-width: 0;
+  }
+}

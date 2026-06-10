@@ -2,9 +2,7 @@
   <div class="ff-login-shell">
     <header class="ff-login-header">
       <div class="ff-login-brand">
-        <span class="ff-login-brand__icon" aria-hidden="true">
-          <svg [lucideIcon]="icons.brand"></svg>
-        </span>
+        <span class="ff-login-brand__icon" aria-hidden="true">FF</span>
 
         <div class="ff-login-brand__wordmark" aria-label="FleetFlow">
           <span>Fleet</span><strong>Flow</strong>
@@ -69,7 +67,7 @@
         </label>
 
         <button type="submit" class="ff-login-submit" [disabled]="loading()">
-          <span>{{ loading() ? 'Logging in...' : 'Log in' }}</span>
+          <span>{{ loading() ? 'Logging in...' : 'Enter portal' }}</span>
           <svg [lucideIcon]="icons.loginSubmit" aria-hidden="true"></svg>
         </button>
       </form>

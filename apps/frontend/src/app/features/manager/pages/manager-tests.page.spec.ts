@@ -66,6 +66,16 @@ describe('ManagerTestsPage', () => {
     expect(component.filteredTests().map((test) => test.id)).toEqual([42]);
   });
 
+  it('renders manager cards with the mockup action label', () => {
+    const host = fixture.nativeElement as HTMLElement;
+    const text = host.textContent ?? '';
+    const search = host.querySelector<HTMLInputElement>('input[type="search"]');
+
+    expect(search?.placeholder).toBe('Rechercher un test ou candidat...');
+    expect(text).toContain('TESTS A PASSER');
+    expect(text).toContain('REMPLIR');
+  });
+
   it('shows manager history on history tab', () => {
     component.setTab('history');
 

@@ -99,19 +99,21 @@
     [open]="applicationModalOpen"
     (openChange)="onApplicationModalOpenChanged($event)"
     title="Finalize your application"
-    size="md"
+    size="lg"
   >
-    <form class="ff-form-grid" [formGroup]="applicationForm" (ngSubmit)="onApplicationSubmitted()">
+    <form class="candidate-apply-form" [formGroup]="applicationForm" (ngSubmit)="onApplicationSubmitted()">
       <app-ui-text-input
         formControlName="firstName"
         label="First name"
         placeholder="John"
+        [error]="getApplicationFieldError('firstName')"
       />
 
       <app-ui-text-input
         formControlName="lastName"
         label="Last name"
         placeholder="Doe"
+        [error]="getApplicationFieldError('lastName')"
       />
 
       <app-ui-text-input
@@ -119,6 +121,7 @@
         label="Email"
         placeholder="candidate@example.com"
         type="email"
+        [error]="getApplicationFieldError('email')"
       />
 
       <app-ui-text-input
@@ -126,24 +129,33 @@
         label="Phone"
         placeholder="+33..."
         type="tel"
+        [error]="getApplicationFieldError('phone')"
       />
 
       <app-ui-textarea
+        class="candidate-apply-form__full"
         formControlName="motivation"
         label="Motivation"
         hint="Describe briefly why you are a good fit for this role."
         placeholder="Tell us about your profile and availability..."
         [rows]="5"
+        [error]="getApplicationFieldError('motivation')"
       />
 
       @if (applicationErrorMessage) {
         <app-ui-alert
+          class="candidate-apply-form__full"
           variant="error"
           [message]="applicationErrorMessage"
         />
       }
 
-      <div modal-actions class="ff-u-full">
+      <div class="candidate-apply-form__actions candidate-apply-form__full">
+        <app-ui-button-secondary
+          type="button"
+          label="Cancel"
+          (clicked)="onApplicationModalOpenChanged(false)"
+        />
         <app-ui-button-primary type="submit" [loading]="applicationSubmitting">
           Confirm application
         </app-ui-button-primary>

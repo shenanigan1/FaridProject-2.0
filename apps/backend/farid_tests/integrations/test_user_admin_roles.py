@@ -41,7 +41,7 @@ def test_users_hr_can_list_contacts(api_client):
     assert res.status_code == 200
 
 
-def test_users_hr_cannot_create_or_update_contacts(api_client):
+def test_users_hr_can_create_and_update_contacts(api_client):
     hr = UserFactory.create(role=UserRoles.HR, is_staff=True)
     target = UserFactory.create(role=UserRoles.MANAGER)
     api_client.force_authenticate(user=hr)
@@ -59,14 +59,16 @@ def test_users_hr_cannot_create_or_update_contacts(api_client):
     )
     update_res = api_client.patch(
         reverse("users-detail", args=[target.id]),
-        {"role": UserRoles.DIRECTOR},
+        {"role": UserRoles.DIRECTOR, "first_name": "Updated"},
         format="json",
     )
 
-    assert create_res.status_code == 403
-    assert update_res.status_code == 403
+    assert create_res.status_code == 201
+    assert update_res.status_code == 200
+    assert User.objects.get(email="blocked@example.com").role == UserRoles.MANAGER
     target.refresh_from_db()
-    assert target.role == UserRoles.MANAGER
+    assert target.role == UserRoles.DIRECTOR
+    assert target.first_name == "Updated"
 
 
 def test_users_director_can_create_and_update_contacts(api_client):

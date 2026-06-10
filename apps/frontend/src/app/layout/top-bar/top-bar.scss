@@ -5,15 +5,13 @@
 .ff-topbar {
   position: relative;
   display: flex;
-  height: 4rem;
+  height: 4.75rem;
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid var(--ff-color-border-soft);
-  background:
-    linear-gradient(90deg, rgba(17, 35, 72, 0.44), transparent 45%),
-    var(--ff-color-header);
+  background: var(--ff-color-header);
   box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.025);
-  padding: 0 1rem;
+  padding: 0 1.25rem;
 }
 
 .ff-topbar__brand,
@@ -28,25 +26,54 @@
 
 .ff-topbar__brand {
   min-width: 0;
-  gap: 0.75rem;
+  gap: 0.8rem;
 }
 
-.ff-topbar__menu-mark {
-  width: 1.375rem;
-  height: 1rem;
+.ff-topbar__brand-mark {
+  display: inline-flex;
+  width: 2.55rem;
+  height: 2.55rem;
   flex: 0 0 auto;
-  color: var(--ff-color-primary-400);
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(141, 183, 255, 0.28);
+  border-radius: 0.7rem;
+  background: linear-gradient(180deg, #3f86ff, #167ef0);
+  color: #ffffff;
+  font-size: 0.9rem;
+  font-weight: 950;
+  letter-spacing: 0;
+  box-shadow: 0 0.8rem 1.8rem rgba(22, 131, 247, 0.18);
+}
+
+.ff-topbar__brand-text {
+  display: grid;
+  min-width: 0;
+  gap: 0.08rem;
 }
 
 .ff-topbar__brand-name {
   min-width: 0;
   overflow: hidden;
-  color: #68a8ff;
-  font-size: clamp(1rem, 2vw, 1.12rem);
-  font-weight: 900;
+  color: var(--ff-color-text-primary);
+  font-size: clamp(1.05rem, 2vw, 1.25rem);
+  font-weight: 950;
   letter-spacing: 0;
-  line-height: 1.55;
+  line-height: 1.05;
   text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ff-topbar__section {
+  display: none;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--ff-color-text-muted);
+  font-size: 0.66rem;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
   white-space: nowrap;
 }
 
@@ -58,11 +85,11 @@
 .ff-topbar__icon-button,
 .ff-topbar__user {
   position: relative;
-  width: 2.35rem;
-  height: 2.35rem;
+  width: 2.6rem;
+  height: 2.6rem;
   justify-content: center;
-  border: 1px solid var(--ff-color-border-soft);
-  border-radius: 1rem;
+  border: 1px solid rgba(129, 149, 178, 0.28);
+  border-radius: 50%;
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.015)),
     var(--ff-color-surface-3);
@@ -98,8 +125,8 @@
 
 .ff-topbar__avatar {
   display: inline-flex;
-  width: 2rem;
-  height: 2rem;
+  width: 2.25rem;
+  height: 2.25rem;
   align-items: center;
   justify-content: center;
   border-radius: inherit;
@@ -171,6 +198,10 @@
 
 @media (min-width: 1024px) {
   .ff-topbar {
-    padding-inline: 1.25rem;
+    padding-inline: 1.5rem;
+  }
+
+  .ff-topbar__section {
+    display: block;
   }
 }
