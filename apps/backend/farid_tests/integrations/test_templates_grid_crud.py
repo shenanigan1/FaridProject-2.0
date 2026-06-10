@@ -9,6 +9,7 @@ from farid_tests.factories.templates_grid import (
     TemplateFactory,
     TemplateSectionFactory,
 )
+from templates_grid.models import SkillQuestion, TemplatePoolRule
 
 pytestmark = pytest.mark.django_db
 
@@ -92,6 +93,41 @@ def test_create_skill_question_from_pool_nested_route_uses_pool_from_url(api_cli
     assert res.status_code == 201, res.data
     assert res.data["pool"] == pool.id
     assert res.data["format"] == "free_text"
+
+
+def test_pool_questions_and_template_detail_include_eliminatory_questions(api_client):
+    template = TemplateFactory.create(name="Safety Template")
+    section = TemplateSectionFactory.create(template=template, name="Safety")
+    pool = QuestionPoolFactory.create(name="Safety Pool", code="SAFETY_POOL")
+    TemplatePoolRule.objects.create(
+        template=template,
+        section=section,
+        pool=pool,
+        random_count=0,
+        order=0,
+    )
+    question = SkillQuestion.objects.create(
+        pool=pool,
+        format="yes_no",
+        title="Valid license",
+        text="Le permis est-il valide ?",
+        explanation="Oui",
+        is_eliminatory=True,
+        points=10,
+    )
+
+    pool_res = api_client.get(
+        reverse(f"{BASENAME_POOLS}-questions", kwargs={"pk": pool.id})
+    )
+    template_res = api_client.get(
+        reverse(f"{BASENAME_TEMPLATES}-detail", args=[template.id])
+    )
+
+    assert pool_res.status_code == 200, pool_res.data
+    assert pool_res.data[0]["id"] == question.id
+    assert pool_res.data[0]["is_eliminatory"] is True
+    assert template_res.status_code == 200, template_res.data
+    assert template_res.data["sections"][0]["questions"][0]["id"] == question.id
 
 
 @pytest.mark.parametrize("question_format", ["free_text", "yes_no", "rating"])

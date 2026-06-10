@@ -23,6 +23,7 @@ const hrNavigation: AppNavigationItem[] = [
   { label: 'Contacts', icon: APP_ICONS.users, route: '/contact' },
   { label: 'Tests', icon: APP_ICONS.clipboard_check, route: '/tests' },
   { label: 'Jobs', icon: APP_ICONS.jobs, route: '/jobs' },
+  { label: 'Roles', icon: APP_ICONS.settings, route: '/roles' },
 ];
 
 const adminNavigation: AppNavigationItem[] = [
@@ -39,6 +40,7 @@ const directionNavigation: AppNavigationItem[] = [
   { label: 'Tests', icon: APP_ICONS.clipboard_check, route: '/tests' },
   { label: 'Jobs', icon: APP_ICONS.jobs, route: '/jobs' },
   { label: 'Reporting', icon: APP_ICONS.preview, route: '/reporting' },
+  { label: 'Roles', icon: APP_ICONS.settings, route: '/roles' },
 ];
 
 const managerNavigation: AppNavigationItem[] = [

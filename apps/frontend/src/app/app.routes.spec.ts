@@ -6,4 +6,10 @@ describe('application routes', () => {
 
     expect(jobsRoute?.data?.['roles']).toEqual(['hr', 'admin', 'director']);
   });
+
+  it('allows all recruitment authority roles to open role management', () => {
+    const rolesRoute = routes.find((route) => route.path === 'roles');
+
+    expect(rolesRoute?.data?.['roles']).toEqual(['hr', 'admin', 'director']);
+  });
 });

@@ -1,0 +1,134 @@
+:host {
+  display: contents;
+}
+
+.ff-modal-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: clamp(1rem, 3vw, 2rem);
+  isolation: isolate;
+}
+
+.ff-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(circle at 50% 8%, rgba(74, 142, 255, 0.16), transparent 22rem),
+    rgba(3, 8, 22, 0.78);
+  backdrop-filter: blur(12px);
+  cursor: pointer;
+}
+
+.ff-modal-panel {
+  width: min(100%, var(--ff-modal-width, 40rem));
+  max-height: min(88dvh, 46rem);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid rgba(139, 160, 193, 0.28);
+  border-radius: clamp(1rem, 2vw, 1.35rem);
+  background:
+    radial-gradient(circle at 100% 0%, rgba(74, 142, 255, 0.12), transparent 15rem),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.012)),
+    var(--ff-color-surface-1, #1c2027);
+  color: var(--ff-color-text-primary, #f7f9ff);
+  box-shadow:
+    0 30px 90px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.ff-modal-panel--sm {
+  --ff-modal-width: 28rem;
+}
+
+.ff-modal-panel--md {
+  --ff-modal-width: 42rem;
+}
+
+.ff-modal-panel--lg {
+  --ff-modal-width: 58rem;
+}
+
+.ff-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: clamp(1rem, 2.4vw, 1.35rem);
+  border-bottom: 1px solid rgba(139, 160, 193, 0.18);
+  background: rgba(3, 8, 22, 0.38);
+}
+
+.ff-modal-heading {
+  min-width: 0;
+}
+
+.ff-modal-title {
+  margin: 0;
+  color: var(--ff-color-text-primary, #f7f9ff);
+  font-size: clamp(1.1rem, 2vw, 1.35rem);
+  font-weight: 900;
+  line-height: 1.15;
+  letter-spacing: 0;
+  text-shadow: var(--ff-text-shadow, 0 1px 0 rgba(0, 0, 0, 0.5));
+}
+
+.ff-modal-close {
+  flex: 0 0 auto;
+  width: 2.35rem;
+  height: 2.35rem;
+  display: inline-grid;
+  place-items: center;
+  border: 1px solid rgba(139, 160, 193, 0.24);
+  border-radius: 0.85rem;
+  background: rgba(17, 23, 34, 0.82);
+  color: var(--ff-color-text-secondary, #d7deef);
+  font-size: 1rem;
+  font-weight: 900;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.ff-modal-close:hover {
+  border-color: rgba(74, 142, 255, 0.5);
+  color: var(--ff-color-text-primary, #f7f9ff);
+}
+
+.ff-modal-body {
+  min-height: 0;
+  overflow: auto;
+  padding: clamp(1rem, 2.4vw, 1.35rem);
+}
+
+.ff-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding: 0 clamp(1rem, 2.4vw, 1.35rem) clamp(1rem, 2.4vw, 1.35rem);
+  border-top: 1px solid transparent;
+}
+
+.ff-modal-actions:empty {
+  display: none;
+}
+
+@media (max-width: 42rem) {
+  .ff-modal-layer {
+    align-items: end;
+    padding: 0.75rem;
+  }
+
+  .ff-modal-panel {
+    width: 100%;
+    max-height: 92dvh;
+    border-radius: 1rem;
+  }
+
+  .ff-modal-actions {
+    flex-direction: column-reverse;
+  }
+}

@@ -6,23 +6,13 @@
   position: relative;
   overflow: hidden;
   min-height: 100dvh;
-  background:
-    linear-gradient(180deg, rgba(4, 9, 18, 0.98) 0%, rgba(16, 20, 27, 0.98) 52%, #0c1118 100%),
-    var(--ff-color-background);
+  background: #10141b;
   color: var(--ff-color-text-primary);
   padding: clamp(1.4rem, 3vh, 2.4rem) 1.4rem;
 }
 
 .ff-login-screen::before {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  content: "";
-  background:
-    linear-gradient(rgba(74, 142, 255, 0.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(74, 142, 255, 0.035) 1px, transparent 1px);
-  background-size: 5.6rem 5.6rem;
-  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), transparent 62%);
+  content: none;
 }
 
 .ff-login-screen::after {
@@ -59,19 +49,25 @@
 }
 
 .ff-login-brand__icon {
-  display: inline-grid;
+  display: inline-flex;
   width: clamp(3.8rem, 7vw, 4.55rem);
   height: clamp(3.8rem, 7vw, 4.55rem);
   place-items: center;
+  align-items: center;
+  justify-content: center;
   border: 1px solid rgba(207, 224, 255, 0.26);
   border-radius: 1.15rem;
   background: linear-gradient(180deg, var(--ff-color-primary-400), var(--ff-color-primary-500));
   box-shadow:
     0 20px 44px rgba(22, 131, 247, 0.28),
     inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-weight: 950;
 }
 
 .ff-login-brand__icon svg {
+  display: none;
   width: 2.1rem;
   height: 2.1rem;
   color: white;
@@ -105,10 +101,10 @@
 .ff-login-card {
   position: relative;
   overflow: hidden;
-  border: 1px solid rgba(139, 144, 160, 0.28);
-  border-radius: 1.8rem;
+  border: 1px solid rgba(74, 97, 132, 0.7);
+  border-radius: 1.65rem;
   background:
-    linear-gradient(180deg, rgba(38, 47, 64, 0.9), rgba(28, 32, 39, 0.98)),
+    linear-gradient(180deg, rgba(32, 40, 55, 0.96), rgba(22, 28, 39, 0.98)),
     var(--ff-color-surface-1);
   padding: clamp(1.35rem, 3vh, 2rem);
   box-shadow:
@@ -117,12 +113,7 @@
 }
 
 .ff-login-card::before {
-  position: absolute;
-  inset: 0 0 auto;
-  height: 3px;
-  content: "";
-  background: linear-gradient(90deg, transparent, var(--ff-color-primary-400), transparent);
-  opacity: 0.82;
+  content: none;
 }
 
 .ff-login-card form,
@@ -258,9 +249,9 @@
   background: linear-gradient(180deg, var(--ff-color-primary-400), var(--ff-color-primary-500));
   color: white;
   cursor: pointer;
-  font-size: 0.92rem;
+  font-size: 1rem;
   font-weight: 900;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   box-shadow:
     0 20px 44px rgba(22, 131, 247, 0.28),

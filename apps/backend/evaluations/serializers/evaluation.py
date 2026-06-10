@@ -293,6 +293,8 @@ class LaunchEvaluationSerializer(serializers.Serializer):
                     raise serializers.ValidationError(
                         {"assigned_to_id": "Unknown assigned user."}
                     )
+            if assigned_to is None and section_assignments:
+                assigned_to = next(iter(section_assignments.values()))
 
             template_pairs.append(
                 {

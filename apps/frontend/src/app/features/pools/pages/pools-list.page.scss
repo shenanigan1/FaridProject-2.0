@@ -1,0 +1,100 @@
+.pools-page {
+  gap: 1.45rem;
+}
+
+.pools-hero {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.pools-hero h1 {
+  margin: 0;
+  color: var(--ff-color-text-primary);
+  font-size: clamp(2.8rem, 8vw, 4rem);
+  font-weight: 950;
+  line-height: 0.98;
+  text-shadow: var(--ff-text-shadow-strong);
+}
+
+.pools-hero p {
+  max-width: 36rem;
+  margin: 0;
+  color: var(--ff-color-text-muted);
+  font-size: clamp(1.18rem, 4vw, 1.55rem);
+  line-height: 1.35;
+}
+
+.pools-search {
+  min-height: 4.85rem;
+  padding-left: 3.35rem;
+}
+
+.pools-search input {
+  font-size: clamp(1.1rem, 4vw, 1.45rem);
+}
+
+.pools-chips {
+  gap: 0.85rem;
+  margin-top: 0;
+}
+
+.pools-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.pool-card {
+  display: grid;
+  gap: 0.9rem;
+  min-height: 14rem;
+  border: 1px solid rgba(151, 164, 188, 0.24);
+  border-radius: 1.45rem;
+  background: #262d38;
+  color: var(--ff-color-text-primary);
+  padding: 1.45rem;
+  box-shadow: var(--ff-shadow-card), var(--ff-shadow-inset);
+}
+
+.pool-card__top,
+.pool-card__meta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.pool-card__top span:last-child {
+  color: var(--ff-color-text-muted);
+  font-size: 0.82rem;
+  font-weight: 850;
+}
+
+.pool-card h2 {
+  margin: 0;
+  color: var(--ff-color-text-primary);
+  font-size: clamp(2rem, 7vw, 2.75rem);
+  font-weight: 950;
+  line-height: 1.05;
+  text-shadow: var(--ff-text-shadow);
+}
+
+.pool-card__code {
+  width: fit-content;
+  border: 1px solid rgba(151, 164, 188, 0.3);
+  border-radius: 0.45rem;
+  color: var(--ff-color-primary-100);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 1rem;
+  padding: 0.45rem 0.65rem;
+}
+
+.pool-card__meta {
+  color: var(--ff-color-text-muted);
+  font-weight: 850;
+}
+
+.pool-card__meta a {
+  margin-left: auto;
+  color: var(--ff-color-text-muted);
+  font-size: 1.5rem;
+  text-decoration: none;
+}

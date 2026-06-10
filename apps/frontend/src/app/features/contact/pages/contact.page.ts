@@ -37,19 +37,7 @@ const ROLE_OPTIONS: UserRole[] = [
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section class="ff-app-screen">
-      <div class="ff-app-container ff-app-stack">
-        <header class="ff-app-header">
-          <div>
-            <p class="ff-app-kicker">CONTACTS</p>
-            <h1 class="ff-app-title">Directory</h1>
-          </div>
-
-          @if (canManageContacts()) {
-            <button type="button" class="ff-btn ff-btn-primary" (click)="createPanelOpen.set(true)">
-              Create Contact
-            </button>
-          }
-        </header>
+      <div class="ff-app-container ff-app-container--compact ff-app-stack contact-page">
 
         <app-ui-modal
           [open]="canManageContacts() && createPanelOpen()"
@@ -108,20 +96,36 @@ const ROLE_OPTIONS: UserRole[] = [
           </form>
         </app-ui-modal>
 
-        <div class="ff-app-panel ff-app-stack">
-          <input
+        <div class="contact-toolbar">
+          <label class="ff-search-box contact-search">
+            <input
             type="search"
             [formControl]="searchControl"
             aria-label="Search contacts"
-            class="ff-control"
-          />
+              placeholder="Search contacts..."
+            />
+          </label>
 
-          <select class="ff-control" [value]="selectedRole()" (change)="onRoleFilterChange($event)">
-            <option value="all">All contacts</option>
+          <div class="ff-chip-row contact-chips" aria-label="Contact filters">
+            <button
+              type="button"
+              class="ff-chip"
+              [class.ff-chip--active]="selectedRole() === 'all'"
+              (click)="selectedRole.set('all')"
+            >
+              ALL
+            </button>
             @for (role of roleFilters(); track role) {
-              <option [value]="role">{{ role }}</option>
+              <button
+                type="button"
+                class="ff-chip"
+                [class.ff-chip--active]="selectedRole() === role"
+                (click)="selectedRole.set(role)"
+              >
+                {{ roleLabel(role) }}
+              </button>
             }
-          </select>
+          </div>
         </div>
 
         @if (pageMessage()) {
@@ -133,31 +137,229 @@ const ROLE_OPTIONS: UserRole[] = [
         @if (isLoading()) {
           <p class="ff-empty">Loading contacts...</p>
         } @else {
-          <div class="ff-app-stack">
+          <section class="contact-list" aria-labelledby="recent-contacts-title">
+            <h2 id="recent-contacts-title" class="contact-section-title">RECENT CONTACTS</h2>
             @for (user of filteredUsers(); track user.id) {
-              <article class="ff-data-card" [routerLink]="['/contact', user.id]">
-                <div class="ff-inline-actions ff-inline-actions--split-start">
-                  <div>
-                    <h2 class="ff-row-title">{{ user.first_name }} {{ user.last_name }}</h2>
-                    <p class="ff-row-meta">{{ user.email }}</p>
-                    <p class="ff-row-meta">{{ user.role }}</p>
-                  </div>
+              <a class="contact-card" [routerLink]="['/contact', user.id]">
+                <span class="contact-avatar" aria-hidden="true">{{ initials(user) }}</span>
+                <span class="contact-card__body">
+                  <strong>{{ user.first_name }} {{ user.last_name }}</strong>
+                  <small>{{ user.email }}</small>
+                  <em>{{ roleLabel(user.role) }}</em>
+                </span>
 
-                  <span class="ff-status-pill" [class.ff-status-pill--muted]="!user.is_active">
-                    {{ user.is_active ? 'Active' : 'Inactive' }}
-                  </span>
-                </div>
-              </article>
+                <span class="ff-status-pill" [class.ff-status-pill--muted]="!user.is_active">
+                  {{ user.is_active ? 'ACTIVE' : 'INACTIVE' }}
+                </span>
+              </a>
             }
-          </div>
+          </section>
 
           @if (filteredUsers().length === 0) {
             <p class="ff-empty">Aucun contact en base pour ce filtre.</p>
           }
         }
       </div>
+
+      @if (canManageContacts()) {
+        <button
+          type="button"
+          class="ff-fab contact-fab"
+          (click)="createPanelOpen.set(true)"
+          aria-label="Creer un contact"
+        >
+          +
+          <span class="contact-fab__label">Creer un contact</span>
+        </button>
+      }
     </section>
   `,
+  styles: [
+    `
+      .contact-page {
+        gap: 1.7rem;
+      }
+
+      .contact-fab__label {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
+      }
+
+      .contact-toolbar {
+        display: grid;
+        gap: 1.25rem;
+      }
+
+      .contact-search {
+        min-height: 4.8rem;
+        padding-left: 3.35rem;
+      }
+
+      .contact-search input {
+        font-size: clamp(1.1rem, 4vw, 1.45rem);
+      }
+
+      .contact-chips {
+        margin-top: 0;
+      }
+
+      .contact-section-title {
+        margin: 1.3rem 0 1rem;
+        color: var(--ff-color-primary-500);
+        font-size: 0.86rem;
+        font-weight: 950;
+        letter-spacing: 0.18em;
+      }
+
+      .contact-section-title::after {
+        content: "";
+        display: block;
+        width: 4rem;
+        height: 0.22rem;
+        margin-top: 0.45rem;
+        border-radius: 999px;
+        background: currentColor;
+      }
+
+      .contact-list {
+        display: grid;
+        gap: 0.9rem;
+      }
+
+      .contact-card {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        gap: 1.1rem;
+        align-items: center;
+        min-height: 7.9rem;
+        border: 1px solid rgba(151, 164, 188, 0.24);
+        border-radius: 1.55rem;
+        background: #262d38;
+        color: inherit;
+        padding: 1.15rem;
+        text-decoration: none;
+        box-shadow: var(--ff-shadow-card), var(--ff-shadow-inset);
+      }
+
+      .contact-avatar {
+        display: grid;
+        width: 4.65rem;
+        height: 4.65rem;
+        place-items: center;
+        border: 1px solid rgba(22, 131, 247, 0.42);
+        border-radius: 50%;
+        background: #203950;
+        color: var(--ff-color-primary-500);
+        font-size: 1.25rem;
+        font-weight: 950;
+      }
+
+      .contact-card__body {
+        display: grid;
+        min-width: 0;
+        gap: 0.16rem;
+      }
+
+      .contact-card__body strong {
+        overflow: hidden;
+        color: var(--ff-color-text-secondary);
+        font-size: clamp(1.25rem, 4vw, 1.5rem);
+        font-weight: 950;
+        text-overflow: ellipsis;
+        text-shadow: var(--ff-text-shadow);
+        white-space: nowrap;
+      }
+
+      .contact-card__body small,
+      .contact-card__body em {
+        overflow: hidden;
+        color: var(--ff-color-text-muted);
+        font-style: normal;
+        font-size: 1rem;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .contact-card__body em {
+        color: var(--ff-color-primary-500);
+        font-size: 0.78rem;
+        font-weight: 950;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      @media (max-width: 520px) {
+        .contact-card {
+          grid-template-columns: auto minmax(0, 1fr);
+        }
+
+        .contact-card .ff-status-pill {
+          grid-column: 1 / -1;
+          width: fit-content;
+        }
+      }
+
+      @media (min-width: 768px) {
+        .contact-page {
+          gap: 1rem;
+        }
+
+        .contact-toolbar {
+          gap: 0.8rem;
+        }
+
+        .contact-search {
+          min-height: 3.1rem;
+          border-radius: 0.85rem;
+          padding-left: 2.8rem;
+        }
+
+        .contact-search input {
+          font-size: 0.98rem;
+        }
+
+        .contact-section-title {
+          margin: 0.8rem 0 0.65rem;
+          font-size: 0.72rem;
+          letter-spacing: 0.14em;
+        }
+
+        .contact-list {
+          gap: 0.65rem;
+        }
+
+        .contact-card {
+          min-height: 4.7rem;
+          gap: 0.85rem;
+          border-radius: 0.95rem;
+          padding: 0.85rem 1rem;
+        }
+
+        .contact-avatar {
+          width: 2.85rem;
+          height: 2.85rem;
+          font-size: 0.9rem;
+        }
+
+        .contact-card__body strong {
+          font-size: 1rem;
+        }
+
+        .contact-card__body small {
+          font-size: 0.84rem;
+        }
+
+        .contact-card__body em {
+          font-size: 0.68rem;
+          letter-spacing: 0.1em;
+        }
+      }
+    `,
+  ],
 })
 export class ContactPage {
   private readonly api = inject(RolesAdminService);
@@ -222,6 +424,29 @@ export class ContactPage {
     const target = event.target;
     if (!(target instanceof HTMLSelectElement)) return;
     this.selectedRole.set(target.value as 'all' | UserRole);
+  }
+
+  initials(user: AdminUser): string {
+    const source = `${user.first_name ?? ''} ${user.last_name ?? ''}`.trim() || user.email;
+    return source
+      .split(/\s+/)
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((part) => part[0]?.toUpperCase() ?? '')
+      .join('');
+  }
+
+  roleLabel(role: UserRole): string {
+    const labels: Partial<Record<UserRole, string>> = {
+      driver: 'CHAUFFEUR',
+      candidate: 'CANDIDATE',
+      manager: 'MANAGER',
+      director: 'DIRECTOR',
+      admin: 'ADMIN',
+      employee: 'EMPLOYE',
+      hr: 'RH',
+    };
+    return labels[role] ?? role.toUpperCase();
   }
 
   onCreateModalChange(open: boolean): void {

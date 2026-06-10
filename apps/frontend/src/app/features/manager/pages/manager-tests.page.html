@@ -1,11 +1,5 @@
-<section class="ff-workflow-screen">
-  <header class="ff-page-bar">
-    <a class="ff-page-bar__action" routerLink="/manager" aria-label="Retour accueil">&#8592;</a>
-    <h1 class="ff-page-bar__title">Tests Manager</h1>
-    <span class="ff-page-bar__spacer" aria-hidden="true"></span>
-  </header>
-
-  <div class="ff-workflow-shell ff-workflow-shell--narrow">
+<section class="manager-tests-list">
+  <div class="manager-tests-list__shell">
     <label class="ff-search-box">
       <input
         type="search"
@@ -15,7 +9,7 @@
       />
     </label>
 
-    <div class="ff-segmented ff-u-mt-lg" role="tablist" aria-label="Tests manager">
+    <div class="ff-segmented manager-tabs" role="tablist" aria-label="Tests manager">
       <button
         type="button"
         class="ff-segmented__item"
@@ -24,7 +18,7 @@
         [attr.aria-pressed]="activeTab() === 'todo'"
         (click)="setTab('todo')"
       >
-        Tests a passer
+        TESTS A PASSER
       </button>
       <button
         type="button"
@@ -34,7 +28,7 @@
         [attr.aria-pressed]="activeTab() === 'history'"
         (click)="setTab('history')"
       >
-        Tests effectues
+        TESTS EFFECTUES
       </button>
     </div>
 
@@ -43,19 +37,24 @@
     } @else if (error()) {
       <p class="ff-alert ff-alert-error">{{ error() }}</p>
     } @else {
-      <div class="ff-list ff-u-mt-lg">
+      <div class="manager-card-list">
         @for (test of filteredTests(); track test.id) {
-          <a class="ff-list-row ff-list-row--button" [routerLink]="['/manager/tests', test.id]">
-            <span class="ff-avatar" aria-hidden="true">{{ initials(test) }}</span>
-            <span>
-              <strong class="ff-row-title">{{ test.templateName }}</strong>
-              <small class="ff-row-meta ff-u-block">{{ test.candidateName }}</small>
+          <a class="manager-test-card" [routerLink]="['/manager/tests', test.id]">
+            <span class="manager-test-card__avatar" aria-hidden="true">{{ initials(test) }}</span>
+            <span class="manager-test-card__body">
+              <strong>{{ test.templateName }}</strong>
+              <small>{{ test.candidateEmail || test.candidateName }}</small>
               @if (test.positionTitle) {
-                <small class="ff-row-meta ff-u-block">{{ test.positionTitle }}</small>
+                <em>{{ test.positionTitle }}</em>
               }
+              <span class="manager-test-card__type">TEST</span>
             </span>
-            <span class="ff-status-pill">
-              {{ test.status === 'in_progress' ? 'A remplir' : test.status }}
+            <span class="manager-test-card__progress" aria-hidden="true">
+              <i [style.width.%]="test.status === 'in_progress' ? 35 : 100"></i>
+            </span>
+            <span class="manager-test-card__cta">
+              <span aria-hidden="true">≡</span>
+              {{ test.status === 'in_progress' ? 'REMPLIR' : 'OUVRIR' }}
             </span>
           </a>
         }
