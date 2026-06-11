@@ -9,12 +9,15 @@ from users.permissions import IsHrAdminOrDirector
 
 
 class JobApplicationViewSet(ModelViewSet):
-    queryset = (
-        JobApplication.objects.select_related("candidate", "position")
-        .all()
-        .order_by("id")
-    )
     serializer_class = JobApplicationSerializer
+
+    @staticmethod
+    def _base_queryset():
+        return (
+            JobApplication.objects.select_related("candidate", "position")
+            .all()
+            .order_by("id")
+        )
 
     def get_permissions(self):
         if self.action in ["update", "partial_update", "destroy"]:
@@ -22,7 +25,7 @@ class JobApplicationViewSet(ModelViewSet):
         return [IsAuthenticated()]
 
     def get_queryset(self):
-        queryset = self.queryset
+        queryset = type(self)._base_queryset()
         user = self.request.user
 
         if user.role in {UserRoles.HR, UserRoles.ADMIN, UserRoles.DIRECTOR}:
