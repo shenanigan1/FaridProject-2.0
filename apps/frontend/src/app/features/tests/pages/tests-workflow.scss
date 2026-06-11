@@ -170,3 +170,110 @@
   font-size: 1.5rem;
   text-decoration: none;
 }
+
+@media (min-width: 768px) {
+  .tests-admin-switch {
+    width: min(100%, 26rem);
+    margin-bottom: 1.15rem;
+  }
+
+  .tests-admin-switch .ff-segmented__item {
+    min-height: 2.35rem;
+    font-size: 0.76rem;
+    padding-inline: 0.9rem;
+  }
+
+  .tests-admin-hero {
+    margin-bottom: 0.9rem;
+  }
+
+  .tests-admin-title {
+    font-size: clamp(1.55rem, 2.2vw, 2.05rem);
+    line-height: 1.08;
+  }
+
+  .tests-admin-search {
+    min-height: 3.1rem;
+    margin-top: 0.75rem;
+    border-radius: 0.85rem;
+    padding-left: 2.8rem;
+  }
+
+  .tests-admin-search input {
+    font-size: 0.98rem;
+  }
+
+  .tests-admin-filters {
+    gap: 0.6rem;
+    margin: 0.8rem 0 1.15rem;
+  }
+
+  .tests-admin-filters .ff-chip {
+    min-height: 2.35rem;
+    border-radius: 0.75rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    padding-inline: 0.9rem;
+  }
+
+  .tests-admin-list,
+  .tests-admin-template-list {
+    gap: 0.75rem;
+  }
+
+  .tests-admin-card {
+    border-radius: 0.95rem;
+    padding: 0.85rem;
+  }
+
+  .tests-admin-card__main {
+    gap: 0.8rem;
+  }
+
+  .tests-admin-card__avatar {
+    width: 2.85rem;
+    height: 2.85rem;
+    border-radius: 0.75rem;
+    font-size: 0.9rem;
+  }
+
+  .tests-admin-card__body strong {
+    font-size: 1rem;
+  }
+
+  .tests-admin-card__body small,
+  .tests-admin-card__progress,
+  .tests-admin-card__progress p {
+    font-size: 0.84rem;
+  }
+
+  .tests-admin-card__chevron {
+    font-size: 1.25rem;
+  }
+
+  .tests-admin-card__progress {
+    gap: 0.45rem;
+    margin-top: 0.75rem;
+    border-radius: 0.75rem;
+    padding: 0.65rem;
+  }
+
+  .tests-template-card {
+    gap: 0.55rem;
+    border-radius: 0.95rem;
+    padding: 1rem;
+  }
+
+  .tests-template-card h2 {
+    font-size: 1.25rem;
+    line-height: 1.16;
+  }
+
+  .tests-template-card p {
+    font-size: 0.9rem;
+  }
+
+  .tests-template-card__meta {
+    font-size: 0.78rem;
+  }
+}

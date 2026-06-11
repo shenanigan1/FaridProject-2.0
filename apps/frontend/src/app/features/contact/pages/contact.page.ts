@@ -302,6 +302,62 @@ const ROLE_OPTIONS: UserRole[] = [
           width: fit-content;
         }
       }
+
+      @media (min-width: 768px) {
+        .contact-page {
+          gap: 1rem;
+        }
+
+        .contact-toolbar {
+          gap: 0.8rem;
+        }
+
+        .contact-search {
+          min-height: 3.1rem;
+          border-radius: 0.85rem;
+          padding-left: 2.8rem;
+        }
+
+        .contact-search input {
+          font-size: 0.98rem;
+        }
+
+        .contact-section-title {
+          margin: 0.8rem 0 0.65rem;
+          font-size: 0.72rem;
+          letter-spacing: 0.14em;
+        }
+
+        .contact-list {
+          gap: 0.65rem;
+        }
+
+        .contact-card {
+          min-height: 4.7rem;
+          gap: 0.85rem;
+          border-radius: 0.95rem;
+          padding: 0.85rem 1rem;
+        }
+
+        .contact-avatar {
+          width: 2.85rem;
+          height: 2.85rem;
+          font-size: 0.9rem;
+        }
+
+        .contact-card__body strong {
+          font-size: 1rem;
+        }
+
+        .contact-card__body small {
+          font-size: 0.84rem;
+        }
+
+        .contact-card__body em {
+          font-size: 0.68rem;
+          letter-spacing: 0.1em;
+        }
+      }
     `,
   ],
 })
