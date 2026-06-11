@@ -1,5 +1,3 @@
-#Test
-
 # FaridProject‑2.0  
 ### *Rebuild from Scratch • Monorepo • Test Driven Development • Clean Architecture*
 
